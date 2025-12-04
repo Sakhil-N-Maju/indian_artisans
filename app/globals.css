@@ -1,0 +1,174 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Warm Earthy Palette */
+  --warm-cream: #fdf9f4;
+  --warm-sand: #f4ede4;
+  --warm-terracotta: #c85a3a;
+  --warm-saffron: #d4a574;
+  --warm-gold: #d4a574;
+  --warm-sage: #6b8e7f;
+  --warm-charcoal: #2c2c2c;
+  --warm-rust: #8b4513;
+  --warm-olive: #556b2f;
+
+  /* Background & Text */
+  --background: #fdf9f4;
+  --foreground: #2c2c2c;
+  --card: #ffffff;
+  --card-foreground: #2c2c2c;
+
+  /* Primary & Secondary */
+  --primary: #c85a3a;
+  --primary-foreground: #fdf9f4;
+  --secondary: #d4a574;
+  --secondary-foreground: #2c2c2c;
+
+  /* Muted & Accent */
+  --muted: #f4ede4;
+  --muted-foreground: #6b6b6b;
+  --accent: #c85a3a;
+  --accent-foreground: #fdf9f4;
+
+  /* Borders & Inputs */
+  --border: #e8dcd1;
+  --input: #f4ede4;
+  --ring: #d4a574;
+
+  /* Destructive */
+  --destructive: #dc2626;
+  --destructive-foreground: #fdf9f4;
+
+  /* Sidebar & Chart */
+  --sidebar: #ffffff;
+  --sidebar-foreground: #2c2c2c;
+  --sidebar-primary: #c85a3a;
+  --sidebar-primary-foreground: #fdf9f4;
+  --sidebar-accent: #d4a574;
+  --sidebar-accent-foreground: #2c2c2c;
+  --sidebar-border: #e8dcd1;
+  --sidebar-ring: #d4a574;
+
+  --chart-1: #c85a3a;
+  --chart-2: #d4a574;
+  --chart-3: #6b8e7f;
+  --chart-4: #556b2f;
+  --chart-5: #8b4513;
+
+  --radius: 0.625rem;
+}
+
+.dark {
+  --background: #1a1a1a;
+  --foreground: #f5f5f5;
+  --card: #2c2c2c;
+  --card-foreground: #f5f5f5;
+  --primary: #e8906f;
+  --primary-foreground: #1a1a1a;
+  --secondary: #d4a574;
+  --secondary-foreground: #1a1a1a;
+  --muted: #404040;
+  --muted-foreground: #b0b0b0;
+  --accent: #e8906f;
+  --accent-foreground: #1a1a1a;
+  --border: #404040;
+  --input: #2c2c2c;
+  --ring: #d4a574;
+}
+
+@theme inline {
+  --font-serif: "Lora", "Lora Fallback";
+  --font-sans: "Inter", "Inter Fallback";
+  --font-mono: "Geist Mono", "Geist Mono Fallback";
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .scroll-smooth-large {
+    scroll-behavior: smooth;
+  }
+
+  .text-balance-heading {
+    text-wrap: balance;
+  }
+
+  .hero-gradient {
+    background: linear-gradient(135deg, rgba(200, 90, 58, 0.05) 0%, rgba(212, 165, 116, 0.05) 100%);
+  }
+
+  .section-divider {
+    @apply border-t border-border;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:scale-105;
+  }
+
+  .card-light {
+    @apply bg-card rounded-lg p-6 shadow-sm;
+  }
+
+  .accent-underline {
+    @apply border-b-2 border-primary;
+  }
+
+  /* Added floral background classes */
+  .bg-floral-soft {
+    background-color: #f5ebe0;
+    background-image: linear-gradient(
+      135deg,
+      rgba(200, 90, 58, 0.03) 0%,
+      rgba(212, 165, 116, 0.03) 50%,
+      rgba(107, 142, 127, 0.02) 100%
+    );
+  }
+
+  .bg-floral-full {
+    background-image: url("/images/pink-floral-wall-textured-background.jpg");
+  }
+}
