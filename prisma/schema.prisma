@@ -1,0 +1,729 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================================
+// User & Authentication Models
+// ============================================================================
+
+model User {
+  id                String   @id @default(cuid())
+  email             String?  @unique
+  phone             String   @unique
+  name              String
+  role              UserRole @default(CUSTOMER)
+  passwordHash      String?
+  emailVerified     Boolean  @default(false)
+  phoneVerified     Boolean  @default(false)
+  whatsappOptIn     Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  // Relations
+  addresses         Address[]
+  orders            Order[]
+  reviews           Review[]
+  wishlist          WishlistItem[]
+  cartItems         CartItem[]
+  artisanProfile    Artisan?
+  subscriptions     Subscription[]
+  loyaltyPoints     LoyaltyPoint[]
+  notifications     Notification[]
+}
+
+enum UserRole {
+  CUSTOMER
+  ARTISAN
+  ADMIN
+  SUPER_ADMIN
+}
+
+// ============================================================================
+// Artisan Models
+// ============================================================================
+
+model Artisan {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  businessName    String
+  craftType       String
+  description     String?  @db.Text
+  experience      Int?     // years
+  certifications  String[] // array of certification names
+  
+  // Location
+  state           String
+  district        String
+  pincode         String?
+  village         String?
+  
+  // Business details
+  gstNumber       String?  @unique
+  panNumber       String?  @unique
+  bankAccount     String?
+  ifscCode        String?
+  
+  // Verification
+  verified        Boolean  @default(false)
+  verifiedAt      DateTime?
+  kycStatus       KYCStatus @default(PENDING)
+  
+  // Stats
+  rating          Float    @default(0)
+  totalSales      Int      @default(0)
+  totalRevenue    Float    @default(0)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  products        Product[]
+  stories         Story[]
+  workshops       Workshop[]
+}
+
+enum KYCStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+// ============================================================================
+// Product Models
+// ============================================================================
+
+model Product {
+  id              String   @id @default(cuid())
+  artisanId       String
+  artisan         Artisan  @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+  
+  title           String
+  description     String   @db.Text
+  aiStory         String?  @db.Text
+  
+  // Pricing
+  price           Float
+  compareAtPrice  Float?
+  costPrice       Float?
+  currency        String   @default("INR")
+  
+  // Inventory
+  sku             String?  @unique
+  stock           Int      @default(0)
+  lowStockAlert   Int      @default(5)
+  
+  // Categories & Tags
+  category        String
+  subCategory     String?
+  tags            String[]
+  craftType       String
+  
+  // Media
+  images          ProductImage[]
+  videos          String[]
+  
+  // Dimensions & Details
+  weight          Float?   // in grams
+  dimensions      Json?    // {length, width, height}
+  material        String?
+  color           String?
+  customizable    Boolean  @default(false)
+  
+  // SEO
+  slug            String   @unique
+  metaTitle       String?
+  metaDescription String?
+  
+  // Status
+  status          ProductStatus @default(DRAFT)
+  featured        Boolean  @default(false)
+  trending        Boolean  @default(false)
+  
+  // Stats
+  views           Int      @default(0)
+  likes           Int      @default(0)
+  sales           Int      @default(0)
+  rating          Float    @default(0)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  publishedAt     DateTime?
+  
+  // Relations
+  orderItems      OrderItem[]
+  reviews         Review[]
+  wishlistItems   WishlistItem[]
+  cartItems       CartItem[]
+  
+  @@index([status, featured])
+  @@index([artisanId])
+  @@index([category])
+}
+
+enum ProductStatus {
+  DRAFT
+  PENDING_REVIEW
+  ACTIVE
+  INACTIVE
+  OUT_OF_STOCK
+}
+
+model ProductImage {
+  id              String   @id @default(cuid())
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  url             String
+  altText         String?
+  position        Int      @default(0)
+  isPrimary       Boolean  @default(false)
+  
+  createdAt       DateTime @default(now())
+}
+
+// ============================================================================
+// Order Models
+// ============================================================================
+
+model Order {
+  id              String   @id @default(cuid())
+  orderNumber     String   @unique
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  
+  // Order Details
+  status          OrderStatus @default(PENDING)
+  paymentStatus   PaymentStatus @default(PENDING)
+  fulfillmentStatus FulfillmentStatus @default(UNFULFILLED)
+  
+  // Pricing
+  subtotal        Float
+  tax             Float    @default(0)
+  shippingCost    Float    @default(0)
+  discount        Float    @default(0)
+  total           Float
+  
+  // Shipping
+  shippingAddress Json
+  billingAddress  Json?
+  trackingNumber  String?
+  carrier         String?
+  
+  // Payment
+  paymentMethod   String?
+  razorpayOrderId String?  @unique
+  razorpayPaymentId String?
+  transactionId   String?
+  
+  // Communication
+  whatsappSent    Boolean  @default(false)
+  emailSent       Boolean  @default(false)
+  
+  // Notes
+  customerNote    String?
+  internalNote    String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  confirmedAt     DateTime?
+  shippedAt       DateTime?
+  deliveredAt     DateTime?
+  cancelledAt     DateTime?
+  
+  // Relations
+  items           OrderItem[]
+  payments        Payment[]
+  refunds         Refund[]
+  
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  AUTHORIZED
+  PAID
+  PARTIALLY_PAID
+  REFUNDED
+  PARTIALLY_REFUNDED
+  FAILED
+}
+
+enum FulfillmentStatus {
+  UNFULFILLED
+  PARTIALLY_FULFILLED
+  FULFILLED
+  RETURNED
+}
+
+model OrderItem {
+  id              String   @id @default(cuid())
+  orderId         String
+  order           Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id])
+  
+  quantity        Int
+  price           Float    // price at time of order
+  total           Float
+  
+  // Customization
+  customization   Json?
+  
+  createdAt       DateTime @default(now())
+}
+
+// ============================================================================
+// Payment Models
+// ============================================================================
+
+model Payment {
+  id              String   @id @default(cuid())
+  orderId         String
+  order           Order    @relation(fields: [orderId], references: [id])
+  
+  amount          Float
+  currency        String   @default("INR")
+  status          PaymentStatus
+  method          PaymentMethod
+  
+  // Razorpay
+  razorpayPaymentId String? @unique
+  razorpayOrderId   String?
+  razorpaySignature String?
+  
+  // Details
+  metadata        Json?
+  errorMessage    String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+enum PaymentMethod {
+  RAZORPAY
+  COD
+  UPI
+  CARD
+  NET_BANKING
+  WALLET
+}
+
+model Refund {
+  id              String   @id @default(cuid())
+  orderId         String
+  order           Order    @relation(fields: [orderId], references: [id])
+  
+  amount          Float
+  reason          String
+  status          RefundStatus @default(PENDING)
+  
+  razorpayRefundId String? @unique
+  
+  processedAt     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+enum RefundStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+// ============================================================================
+// Address Model
+// ============================================================================
+
+model Address {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  firstName       String
+  lastName        String
+  phone           String
+  addressLine1    String
+  addressLine2    String?
+  city            String
+  state           String
+  pincode         String
+  country         String   @default("India")
+  
+  isDefault       Boolean  @default(false)
+  addressType     AddressType @default(HOME)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+enum AddressType {
+  HOME
+  WORK
+  OTHER
+}
+
+// ============================================================================
+// Cart & Wishlist
+// ============================================================================
+
+model CartItem {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  quantity        Int      @default(1)
+  customization   Json?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@unique([userId, productId])
+}
+
+model WishlistItem {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  createdAt       DateTime @default(now())
+  
+  @@unique([userId, productId])
+}
+
+// ============================================================================
+// Review Model
+// ============================================================================
+
+model Review {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  rating          Int      // 1-5
+  title           String?
+  comment         String?  @db.Text
+  images          String[]
+  
+  verified        Boolean  @default(false) // verified purchase
+  helpful         Int      @default(0)
+  
+  status          ReviewStatus @default(PENDING)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// ============================================================================
+// Story & Workshop Models
+// ============================================================================
+
+model Story {
+  id              String   @id @default(cuid())
+  artisanId       String
+  artisan         Artisan  @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+  
+  title           String
+  content         String   @db.Text
+  aiGenerated     Boolean  @default(false)
+  
+  coverImage      String?
+  images          String[]
+  videoUrl        String?
+  
+  slug            String   @unique
+  views           Int      @default(0)
+  likes           Int      @default(0)
+  
+  published       Boolean  @default(false)
+  publishedAt     DateTime?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Workshop {
+  id              String   @id @default(cuid())
+  artisanId       String
+  artisan         Artisan  @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+  
+  title           String
+  description     String   @db.Text
+  craftType       String
+  
+  // Schedule
+  startDate       DateTime
+  endDate         DateTime
+  duration        Int      // minutes
+  maxParticipants Int
+  
+  // Pricing
+  price           Float
+  currency        String   @default("INR")
+  
+  // Location
+  mode            WorkshopMode
+  venue           String?
+  onlineLink      String?
+  
+  // Media
+  coverImage      String?
+  images          String[]
+  
+  status          WorkshopStatus @default(DRAFT)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  enrollments     WorkshopEnrollment[]
+}
+
+enum WorkshopMode {
+  ONLINE
+  OFFLINE
+  HYBRID
+}
+
+enum WorkshopStatus {
+  DRAFT
+  PUBLISHED
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+model WorkshopEnrollment {
+  id              String   @id @default(cuid())
+  workshopId      String
+  workshop        Workshop @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+  userId          String
+  
+  paymentStatus   PaymentStatus @default(PENDING)
+  attended        Boolean  @default(false)
+  
+  createdAt       DateTime @default(now())
+  
+  @@unique([workshopId, userId])
+}
+
+// ============================================================================
+// Subscription Model
+// ============================================================================
+
+model Subscription {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  plan            SubscriptionPlan
+  status          SubscriptionStatus @default(ACTIVE)
+  
+  startDate       DateTime @default(now())
+  endDate         DateTime
+  renewalDate     DateTime
+  
+  price           Float
+  currency        String   @default("INR")
+  
+  // Razorpay
+  razorpaySubscriptionId String? @unique
+  
+  cancelledAt     DateTime?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+enum SubscriptionPlan {
+  MONTHLY
+  QUARTERLY
+  ANNUAL
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAUSED
+  CANCELLED
+  EXPIRED
+}
+
+// ============================================================================
+// Loyalty & Gamification
+// ============================================================================
+
+model LoyaltyPoint {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  points          Int
+  reason          String
+  type            LoyaltyType
+  
+  expiresAt       DateTime?
+  
+  createdAt       DateTime @default(now())
+}
+
+enum LoyaltyType {
+  EARNED
+  REDEEMED
+  EXPIRED
+  BONUS
+}
+
+// ============================================================================
+// Notification Model
+// ============================================================================
+
+model Notification {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  type            NotificationType
+  title           String
+  message         String   @db.Text
+  
+  // Channels
+  whatsappSent    Boolean  @default(false)
+  emailSent       Boolean  @default(false)
+  pushSent        Boolean  @default(false)
+  
+  read            Boolean  @default(false)
+  readAt          DateTime?
+  
+  // Metadata
+  metadata        Json?
+  
+  createdAt       DateTime @default(now())
+}
+
+enum NotificationType {
+  ORDER_UPDATE
+  PAYMENT_SUCCESS
+  PAYMENT_FAILED
+  SHIPMENT_UPDATE
+  PRODUCT_AVAILABLE
+  WORKSHOP_REMINDER
+  PROMOTION
+  SYSTEM
+}
+
+// ============================================================================
+// Analytics Models
+// ============================================================================
+
+model Analytics {
+  id              String   @id @default(cuid())
+  
+  type            AnalyticsType
+  entityType      String   // product, order, user, etc.
+  entityId        String?
+  
+  event           String
+  metadata        Json?
+  
+  userId          String?
+  sessionId       String?
+  ipAddress       String?
+  userAgent       String?
+  
+  createdAt       DateTime @default(now())
+  
+  @@index([type, entityType])
+  @@index([createdAt])
+}
+
+enum AnalyticsType {
+  PAGE_VIEW
+  PRODUCT_VIEW
+  ADD_TO_CART
+  PURCHASE
+  SEARCH
+  CLICK
+  CUSTOM
+}
+
+// ============================================================================
+// WhatsApp Integration
+// ============================================================================
+
+model WhatsAppMessage {
+  id              String   @id @default(cuid())
+  
+  userId          String?
+  phone           String
+  
+  direction       MessageDirection
+  messageType     String   // text, image, document, etc.
+  content         String   @db.Text
+  
+  // Meta WhatsApp API
+  waMessageId     String?  @unique
+  status          WhatsAppStatus @default(SENT)
+  
+  // Template
+  templateName    String?
+  templateParams  Json?
+  
+  // Metadata
+  metadata        Json?
+  errorMessage    String?
+  
+  sentAt          DateTime?
+  deliveredAt     DateTime?
+  readAt          DateTime?
+  
+  createdAt       DateTime @default(now())
+  
+  @@index([phone])
+  @@index([createdAt])
+}
+
+enum MessageDirection {
+  INBOUND
+  OUTBOUND
+}
+
+enum WhatsAppStatus {
+  QUEUED
+  SENT
+  DELIVERED
+  READ
+  FAILED
+}

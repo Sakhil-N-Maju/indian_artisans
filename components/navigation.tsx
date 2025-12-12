@@ -35,20 +35,14 @@ export function Navigation({ scrolled }: NavigationProps) {
             <Link href="/artisans" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
               Artisans
             </Link>
-            <Link href="/story-hub" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
-              Stories
+            <Link href="/features" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
+              Features
             </Link>
-            <Link href="/workshops" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
-              Workshops
-            </Link>
-            <Link href="/market" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
-              Market
+            <Link href="/admin" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
+              Admin
             </Link>
             <Link href="/analytics" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
               Analytics
-            </Link>
-            <Link href="/roadmap" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
-              Roadmap
             </Link>
             <Link href="/about" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
               About
