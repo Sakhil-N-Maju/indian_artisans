@@ -21,14 +21,25 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="min-h-screen">
-      <Navigation scrolled={scrolled} />
-      <HeroSection />
-      <FeaturedCarousel />
-      <CategoryGrid />
-      <ArtisanSpotlight />
-      <VoiceCallToAction />
-      <Footer />
+    <main className="min-h-screen relative">
+      {/* Full background */}
+      <div 
+        className="fixed top-0 left-0 w-full h-full bg-cover bg-center bg-no-repeat" 
+        style={{ 
+          backgroundImage: "url('/images/background.png')",
+          zIndex: -1
+        }}
+      />
+      
+      <div className="relative z-10">
+        <Navigation scrolled={scrolled} />
+        <HeroSection />
+        <FeaturedCarousel />
+        <CategoryGrid />
+        <ArtisanSpotlight />
+        <VoiceCallToAction />
+        <Footer />
+      </div>
     </main>
   )
 }

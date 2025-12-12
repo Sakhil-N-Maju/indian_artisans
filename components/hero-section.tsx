@@ -11,13 +11,7 @@ export function HeroSection() {
   }, [])
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-12 bg-floral-soft">
-      {/* Background gradient */}
-      <div className="absolute inset-0 -z-10 hero-gradient" />
-
-      {/* Decorative elements */}
-      <div className="absolute top-20 right-10 w-72 h-72 bg-secondary opacity-5 rounded-full blur-3xl -z-10" />
-      <div className="absolute bottom-0 left-10 w-96 h-96 bg-primary opacity-5 rounded-full blur-3xl -z-10" />
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-12">
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="grid md:grid-cols-2 gap-12 items-center">

@@ -13,7 +13,7 @@ export function Navigation({ scrolled }: NavigationProps) {
 
   return (
     <nav
-      className={`sticky top-0 z-40 transition-all duration-300 ${scrolled ? "bg-white shadow-md" : "bg-warm-cream"}`}
+      className={`sticky top-0 z-40 transition-all duration-300 ${scrolled ? "bg-white/90 backdrop-blur-sm shadow-md" : "bg-transparent"}`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
@@ -35,8 +35,20 @@ export function Navigation({ scrolled }: NavigationProps) {
             <Link href="/artisans" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
               Artisans
             </Link>
+            <Link href="/story-hub" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
+              Stories
+            </Link>
             <Link href="/workshops" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
               Workshops
+            </Link>
+            <Link href="/market" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
+              Market
+            </Link>
+            <Link href="/analytics" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
+              Analytics
+            </Link>
+            <Link href="/roadmap" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
+              Roadmap
             </Link>
             <Link href="/about" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
               About
@@ -78,8 +90,20 @@ export function Navigation({ scrolled }: NavigationProps) {
             <Link href="/artisans" className="block px-4 py-2 text-sm hover:bg-warm-sand rounded transition">
               Artisans
             </Link>
+            <Link href="/story-hub" className="block px-4 py-2 text-sm hover:bg-warm-sand rounded transition">
+              Stories
+            </Link>
             <Link href="/workshops" className="block px-4 py-2 text-sm hover:bg-warm-sand rounded transition">
               Workshops
+            </Link>
+            <Link href="/market" className="block px-4 py-2 text-sm hover:bg-warm-sand rounded transition">
+              Market
+            </Link>
+            <Link href="/analytics" className="block px-4 py-2 text-sm hover:bg-warm-sand rounded transition">
+              Analytics
+            </Link>
+            <Link href="/roadmap" className="block px-4 py-2 text-sm hover:bg-warm-sand rounded transition">
+              Roadmap
             </Link>
             <Link href="/about" className="block px-4 py-2 text-sm hover:bg-warm-sand rounded transition">
               About

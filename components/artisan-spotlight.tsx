@@ -48,7 +48,7 @@ const artisans: Artisan[] = [
 
 export function ArtisanSpotlight() {
   return (
-    <section className="py-20 bg-floral-soft">
+    <section className="py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <p className="text-sm font-semibold text-primary uppercase tracking-wide">Meet The Masters</p>
