@@ -1,16 +1,29 @@
 # 🎨 Indian Artisans Marketplace Platform
 
-A comprehensive, production-grade e-commerce platform connecting traditional Indian artisans with global markets. Built with Next.js, PostgreSQL, Razorpay, and WhatsApp Cloud API.
+A comprehensive, production-grade e-commerce platform connecting traditional Indian artisans with global markets. Built with Next.js, PostgreSQL, Razorpay, WhatsApp Cloud API, and **AI-powered product creation**.
 
 ![Next.js](https://img.shields.io/badge/Next.js-16.0.7-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-blue)
 ![Prisma](https://img.shields.io/badge/Prisma-7.1-green)
 ![Razorpay](https://img.shields.io/badge/Razorpay-Integrated-blue)
+![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4-412991)
+
+> **🤖 NEW: AI-Powered Product Creation** - Artisans can now create professional product listings by simply sending a photo and voice message via WhatsApp! GPT-4 Vision + Whisper automatically generate titles, descriptions, pricing, and cultural stories.
 
 ---
 
 ## 🚀 Features
+
+### 🤖 **AI-Powered Product Creation** ⭐ NEW
+- **WhatsApp Integration**: Artisans send photo + voice → AI creates professional listing
+- **GPT-4 Vision**: Analyzes product images for visual details
+- **Whisper**: Transcribes voice in any language (Hindi, English, regional languages)
+- **GPT-4 Turbo**: Generates titles, descriptions, pricing, categories, tags
+- **Cultural Storytelling**: AI-generated stories highlighting craft heritage
+- **30-second Processing**: From media upload to published product
+- **Low Cost**: ~₹3.50 per product (~$0.04)
+- 📖 [Full Documentation](AI_PIPELINE.md) | 🧪 [Testing Guide](AI_TESTING.md)
 
 ### 🛍️ **Marketplace**
 - Product catalog with advanced filtering
@@ -34,6 +47,7 @@ A comprehensive, production-grade e-commerce platform connecting traditional Ind
 - Subscription management
 
 ### 📱 **WhatsApp Integration**
+- **AI Product Creation** (photo + voice → listing)
 - Order confirmations via WhatsApp
 - Shipment tracking updates
 - Customer support messaging
@@ -123,6 +137,7 @@ Visit http://localhost:3000
 - **Authentication**: NextAuth.js
 
 ### Integrations
+- **AI**: OpenAI (GPT-4 Vision, Whisper, GPT-4 Turbo)
 - **Payments**: Razorpay
 - **Messaging**: WhatsApp Cloud API (Meta)
 - **HTTP Client**: Axios
@@ -198,6 +213,12 @@ npx prisma studio
 
 ## 🔌 API Endpoints
 
+### AI Product Creation ⭐ NEW
+```
+POST /api/ai/products           # AI product creation
+GET  /api/ai/products           # Quick image analysis
+```
+
 ### Products
 ```
 GET  /api/products              # List products
@@ -220,7 +241,7 @@ POST /api/payment/verify        # Verify payment
 ### Webhooks
 ```
 POST /api/webhooks/razorpay     # Razorpay events
-POST /api/webhooks/whatsapp     # WhatsApp messages
+POST /api/webhooks/whatsapp     # WhatsApp messages (+ AI processing)
 ```
 
 ---
@@ -295,6 +316,7 @@ Required variables:
 
 ```env
 DATABASE_URL                    # PostgreSQL connection
+OPENAI_API_KEY                 # OpenAI API key (for AI features)
 RAZORPAY_KEY_ID                # Razorpay test/live key
 RAZORPAY_KEY_SECRET            # Razorpay secret
 WHATSAPP_PHONE_NUMBER_ID       # WhatsApp phone ID
@@ -304,6 +326,11 @@ WHATSAPP_WEBHOOK_VERIFY_TOKEN  # Custom verify token
 NEXTAUTH_SECRET                # Auth secret
 NEXTAUTH_URL                   # App URL
 ```
+
+**Get API Keys**:
+- OpenAI: https://platform.openai.com/api-keys
+- Razorpay: https://dashboard.razorpay.com
+- WhatsApp: https://developers.facebook.com/apps
 
 ---
 
@@ -324,6 +351,13 @@ Access: http://localhost:3000/admin
 ---
 
 ## 🧪 Testing
+
+### Test AI Product Creation
+```bash
+# 1. Configure OpenAI API key in .env
+# 2. Follow testing guide
+```
+📖 **Full Testing Guide**: [AI_TESTING.md](AI_TESTING.md)
 
 ### Test Payment
 1. Use Razorpay test mode
@@ -361,11 +395,14 @@ Proprietary - Indian Artisans Marketplace Platform
 
 ## 🆘 Support
 
+- **AI Pipeline**: [AI_PIPELINE.md](./AI_PIPELINE.md)
+- **AI Testing**: [AI_TESTING.md](./AI_TESTING.md)
 - **Setup Issues**: See [SETUP_GUIDE.md](./SETUP_GUIDE.md)
 - **System Documentation**: [IMPLEMENTATION_STATUS.md](./IMPLEMENTATION_STATUS.md)
 - **Prisma Docs**: https://www.prisma.io/docs
 - **Razorpay Docs**: https://razorpay.com/docs
 - **WhatsApp API**: https://developers.facebook.com/docs/whatsapp
+- **OpenAI API**: https://platform.openai.com/docs
 
 ---
 
