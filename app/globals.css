@@ -169,6 +169,7 @@
   }
 
   .bg-floral-full {
-    background-image: url("/images/pink-floral-wall-textured-background.jpg");
+    background-image: url("/images/background_down.PNG");
+    background-position: top center;
   }
 }
