@@ -1,6 +1,6 @@
 /**
  * Admin System Monitor
- * 
+ *
  * System health and performance monitoring
  */
 
@@ -36,9 +36,12 @@ export class AdminSystemMonitor {
     unit: string;
     threshold?: number;
   }): Promise<SystemMetric> {
-    const status: SystemMetric['status'] = data.threshold && data.value > data.threshold
-      ? data.value > data.threshold * 1.5 ? 'critical' : 'warning'
-      : 'normal';
+    const status: SystemMetric['status'] =
+      data.threshold && data.value > data.threshold
+        ? data.value > data.threshold * 1.5
+          ? 'critical'
+          : 'warning'
+        : 'normal';
 
     const metric: SystemMetric = {
       id: `metric-${Date.now()}-${Math.random().toString(36).substring(7)}`,
@@ -91,8 +94,9 @@ export class AdminSystemMonitor {
     criticalAlerts: number;
     recentMetrics: SystemMetric[];
   }> {
-    const criticalAlerts = Array.from(this.alerts.values())
-      .filter(a => a.severity === 'critical' && !a.acknowledged).length;
+    const criticalAlerts = Array.from(this.alerts.values()).filter(
+      (a) => a.severity === 'critical' && !a.acknowledged
+    ).length;
 
     const status: 'healthy' | 'degraded' | 'down' =
       criticalAlerts > 5 ? 'down' : criticalAlerts > 0 ? 'degraded' : 'healthy';
@@ -112,7 +116,7 @@ export class AdminSystemMonitor {
   async getAlerts(acknowledged?: boolean): Promise<SystemAlert[]> {
     let alerts = Array.from(this.alerts.values());
     if (acknowledged !== undefined) {
-      alerts = alerts.filter(a => a.acknowledged === acknowledged);
+      alerts = alerts.filter((a) => a.acknowledged === acknowledged);
     }
     return alerts.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
   }

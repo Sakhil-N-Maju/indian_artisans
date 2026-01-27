@@ -1,28 +1,29 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Navigation } from "@/components/navigation"
-import { Footer } from "@/components/footer"
-import { useParams } from "next/navigation"
-import { Heart, Share2, Bookmark, Calendar, User, Clock, ArrowRight } from "lucide-react"
+import { useState } from 'react';
+import { Navigation } from '@/components/navigation';
+import { Footer } from '@/components/footer';
+import { useParams } from 'next/navigation';
+import { Heart, Share2, Bookmark, Calendar, User, Clock, ArrowRight } from 'lucide-react';
 
 export default function StoryDetailPage() {
-  const params = useParams()
-  const id = params.id as string
-  const [isLiked, setIsLiked] = useState(false)
-  const [isBookmarked, setIsBookmarked] = useState(false)
+  const params = useParams();
+  const id = params.id as string;
+  const [isLiked, setIsLiked] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   const story = {
     id: Number.parseInt(id),
     title: "The Weaver's Legacy: 35 Years of Tradition in Jaipur",
-    excerpt: "Priya Sharma carries forward the ancient art of hand-weaving, transforming threads into stories.",
-    author: "Priya Sharma",
-    craft: "Hand-Weaving",
-    location: "Jaipur, Rajasthan",
-    date: "December 3, 2025",
+    excerpt:
+      'Priya Sharma carries forward the ancient art of hand-weaving, transforming threads into stories.',
+    author: 'Priya Sharma',
+    craft: 'Hand-Weaving',
+    location: 'Jaipur, Rajasthan',
+    date: 'December 3, 2025',
     readTime: 8,
     likes: 1203,
-    image: "/placeholder.svg?key=story-detail",
+    image: '/placeholder.svg?key=story-detail',
     content: `
 # The Weaver's Legacy: 35 Years of Tradition in Jaipur
 
@@ -75,72 +76,80 @@ Her message to the younger generation is clear: "Don't see handweaving as a reli
 *Priya Sharma's work can be found on the Artisans of India platform, where each saree comes with a certificate of authenticity and the complete story of its creation.*
     `,
     relatedStories: [
-      { id: 2, title: "Blue Pottery: Khurja's Art of Resilience", author: "Rajesh Kumar" },
-      { id: 5, title: "Madhubani: Where Ancient Lines Paint Modern Dreams", author: "Anita Singh" },
+      { id: 2, title: "Blue Pottery: Khurja's Art of Resilience", author: 'Rajesh Kumar' },
+      { id: 5, title: 'Madhubani: Where Ancient Lines Paint Modern Dreams', author: 'Anita Singh' },
     ],
-  }
+  };
 
   return (
-    <main className="min-h-screen bg-warm-cream">
+    <main className="bg-warm-cream min-h-screen">
       <Navigation scrolled={false} />
 
-      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <article className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12">
-          <p className="text-primary font-semibold uppercase tracking-wide text-sm mb-2">{story.craft}</p>
-          <h1 className="text-5xl sm:text-6xl font-serif font-bold text-warm-charcoal mb-4 text-balance-heading">
+          <p className="text-primary mb-2 text-sm font-semibold tracking-wide uppercase">
+            {story.craft}
+          </p>
+          <h1 className="text-warm-charcoal text-balance-heading mb-4 font-serif text-5xl font-bold sm:text-6xl">
             {story.title}
           </h1>
 
           {/* Meta */}
-          <div className="flex flex-wrap gap-6 text-warm-charcoal/60 mb-8 border-b border-border pb-6">
+          <div className="text-warm-charcoal/60 border-border mb-8 flex flex-wrap gap-6 border-b pb-6">
             <div className="flex items-center gap-2">
-              <User className="w-4 h-4" />
+              <User className="h-4 w-4" />
               <span>{story.author}</span>
             </div>
             <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
+              <Calendar className="h-4 w-4" />
               <span>{story.date}</span>
             </div>
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4" />
+              <Clock className="h-4 w-4" />
               <span>{story.readTime} min read</span>
             </div>
           </div>
 
           {/* Actions */}
-          <div className="flex gap-4 mb-8">
+          <div className="mb-8 flex gap-4">
             <button
               onClick={() => setIsLiked(!isLiked)}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border hover:bg-warm-sand transition"
+              className="border-border hover:bg-warm-sand flex items-center gap-2 rounded-lg border px-4 py-2 transition"
             >
-              <Heart className={`w-5 h-5 ${isLiked ? "fill-primary text-primary" : ""}`} />
+              <Heart className={`h-5 w-5 ${isLiked ? 'fill-primary text-primary' : ''}`} />
               <span className="text-sm">{story.likes}</span>
             </button>
             <button
               onClick={() => setIsBookmarked(!isBookmarked)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition ${
-                isBookmarked ? "border-primary bg-primary/10" : "border-border hover:bg-warm-sand"
+              className={`flex items-center gap-2 rounded-lg border px-4 py-2 transition ${
+                isBookmarked ? 'border-primary bg-primary/10' : 'border-border hover:bg-warm-sand'
               }`}
             >
-              <Bookmark className={`w-5 h-5 ${isBookmarked ? "fill-primary text-primary" : ""}`} />
-              <span className="text-sm">{isBookmarked ? "Saved" : "Save"}</span>
+              <Bookmark className={`h-5 w-5 ${isBookmarked ? 'fill-primary text-primary' : ''}`} />
+              <span className="text-sm">{isBookmarked ? 'Saved' : 'Save'}</span>
             </button>
-            <button className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border hover:bg-warm-sand transition">
-              <Share2 className="w-5 h-5" />
+            <button className="border-border hover:bg-warm-sand flex items-center gap-2 rounded-lg border px-4 py-2 transition">
+              <Share2 className="h-5 w-5" />
               <span className="text-sm">Share</span>
             </button>
           </div>
         </div>
 
         {/* Featured Image */}
-        <div className="w-full h-96 rounded-2xl overflow-hidden mb-12 bg-warm-sand">
-          <img src={story.image || "/placeholder.svg"} alt={story.title} className="w-full h-full object-cover" />
+        <div className="bg-warm-sand mb-12 h-96 w-full overflow-hidden rounded-2xl">
+          <img
+            src={story.image || '/placeholder.svg'}
+            alt={story.title}
+            className="h-full w-full object-cover"
+          />
         </div>
 
         {/* Content */}
-        <div className="prose prose-lg max-w-none mb-16">
-          <div className="text-warm-charcoal/80 leading-relaxed whitespace-pre-line">{story.content}</div>
+        <div className="prose prose-lg mb-16 max-w-none">
+          <div className="text-warm-charcoal/80 leading-relaxed whitespace-pre-line">
+            {story.content}
+          </div>
         </div>
 
         {/* Author Card */}
@@ -149,18 +158,20 @@ Her message to the younger generation is clear: "Don't see handweaving as a reli
             <img
               src="/placeholder.svg?key=author-avatar"
               alt={story.author}
-              className="w-16 h-16 rounded-full object-cover"
+              className="h-16 w-16 rounded-full object-cover"
             />
             <div className="flex-1">
-              <h3 className="text-xl font-serif font-bold text-warm-charcoal">{story.author}</h3>
+              <h3 className="text-warm-charcoal font-serif text-xl font-bold">{story.author}</h3>
               <p className="text-warm-charcoal/60 mb-3">
                 {story.craft} Artisan from {story.location}
               </p>
               <p className="text-warm-charcoal/70 mb-4">
-                Master craftsperson with decades of experience in preserving traditional techniques while connecting
-                with global audiences.
+                Master craftsperson with decades of experience in preserving traditional techniques
+                while connecting with global audiences.
               </p>
-              <button className="text-primary font-semibold hover:text-warm-rust transition">View Full Profile</button>
+              <button className="text-primary hover:text-warm-rust font-semibold transition">
+                View Full Profile
+              </button>
             </div>
           </div>
         </div>
@@ -168,15 +179,19 @@ Her message to the younger generation is clear: "Don't see handweaving as a reli
         {/* Related Stories */}
         {story.relatedStories.length > 0 && (
           <div>
-            <h2 className="text-3xl font-serif font-bold text-warm-charcoal mb-8">Related Stories</h2>
-            <div className="grid md:grid-cols-2 gap-8">
+            <h2 className="text-warm-charcoal mb-8 font-serif text-3xl font-bold">
+              Related Stories
+            </h2>
+            <div className="grid gap-8 md:grid-cols-2">
               {story.relatedStories.map((related) => (
-                <div key={related.id} className="card-light hover:shadow-lg transition">
-                  <h3 className="text-lg font-serif font-bold text-warm-charcoal mb-2">{related.title}</h3>
-                  <p className="text-warm-charcoal/60 text-sm mb-4">By {related.author}</p>
-                  <button className="text-primary font-semibold flex items-center gap-2 hover:gap-3 transition">
+                <div key={related.id} className="card-light transition hover:shadow-lg">
+                  <h3 className="text-warm-charcoal mb-2 font-serif text-lg font-bold">
+                    {related.title}
+                  </h3>
+                  <p className="text-warm-charcoal/60 mb-4 text-sm">By {related.author}</p>
+                  <button className="text-primary flex items-center gap-2 font-semibold transition hover:gap-3">
                     Read Story
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="h-4 w-4" />
                   </button>
                 </div>
               ))}
@@ -187,5 +202,5 @@ Her message to the younger generation is clear: "Don't see handweaving as a reli
 
       <Footer />
     </main>
-  )
+  );
 }

@@ -1,6 +1,6 @@
 /**
  * Personalization Engine
- * 
+ *
  * Provides personalized experiences based on user behavior, preferences, and context
  * - Product recommendations
  * - Content personalization
@@ -10,7 +10,7 @@
 
 export interface UserProfile {
   userId: string;
-  
+
   // Demographics
   age?: number;
   gender?: string;
@@ -20,7 +20,7 @@ export interface UserProfile {
     country: string;
   };
   language: string;
-  
+
   // Preferences
   preferences: {
     craftTypes: string[];
@@ -29,7 +29,7 @@ export interface UserProfile {
     regions: string[];
     colors: string[];
   };
-  
+
   // Behavior
   behavior: {
     browsingHistory: {
@@ -50,7 +50,7 @@ export interface UserProfile {
     wishlist: string[];
     cartItems: string[];
   };
-  
+
   // Engagement
   engagement: {
     lastVisit: Date;
@@ -59,7 +59,7 @@ export interface UserProfile {
     pagesPerSession: number;
     conversionRate: number;
   };
-  
+
   // Personalization scores
   scores: {
     interests: Record<string, number>; // category -> score (0-100)
@@ -77,20 +77,20 @@ export interface PersonalizedExperience {
     artisans: any[];
     content: any[];
   };
-  
+
   uiAdaptations: {
     theme: 'light' | 'dark';
     layout: 'grid' | 'list';
     language: string;
     currency: string;
   };
-  
+
   messaging: {
     welcomeMessage: string;
     promotions: any[];
     notifications: any[];
   };
-  
+
   pricing: {
     showDiscounts: boolean;
     personalizedOffers: any[];
@@ -99,7 +99,7 @@ export interface PersonalizedExperience {
 
 export class PersonalizationEngine {
   private profiles: Map<string, UserProfile>;
-  
+
   constructor() {
     this.profiles = new Map();
   }
@@ -109,12 +109,12 @@ export class PersonalizationEngine {
    */
   async getUserProfile(userId: string): Promise<UserProfile> {
     let profile = this.profiles.get(userId);
-    
+
     if (!profile) {
       profile = this.createDefaultProfile(userId);
       this.profiles.set(userId, profile);
     }
-    
+
     return profile;
   }
 
@@ -123,22 +123,25 @@ export class PersonalizationEngine {
    */
   async updateProfile(userId: string, updates: Partial<UserProfile>): Promise<UserProfile> {
     const profile = await this.getUserProfile(userId);
-    
+
     Object.assign(profile, updates);
     this.recalculateScores(profile);
-    
+
     return profile;
   }
 
   /**
    * Track user behavior
    */
-  async trackBehavior(userId: string, event: {
-    type: 'view' | 'search' | 'purchase' | 'add_to_cart' | 'wishlist';
-    data: any;
-  }): Promise<void> {
+  async trackBehavior(
+    userId: string,
+    event: {
+      type: 'view' | 'search' | 'purchase' | 'add_to_cart' | 'wishlist';
+      data: any;
+    }
+  ): Promise<void> {
     const profile = await this.getUserProfile(userId);
-    
+
     switch (event.type) {
       case 'view':
         profile.behavior.browsingHistory.push({
@@ -147,7 +150,7 @@ export class PersonalizationEngine {
           duration: event.data.duration || 0,
         });
         break;
-      
+
       case 'search':
         profile.behavior.searchHistory.push({
           query: event.data.query,
@@ -155,7 +158,7 @@ export class PersonalizationEngine {
           resultsClicked: event.data.resultsClicked || 0,
         });
         break;
-      
+
       case 'purchase':
         profile.behavior.purchaseHistory.push({
           productId: event.data.productId,
@@ -163,20 +166,20 @@ export class PersonalizationEngine {
           timestamp: new Date(),
         });
         break;
-      
+
       case 'add_to_cart':
         if (!profile.behavior.cartItems.includes(event.data.productId)) {
           profile.behavior.cartItems.push(event.data.productId);
         }
         break;
-      
+
       case 'wishlist':
         if (!profile.behavior.wishlist.includes(event.data.productId)) {
           profile.behavior.wishlist.push(event.data.productId);
         }
         break;
     }
-    
+
     this.recalculateScores(profile);
   }
 
@@ -185,7 +188,7 @@ export class PersonalizationEngine {
    */
   async getPersonalizedExperience(userId: string): Promise<PersonalizedExperience> {
     const profile = await this.getUserProfile(userId);
-    
+
     return {
       recommendations: await this.generateRecommendations(profile),
       uiAdaptations: this.getUIAdaptations(profile),
@@ -200,16 +203,16 @@ export class PersonalizationEngine {
   private async generateRecommendations(profile: UserProfile) {
     // Product recommendations based on browsing and purchase history
     const productRecommendations = this.recommendProducts(profile);
-    
+
     // Workshop recommendations based on interests
     const workshopRecommendations = this.recommendWorkshops(profile);
-    
+
     // Artisan recommendations based on purchase history
     const artisanRecommendations = this.recommendArtisans(profile);
-    
+
     // Content recommendations
     const contentRecommendations = this.recommendContent(profile);
-    
+
     return {
       products: productRecommendations,
       workshops: workshopRecommendations,
@@ -223,22 +226,19 @@ export class PersonalizationEngine {
    */
   private recommendProducts(profile: UserProfile): any[] {
     const recommendations: any[] = [];
-    
+
     // Based on browsing history
-    const recentlyViewed = profile.behavior.browsingHistory
-      .slice(-10)
-      .map(h => h.productId);
-    
+    const recentlyViewed = profile.behavior.browsingHistory.slice(-10).map((h) => h.productId);
+
     // Based on purchase history
-    const previousPurchases = profile.behavior.purchaseHistory
-      .map(h => h.productId);
-    
+    const previousPurchases = profile.behavior.purchaseHistory.map((h) => h.productId);
+
     // Based on wishlist
     const wishlistItems = profile.behavior.wishlist;
-    
+
     // Based on preferred craft types
     const preferredCrafts = profile.preferences.craftTypes;
-    
+
     // Combine and score recommendations
     const scoredRecommendations = this.scoreRecommendations({
       recentlyViewed,
@@ -247,7 +247,7 @@ export class PersonalizationEngine {
       preferredCrafts,
       priceRange: profile.preferences.priceRange,
     });
-    
+
     return scoredRecommendations.slice(0, 20);
   }
 
@@ -256,21 +256,21 @@ export class PersonalizationEngine {
    */
   private recommendWorkshops(profile: UserProfile): any[] {
     const recommendations: any[] = [];
-    
+
     // Get top interests
     const topInterests = Object.entries(profile.scores.interests)
       .sort(([, a], [, b]) => b - a)
       .slice(0, 5)
       .map(([interest]) => interest);
-    
+
     // Match workshops to interests
-    const matchedWorkshops = topInterests.map(interest => ({
+    const matchedWorkshops = topInterests.map((interest) => ({
       workshopId: `workshop-${interest}`,
       craftType: interest,
       score: profile.scores.interests[interest],
       reason: `Based on your interest in ${interest}`,
     }));
-    
+
     return matchedWorkshops;
   }
 
@@ -279,18 +279,20 @@ export class PersonalizationEngine {
    */
   private recommendArtisans(profile: UserProfile): any[] {
     const recommendations: any[] = [];
-    
+
     // Get artisans from purchase history
-    const purchasedArtisans = profile.behavior.purchaseHistory
-      .map(h => ({ artisanId: `artisan-${h.productId}`, productId: h.productId }));
-    
+    const purchasedArtisans = profile.behavior.purchaseHistory.map((h) => ({
+      artisanId: `artisan-${h.productId}`,
+      productId: h.productId,
+    }));
+
     // Find similar artisans
-    const similarArtisans = purchasedArtisans.map(a => ({
+    const similarArtisans = purchasedArtisans.map((a) => ({
       artisanId: a.artisanId,
       reason: 'Based on your previous purchases',
       score: 85,
     }));
-    
+
     return similarArtisans.slice(0, 10);
   }
 
@@ -299,11 +301,11 @@ export class PersonalizationEngine {
    */
   private recommendContent(profile: UserProfile): any[] {
     const recommendations: any[] = [];
-    
+
     const topInterests = Object.entries(profile.scores.interests)
       .sort(([, a], [, b]) => b - a)
       .slice(0, 3);
-    
+
     topInterests.forEach(([interest, score]) => {
       recommendations.push({
         contentId: `content-${interest}`,
@@ -312,7 +314,7 @@ export class PersonalizationEngine {
         score,
       });
     });
-    
+
     return recommendations;
   }
 
@@ -322,7 +324,7 @@ export class PersonalizationEngine {
   private getUIAdaptations(profile: UserProfile) {
     return {
       theme: 'light' as const, // Could be based on user preference
-      layout: profile.behavior.browsingHistory.length > 50 ? 'list' as const : 'grid' as const,
+      layout: profile.behavior.browsingHistory.length > 50 ? ('list' as const) : ('grid' as const),
       language: profile.language,
       currency: profile.location?.country === 'India' ? 'INR' : 'USD',
     };
@@ -333,17 +335,19 @@ export class PersonalizationEngine {
    */
   private async getPersonalizedMessaging(profile: UserProfile) {
     const timeOfDay = new Date().getHours();
-    const greeting = timeOfDay < 12 ? 'Good morning' : timeOfDay < 18 ? 'Good afternoon' : 'Good evening';
-    
+    const greeting =
+      timeOfDay < 12 ? 'Good morning' : timeOfDay < 18 ? 'Good afternoon' : 'Good evening';
+
     const name = profile.userId; // In production, would use actual name
-    const topInterest = Object.entries(profile.scores.interests)
-      .sort(([, a], [, b]) => b - a)[0]?.[0] || 'handcrafted products';
-    
+    const topInterest =
+      Object.entries(profile.scores.interests).sort(([, a], [, b]) => b - a)[0]?.[0] ||
+      'handcrafted products';
+
     const welcomeMessage = `${greeting}, ${name}! Ready to explore more ${topInterest}?`;
-    
+
     const promotions = await this.getPersonalizedPromotions(profile);
     const notifications = await this.getPersonalizedNotifications(profile);
-    
+
     return {
       welcomeMessage,
       promotions,
@@ -356,7 +360,7 @@ export class PersonalizationEngine {
    */
   private async getPersonalizedPromotions(profile: UserProfile): Promise<any[]> {
     const promotions: any[] = [];
-    
+
     // Cart abandonment
     if (profile.behavior.cartItems.length > 0) {
       promotions.push({
@@ -365,7 +369,7 @@ export class PersonalizationEngine {
         discount: 10,
       });
     }
-    
+
     // Wishlist items
     if (profile.behavior.wishlist.length > 0) {
       promotions.push({
@@ -374,7 +378,7 @@ export class PersonalizationEngine {
         discount: 15,
       });
     }
-    
+
     // First-time buyer
     if (profile.behavior.purchaseHistory.length === 0) {
       promotions.push({
@@ -383,7 +387,7 @@ export class PersonalizationEngine {
         discount: 20,
       });
     }
-    
+
     return promotions;
   }
 
@@ -392,21 +396,21 @@ export class PersonalizationEngine {
    */
   private async getPersonalizedNotifications(profile: UserProfile): Promise<any[]> {
     const notifications: any[] = [];
-    
+
     // New products in preferred categories
     const topInterests = Object.entries(profile.scores.interests)
       .sort(([, a], [, b]) => b - a)
       .slice(0, 3)
       .map(([interest]) => interest);
-    
-    topInterests.forEach(interest => {
+
+    topInterests.forEach((interest) => {
       notifications.push({
         type: 'new_product',
         message: `New ${interest} products just arrived!`,
         category: interest,
       });
     });
-    
+
     return notifications;
   }
 
@@ -415,9 +419,9 @@ export class PersonalizationEngine {
    */
   private async getPersonalizedPricing(profile: UserProfile) {
     const showDiscounts = profile.scores.pricesSensitivity > 60;
-    
+
     const personalizedOffers: any[] = [];
-    
+
     if (profile.scores.brandAffinity > 80) {
       personalizedOffers.push({
         type: 'loyalty',
@@ -425,7 +429,7 @@ export class PersonalizationEngine {
         message: 'Thank you for being a valued customer!',
       });
     }
-    
+
     if (profile.behavior.purchaseHistory.length > 5) {
       personalizedOffers.push({
         type: 'frequent_buyer',
@@ -433,7 +437,7 @@ export class PersonalizationEngine {
         message: 'Frequent buyer discount',
       });
     }
-    
+
     return {
       showDiscounts,
       personalizedOffers,
@@ -484,43 +488,41 @@ export class PersonalizationEngine {
   private recalculateScores(profile: UserProfile): void {
     // Interest scores based on browsing and purchases
     const interests: Record<string, number> = {};
-    
-    profile.behavior.browsingHistory.forEach(item => {
+
+    profile.behavior.browsingHistory.forEach((item) => {
       const category = this.getCategoryFromProduct(item.productId);
       interests[category] = (interests[category] || 0) + 1;
     });
-    
-    profile.behavior.purchaseHistory.forEach(item => {
+
+    profile.behavior.purchaseHistory.forEach((item) => {
       const category = this.getCategoryFromProduct(item.productId);
       interests[category] = (interests[category] || 0) + 5; // Purchases weighted higher
     });
-    
+
     // Normalize scores to 0-100
     const maxScore = Math.max(...Object.values(interests), 1);
-    Object.keys(interests).forEach(key => {
+    Object.keys(interests).forEach((key) => {
       interests[key] = (interests[key] / maxScore) * 100;
     });
-    
+
     profile.scores.interests = interests;
-    
+
     // Brand affinity based on repeat purchases
-    profile.scores.brandAffinity = Math.min(
-      50 + (profile.behavior.purchaseHistory.length * 5),
-      100
-    );
-    
+    profile.scores.brandAffinity = Math.min(50 + profile.behavior.purchaseHistory.length * 5, 100);
+
     // Price sensitivity based on purchase patterns
     if (profile.behavior.purchaseHistory.length > 0) {
-      const avgPurchase = profile.behavior.purchaseHistory.reduce((sum, p) => sum + p.amount, 0) / profile.behavior.purchaseHistory.length;
+      const avgPurchase =
+        profile.behavior.purchaseHistory.reduce((sum, p) => sum + p.amount, 0) /
+        profile.behavior.purchaseHistory.length;
       profile.scores.pricesSensitivity = avgPurchase < 5000 ? 80 : avgPurchase < 10000 ? 50 : 20;
     }
-    
+
     // Quality focus based on premium purchases
-    const premiumPurchases = profile.behavior.purchaseHistory.filter(p => p.amount > 10000).length;
-    profile.scores.qualityFocus = Math.min(
-      30 + (premiumPurchases * 15),
-      100
-    );
+    const premiumPurchases = profile.behavior.purchaseHistory.filter(
+      (p) => p.amount > 10000
+    ).length;
+    profile.scores.qualityFocus = Math.min(30 + premiumPurchases * 15, 100);
   }
 
   /**
@@ -528,10 +530,10 @@ export class PersonalizationEngine {
    */
   private scoreRecommendations(context: any): any[] {
     const scored: any[] = [];
-    
+
     // Simple scoring algorithm
     // In production, this would use ML models
-    
+
     return scored.sort((a, b) => (b.score || 0) - (a.score || 0));
   }
 
@@ -549,14 +551,17 @@ export class PersonalizationEngine {
    */
   getStats() {
     const profiles = Array.from(this.profiles.values());
-    
+
     return {
       totalUsers: profiles.length,
-      activeUsers: profiles.filter(p => {
-        const daysSinceLastVisit = (Date.now() - p.engagement.lastVisit.getTime()) / (1000 * 60 * 60 * 24);
+      activeUsers: profiles.filter((p) => {
+        const daysSinceLastVisit =
+          (Date.now() - p.engagement.lastVisit.getTime()) / (1000 * 60 * 60 * 24);
         return daysSinceLastVisit <= 30;
       }).length,
-      avgEngagement: profiles.reduce((sum, p) => sum + p.engagement.conversionRate, 0) / Math.max(profiles.length, 1),
+      avgEngagement:
+        profiles.reduce((sum, p) => sum + p.engagement.conversionRate, 0) /
+        Math.max(profiles.length, 1),
       topInterests: this.getTopInterestsAcrossUsers(profiles),
     };
   }
@@ -566,13 +571,13 @@ export class PersonalizationEngine {
    */
   private getTopInterestsAcrossUsers(profiles: UserProfile[]): Record<string, number> {
     const interests: Record<string, number> = {};
-    
-    profiles.forEach(profile => {
+
+    profiles.forEach((profile) => {
       Object.entries(profile.scores.interests).forEach(([interest, score]) => {
         interests[interest] = (interests[interest] || 0) + score;
       });
     });
-    
+
     return interests;
   }
 }

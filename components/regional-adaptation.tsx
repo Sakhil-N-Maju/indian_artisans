@@ -2,7 +2,7 @@
 
 /**
  * Regional Adaptation Component
- * 
+ *
  * Provides UI for regional customization:
  * - Language selector
  * - Currency selector
@@ -47,13 +47,31 @@ export function useRegionalContext() {
 
 // Available regions
 const REGIONS = [
-  { code: 'IN', name: 'India', flag: '🇮🇳', currency: 'INR', languages: ['en', 'hi', 'bn', 'te', 'mr', 'ta'] },
+  {
+    code: 'IN',
+    name: 'India',
+    flag: '🇮🇳',
+    currency: 'INR',
+    languages: ['en', 'hi', 'bn', 'te', 'mr', 'ta'],
+  },
   { code: 'US', name: 'United States', flag: '🇺🇸', currency: 'USD', languages: ['en', 'es'] },
   { code: 'UK', name: 'United Kingdom', flag: '🇬🇧', currency: 'GBP', languages: ['en'] },
-  { code: 'EU', name: 'European Union', flag: '🇪🇺', currency: 'EUR', languages: ['en', 'de', 'fr', 'es', 'it'] },
+  {
+    code: 'EU',
+    name: 'European Union',
+    flag: '🇪🇺',
+    currency: 'EUR',
+    languages: ['en', 'de', 'fr', 'es', 'it'],
+  },
   { code: 'AU', name: 'Australia', flag: '🇦🇺', currency: 'AUD', languages: ['en'] },
   { code: 'CA', name: 'Canada', flag: '🇨🇦', currency: 'CAD', languages: ['en', 'fr'] },
-  { code: 'SG', name: 'Singapore', flag: '🇸🇬', currency: 'SGD', languages: ['en', 'zh', 'ms', 'ta'] },
+  {
+    code: 'SG',
+    name: 'Singapore',
+    flag: '🇸🇬',
+    currency: 'SGD',
+    languages: ['en', 'zh', 'ms', 'ta'],
+  },
   { code: 'AE', name: 'UAE', flag: '🇦🇪', currency: 'AED', languages: ['en', 'ar'] },
   { code: 'JP', name: 'Japan', flag: '🇯🇵', currency: 'JPY', languages: ['ja', 'en'] },
 ];
@@ -123,15 +141,7 @@ export function RegionalProvider({ children }: { children: React.ReactNode }) {
 
   // Load preferences from localStorage
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedRegion = localStorage.getItem('regional-preferences-region');
-      const savedCurrency = localStorage.getItem('regional-preferences-currency');
-      const savedLanguage = localStorage.getItem('regional-preferences-language');
-
-      if (savedRegion) setRegion(savedRegion);
-      if (savedCurrency) setCurrency(savedCurrency);
-      if (savedLanguage) setLanguage(savedLanguage);
-    }
+    // Effect only for subscribing to changes, initial load handled by useState
   }, []);
 
   // Save preferences to localStorage
@@ -158,7 +168,7 @@ export function RegionalProvider({ children }: { children: React.ReactNode }) {
 
   // Format currency
   const formatCurrency = (amount: number): string => {
-    const currencyData = CURRENCIES.find(c => c.code === currency);
+    const currencyData = CURRENCIES.find((c) => c.code === currency);
     if (!currencyData) return `${amount}`;
 
     return `${currencyData.symbol}${amount.toLocaleString(undefined, {
@@ -183,17 +193,13 @@ export function RegionalProvider({ children }: { children: React.ReactNode }) {
     translate,
   };
 
-  return (
-    <RegionalContext.Provider value={value}>
-      {children}
-    </RegionalContext.Provider>
-  );
+  return <RegionalContext.Provider value={value}>{children}</RegionalContext.Provider>;
 }
 
 // Region Selector Component
 export function RegionSelector({ className }: { className?: string }) {
   const { region, setRegion } = useRegionalContext();
-  
+
   return (
     <Select value={region} onValueChange={setRegion}>
       <SelectTrigger className={className}>
@@ -203,7 +209,7 @@ export function RegionSelector({ className }: { className?: string }) {
         </div>
       </SelectTrigger>
       <SelectContent>
-        {REGIONS.map(r => (
+        {REGIONS.map((r) => (
           <SelectItem key={r.code} value={r.code}>
             <div className="flex items-center gap-2">
               <span>{r.flag}</span>
@@ -219,7 +225,7 @@ export function RegionSelector({ className }: { className?: string }) {
 // Currency Selector Component
 export function CurrencySelector({ className }: { className?: string }) {
   const { currency, setCurrency } = useRegionalContext();
-  
+
   return (
     <Select value={currency} onValueChange={setCurrency}>
       <SelectTrigger className={className}>
@@ -229,7 +235,7 @@ export function CurrencySelector({ className }: { className?: string }) {
         </div>
       </SelectTrigger>
       <SelectContent>
-        {CURRENCIES.map(c => (
+        {CURRENCIES.map((c) => (
           <SelectItem key={c.code} value={c.code}>
             <div className="flex items-center gap-2">
               <span>{c.symbol}</span>
@@ -246,7 +252,7 @@ export function CurrencySelector({ className }: { className?: string }) {
 // Language Selector Component
 export function LanguageSelector({ className }: { className?: string }) {
   const { language, setLanguage } = useRegionalContext();
-  
+
   return (
     <Select value={language} onValueChange={setLanguage}>
       <SelectTrigger className={className}>
@@ -256,7 +262,7 @@ export function LanguageSelector({ className }: { className?: string }) {
         </div>
       </SelectTrigger>
       <SelectContent>
-        {LANGUAGES.map(l => (
+        {LANGUAGES.map((l) => (
           <SelectItem key={l.code} value={l.code}>
             <div className="flex items-center gap-2">
               <span>{l.nativeName}</span>
@@ -272,10 +278,10 @@ export function LanguageSelector({ className }: { className?: string }) {
 // Regional Preferences Panel
 export function RegionalPreferencesPanel() {
   const { region, currency, language, translate } = useRegionalContext();
-  
-  const currentRegion = REGIONS.find(r => r.code === region);
-  const currentCurrency = CURRENCIES.find(c => c.code === currency);
-  const currentLanguage = LANGUAGES.find(l => l.code === language);
+
+  const currentRegion = REGIONS.find((r) => r.code === region);
+  const currentCurrency = CURRENCIES.find((c) => c.code === currency);
+  const currentLanguage = LANGUAGES.find((l) => l.code === language);
 
   const handleReset = () => {
     if (typeof window !== 'undefined') {
@@ -299,7 +305,7 @@ export function RegionalPreferencesPanel() {
         {/* Current Settings */}
         <div className="grid gap-4 md:grid-cols-3">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">
+            <label className="text-muted-foreground text-sm font-medium">
               {translate('region.current')}
             </label>
             <div className="flex items-center gap-2 text-sm">
@@ -309,7 +315,7 @@ export function RegionalPreferencesPanel() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">
+            <label className="text-muted-foreground text-sm font-medium">
               {translate('currency.current')}
             </label>
             <div className="flex items-center gap-2 text-sm">
@@ -319,7 +325,7 @@ export function RegionalPreferencesPanel() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">
+            <label className="text-muted-foreground text-sm font-medium">
               {translate('language.current')}
             </label>
             <div className="flex items-center gap-2 text-sm">
@@ -332,23 +338,17 @@ export function RegionalPreferencesPanel() {
         {/* Selectors */}
         <div className="grid gap-4 md:grid-cols-3">
           <div className="space-y-2">
-            <label className="text-sm font-medium">
-              {translate('region.select')}
-            </label>
+            <label className="text-sm font-medium">{translate('region.select')}</label>
             <RegionSelector />
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium">
-              {translate('currency.select')}
-            </label>
+            <label className="text-sm font-medium">{translate('currency.select')}</label>
             <CurrencySelector />
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium">
-              {translate('language.select')}
-            </label>
+            <label className="text-sm font-medium">{translate('language.select')}</label>
             <LanguageSelector />
           </div>
         </div>
@@ -367,23 +367,23 @@ export function RegionalPreferencesPanel() {
 // Compact Regional Toolbar (for header/navbar)
 export function RegionalToolbar({ className }: { className?: string }) {
   const { region, currency, language } = useRegionalContext();
-  
-  const currentRegion = REGIONS.find(r => r.code === region);
-  const currentCurrency = CURRENCIES.find(c => c.code === currency);
+
+  const currentRegion = REGIONS.find((r) => r.code === region);
+  const currentCurrency = CURRENCIES.find((c) => c.code === currency);
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-muted text-xs">
+      <div className="bg-muted flex items-center gap-1 rounded-md px-2 py-1 text-xs">
         <span>{currentRegion?.flag}</span>
         <span className="hidden sm:inline">{currentRegion?.code}</span>
       </div>
-      
-      <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-muted text-xs">
+
+      <div className="bg-muted flex items-center gap-1 rounded-md px-2 py-1 text-xs">
         <span>{currentCurrency?.symbol}</span>
         <span className="hidden sm:inline">{currentCurrency?.code}</span>
       </div>
-      
-      <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-muted text-xs">
+
+      <div className="bg-muted flex items-center gap-1 rounded-md px-2 py-1 text-xs">
         <Globe className="h-3 w-3" />
         <span className="hidden sm:inline">{language.toUpperCase()}</span>
       </div>
@@ -400,7 +400,7 @@ export function useFormattedPrice() {
 // Hook to get current region data
 export function useCurrentRegion() {
   const { region } = useRegionalContext();
-  return REGIONS.find(r => r.code === region);
+  return REGIONS.find((r) => r.code === region);
 }
 
 // Export all region data for use in other components

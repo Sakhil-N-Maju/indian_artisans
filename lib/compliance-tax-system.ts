@@ -1,6 +1,6 @@
 /**
  * Compliance & Tax System
- * 
+ *
  * Handles international compliance and taxation:
  * - Tax calculation by region
  * - VAT/GST handling
@@ -13,7 +13,7 @@
 export interface TaxRegion {
   code: string;
   name: string;
-  
+
   // Tax Rates
   taxes: {
     vat?: number; // Value Added Tax
@@ -22,7 +22,7 @@ export interface TaxRegion {
     importDuty?: number;
     luxuryTax?: number;
   };
-  
+
   // Tax Rules
   rules: {
     taxIncludedInPrice: boolean;
@@ -30,7 +30,7 @@ export interface TaxRegion {
     reverseCharge?: boolean; // For B2B transactions
     digitalServicesTax?: number;
   };
-  
+
   // Compliance
   compliance: {
     taxIdRequired: boolean;
@@ -43,7 +43,7 @@ export interface TaxRegion {
 export interface TaxCalculation {
   subtotal: number;
   currency: string;
-  
+
   // Breakdown
   breakdown: {
     vat: number;
@@ -53,10 +53,10 @@ export interface TaxCalculation {
     luxuryTax: number;
     otherTaxes: number;
   };
-  
+
   totalTax: number;
   total: number;
-  
+
   // Details
   region: string;
   appliedRates: {
@@ -66,13 +66,18 @@ export interface TaxCalculation {
 
 export interface ComplianceDocument {
   id: string;
-  type: 'invoice' | 'customs_declaration' | 'certificate_of_origin' | 'export_declaration' | 'tax_certificate';
-  
+  type:
+    | 'invoice'
+    | 'customs_declaration'
+    | 'certificate_of_origin'
+    | 'export_declaration'
+    | 'tax_certificate';
+
   // Metadata
   documentNumber: string;
   issueDate: Date;
   validUntil?: Date;
-  
+
   // Parties
   issuer: {
     name: string;
@@ -80,14 +85,14 @@ export interface ComplianceDocument {
     taxId?: string;
     country: string;
   };
-  
+
   recipient: {
     name: string;
     address: string;
     taxId?: string;
     country: string;
   };
-  
+
   // Content
   items: {
     description: string;
@@ -98,7 +103,7 @@ export interface ComplianceDocument {
     taxRate?: number;
     tax?: number;
   }[];
-  
+
   // Totals
   totals: {
     subtotal: number;
@@ -106,7 +111,7 @@ export interface ComplianceDocument {
     total: number;
     currency: string;
   };
-  
+
   // Additional Info
   notes?: string;
   signature?: {
@@ -114,10 +119,10 @@ export interface ComplianceDocument {
     date: Date;
     position: string;
   };
-  
+
   // Status
   status: 'draft' | 'issued' | 'verified' | 'rejected';
-  
+
   // File
   fileUrl?: string;
   pdfGenerated: boolean;
@@ -126,21 +131,21 @@ export interface ComplianceDocument {
 export interface ExportCompliance {
   productId: string;
   productName: string;
-  
+
   // Classification
   classification: {
     hsCode: string;
     eccn?: string; // Export Control Classification Number
     schedule?: string;
   };
-  
+
   // Restrictions
   restrictions: {
     embargoed: string[]; // Countries under embargo
     licensed: string[]; // Countries requiring export license
     prohibited: string[]; // Countries where export is prohibited
   };
-  
+
   // Requirements
   requirements: {
     exportLicense: boolean;
@@ -148,7 +153,7 @@ export interface ExportCompliance {
     phytosanitaryCertificate: boolean;
     culturalHeritageCertificate: boolean;
   };
-  
+
   // Status
   approved: boolean;
   approvedFor: string[]; // Approved destination countries
@@ -161,7 +166,7 @@ export interface TaxReport {
     start: Date;
     end: Date;
   };
-  
+
   // Summary
   summary: {
     totalSales: number;
@@ -171,17 +176,20 @@ export interface TaxReport {
     taxPending: number;
     currency: string;
   };
-  
+
   // By Region
-  byRegion: Record<string, {
-    sales: number;
-    taxCollected: number;
-    transactionCount: number;
-  }>;
-  
+  byRegion: Record<
+    string,
+    {
+      sales: number;
+      taxCollected: number;
+      transactionCount: number;
+    }
+  >;
+
   // By Tax Type
   byTaxType: Record<string, number>;
-  
+
   status: 'draft' | 'filed' | 'paid';
   filedDate?: Date;
   paidDate?: Date;
@@ -244,7 +252,7 @@ export class ComplianceTaxSystem {
         code: 'UK',
         name: 'United Kingdom',
         taxes: {
-          vat: 0.20, // 20% VAT
+          vat: 0.2, // 20% VAT
         },
         rules: {
           taxIncludedInPrice: true,
@@ -276,7 +284,7 @@ export class ComplianceTaxSystem {
         code: 'AU',
         name: 'Australia',
         taxes: {
-          gst: 0.10, // 10% GST
+          gst: 0.1, // 10% GST
         },
         rules: {
           taxIncludedInPrice: true,
@@ -336,7 +344,7 @@ export class ComplianceTaxSystem {
       },
     ];
 
-    regions.forEach(region => {
+    regions.forEach((region) => {
       this.taxRegions.set(region.code, region);
     });
   }
@@ -518,7 +526,7 @@ export class ComplianceTaxSystem {
         address: params.importerAddress,
         country: params.importerCountry,
       },
-      items: params.items.map(item => ({
+      items: params.items.map((item) => ({
         description: item.description,
         hsCode: item.hsCode,
         quantity: item.quantity,
@@ -543,14 +551,17 @@ export class ComplianceTaxSystem {
   /**
    * Check export compliance
    */
-  async checkExportCompliance(productId: string, destinationCountry: string): Promise<{
+  async checkExportCompliance(
+    productId: string,
+    destinationCountry: string
+  ): Promise<{
     allowed: boolean;
     requiresLicense: boolean;
     requirements: string[];
     restrictions: string[];
   }> {
     const compliance = this.exportCompliance.get(productId);
-    
+
     if (!compliance) {
       return {
         allowed: true,
@@ -632,7 +643,7 @@ export class ComplianceTaxSystem {
     const byRegion: Record<string, any> = {};
     const byTaxType: Record<string, number> = {};
 
-    params.transactions.forEach(txn => {
+    params.transactions.forEach((txn) => {
       summary.totalSales += txn.amount;
       summary.taxableAmount += txn.amount;
       summary.taxCollected += txn.tax;
@@ -698,11 +709,11 @@ export class ComplianceTaxSystem {
     let documents = Array.from(this.documents.values());
 
     if (filters?.type) {
-      documents = documents.filter(d => d.type === filters.type);
+      documents = documents.filter((d) => d.type === filters.type);
     }
 
     if (filters?.status) {
-      documents = documents.filter(d => d.status === filters.status);
+      documents = documents.filter((d) => d.status === filters.status);
     }
 
     return documents;
@@ -715,15 +726,21 @@ export class ComplianceTaxSystem {
     const documents = Array.from(this.documents.values());
     const reports = Array.from(this.taxReports.values());
 
-    const documentsByType = documents.reduce((acc, doc) => {
-      acc[doc.type] = (acc[doc.type] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const documentsByType = documents.reduce(
+      (acc, doc) => {
+        acc[doc.type] = (acc[doc.type] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const documentsByStatus = documents.reduce((acc, doc) => {
-      acc[doc.status] = (acc[doc.status] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const documentsByStatus = documents.reduce(
+      (acc, doc) => {
+        acc[doc.status] = (acc[doc.status] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     const totalTaxCollected = reports.reduce((sum, report) => {
       return sum + report.summary.taxCollected;

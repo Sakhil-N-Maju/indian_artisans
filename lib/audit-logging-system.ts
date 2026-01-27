@@ -1,6 +1,6 @@
 /**
  * Audit & Logging System
- * 
+ *
  * Comprehensive audit trail and logging system:
  * - User activity logging
  * - Data change tracking
@@ -15,7 +15,7 @@
 export interface AuditLog {
   id: string;
   timestamp: Date;
-  
+
   // Actor information
   actor: {
     id: string;
@@ -25,16 +25,35 @@ export interface AuditLog {
     ipAddress: string;
     userAgent?: string;
   };
-  
+
   // Action details
   action: {
-    type: 'create' | 'read' | 'update' | 'delete' | 'login' | 'logout' | 'export' | 'import' | 'approve' | 'reject' | 'restore' | 'archive';
-    category: 'authentication' | 'authorization' | 'data_modification' | 'configuration' | 'security' | 'compliance' | 'system';
+    type:
+      | 'create'
+      | 'read'
+      | 'update'
+      | 'delete'
+      | 'login'
+      | 'logout'
+      | 'export'
+      | 'import'
+      | 'approve'
+      | 'reject'
+      | 'restore'
+      | 'archive';
+    category:
+      | 'authentication'
+      | 'authorization'
+      | 'data_modification'
+      | 'configuration'
+      | 'security'
+      | 'compliance'
+      | 'system';
     resource: string; // e.g., 'user', 'product', 'order'
     resourceId?: string;
     description: string;
   };
-  
+
   // Changes tracking
   changes?: {
     field: string;
@@ -42,7 +61,7 @@ export interface AuditLog {
     newValue: any;
     valueType: string;
   }[];
-  
+
   // Request details
   request?: {
     method: string;
@@ -51,14 +70,14 @@ export interface AuditLog {
     query?: Record<string, any>;
     body?: any;
   };
-  
+
   // Response details
   response?: {
     statusCode: number;
     duration: number; // ms
     error?: string;
   };
-  
+
   // Context
   context: {
     sessionId?: string;
@@ -70,11 +89,11 @@ export interface AuditLog {
       coordinates?: { lat: number; lng: number };
     };
   };
-  
+
   // Metadata
   metadata?: Record<string, any>;
   tags: string[];
-  
+
   // Retention
   retentionPeriod: number; // days
   expiresAt?: Date;
@@ -86,16 +105,16 @@ export interface SecurityAuditLog extends AuditLog {
   security: {
     severity: 'low' | 'medium' | 'high' | 'critical';
     threatLevel: number; // 0-100
-    
+
     // Indicators
     suspicious: boolean;
     anomalyScore?: number;
     riskFactors: string[];
-    
+
     // Detection
     detectionMethod?: 'rule_based' | 'ml_based' | 'pattern_matching' | 'threshold';
     detectionRule?: string;
-    
+
     // Response
     actionTaken?: 'allowed' | 'blocked' | 'flagged' | 'rate_limited';
     requiresReview: boolean;
@@ -105,26 +124,33 @@ export interface SecurityAuditLog extends AuditLog {
 export interface ComplianceLog {
   id: string;
   timestamp: Date;
-  
+
   // Compliance framework
   framework: 'GDPR' | 'PCI_DSS' | 'SOC2' | 'HIPAA' | 'ISO27001' | 'custom';
   requirement: string;
-  
+
   // Event details
-  eventType: 'data_access' | 'data_export' | 'data_deletion' | 'consent_given' | 'consent_withdrawn' | 'breach_detected' | 'policy_violation';
+  eventType:
+    | 'data_access'
+    | 'data_export'
+    | 'data_deletion'
+    | 'consent_given'
+    | 'consent_withdrawn'
+    | 'breach_detected'
+    | 'policy_violation';
   description: string;
-  
+
   // Subject
   subject: {
     type: 'customer' | 'employee' | 'vendor' | 'system';
     id: string;
     name?: string;
   };
-  
+
   // Data details
   dataCategory: 'personal' | 'financial' | 'health' | 'behavioral' | 'biometric' | 'other';
   dataSensitivity: 'public' | 'internal' | 'confidential' | 'restricted';
-  
+
   // Action
   action: string;
   performedBy: {
@@ -132,15 +158,15 @@ export interface ComplianceLog {
     name: string;
     role: string;
   };
-  
+
   // Justification
   legalBasis?: string;
   consentId?: string;
   purposeOfProcessing?: string;
-  
+
   // Status
   status: 'compliant' | 'non_compliant' | 'needs_review';
-  
+
   // Metadata
   metadata?: Record<string, any>;
 }
@@ -148,20 +174,20 @@ export interface ComplianceLog {
 export interface AccessLog {
   id: string;
   timestamp: Date;
-  
+
   // User
   userId: string;
   username: string;
   userType: 'customer' | 'artisan' | 'admin' | 'system';
-  
+
   // Access details
   accessType: 'login' | 'logout' | 'api_call' | 'page_view' | 'resource_access' | 'failed_login';
   resource?: string;
-  
+
   // Authentication
   authMethod: 'password' | 'oauth' | 'api_key' | 'token' | 'sso' | 'biometric';
   mfaUsed: boolean;
-  
+
   // Request
   ipAddress: string;
   userAgent: string;
@@ -170,15 +196,15 @@ export interface AccessLog {
     city: string;
     region?: string;
   };
-  
+
   // Session
   sessionId?: string;
   sessionDuration?: number; // seconds
-  
+
   // Status
   success: boolean;
   failureReason?: string;
-  
+
   // Security flags
   suspicious: boolean;
   riskScore?: number;
@@ -188,18 +214,18 @@ export interface AccessLog {
 export interface DataChangeLog {
   id: string;
   timestamp: Date;
-  
+
   // Entity details
   entityType: string;
   entityId: string;
-  
+
   // Change details
   operation: 'create' | 'update' | 'delete' | 'restore';
-  
+
   // Before/After state
   before?: Record<string, any>;
   after?: Record<string, any>;
-  
+
   // Field-level changes
   changes: {
     field: string;
@@ -208,7 +234,7 @@ export interface DataChangeLog {
     newValue: any;
     changeType: 'added' | 'modified' | 'removed';
   }[];
-  
+
   // Change context
   changeBy: {
     id: string;
@@ -216,7 +242,7 @@ export interface DataChangeLog {
     type: 'user' | 'admin' | 'system';
   };
   reason?: string;
-  
+
   // Approval
   requiresApproval: boolean;
   approvedBy?: {
@@ -224,13 +250,13 @@ export interface DataChangeLog {
     name: string;
     approvedAt: Date;
   };
-  
+
   // Rollback
   rollbackable: boolean;
   rolledBack: boolean;
   rolledBackAt?: Date;
   rolledBackBy?: string;
-  
+
   // Version
   version: number;
   previousVersionId?: string;
@@ -239,11 +265,11 @@ export interface DataChangeLog {
 export interface TransactionLog {
   id: string;
   timestamp: Date;
-  
+
   // Transaction details
   transactionId: string;
   transactionType: 'order' | 'payment' | 'refund' | 'payout' | 'adjustment' | 'credit' | 'debit';
-  
+
   // Parties
   parties: {
     customer?: {
@@ -259,24 +285,24 @@ export interface TransactionLog {
       name: string;
     };
   };
-  
+
   // Financial details
   amount: number;
   currency: string;
-  
+
   // Payment details
   paymentMethod?: string;
   paymentGateway?: string;
   gatewayTransactionId?: string;
-  
+
   // Status
   status: 'initiated' | 'processing' | 'completed' | 'failed' | 'cancelled' | 'refunded';
-  
+
   // Related entities
   orderId?: string;
   invoiceId?: string;
   refundId?: string;
-  
+
   // Metadata
   metadata?: Record<string, any>;
 }
@@ -284,10 +310,10 @@ export interface TransactionLog {
 export interface SystemLog {
   id: string;
   timestamp: Date;
-  
+
   // Log level
   level: 'debug' | 'info' | 'warn' | 'error' | 'critical';
-  
+
   // Source
   source: {
     service: string;
@@ -296,10 +322,10 @@ export interface SystemLog {
     file?: string;
     line?: number;
   };
-  
+
   // Message
   message: string;
-  
+
   // Error details
   error?: {
     name: string;
@@ -307,21 +333,21 @@ export interface SystemLog {
     stack?: string;
     code?: string;
   };
-  
+
   // Context
   context?: Record<string, any>;
-  
+
   // Performance
   performance?: {
     duration?: number;
     memoryUsage?: number;
     cpuUsage?: number;
   };
-  
+
   // Correlation
   correlationId?: string;
   requestId?: string;
-  
+
   // Environment
   environment: 'development' | 'staging' | 'production';
   hostname?: string;
@@ -332,13 +358,13 @@ export interface AuditReport {
   id: string;
   name: string;
   type: 'security' | 'compliance' | 'activity' | 'data_access' | 'system' | 'custom';
-  
+
   // Period
   period: {
     start: Date;
     end: Date;
   };
-  
+
   // Filters
   filters: {
     actors?: string[];
@@ -346,7 +372,7 @@ export interface AuditReport {
     resources?: string[];
     severity?: string[];
   };
-  
+
   // Summary
   summary: {
     totalLogs: number;
@@ -355,7 +381,7 @@ export interface AuditReport {
     complianceIssues: number;
     securityIncidents: number;
   };
-  
+
   // Findings
   findings: {
     id: string;
@@ -367,17 +393,17 @@ export interface AuditReport {
     affectedResources: string[];
     recommendation?: string;
   }[];
-  
+
   // Data
   logs: AuditLog[];
-  
+
   // Generation
   generatedAt: Date;
   generatedBy: {
     id: string;
     name: string;
   };
-  
+
   // Export
   format?: 'pdf' | 'csv' | 'json' | 'excel';
   exportUrl?: string;
@@ -387,21 +413,21 @@ export interface LogRetentionPolicy {
   id: string;
   name: string;
   description: string;
-  
+
   // Scope
   logType: 'audit' | 'security' | 'compliance' | 'access' | 'transaction' | 'system' | 'all';
-  
+
   // Retention
   retentionPeriod: number; // days
   archiveAfter?: number; // days
-  
+
   // Conditions
   conditions?: {
     severity?: string[];
     category?: string[];
     tags?: string[];
   };
-  
+
   // Actions
   actions: {
     archive: boolean;
@@ -409,14 +435,14 @@ export interface LogRetentionPolicy {
     encrypt: boolean;
     delete: boolean;
   };
-  
+
   // Status
   enabled: boolean;
-  
+
   // Execution
   lastRun?: Date;
   nextRun?: Date;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -432,11 +458,11 @@ export interface LogSearch {
     actions?: string[];
     tags?: string[];
   };
-  
+
   // Pagination
   limit?: number;
   offset?: number;
-  
+
   // Sorting
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
@@ -447,7 +473,7 @@ export interface LogAnalytics {
     start: Date;
     end: Date;
   };
-  
+
   // Volume metrics
   volume: {
     total: number;
@@ -455,7 +481,7 @@ export interface LogAnalytics {
     byCategory: Record<string, number>;
     bySeverity: Record<string, number>;
   };
-  
+
   // Activity metrics
   activity: {
     uniqueActors: number;
@@ -473,14 +499,14 @@ export interface LogAnalytics {
       count: number;
     }[];
   };
-  
+
   // Temporal patterns
   temporal: {
     byHour: { hour: number; count: number }[];
     byDay: { day: string; count: number }[];
     byWeek: { week: number; count: number }[];
   };
-  
+
   // Security insights
   security: {
     suspiciousActivities: number;
@@ -488,7 +514,7 @@ export interface LogAnalytics {
     anomalies: number;
     blockedActions: number;
   };
-  
+
   // Compliance insights
   compliance: {
     totalComplianceLogs: number;
@@ -519,7 +545,7 @@ export class AuditLoggingSystem {
     this.systemLogs = new Map();
     this.retentionPolicies = new Map();
     this.reports = new Map();
-    
+
     // Initialize default retention policies
     this.initializeDefaults();
   }
@@ -902,49 +928,41 @@ export class AuditLoggingSystem {
     if (search.filters) {
       if (search.filters.timeRange) {
         logs = logs.filter(
-          l => l.timestamp >= search.filters!.timeRange!.start &&
-               l.timestamp <= search.filters!.timeRange!.end
+          (l) =>
+            l.timestamp >= search.filters!.timeRange!.start &&
+            l.timestamp <= search.filters!.timeRange!.end
         );
       }
 
       if (search.filters.severity) {
-        logs = logs.filter(l => 
-          search.filters!.severity!.includes(l.action.category)
-        );
+        logs = logs.filter((l) => search.filters!.severity!.includes(l.action.category));
       }
 
       if (search.filters.actors) {
-        logs = logs.filter(l =>
-          search.filters!.actors!.includes(l.actor.id)
-        );
+        logs = logs.filter((l) => search.filters!.actors!.includes(l.actor.id));
       }
 
       if (search.filters.resources) {
-        logs = logs.filter(l =>
-          search.filters!.resources!.includes(l.action.resource)
-        );
+        logs = logs.filter((l) => search.filters!.resources!.includes(l.action.resource));
       }
 
       if (search.filters.actions) {
-        logs = logs.filter(l =>
-          search.filters!.actions!.includes(l.action.type)
-        );
+        logs = logs.filter((l) => search.filters!.actions!.includes(l.action.type));
       }
 
       if (search.filters.tags && search.filters.tags.length > 0) {
-        logs = logs.filter(l =>
-          search.filters!.tags!.some(tag => l.tags.includes(tag))
-        );
+        logs = logs.filter((l) => search.filters!.tags!.some((tag) => l.tags.includes(tag)));
       }
     }
 
     // Text search
     if (search.query) {
       const query = search.query.toLowerCase();
-      logs = logs.filter(l =>
-        l.action.description.toLowerCase().includes(query) ||
-        l.actor.name.toLowerCase().includes(query) ||
-        l.action.resource.toLowerCase().includes(query)
+      logs = logs.filter(
+        (l) =>
+          l.action.description.toLowerCase().includes(query) ||
+          l.actor.name.toLowerCase().includes(query) ||
+          l.action.resource.toLowerCase().includes(query)
       );
     }
 
@@ -956,7 +974,7 @@ export class AuditLoggingSystem {
     logs.sort((a, b) => {
       const aVal = (a as any)[sortBy];
       const bVal = (b as any)[sortBy];
-      
+
       if (sortOrder === 'asc') {
         return aVal > bVal ? 1 : -1;
       } else {
@@ -984,28 +1002,29 @@ export class AuditLoggingSystem {
   }): Promise<AuditReport> {
     // Filter logs based on period and filters
     let logs = Array.from(this.auditLogs.values()).filter(
-      l => l.timestamp >= params.period.start && l.timestamp <= params.period.end
+      (l) => l.timestamp >= params.period.start && l.timestamp <= params.period.end
     );
 
     if (params.filters) {
       if (params.filters.actors) {
-        logs = logs.filter(l => params.filters!.actors!.includes(l.actor.id));
+        logs = logs.filter((l) => params.filters!.actors!.includes(l.actor.id));
       }
       if (params.filters.actions) {
-        logs = logs.filter(l => params.filters!.actions!.includes(l.action.type));
+        logs = logs.filter((l) => params.filters!.actions!.includes(l.action.type));
       }
       if (params.filters.resources) {
-        logs = logs.filter(l => params.filters!.resources!.includes(l.action.resource));
+        logs = logs.filter((l) => params.filters!.resources!.includes(l.action.resource));
       }
     }
 
     // Calculate summary
-    const uniqueActors = new Set(logs.map(l => l.actor.id)).size;
-    const criticalEvents = logs.filter(l => l.action.category === 'security').length;
+    const uniqueActors = new Set(logs.map((l) => l.actor.id)).size;
+    const criticalEvents = logs.filter((l) => l.action.category === 'security').length;
     const complianceIssues = Array.from(this.complianceLogs.values()).filter(
-      l => l.status === 'non_compliant' &&
-           l.timestamp >= params.period.start &&
-           l.timestamp <= params.period.end
+      (l) =>
+        l.status === 'non_compliant' &&
+        l.timestamp >= params.period.start &&
+        l.timestamp <= params.period.end
     ).length;
 
     // Generate findings
@@ -1013,8 +1032,11 @@ export class AuditLoggingSystem {
 
     // Check for failed login attempts
     const failedLogins = Array.from(this.accessLogs.values()).filter(
-      l => !l.success && l.accessType === 'failed_login' &&
-           l.timestamp >= params.period.start && l.timestamp <= params.period.end
+      (l) =>
+        !l.success &&
+        l.accessType === 'failed_login' &&
+        l.timestamp >= params.period.start &&
+        l.timestamp <= params.period.end
     );
     if (failedLogins.length > 10) {
       findings.push({
@@ -1025,7 +1047,8 @@ export class AuditLoggingSystem {
         description: `Detected ${failedLogins.length} failed login attempts during the reporting period`,
         count: failedLogins.length,
         affectedResources: ['Authentication System'],
-        recommendation: 'Review and consider implementing additional security measures such as account lockout policies',
+        recommendation:
+          'Review and consider implementing additional security measures such as account lockout policies',
       });
     }
 
@@ -1057,7 +1080,7 @@ export class AuditLoggingSystem {
    */
   async getAnalytics(period: { start: Date; end: Date }): Promise<LogAnalytics> {
     const logs = Array.from(this.auditLogs.values()).filter(
-      l => l.timestamp >= period.start && l.timestamp <= period.end
+      (l) => l.timestamp >= period.start && l.timestamp <= period.end
     );
 
     // Volume metrics
@@ -1065,16 +1088,16 @@ export class AuditLoggingSystem {
     const byCategory: Record<string, number> = {};
     const bySeverity: Record<string, number> = {};
 
-    logs.forEach(log => {
+    logs.forEach((log) => {
       byType[log.action.type] = (byType[log.action.type] || 0) + 1;
       byCategory[log.action.category] = (byCategory[log.action.category] || 0) + 1;
     });
 
     // Activity metrics
-    const uniqueActors = new Set(logs.map(l => l.actor.id)).size;
-    
+    const uniqueActors = new Set(logs.map((l) => l.actor.id)).size;
+
     const actorCounts = new Map<string, { id: string; name: string; count: number }>();
-    logs.forEach(log => {
+    logs.forEach((log) => {
       const existing = actorCounts.get(log.actor.id);
       if (existing) {
         existing.count++;
@@ -1090,26 +1113,26 @@ export class AuditLoggingSystem {
     const topActors = Array.from(actorCounts.values())
       .sort((a, b) => b.count - a.count)
       .slice(0, 10)
-      .map(a => ({ id: a.id, name: a.name, actionCount: a.count }));
+      .map((a) => ({ id: a.id, name: a.name, actionCount: a.count }));
 
     // Temporal patterns
     const byHour: { hour: number; count: number }[] = Array.from({ length: 24 }, (_, i) => ({
       hour: i,
       count: 0,
     }));
-    
-    logs.forEach(log => {
+
+    logs.forEach((log) => {
       const hour = log.timestamp.getHours();
       byHour[hour].count++;
     });
 
     // Security insights
     const securityLogs = Array.from(this.securityLogs.values()).filter(
-      l => l.timestamp >= period.start && l.timestamp <= period.end
+      (l) => l.timestamp >= period.start && l.timestamp <= period.end
     );
 
     const accessLogs = Array.from(this.accessLogs.values()).filter(
-      l => l.timestamp >= period.start && l.timestamp <= period.end
+      (l) => l.timestamp >= period.start && l.timestamp <= period.end
     );
 
     return {
@@ -1135,15 +1158,22 @@ export class AuditLoggingSystem {
         byWeek: [],
       },
       security: {
-        suspiciousActivities: securityLogs.filter(l => l.security.suspicious).length,
-        failedLogins: accessLogs.filter(l => !l.success && l.accessType === 'failed_login').length,
-        anomalies: securityLogs.filter(l => l.security.anomalyScore && l.security.anomalyScore > 0.7).length,
-        blockedActions: securityLogs.filter(l => l.security.actionTaken === 'blocked').length,
+        suspiciousActivities: securityLogs.filter((l) => l.security.suspicious).length,
+        failedLogins: accessLogs.filter((l) => !l.success && l.accessType === 'failed_login')
+          .length,
+        anomalies: securityLogs.filter(
+          (l) => l.security.anomalyScore && l.security.anomalyScore > 0.7
+        ).length,
+        blockedActions: securityLogs.filter((l) => l.security.actionTaken === 'blocked').length,
       },
       compliance: {
         totalComplianceLogs: this.complianceLogs.size,
-        violations: Array.from(this.complianceLogs.values()).filter(l => l.status === 'non_compliant').length,
-        needsReview: Array.from(this.complianceLogs.values()).filter(l => l.status === 'needs_review').length,
+        violations: Array.from(this.complianceLogs.values()).filter(
+          (l) => l.status === 'non_compliant'
+        ).length,
+        needsReview: Array.from(this.complianceLogs.values()).filter(
+          (l) => l.status === 'needs_review'
+        ).length,
         byFramework: {},
       },
     };
@@ -1154,7 +1184,7 @@ export class AuditLoggingSystem {
    */
   private findRetentionPolicy(logType: string, log: any): LogRetentionPolicy | null {
     const policies = Array.from(this.retentionPolicies.values()).filter(
-      p => p.enabled && (p.logType === logType || p.logType === 'all')
+      (p) => p.enabled && (p.logType === logType || p.logType === 'all')
     );
 
     // Find most specific matching policy
@@ -1162,15 +1192,15 @@ export class AuditLoggingSystem {
       if (policy.conditions) {
         // Check if log matches conditions
         let matches = true;
-        
+
         if (policy.conditions.severity && log.severity) {
           matches = matches && policy.conditions.severity.includes(log.severity);
         }
-        
+
         if (policy.conditions.tags && log.tags) {
           matches = matches && policy.conditions.tags.some((tag: string) => log.tags.includes(tag));
         }
-        
+
         if (matches) {
           return policy;
         }
@@ -1205,11 +1235,11 @@ export class AuditLoggingSystem {
    */
   async getComplianceLogs(framework?: ComplianceLog['framework']): Promise<ComplianceLog[]> {
     let logs = Array.from(this.complianceLogs.values());
-    
+
     if (framework) {
-      logs = logs.filter(l => l.framework === framework);
+      logs = logs.filter((l) => l.framework === framework);
     }
-    
+
     return logs.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
   }
 
@@ -1218,14 +1248,12 @@ export class AuditLoggingSystem {
    */
   async getAccessLogs(userId?: string, limit: number = 100): Promise<AccessLog[]> {
     let logs = Array.from(this.accessLogs.values());
-    
+
     if (userId) {
-      logs = logs.filter(l => l.userId === userId);
+      logs = logs.filter((l) => l.userId === userId);
     }
-    
-    return logs
-      .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
-      .slice(0, limit);
+
+    return logs.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime()).slice(0, limit);
   }
 
   /**
@@ -1237,15 +1265,15 @@ export class AuditLoggingSystem {
     limit?: number;
   }): Promise<DataChangeLog[]> {
     let logs = Array.from(this.dataChangeLogs.values());
-    
+
     if (params.entityType) {
-      logs = logs.filter(l => l.entityType === params.entityType);
+      logs = logs.filter((l) => l.entityType === params.entityType);
     }
-    
+
     if (params.entityId) {
-      logs = logs.filter(l => l.entityId === params.entityId);
+      logs = logs.filter((l) => l.entityId === params.entityId);
     }
-    
+
     return logs
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
       .slice(0, params.limit || 100);
@@ -1260,15 +1288,15 @@ export class AuditLoggingSystem {
     limit?: number;
   }): Promise<TransactionLog[]> {
     let logs = Array.from(this.transactionLogs.values());
-    
+
     if (params.transactionType) {
-      logs = logs.filter(l => l.transactionType === params.transactionType);
+      logs = logs.filter((l) => l.transactionType === params.transactionType);
     }
-    
+
     if (params.orderId) {
-      logs = logs.filter(l => l.orderId === params.orderId);
+      logs = logs.filter((l) => l.orderId === params.orderId);
     }
-    
+
     return logs
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
       .slice(0, params.limit || 100);
@@ -1286,11 +1314,11 @@ export class AuditLoggingSystem {
    */
   async getReports(type?: AuditReport['type']): Promise<AuditReport[]> {
     let reports = Array.from(this.reports.values());
-    
+
     if (type) {
-      reports = reports.filter(r => r.type === type);
+      reports = reports.filter((r) => r.type === type);
     }
-    
+
     return reports.sort((a, b) => b.generatedAt.getTime() - a.generatedAt.getTime());
   }
 }

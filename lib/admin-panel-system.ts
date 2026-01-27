@@ -1,6 +1,6 @@
 /**
  * Admin Panel System
- * 
+ *
  * Comprehensive administrative interface for platform management with
  * role-based access, audit logging, and real-time monitoring.
  */
@@ -9,7 +9,7 @@
 // Types & Interfaces
 // ============================================================================
 
-export type AdminRole = 
+export type AdminRole =
   | 'super-admin'
   | 'admin'
   | 'moderator'
@@ -19,7 +19,7 @@ export type AdminRole =
   | 'finance-manager'
   | 'operations-manager';
 
-export type PermissionCategory = 
+export type PermissionCategory =
   | 'users'
   | 'products'
   | 'orders'
@@ -30,7 +30,7 @@ export type PermissionCategory =
   | 'finance'
   | 'reports';
 
-export type ActionType = 
+export type ActionType =
   | 'view'
   | 'create'
   | 'edit'
@@ -40,7 +40,7 @@ export type ActionType =
   | 'export'
   | 'import';
 
-export type AuditAction = 
+export type AuditAction =
   | 'login'
   | 'logout'
   | 'create'
@@ -53,7 +53,7 @@ export type AuditAction =
   | 'config-change'
   | 'permission-change';
 
-export type DashboardWidgetType = 
+export type DashboardWidgetType =
   | 'metric'
   | 'chart'
   | 'table'
@@ -63,7 +63,7 @@ export type DashboardWidgetType =
   | 'map'
   | 'calendar';
 
-export type ChartType = 
+export type ChartType =
   | 'line'
   | 'bar'
   | 'pie'
@@ -75,12 +75,7 @@ export type ChartType =
 
 export type AlertSeverity = 'info' | 'warning' | 'error' | 'critical';
 
-export type TaskStatus = 
-  | 'pending'
-  | 'in-progress'
-  | 'completed'
-  | 'failed'
-  | 'cancelled';
+export type TaskStatus = 'pending' | 'in-progress' | 'completed' | 'failed' | 'cancelled';
 
 export type ReportFormat = 'pdf' | 'excel' | 'csv' | 'json' | 'html';
 
@@ -89,16 +84,16 @@ export interface AdminUser {
   email: string;
   name: string;
   role: AdminRole;
-  
+
   permissions: Permission[];
-  
+
   profile: {
     avatar?: string;
     phone?: string;
     department?: string;
     title?: string;
   };
-  
+
   settings: {
     theme: 'light' | 'dark' | 'auto';
     language: string;
@@ -109,16 +104,16 @@ export interface AdminUser {
       sms: boolean;
     };
   };
-  
+
   security: {
     twoFactorEnabled: boolean;
     lastPasswordChange: Date;
     allowedIPs?: string[];
     sessionTimeout: number; // minutes
   };
-  
+
   status: 'active' | 'inactive' | 'suspended';
-  
+
   metadata: {
     createdAt: Date;
     updatedAt: Date;
@@ -132,17 +127,17 @@ export interface Permission {
   id: string;
   category: PermissionCategory;
   action: ActionType;
-  
+
   resource?: string; // Specific resource or wildcard
-  
+
   conditions?: Array<{
     field: string;
     operator: 'equals' | 'not-equals' | 'contains' | 'in' | 'not-in';
     value: any;
   }>;
-  
+
   enabled: boolean;
-  
+
   metadata: {
     grantedBy?: string;
     grantedAt: Date;
@@ -152,7 +147,7 @@ export interface Permission {
 
 export interface AuditLog {
   id: string;
-  
+
   actor: {
     userId: string;
     userName: string;
@@ -160,28 +155,28 @@ export interface AuditLog {
     ip?: string;
     userAgent?: string;
   };
-  
+
   action: AuditAction;
-  
+
   resource: {
     type: string;
     id?: string;
     name?: string;
   };
-  
+
   changes?: {
     field: string;
     oldValue: any;
     newValue: any;
   }[];
-  
+
   metadata: {
     success: boolean;
     errorMessage?: string;
     duration?: number; // milliseconds
     requestId?: string;
   };
-  
+
   timestamp: Date;
 }
 
@@ -189,14 +184,14 @@ export interface DashboardWidget {
   id: string;
   type: DashboardWidgetType;
   title: string;
-  
+
   position: {
     x: number;
     y: number;
     width: number;
     height: number;
   };
-  
+
   config: {
     metric?: {
       value: number;
@@ -206,7 +201,7 @@ export interface DashboardWidget {
       trend?: number[];
       target?: number;
     };
-    
+
     chart?: {
       type: ChartType;
       data: Array<{
@@ -216,7 +211,7 @@ export interface DashboardWidget {
       }>;
       options?: Record<string, any>;
     };
-    
+
     table?: {
       columns: Array<{
         key: string;
@@ -230,7 +225,7 @@ export interface DashboardWidget {
         total: number;
       };
     };
-    
+
     list?: {
       items: Array<{
         id: string;
@@ -240,7 +235,7 @@ export interface DashboardWidget {
         metadata?: Record<string, any>;
       }>;
     };
-    
+
     activityFeed?: {
       activities: Array<{
         id: string;
@@ -250,7 +245,7 @@ export interface DashboardWidget {
         timestamp: Date;
       }>;
     };
-    
+
     alert?: {
       severity: AlertSeverity;
       message: string;
@@ -258,11 +253,11 @@ export interface DashboardWidget {
       actionUrl?: string;
     };
   };
-  
+
   refreshInterval?: number; // seconds
-  
+
   filters?: Record<string, any>;
-  
+
   metadata: {
     createdAt: Date;
     updatedAt: Date;
@@ -274,11 +269,11 @@ export interface AdminDashboard {
   id: string;
   name: string;
   description?: string;
-  
+
   layout: 'grid' | 'flex';
-  
+
   widgets: DashboardWidget[];
-  
+
   filters: {
     dateRange?: {
       start: Date;
@@ -286,17 +281,17 @@ export interface AdminDashboard {
     };
     customFilters?: Record<string, any>;
   };
-  
+
   sharing: {
     isPublic: boolean;
     sharedWith?: string[]; // User IDs
   };
-  
+
   owner: {
     userId: string;
     userName: string;
   };
-  
+
   metadata: {
     createdAt: Date;
     updatedAt: Date;
@@ -308,27 +303,27 @@ export interface AdminDashboard {
 export interface AdminTask {
   id: string;
   type: 'approval' | 'review' | 'investigation' | 'maintenance' | 'custom';
-  
+
   title: string;
   description: string;
-  
+
   priority: 'low' | 'medium' | 'high' | 'urgent';
   status: TaskStatus;
-  
+
   assignee?: {
     userId: string;
     userName: string;
     assignedAt: Date;
   };
-  
+
   relatedResource?: {
     type: string;
     id: string;
     name?: string;
   };
-  
+
   dueDate?: Date;
-  
+
   workflow?: Array<{
     step: string;
     status: 'pending' | 'completed' | 'skipped';
@@ -336,7 +331,7 @@ export interface AdminTask {
     completedAt?: Date;
     notes?: string;
   }>;
-  
+
   comments: Array<{
     id: string;
     userId: string;
@@ -344,7 +339,7 @@ export interface AdminTask {
     text: string;
     timestamp: Date;
   }>;
-  
+
   metadata: {
     createdBy: string;
     createdAt: Date;
@@ -356,47 +351,47 @@ export interface AdminTask {
 export interface SystemAlert {
   id: string;
   severity: AlertSeverity;
-  
+
   category: 'security' | 'performance' | 'error' | 'business' | 'system';
-  
+
   title: string;
   message: string;
-  
+
   source: {
     system: string;
     component?: string;
   };
-  
+
   affectedResources?: Array<{
     type: string;
     id: string;
     name?: string;
   }>;
-  
+
   metrics?: Record<string, number>;
-  
+
   status: 'active' | 'acknowledged' | 'resolved' | 'ignored';
-  
+
   acknowledgedBy?: {
     userId: string;
     userName: string;
     timestamp: Date;
     notes?: string;
   };
-  
+
   resolvedBy?: {
     userId: string;
     userName: string;
     timestamp: Date;
     resolution?: string;
   };
-  
+
   actions?: Array<{
     label: string;
     url: string;
     type: 'primary' | 'secondary';
   }>;
-  
+
   timestamp: Date;
 }
 
@@ -404,22 +399,22 @@ export interface QuickAction {
   id: string;
   label: string;
   icon: string;
-  
+
   category: 'user' | 'product' | 'order' | 'content' | 'system';
-  
+
   action: {
     type: 'navigate' | 'modal' | 'command';
     target?: string;
     command?: string;
     params?: Record<string, any>;
   };
-  
+
   permissions: Permission[];
-  
+
   hotkey?: string;
-  
+
   enabled: boolean;
-  
+
   usage: {
     count: number;
     lastUsed?: Date;
@@ -429,26 +424,26 @@ export interface QuickAction {
 export interface BulkOperation {
   id: string;
   type: 'update' | 'delete' | 'export' | 'import';
-  
+
   resourceType: string;
-  
+
   filters?: Record<string, any>;
   affectedCount: number;
-  
+
   operation: {
     action: string;
     params: Record<string, any>;
   };
-  
+
   status: TaskStatus;
-  
+
   progress: {
     total: number;
     completed: number;
     failed: number;
     percentage: number;
   };
-  
+
   results?: {
     successful: string[];
     failed: Array<{
@@ -456,7 +451,7 @@ export interface BulkOperation {
       error: string;
     }>;
   };
-  
+
   metadata: {
     initiatedBy: string;
     startedAt: Date;
@@ -467,51 +462,51 @@ export interface BulkOperation {
 
 export interface SystemMetrics {
   timestamp: Date;
-  
+
   server: {
     cpu: {
       usage: number; // percentage
       cores: number;
     };
-    
+
     memory: {
       used: number; // bytes
       total: number;
       percentage: number;
     };
-    
+
     disk: {
       used: number;
       total: number;
       percentage: number;
     };
-    
+
     network: {
       incoming: number; // bytes/sec
       outgoing: number;
     };
   };
-  
+
   application: {
     activeUsers: number;
     activeAdmins: number;
-    
+
     requestsPerSecond: number;
     averageResponseTime: number;
-    
+
     errorRate: number;
-    
+
     database: {
       connections: number;
       queryTime: number;
     };
-    
+
     cache: {
       hitRate: number;
       size: number;
     };
   };
-  
+
   business: {
     ordersPerHour: number;
     revenuePerHour: number;
@@ -523,12 +518,12 @@ export interface SystemMetrics {
 export interface AdminReport {
   id: string;
   type: 'user' | 'sales' | 'inventory' | 'security' | 'performance' | 'custom';
-  
+
   name: string;
   description?: string;
-  
+
   parameters: Record<string, any>;
-  
+
   schedule?: {
     frequency: 'once' | 'daily' | 'weekly' | 'monthly';
     time?: string;
@@ -536,20 +531,20 @@ export interface AdminReport {
     dayOfMonth?: number;
     timezone: string;
   };
-  
+
   recipients?: string[]; // Email addresses
-  
+
   format: ReportFormat;
-  
+
   lastRun?: {
     timestamp: Date;
     status: 'success' | 'failed';
     fileUrl?: string;
     error?: string;
   };
-  
+
   nextRun?: Date;
-  
+
   metadata: {
     createdBy: string;
     createdAt: Date;
@@ -560,7 +555,7 @@ export interface AdminReport {
 export interface AdminSession {
   id: string;
   userId: string;
-  
+
   device: {
     type: 'desktop' | 'mobile' | 'tablet';
     os?: string;
@@ -575,11 +570,11 @@ export interface AdminSession {
       };
     };
   };
-  
+
   startedAt: Date;
   lastActivity: Date;
   expiresAt: Date;
-  
+
   status: 'active' | 'expired' | 'terminated';
 }
 
@@ -599,7 +594,7 @@ export class AdminPanelSystem {
   private bulkOperations: Map<string, BulkOperation> = new Map();
   private reports: Map<string, AdminReport> = new Map();
   private sessions: Map<string, AdminSession> = new Map();
-  
+
   private metricsHistory: SystemMetrics[] = [];
   private metricsCollectionInterval?: NodeJS.Timeout;
 
@@ -670,7 +665,7 @@ export class AdminPanelSystem {
 
     const changes: AuditLog['changes'] = [];
 
-    Object.keys(updates).forEach(key => {
+    Object.keys(updates).forEach((key) => {
       const oldValue = (user as any)[key];
       const newValue = (updates as any)[key];
       if (JSON.stringify(oldValue) !== JSON.stringify(newValue)) {
@@ -692,7 +687,11 @@ export class AdminPanelSystem {
     return user;
   }
 
-  grantPermission(userId: string, permission: Omit<Permission, 'id' | 'metadata'>, grantedBy: string): Permission {
+  grantPermission(
+    userId: string,
+    permission: Omit<Permission, 'id' | 'metadata'>,
+    grantedBy: string
+  ): Permission {
     const user = this.adminUsers.get(userId);
     if (!user) throw new Error('Admin user not found');
 
@@ -724,7 +723,7 @@ export class AdminPanelSystem {
     const user = this.adminUsers.get(userId);
     if (!user) throw new Error('Admin user not found');
 
-    const index = user.permissions.findIndex(p => p.id === permissionId);
+    const index = user.permissions.findIndex((p) => p.id === permissionId);
     if (index === -1) throw new Error('Permission not found');
 
     const removed = user.permissions.splice(index, 1)[0];
@@ -740,7 +739,12 @@ export class AdminPanelSystem {
     });
   }
 
-  hasPermission(userId: string, category: PermissionCategory, action: ActionType, resource?: string): boolean {
+  hasPermission(
+    userId: string,
+    category: PermissionCategory,
+    action: ActionType,
+    resource?: string
+  ): boolean {
     const user = this.adminUsers.get(userId);
     if (!user) return false;
     if (user.status !== 'active') return false;
@@ -748,13 +752,13 @@ export class AdminPanelSystem {
     // Super admin has all permissions
     if (user.role === 'super-admin') return true;
 
-    return user.permissions.some(p => {
+    return user.permissions.some((p) => {
       if (!p.enabled) return false;
       if (p.metadata.expiresAt && new Date() > p.metadata.expiresAt) return false;
       if (p.category !== category) return false;
       if (p.action !== action) return false;
       if (p.resource && resource && p.resource !== '*' && p.resource !== resource) return false;
-      
+
       return true;
     });
   }
@@ -794,7 +798,10 @@ export class AdminPanelSystem {
     return dashboard;
   }
 
-  addWidgetToDashboard(dashboardId: string, widget: Omit<DashboardWidget, 'id' | 'metadata'>): DashboardWidget {
+  addWidgetToDashboard(
+    dashboardId: string,
+    widget: Omit<DashboardWidget, 'id' | 'metadata'>
+  ): DashboardWidget {
     const dashboard = this.dashboards.get(dashboardId);
     if (!dashboard) throw new Error('Dashboard not found');
 
@@ -935,7 +942,7 @@ export class AdminPanelSystem {
 
   getTasksByAssignee(userId: string, status?: TaskStatus): AdminTask[] {
     return Array.from(this.tasks.values())
-      .filter(task => {
+      .filter((task) => {
         if (task.assignee?.userId !== userId) return false;
         if (status && task.status !== status) return false;
         return true;
@@ -1015,7 +1022,12 @@ export class AdminPanelSystem {
     return alert;
   }
 
-  resolveAlert(alertId: string, userId: string, userName: string, resolution?: string): SystemAlert {
+  resolveAlert(
+    alertId: string,
+    userId: string,
+    userName: string,
+    resolution?: string
+  ): SystemAlert {
     const alert = this.alerts.get(alertId);
     if (!alert) throw new Error('Alert not found');
 
@@ -1039,7 +1051,7 @@ export class AdminPanelSystem {
 
   getActiveAlerts(severity?: AlertSeverity): SystemAlert[] {
     return Array.from(this.alerts.values())
-      .filter(alert => {
+      .filter((alert) => {
         if (alert.status === 'resolved' || alert.status === 'ignored') return false;
         if (severity && alert.severity !== severity) return false;
         return true;
@@ -1097,7 +1109,7 @@ export class AdminPanelSystem {
     if (!operation) return;
 
     operation.status = 'in-progress';
-    
+
     // Simulate bulk processing
     const itemCount = Math.floor(Math.random() * 100) + 10;
     operation.progress.total = itemCount;
@@ -1124,7 +1136,8 @@ export class AdminPanelSystem {
       }
 
       operation.progress.percentage = Math.round(
-        ((operation.progress.completed + operation.progress.failed) / operation.progress.total) * 100
+        ((operation.progress.completed + operation.progress.failed) / operation.progress.total) *
+          100
       );
     }
 
@@ -1196,7 +1209,7 @@ export class AdminPanelSystem {
     let logs = Array.from(this.auditLogs.values());
 
     if (filters) {
-      logs = logs.filter(log => {
+      logs = logs.filter((log) => {
         if (filters.userId && log.actor.userId !== filters.userId) return false;
         if (filters.action && log.action !== filters.action) return false;
         if (filters.resourceType && log.resource.type !== filters.resourceType) return false;
@@ -1356,9 +1369,7 @@ export class AdminPanelSystem {
 
   getMetricsHistory(duration: number = 3600): SystemMetrics[] {
     const now = Date.now();
-    return this.metricsHistory.filter(
-      m => now - m.timestamp.getTime() <= duration * 1000
-    );
+    return this.metricsHistory.filter((m) => now - m.timestamp.getTime() <= duration * 1000);
   }
 
   // ============================================================================
@@ -1389,16 +1400,15 @@ export class AdminPanelSystem {
   }
 
   getActiveSessions(userId?: string): AdminSession[] {
-    return Array.from(this.sessions.values())
-      .filter(s => {
-        if (s.status !== 'active') return false;
-        if (userId && s.userId !== userId) return false;
-        if (new Date() > s.expiresAt) {
-          s.status = 'expired';
-          return false;
-        }
-        return true;
-      });
+    return Array.from(this.sessions.values()).filter((s) => {
+      if (s.status !== 'active') return false;
+      if (userId && s.userId !== userId) return false;
+      if (new Date() > s.expiresAt) {
+        s.status = 'expired';
+        return false;
+      }
+      return true;
+    });
   }
 
   terminateSession(sessionId: string): void {
@@ -1428,15 +1438,15 @@ export class AdminPanelSystem {
       case 'super-admin':
         // Has all permissions (handled separately)
         break;
-      
+
       case 'admin':
-        ['users', 'products', 'orders', 'content', 'settings'].forEach(cat => {
-          ['view', 'create', 'edit', 'delete'].forEach(act => {
+        ['users', 'products', 'orders', 'content', 'settings'].forEach((cat) => {
+          ['view', 'create', 'edit', 'delete'].forEach((act) => {
             permissions.push(createPerm(cat as PermissionCategory, act as ActionType));
           });
         });
         break;
-      
+
       case 'moderator':
         permissions.push(createPerm('content', 'view'));
         permissions.push(createPerm('content', 'edit'));
@@ -1444,13 +1454,13 @@ export class AdminPanelSystem {
         permissions.push(createPerm('content', 'reject'));
         permissions.push(createPerm('users', 'view'));
         break;
-      
+
       case 'support':
         permissions.push(createPerm('users', 'view'));
         permissions.push(createPerm('orders', 'view'));
         permissions.push(createPerm('orders', 'edit'));
         break;
-      
+
       case 'analyst':
         permissions.push(createPerm('analytics', 'view'));
         permissions.push(createPerm('analytics', 'export'));
@@ -1502,7 +1512,15 @@ export class AdminPanelSystem {
         icon: 'user-plus',
         category: 'user',
         action: { type: 'modal', target: 'create-user' },
-        permissions: [{ id: '', category: 'users', action: 'create', enabled: true, metadata: { grantedAt: new Date() } }],
+        permissions: [
+          {
+            id: '',
+            category: 'users',
+            action: 'create',
+            enabled: true,
+            metadata: { grantedAt: new Date() },
+          },
+        ],
         hotkey: 'Ctrl+Shift+U',
         enabled: true,
         usage: { count: 0 },
@@ -1512,7 +1530,15 @@ export class AdminPanelSystem {
         icon: 'shopping-cart',
         category: 'order',
         action: { type: 'navigate', target: '/admin/orders' },
-        permissions: [{ id: '', category: 'orders', action: 'view', enabled: true, metadata: { grantedAt: new Date() } }],
+        permissions: [
+          {
+            id: '',
+            category: 'orders',
+            action: 'view',
+            enabled: true,
+            metadata: { grantedAt: new Date() },
+          },
+        ],
         hotkey: 'Ctrl+Shift+O',
         enabled: true,
         usage: { count: 0 },
@@ -1522,14 +1548,22 @@ export class AdminPanelSystem {
         icon: 'package',
         category: 'product',
         action: { type: 'modal', target: 'create-product' },
-        permissions: [{ id: '', category: 'products', action: 'create', enabled: true, metadata: { grantedAt: new Date() } }],
+        permissions: [
+          {
+            id: '',
+            category: 'products',
+            action: 'create',
+            enabled: true,
+            metadata: { grantedAt: new Date() },
+          },
+        ],
         hotkey: 'Ctrl+Shift+P',
         enabled: true,
         usage: { count: 0 },
       },
     ];
 
-    actions.forEach(action => {
+    actions.forEach((action) => {
       const qa: QuickAction = {
         id: `qa_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         ...action,
@@ -1545,14 +1579,12 @@ export class AdminPanelSystem {
 
       // Keep only last hour of metrics
       const oneHourAgo = Date.now() - 3600000;
-      this.metricsHistory = this.metricsHistory.filter(
-        m => m.timestamp.getTime() > oneHourAgo
-      );
+      this.metricsHistory = this.metricsHistory.filter((m) => m.timestamp.getTime() > oneHourAgo);
     }, 60000); // Every minute
   }
 
   private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   // ============================================================================
@@ -1567,7 +1599,7 @@ export class AdminPanelSystem {
     let users = Array.from(this.adminUsers.values());
 
     if (filters) {
-      users = users.filter(user => {
+      users = users.filter((user) => {
         if (filters.role && user.role !== filters.role) return false;
         if (filters.status && user.status !== filters.status) return false;
         return true;
@@ -1582,8 +1614,9 @@ export class AdminPanelSystem {
   }
 
   getUserDashboards(userId: string): AdminDashboard[] {
-    return Array.from(this.dashboards.values())
-      .filter(d => d.owner.userId === userId || d.sharing.sharedWith?.includes(userId));
+    return Array.from(this.dashboards.values()).filter(
+      (d) => d.owner.userId === userId || d.sharing.sharedWith?.includes(userId)
+    );
   }
 
   getQuickActions(userId: string): QuickAction[] {
@@ -1591,11 +1624,11 @@ export class AdminPanelSystem {
     if (!user) return [];
 
     return Array.from(this.quickActions.values())
-      .filter(action => {
+      .filter((action) => {
         if (!action.enabled) return false;
-        
+
         // Check if user has required permissions
-        return action.permissions.every(perm =>
+        return action.permissions.every((perm) =>
           this.hasPermission(userId, perm.category, perm.action)
         );
       })

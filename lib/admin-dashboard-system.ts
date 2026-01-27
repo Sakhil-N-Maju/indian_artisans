@@ -1,6 +1,6 @@
 /**
  * Admin Dashboard System
- * 
+ *
  * Comprehensive administrative dashboard and control panel:
  * - Dashboard overview and metrics
  * - Quick actions and shortcuts
@@ -16,17 +16,17 @@ export interface AdminUser {
   email: string;
   username: string;
   name: string;
-  
+
   // Role and permissions
   role: 'super_admin' | 'admin' | 'manager' | 'moderator' | 'support' | 'analyst';
   permissions: {
     module: string;
     actions: ('view' | 'create' | 'edit' | 'delete' | 'approve' | 'export')[];
   }[];
-  
+
   // Status
   status: 'active' | 'inactive' | 'suspended' | 'locked';
-  
+
   // Authentication
   auth: {
     lastLogin?: Date;
@@ -36,14 +36,14 @@ export interface AdminUser {
     mfaEnabled: boolean;
     mfaMethod?: 'totp' | 'sms' | 'email';
   };
-  
+
   // Access control
   accessControl: {
     allowedIPs?: string[];
     allowedHours?: { start: string; end: string };
     sessionTimeout: number; // minutes
   };
-  
+
   // Profile
   profile: {
     avatar?: string;
@@ -52,7 +52,7 @@ export interface AdminUser {
     language: string;
     department?: string;
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
   createdBy?: string;
@@ -67,7 +67,7 @@ export interface DashboardOverview {
       end: Date;
     };
   };
-  
+
   // Key metrics
   metrics: {
     totalRevenue: {
@@ -107,14 +107,14 @@ export interface DashboardOverview {
       changePercentage: number;
     };
   };
-  
+
   // Sales trends
   salesTrend: {
     date: Date;
     revenue: number;
     orders: number;
   }[];
-  
+
   // Top products
   topProducts: {
     productId: string;
@@ -123,7 +123,7 @@ export interface DashboardOverview {
     revenue: number;
     units: number;
   }[];
-  
+
   // Recent orders
   recentOrders: {
     orderId: string;
@@ -132,14 +132,19 @@ export interface DashboardOverview {
     status: string;
     createdAt: Date;
   }[];
-  
+
   // Pending tasks
   pendingTasks: {
-    type: 'order_approval' | 'product_review' | 'refund_request' | 'support_ticket' | 'artisan_verification';
+    type:
+      | 'order_approval'
+      | 'product_review'
+      | 'refund_request'
+      | 'support_ticket'
+      | 'artisan_verification';
     count: number;
     urgent: number;
   }[];
-  
+
   // Alerts
   alerts: {
     id: string;
@@ -166,16 +171,23 @@ export interface QuickAction {
 
 export interface SystemSetting {
   id: string;
-  category: 'general' | 'payment' | 'shipping' | 'email' | 'notifications' | 'security' | 'integrations';
+  category:
+    | 'general'
+    | 'payment'
+    | 'shipping'
+    | 'email'
+    | 'notifications'
+    | 'security'
+    | 'integrations';
   key: string;
   label: string;
   description?: string;
-  
+
   // Value configuration
   value: any;
   defaultValue: any;
   dataType: 'string' | 'number' | 'boolean' | 'json' | 'array' | 'enum';
-  
+
   // Validation
   validation?: {
     required?: boolean;
@@ -184,15 +196,24 @@ export interface SystemSetting {
     pattern?: string;
     options?: { value: any; label: string }[];
   };
-  
+
   // UI configuration
   ui: {
-    type: 'text' | 'number' | 'toggle' | 'select' | 'multiselect' | 'textarea' | 'json' | 'color' | 'file';
+    type:
+      | 'text'
+      | 'number'
+      | 'toggle'
+      | 'select'
+      | 'multiselect'
+      | 'textarea'
+      | 'json'
+      | 'color'
+      | 'file';
     group?: string;
     order?: number;
     hidden?: boolean;
   };
-  
+
   // Metadata
   sensitive: boolean;
   requiresRestart: boolean;
@@ -204,12 +225,12 @@ export interface AdminNotification {
   id: string;
   type: 'system' | 'order' | 'customer' | 'product' | 'security' | 'performance';
   priority: 'low' | 'normal' | 'high' | 'urgent';
-  
+
   // Content
   title: string;
   message: string;
   details?: Record<string, any>;
-  
+
   // Recipients
   recipients: {
     adminId: string;
@@ -217,14 +238,14 @@ export interface AdminNotification {
     readAt?: Date;
     dismissed: boolean;
   }[];
-  
+
   // Actions
   actions?: {
     label: string;
     action: string;
     url?: string;
   }[];
-  
+
   // Lifecycle
   createdAt: Date;
   expiresAt?: Date;
@@ -236,34 +257,44 @@ export interface ActivityLog {
   id: string;
   adminId: string;
   adminName: string;
-  
+
   // Action details
   action: {
-    type: 'create' | 'update' | 'delete' | 'approve' | 'reject' | 'export' | 'import' | 'login' | 'logout' | 'settings_change';
+    type:
+      | 'create'
+      | 'update'
+      | 'delete'
+      | 'approve'
+      | 'reject'
+      | 'export'
+      | 'import'
+      | 'login'
+      | 'logout'
+      | 'settings_change';
     module: string;
     entity?: string;
     entityId?: string;
     description: string;
   };
-  
+
   // Changes
   changes?: {
     field: string;
     oldValue: any;
     newValue: any;
   }[];
-  
+
   // Context
   context: {
     ipAddress: string;
     userAgent: string;
     location?: string;
   };
-  
+
   // Status
   status: 'success' | 'failed' | 'pending';
   error?: string;
-  
+
   timestamp: Date;
 }
 
@@ -272,7 +303,7 @@ export interface PermissionSet {
   name: string;
   description: string;
   role: AdminUser['role'];
-  
+
   // Permissions
   permissions: {
     module: string;
@@ -283,7 +314,7 @@ export interface PermissionSet {
       conditions?: Record<string, any>;
     }[];
   }[];
-  
+
   // Restrictions
   restrictions?: {
     dataAccess?: 'all' | 'own' | 'department' | 'custom';
@@ -291,7 +322,7 @@ export interface PermissionSet {
     maxExportRows?: number;
     maxBulkActions?: number;
   };
-  
+
   isDefault: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -301,20 +332,20 @@ export interface AdminSession {
   sessionId: string;
   adminId: string;
   adminName: string;
-  
+
   // Session info
   startedAt: Date;
   lastActivity: Date;
   expiresAt: Date;
-  
+
   // Security
   ipAddress: string;
   userAgent: string;
   location?: string;
-  
+
   // Status
   status: 'active' | 'expired' | 'revoked';
-  
+
   // Activity
   actionsPerformed: number;
   pagesViewed: string[];
@@ -325,7 +356,7 @@ export interface AdminAnalytics {
     start: Date;
     end: Date;
   };
-  
+
   // Admin activity
   activity: {
     totalLogins: number;
@@ -337,7 +368,7 @@ export interface AdminAnalytics {
       count: number;
     }[];
   };
-  
+
   // Most active admins
   topAdmins: {
     adminId: string;
@@ -346,7 +377,7 @@ export interface AdminAnalytics {
     actions: number;
     modules: string[];
   }[];
-  
+
   // Module usage
   moduleUsage: {
     module: string;
@@ -354,7 +385,7 @@ export interface AdminAnalytics {
     actions: number;
     uniqueAdmins: number;
   }[];
-  
+
   // Performance
   performance: {
     averageResponseTime: number;
@@ -382,7 +413,7 @@ export class AdminDashboardSystem {
     this.permissionSets = new Map();
     this.sessions = new Map();
     this.quickActions = [];
-    
+
     // Initialize default data
     this.initializeDefaults();
   }
@@ -720,7 +751,7 @@ export class AdminDashboardSystem {
           changePercentage: 5.17,
         },
         averageOrderValue: {
-          current: 510.20,
+          current: 510.2,
           previous: 491.82,
           change: 18.38,
           changePercentage: 3.74,
@@ -736,14 +767,50 @@ export class AdminDashboardSystem {
         };
       }),
       topProducts: [
-        { productId: 'prod-1', productName: 'Handwoven Silk Saree', sales: 250, revenue: 125000, units: 250 },
-        { productId: 'prod-2', productName: 'Terracotta Vase Set', sales: 490, revenue: 98000, units: 490 },
-        { productId: 'prod-3', productName: 'Silver Jewelry Collection', sales: 175, revenue: 87500, units: 175 },
+        {
+          productId: 'prod-1',
+          productName: 'Handwoven Silk Saree',
+          sales: 250,
+          revenue: 125000,
+          units: 250,
+        },
+        {
+          productId: 'prod-2',
+          productName: 'Terracotta Vase Set',
+          sales: 490,
+          revenue: 98000,
+          units: 490,
+        },
+        {
+          productId: 'prod-3',
+          productName: 'Silver Jewelry Collection',
+          sales: 175,
+          revenue: 87500,
+          units: 175,
+        },
       ],
       recentOrders: [
-        { orderId: 'ORD-12345', customerName: 'Priya Sharma', amount: 1250, status: 'processing', createdAt: new Date() },
-        { orderId: 'ORD-12344', customerName: 'Rajesh Kumar', amount: 850, status: 'shipped', createdAt: new Date(Date.now() - 3600000) },
-        { orderId: 'ORD-12343', customerName: 'Anita Desai', amount: 2340, status: 'delivered', createdAt: new Date(Date.now() - 7200000) },
+        {
+          orderId: 'ORD-12345',
+          customerName: 'Priya Sharma',
+          amount: 1250,
+          status: 'processing',
+          createdAt: new Date(),
+        },
+        {
+          orderId: 'ORD-12344',
+          customerName: 'Rajesh Kumar',
+          amount: 850,
+          status: 'shipped',
+          createdAt: new Date(Date.now() - 3600000),
+        },
+        {
+          orderId: 'ORD-12343',
+          customerName: 'Anita Desai',
+          amount: 2340,
+          status: 'delivered',
+          createdAt: new Date(Date.now() - 7200000),
+        },
       ],
       pendingTasks: [
         { type: 'order_approval', count: 12, urgent: 3 },
@@ -835,7 +902,7 @@ export class AdminDashboardSystem {
       title: params.title,
       message: params.message,
       details: params.details,
-      recipients: params.recipientIds.map(id => ({
+      recipients: params.recipientIds.map((id) => ({
         adminId: id,
         read: false,
         dismissed: false,
@@ -894,11 +961,11 @@ export class AdminDashboardSystem {
    */
   async getAdminAnalytics(period: { start: Date; end: Date }): Promise<AdminAnalytics> {
     const logs = Array.from(this.activityLogs.values()).filter(
-      log => log.timestamp >= period.start && log.timestamp <= period.end
+      (log) => log.timestamp >= period.start && log.timestamp <= period.end
     );
 
     const actionsByType = new Map<string, number>();
-    logs.forEach(log => {
+    logs.forEach((log) => {
       const count = actionsByType.get(log.action.type) || 0;
       actionsByType.set(log.action.type, count + 1);
     });
@@ -906,8 +973,8 @@ export class AdminDashboardSystem {
     return {
       period,
       activity: {
-        totalLogins: logs.filter(l => l.action.type === 'login').length,
-        uniqueAdmins: new Set(logs.map(l => l.adminId)).size,
+        totalLogins: logs.filter((l) => l.action.type === 'login').length,
+        uniqueAdmins: new Set(logs.map((l) => l.adminId)).size,
         averageSessionDuration: 45.5,
         totalActions: logs.length,
         actionsByType: Array.from(actionsByType.entries()).map(([type, count]) => ({
@@ -916,8 +983,20 @@ export class AdminDashboardSystem {
         })),
       },
       topAdmins: [
-        { adminId: 'admin-1', adminName: 'Super Admin', logins: 45, actions: 285, modules: ['orders', 'products', 'settings'] },
-        { adminId: 'admin-2', adminName: 'Manager', logins: 38, actions: 192, modules: ['orders', 'products'] },
+        {
+          adminId: 'admin-1',
+          adminName: 'Super Admin',
+          logins: 45,
+          actions: 285,
+          modules: ['orders', 'products', 'settings'],
+        },
+        {
+          adminId: 'admin-2',
+          adminName: 'Manager',
+          logins: 38,
+          actions: 192,
+          modules: ['orders', 'products'],
+        },
       ],
       moduleUsage: [
         { module: 'orders', views: 1250, actions: 485, uniqueAdmins: 8 },
@@ -939,26 +1018,27 @@ export class AdminDashboardSystem {
    */
   async getAllSettings(category?: SystemSetting['category']): Promise<SystemSetting[]> {
     let settings = Array.from(this.settings.values());
-    
+
     if (category) {
-      settings = settings.filter(s => s.category === category);
+      settings = settings.filter((s) => s.category === category);
     }
-    
+
     return settings;
   }
 
   /**
    * Get admin notifications
    */
-  async getNotifications(adminId: string, unreadOnly: boolean = false): Promise<AdminNotification[]> {
-    const notifications = Array.from(this.notifications.values()).filter(
-      n => n.recipients.some(r => r.adminId === adminId)
+  async getNotifications(
+    adminId: string,
+    unreadOnly: boolean = false
+  ): Promise<AdminNotification[]> {
+    const notifications = Array.from(this.notifications.values()).filter((n) =>
+      n.recipients.some((r) => r.adminId === adminId)
     );
 
     if (unreadOnly) {
-      return notifications.filter(
-        n => !n.recipients.find(r => r.adminId === adminId)?.read
-      );
+      return notifications.filter((n) => !n.recipients.find((r) => r.adminId === adminId)?.read);
     }
 
     return notifications;
@@ -976,15 +1056,15 @@ export class AdminDashboardSystem {
     let logs = Array.from(this.activityLogs.values());
 
     if (params.adminId) {
-      logs = logs.filter(l => l.adminId === params.adminId);
+      logs = logs.filter((l) => l.adminId === params.adminId);
     }
 
     if (params.actionType) {
-      logs = logs.filter(l => l.action.type === params.actionType);
+      logs = logs.filter((l) => l.action.type === params.actionType);
     }
 
     if (params.module) {
-      logs = logs.filter(l => l.action.module === params.module);
+      logs = logs.filter((l) => l.action.module === params.module);
     }
 
     // Sort by timestamp descending

@@ -73,12 +73,14 @@ npm run dev
 ### For Artisans (Via WhatsApp)
 
 #### Step 1: Send Product Image
+
 ```
 Artisan → Sends clear photo of handcrafted product
 Platform → "📸 Image received! Now send a voice message..."
 ```
 
 #### Step 2: Send Voice Description
+
 ```
 Artisan → Records voice (any language)
 "Yeh ek haath se buni hui saree hai..."
@@ -86,8 +88,9 @@ Platform → "🤖 Processing with AI..."
 ```
 
 #### Step 3: Receive Confirmation
+
 ```
-Platform → 
+Platform →
 "✅ Product created successfully!
 
 📦 Hand-woven Silk Saree
@@ -99,11 +102,11 @@ Confidence Score: 95%"
 
 ### Commands Available
 
-| Command | Action |
-|---------|--------|
-| `help` or `start` | Show welcome message |
-| `status` | Check upload progress |
-| `cancel` | Cancel current upload |
+| Command           | Action                |
+| ----------------- | --------------------- |
+| `help` or `start` | Show welcome message  |
+| `status`          | Check upload progress |
+| `cancel`          | Cancel current upload |
 
 ---
 
@@ -154,6 +157,7 @@ Response:
 
 **Input**: Product photo  
 **Output**:
+
 ```json
 {
   "productType": "Handwoven textile",
@@ -169,6 +173,7 @@ Response:
 
 **Input**: Voice message (any language)  
 **Output**:
+
 ```json
 {
   "text": "Yeh ek Pochampally saree hai jo maine 3 mahine mein buni hai...",
@@ -180,6 +185,7 @@ Response:
 
 **Input**: Image analysis + Voice transcription  
 **Output**:
+
 ```json
 {
   "title": "Traditional Pochampally Ikat Silk Saree",
@@ -198,10 +204,11 @@ Response:
 
 **Input**: Product details + Artisan info  
 **Output**:
+
 ```
-Crafted by master weaver Lakshmi from Pochampally, 
-this exquisite Ikat silk saree represents three months 
-of meticulous handloom work. Using traditional 
+Crafted by master weaver Lakshmi from Pochampally,
+this exquisite Ikat silk saree represents three months
+of meticulous handloom work. Using traditional
 techniques passed down through generations...
 ```
 
@@ -210,6 +217,7 @@ techniques passed down through generations...
 ## 💡 Features
 
 ### Automatic Extraction
+
 - ✅ **Product title** - Catchy, SEO-friendly
 - ✅ **Description** - Detailed, compelling (200-400 words)
 - ✅ **Category** - Auto-categorized
@@ -221,12 +229,14 @@ techniques passed down through generations...
 - ✅ **AI Story** - Cultural significance, craftsmanship
 
 ### Multi-Language Support
+
 - Hindi
 - English
 - Regional languages (Tamil, Telugu, Bengali, etc.)
 - Whisper auto-detects language
 
 ### Smart Processing
+
 - **Image quality check**
 - **Voice clarity detection**
 - **Confidence scoring**
@@ -259,18 +269,18 @@ State 5: Reset (ready for next)
 ```
 Artisan: [Sends image of pottery]
 
-Bot: 📸 Image received! Now send a voice message describing 
-     your product (language doesn't matter - Hindi, English, 
+Bot: 📸 Image received! Now send a voice message describing
+     your product (language doesn't matter - Hindi, English,
      or any regional language).
 
-Bot: I can see: "Handcrafted terracotta vase with tribal 
-     motifs". Please describe it in your own words via 
+Bot: I can see: "Handcrafted terracotta vase with tribal
+     motifs". Please describe it in your own words via
      voice message.
 
-Artisan: [Sends voice] "Yeh mitti ka bartan hai jo maine 
+Artisan: [Sends voice] "Yeh mitti ka bartan hai jo maine
          apne haath se banaya hai. Isme adivasi design hai..."
 
-Bot: 🤖 Perfect! Processing your product with AI... 
+Bot: 🤖 Perfect! Processing your product with AI...
      This will take about 30 seconds.
 
 Bot: ✅ Product created successfully!
@@ -278,9 +288,9 @@ Bot: ✅ Product created successfully!
      📦 Traditional Terracotta Vase with Tribal Motifs
      💰 Suggested Price: ₹1,200
      📁 Category: Pottery
-     
+
      ✏️ You can edit and publish it from your dashboard.
-     
+
      Confidence Score: 92%
 ```
 
@@ -317,12 +327,12 @@ curl -X POST http://localhost:3000/api/ai/products \
 
 ## 💰 Pricing (OpenAI)
 
-| Service | Cost | Example |
-|---------|------|---------|
-| GPT-4 Vision | $0.01/image | $0.01 per product image |
-| Whisper | $0.006/min | $0.01 for 2-min voice |
-| GPT-4 Turbo | $0.01/1K tokens | $0.02 for product generation |
-| **Total per product** | **~$0.04** | **₹3.50 per listing** |
+| Service               | Cost            | Example                      |
+| --------------------- | --------------- | ---------------------------- |
+| GPT-4 Vision          | $0.01/image     | $0.01 per product image      |
+| Whisper               | $0.006/min      | $0.01 for 2-min voice        |
+| GPT-4 Turbo           | $0.01/1K tokens | $0.02 for product generation |
+| **Total per product** | **~$0.04**      | **₹3.50 per listing**        |
 
 For 1000 products/month: ~$40 (~₹3,500)
 
@@ -331,6 +341,7 @@ For 1000 products/month: ~$40 (~₹3,500)
 ## 🚧 Error Handling
 
 ### Image Issues
+
 ```
 - Blurry image → "Please send a clearer image"
 - No product visible → "I can't identify the product"
@@ -338,6 +349,7 @@ For 1000 products/month: ~$40 (~₹3,500)
 ```
 
 ### Voice Issues
+
 ```
 - Unclear audio → "Voice unclear, please speak clearly"
 - No speech detected → "No voice detected, please record again"
@@ -345,6 +357,7 @@ For 1000 products/month: ~$40 (~₹3,500)
 ```
 
 ### Timeout
+
 ```
 - 10 minutes passed → Upload cancelled, start over
 ```
@@ -359,19 +372,19 @@ For 1000 products/month: ~$40 (~₹3,500)
 // View AI-created products
 const aiProducts = await prisma.product.findMany({
   where: {
-    aiStory: { not: null }
+    aiStory: { not: null },
   },
   include: {
-    artisan: true
-  }
+    artisan: true,
+  },
 });
 
 // Check confidence scores
 const lowConfidence = await prisma.product.findMany({
   where: {
     // Note: Need to add confidence field to Product model
-    status: 'PENDING_REVIEW'
-  }
+    status: 'PENDING_REVIEW',
+  },
 });
 ```
 
@@ -388,10 +401,10 @@ Edit `lib/services/ai.ts`:
 const prompt = `You are helping an Indian artisan...`;
 
 // Adjust temperature for creativity
-temperature: 0.7  // 0 = consistent, 1 = creative
+temperature: 0.7; // 0 = consistent, 1 = creative
 
 // Change price calculation logic
-suggestedPrice: calculateCustomPrice(complexity, materials)
+suggestedPrice: calculateCustomPrice(complexity, materials);
 ```
 
 ---
@@ -409,6 +422,7 @@ suggestedPrice: calculateCustomPrice(complexity, materials)
 ## 📱 Next Steps
 
 ### Phase 2: Enhancements
+
 - [ ] Add image upload to cloud storage
 - [ ] Support multiple images per product
 - [ ] Video analysis (product demos)
@@ -417,6 +431,7 @@ suggestedPrice: calculateCustomPrice(complexity, materials)
 - [ ] A/B testing AI vs manual listings
 
 ### Phase 3: Advanced AI
+
 - [ ] Auto-categorization improvement
 - [ ] Price optimization ML model
 - [ ] Quality scoring
@@ -429,6 +444,7 @@ suggestedPrice: calculateCustomPrice(complexity, materials)
 ## 🎉 Summary
 
 You now have:
+
 - ✅ **AI Service** (`lib/services/ai.ts`)
 - ✅ **WhatsApp Integration** (auto-processing)
 - ✅ **API Endpoints** (`/api/ai/products`)

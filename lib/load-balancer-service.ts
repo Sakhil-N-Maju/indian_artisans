@@ -1,6 +1,6 @@
 /**
  * Load Balancer Service
- * 
+ *
  * Distribute traffic across multiple servers
  */
 
@@ -39,8 +39,7 @@ export class LoadBalancerService {
   }
 
   async getNextServer(): Promise<Server | null> {
-    const onlineServers = Array.from(this.servers.values())
-      .filter(s => s.status === 'online');
+    const onlineServers = Array.from(this.servers.values()).filter((s) => s.status === 'online');
 
     if (onlineServers.length === 0) return null;
 
@@ -67,9 +66,7 @@ export class LoadBalancerService {
   }
 
   private leastConnections(servers: Server[]): Server {
-    const server = servers.reduce((min, s) => 
-      s.currentLoad < min.currentLoad ? s : min
-    );
+    const server = servers.reduce((min, s) => (s.currentLoad < min.currentLoad ? s : min));
     server.currentLoad++;
     this.servers.set(server.id, server);
     return server;
@@ -129,10 +126,9 @@ export class LoadBalancerService {
     servers: Server[];
   }> {
     const servers = Array.from(this.servers.values());
-    const online = servers.filter(s => s.status === 'online');
-    const avgLoad = servers.length > 0
-      ? servers.reduce((sum, s) => sum + s.currentLoad, 0) / servers.length
-      : 0;
+    const online = servers.filter((s) => s.status === 'online');
+    const avgLoad =
+      servers.length > 0 ? servers.reduce((sum, s) => sum + s.currentLoad, 0) / servers.length : 0;
 
     return {
       totalServers: servers.length,

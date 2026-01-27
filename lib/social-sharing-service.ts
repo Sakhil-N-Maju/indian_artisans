@@ -1,6 +1,6 @@
 /**
  * Social Sharing Service
- * 
+ *
  * Enables social sharing across platforms:
  * - Share products, artisans, stories, workshops
  * - Generate share links with tracking
@@ -16,7 +16,7 @@ export interface ShareableContent {
   description: string;
   imageUrl: string;
   url: string;
-  
+
   // Metadata
   metadata?: {
     price?: number;
@@ -30,25 +30,33 @@ export interface ShareLink {
   id: string;
   contentId: string;
   contentType: ShareableContent['type'];
-  
+
   // Platform
-  platform: 'facebook' | 'twitter' | 'instagram' | 'pinterest' | 'whatsapp' | 'email' | 'copy' | 'native';
-  
+  platform:
+    | 'facebook'
+    | 'twitter'
+    | 'instagram'
+    | 'pinterest'
+    | 'whatsapp'
+    | 'email'
+    | 'copy'
+    | 'native';
+
   // Link
   shortUrl: string;
   fullUrl: string;
-  
+
   // Tracking
   sharedBy?: {
     userId: string;
     username: string;
   };
-  
+
   // Analytics
   clicks: number;
   conversions: number;
   revenue: number;
-  
+
   // Timestamps
   createdAt: Date;
   expiresAt?: Date;
@@ -64,7 +72,7 @@ export interface SocialMetaTags {
     type: 'website' | 'article' | 'product';
     siteName: string;
   };
-  
+
   // Twitter Card
   twitter: {
     card: 'summary' | 'summary_large_image' | 'app' | 'player';
@@ -74,7 +82,7 @@ export interface SocialMetaTags {
     site: string;
     creator?: string;
   };
-  
+
   // Pinterest
   pinterest: {
     description: string;
@@ -86,7 +94,7 @@ export interface ReferralProgram {
   id: string;
   name: string;
   description: string;
-  
+
   // Rewards
   rewards: {
     referrer: {
@@ -100,7 +108,7 @@ export interface ReferralProgram {
       currency?: string;
     };
   };
-  
+
   // Rules
   rules: {
     minimumPurchase?: number;
@@ -108,7 +116,7 @@ export interface ReferralProgram {
     maxRedemptions?: number;
     eligibleProducts?: string[];
   };
-  
+
   isActive: boolean;
 }
 
@@ -116,13 +124,13 @@ export interface Referral {
   id: string;
   code: string;
   programId: string;
-  
+
   // Referrer
   referrer: {
     userId: string;
     username: string;
   };
-  
+
   // Stats
   stats: {
     clicks: number;
@@ -131,7 +139,7 @@ export interface Referral {
     revenue: number;
     rewardEarned: number;
   };
-  
+
   // Status
   isActive: boolean;
   createdAt: Date;
@@ -143,7 +151,7 @@ export interface ShareAnalytics {
     start: Date;
     end: Date;
   };
-  
+
   // Overall
   overall: {
     totalShares: number;
@@ -152,22 +160,28 @@ export interface ShareAnalytics {
     totalRevenue: number;
     conversionRate: number;
   };
-  
+
   // By Platform
-  byPlatform: Record<string, {
-    shares: number;
-    clicks: number;
-    conversions: number;
-    revenue: number;
-  }>;
-  
+  byPlatform: Record<
+    string,
+    {
+      shares: number;
+      clicks: number;
+      conversions: number;
+      revenue: number;
+    }
+  >;
+
   // By Content Type
-  byContentType: Record<string, {
-    shares: number;
-    clicks: number;
-    conversions: number;
-  }>;
-  
+  byContentType: Record<
+    string,
+    {
+      shares: number;
+      clicks: number;
+      conversions: number;
+    }
+  >;
+
   // Top Shared
   topShared: {
     contentId: string;
@@ -177,7 +191,7 @@ export interface ShareAnalytics {
     clicks: number;
     conversions: number;
   }[];
-  
+
   // Top Referrers
   topReferrers: {
     userId: string;
@@ -239,7 +253,7 @@ export class SocialSharingService {
     const shareId = `share-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     const baseUrl = 'https://artisans.com';
     const fullUrl = `${baseUrl}/${params.content.type}/${params.content.id}?ref=${shareId}`;
-    
+
     // Generate short URL (in production would use URL shortening service)
     const shortUrl = `${baseUrl}/s/${shareId.substr(-8)}`;
 
@@ -303,19 +317,19 @@ export class SocialSharingService {
     switch (platform) {
       case 'facebook':
         return `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
-      
+
       case 'twitter':
         return `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`;
-      
+
       case 'pinterest':
         return `https://pinterest.com/pin/create/button/?url=${encodedUrl}&media=${encodeURIComponent(content.imageUrl)}&description=${encodedDescription}`;
-      
+
       case 'whatsapp':
         return `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`;
-      
+
       case 'email':
         return `mailto:?subject=${encodedTitle}&body=${encodedDescription}%0A%0A${encodedUrl}`;
-      
+
       default:
         return shareLink;
     }
@@ -343,7 +357,7 @@ export class SocialSharingService {
       // Update referral stats if shared by a user
       if (shareLink.sharedBy) {
         const referral = Array.from(this.referrals.values()).find(
-          r => r.referrer.userId === shareLink.sharedBy!.userId
+          (r) => r.referrer.userId === shareLink.sharedBy!.userId
         );
 
         if (referral) {
@@ -378,7 +392,7 @@ export class SocialSharingService {
 
     // Check if user already has a referral
     const existing = Array.from(this.referrals.values()).find(
-      r => r.referrer.userId === params.userId && r.programId === params.programId
+      (r) => r.referrer.userId === params.userId && r.programId === params.programId
     );
 
     if (existing) {
@@ -421,8 +435,8 @@ export class SocialSharingService {
     discount?: number;
     discountType?: string;
   }> {
-    const referral = Array.from(this.referrals.values()).find(r => r.code === code);
-    
+    const referral = Array.from(this.referrals.values()).find((r) => r.code === code);
+
     if (!referral || !referral.isActive) {
       return { valid: false };
     }
@@ -451,7 +465,7 @@ export class SocialSharingService {
    */
   async getShareAnalytics(startDate: Date, endDate: Date): Promise<ShareAnalytics> {
     const shares = Array.from(this.shareLinks.values()).filter(
-      s => s.createdAt >= startDate && s.createdAt <= endDate
+      (s) => s.createdAt >= startDate && s.createdAt <= endDate
     );
 
     const overall = {
@@ -462,13 +476,12 @@ export class SocialSharingService {
       conversionRate: 0,
     };
 
-    overall.conversionRate = overall.totalClicks > 0
-      ? (overall.totalConversions / overall.totalClicks) * 100
-      : 0;
+    overall.conversionRate =
+      overall.totalClicks > 0 ? (overall.totalConversions / overall.totalClicks) * 100 : 0;
 
     // By platform
     const byPlatform: ShareAnalytics['byPlatform'] = {};
-    shares.forEach(share => {
+    shares.forEach((share) => {
       if (!byPlatform[share.platform]) {
         byPlatform[share.platform] = {
           shares: 0,
@@ -485,7 +498,7 @@ export class SocialSharingService {
 
     // By content type
     const byContentType: ShareAnalytics['byContentType'] = {};
-    shares.forEach(share => {
+    shares.forEach((share) => {
       if (!byContentType[share.contentType]) {
         byContentType[share.contentType] = {
           shares: 0,
@@ -500,7 +513,7 @@ export class SocialSharingService {
 
     // Top shared content
     const contentStats = new Map<string, any>();
-    shares.forEach(share => {
+    shares.forEach((share) => {
       const key = `${share.contentType}-${share.contentId}`;
       if (!contentStats.has(key)) {
         contentStats.set(key, {
@@ -525,8 +538,8 @@ export class SocialSharingService {
     // Top referrers
     const referrerStats = new Map<string, any>();
     const referrals = Array.from(this.referrals.values());
-    
-    referrals.forEach(ref => {
+
+    referrals.forEach((ref) => {
       referrerStats.set(ref.referrer.userId, {
         userId: ref.referrer.userId,
         username: ref.referrer.username,
@@ -562,7 +575,7 @@ export class SocialSharingService {
     const totalConversions = shares.reduce((sum, s) => sum + s.conversions, 0);
     const totalRevenue = shares.reduce((sum, s) => sum + s.revenue, 0);
 
-    const activeReferrals = referrals.filter(r => r.isActive).length;
+    const activeReferrals = referrals.filter((r) => r.isActive).length;
     const totalReferralRevenue = referrals.reduce((sum, r) => sum + r.stats.revenue, 0);
     const totalRewardsEarned = referrals.reduce((sum, r) => sum + r.stats.rewardEarned, 0);
 

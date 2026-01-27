@@ -1,6 +1,6 @@
 /**
  * Workshop Booking Service
- * 
+ *
  * Handles workshop bookings, scheduling, and tourism experiences
  * Enables customers to book hands-on craft workshops with artisans
  */
@@ -12,7 +12,7 @@ export interface Workshop {
   craftType: string;
   artisanId: string;
   artisanName: string;
-  
+
   // Location
   location: {
     address: string;
@@ -24,38 +24,38 @@ export interface Workshop {
       lng: number;
     };
   };
-  
+
   // Workshop Details
   duration: number; // in hours
   difficulty: 'beginner' | 'intermediate' | 'advanced';
   maxParticipants: number;
   minParticipants: number;
   language: string[];
-  
+
   // Pricing
   price: {
     amount: number;
     currency: string;
     includes: string[];
   };
-  
+
   // Schedule
   schedule: WorkshopSchedule[];
-  
+
   // Media
   images: string[];
   virtualTourUrl?: string;
-  
+
   // Learning Outcomes
   learningOutcomes: string[];
   materialsProvided: string[];
   requirements?: string[];
-  
+
   // Status
   status: 'active' | 'inactive' | 'sold_out';
   rating?: number;
   reviewCount?: number;
-  
+
   // Features
   features: {
     virtualOption: boolean;
@@ -82,7 +82,7 @@ export interface Booking {
   workshopId: string;
   scheduleId: string;
   userId: string;
-  
+
   // Participant Details
   participants: {
     name: string;
@@ -90,26 +90,26 @@ export interface Booking {
     phone: string;
     age?: number;
   }[];
-  
+
   // Booking Details
   bookingDate: Date;
   workshopDate: Date;
   numberOfParticipants: number;
   totalAmount: number;
-  
+
   // Payment
   paymentStatus: 'pending' | 'paid' | 'refunded' | 'cancelled';
   paymentId?: string;
   paymentMethod?: string;
-  
+
   // Status
   status: 'confirmed' | 'pending' | 'cancelled' | 'completed';
   confirmationCode: string;
-  
+
   // Special Requests
   specialRequests?: string;
   dietaryRestrictions?: string[];
-  
+
   // Communication
   reminderSent: boolean;
   feedbackSubmitted: boolean;
@@ -131,7 +131,7 @@ export interface BookingRequest {
 export class WorkshopBookingService {
   private workshops: Map<string, Workshop>;
   private bookings: Map<string, Booking>;
-  
+
   constructor() {
     this.workshops = new Map();
     this.bookings = new Map();
@@ -146,7 +146,8 @@ export class WorkshopBookingService {
       {
         id: 'workshop-001',
         title: 'Traditional Pottery Making Workshop',
-        description: 'Learn the ancient art of pottery making from master artisans. Create your own clay pots using traditional wheel techniques.',
+        description:
+          'Learn the ancient art of pottery making from master artisans. Create your own clay pots using traditional wheel techniques.',
         craftType: 'Pottery',
         artisanId: 'artisan-001',
         artisanName: 'Ramesh Kumar',
@@ -155,7 +156,7 @@ export class WorkshopBookingService {
           city: 'Khurja',
           state: 'Uttar Pradesh',
           country: 'India',
-          coordinates: { lat: 28.2, lng: 77.9 }
+          coordinates: { lat: 28.2, lng: 77.9 },
         },
         duration: 4,
         difficulty: 'beginner',
@@ -165,7 +166,7 @@ export class WorkshopBookingService {
         price: {
           amount: 2500,
           currency: 'INR',
-          includes: ['Clay materials', 'Tools', 'Lunch', 'Take-home pottery', 'Certificate']
+          includes: ['Clay materials', 'Tools', 'Lunch', 'Take-home pottery', 'Certificate'],
         },
         schedule: [],
         images: ['/images/workshops/pottery-1.jpg', '/images/workshops/pottery-2.jpg'],
@@ -173,7 +174,7 @@ export class WorkshopBookingService {
           'Master basic pottery wheel techniques',
           'Understand clay preparation and types',
           'Create 2-3 pottery items',
-          'Learn glazing and firing basics'
+          'Learn glazing and firing basics',
         ],
         materialsProvided: ['Clay', 'Pottery wheel', 'Tools', 'Apron', 'Glazes'],
         requirements: ['Comfortable clothing', 'Closed-toe shoes'],
@@ -186,13 +187,14 @@ export class WorkshopBookingService {
           certificateProvided: true,
           takeHomeProduct: true,
           refreshmentsIncluded: true,
-          transportationIncluded: false
-        }
+          transportationIncluded: false,
+        },
       },
       {
         id: 'workshop-002',
         title: 'Madhubani Painting Masterclass',
-        description: 'Immerse yourself in the vibrant world of Madhubani art. Learn traditional patterns, techniques, and create your own masterpiece.',
+        description:
+          'Immerse yourself in the vibrant world of Madhubani art. Learn traditional patterns, techniques, and create your own masterpiece.',
         craftType: 'Painting',
         artisanId: 'artisan-002',
         artisanName: 'Sunita Devi',
@@ -201,7 +203,7 @@ export class WorkshopBookingService {
           city: 'Madhubani',
           state: 'Bihar',
           country: 'India',
-          coordinates: { lat: 26.35, lng: 86.07 }
+          coordinates: { lat: 26.35, lng: 86.07 },
         },
         duration: 3,
         difficulty: 'beginner',
@@ -211,7 +213,7 @@ export class WorkshopBookingService {
         price: {
           amount: 1800,
           currency: 'INR',
-          includes: ['Canvas', 'Natural colors', 'Brushes', 'Tea & snacks', 'Your artwork']
+          includes: ['Canvas', 'Natural colors', 'Brushes', 'Tea & snacks', 'Your artwork'],
         },
         schedule: [],
         images: ['/images/workshops/madhubani-1.jpg', '/images/workshops/madhubani-2.jpg'],
@@ -220,7 +222,7 @@ export class WorkshopBookingService {
           'Understand Madhubani art history and symbolism',
           'Master traditional patterns and motifs',
           'Mix natural colors from traditional recipes',
-          'Create a complete Madhubani painting'
+          'Create a complete Madhubani painting',
         ],
         materialsProvided: ['Canvas', 'Natural pigments', 'Bamboo brushes', 'Reference materials'],
         requirements: ['No prior experience needed'],
@@ -233,13 +235,14 @@ export class WorkshopBookingService {
           certificateProvided: true,
           takeHomeProduct: true,
           refreshmentsIncluded: true,
-          transportationIncluded: false
-        }
+          transportationIncluded: false,
+        },
       },
       {
         id: 'workshop-003',
         title: 'Silk Weaving Experience',
-        description: 'Discover the intricate art of Banarasi silk weaving. Work on traditional looms and understand the craft behind India\'s finest sarees.',
+        description:
+          "Discover the intricate art of Banarasi silk weaving. Work on traditional looms and understand the craft behind India's finest sarees.",
         craftType: 'Weaving',
         artisanId: 'artisan-003',
         artisanName: 'Abdul Rahman',
@@ -248,7 +251,7 @@ export class WorkshopBookingService {
           city: 'Varanasi',
           state: 'Uttar Pradesh',
           country: 'India',
-          coordinates: { lat: 25.32, lng: 82.97 }
+          coordinates: { lat: 25.32, lng: 82.97 },
         },
         duration: 5,
         difficulty: 'intermediate',
@@ -258,7 +261,14 @@ export class WorkshopBookingService {
         price: {
           amount: 4500,
           currency: 'INR',
-          includes: ['Loom access', 'Silk threads', 'Lunch', 'Traditional tea', 'Woven sample', 'Certificate']
+          includes: [
+            'Loom access',
+            'Silk threads',
+            'Lunch',
+            'Traditional tea',
+            'Woven sample',
+            'Certificate',
+          ],
         },
         schedule: [],
         images: ['/images/workshops/weaving-1.jpg', '/images/workshops/weaving-2.jpg'],
@@ -267,7 +277,7 @@ export class WorkshopBookingService {
           'Understand silk thread preparation',
           'Learn traditional loom operation',
           'Master basic weaving patterns',
-          'Appreciate the complexity of Banarasi weaving'
+          'Appreciate the complexity of Banarasi weaving',
         ],
         materialsProvided: ['Handloom', 'Silk threads', 'Zari', 'Tools', 'Safety equipment'],
         requirements: ['Good manual dexterity', 'Patience', 'Comfortable clothing'],
@@ -280,12 +290,12 @@ export class WorkshopBookingService {
           certificateProvided: true,
           takeHomeProduct: true,
           refreshmentsIncluded: true,
-          transportationIncluded: true
-        }
-      }
+          transportationIncluded: true,
+        },
+      },
     ];
 
-    sampleWorkshops.forEach(workshop => {
+    sampleWorkshops.forEach((workshop) => {
       this.workshops.set(workshop.id, workshop);
     });
   }
@@ -301,36 +311,39 @@ export class WorkshopBookingService {
     virtualOption?: boolean;
   }): Promise<Workshop[]> {
     let workshops = Array.from(this.workshops.values());
-    
+
     if (filters) {
       if (filters.craftType) {
-        workshops = workshops.filter(w => w.craftType.toLowerCase() === filters.craftType!.toLowerCase());
+        workshops = workshops.filter(
+          (w) => w.craftType.toLowerCase() === filters.craftType!.toLowerCase()
+        );
       }
-      
+
       if (filters.location) {
-        workshops = workshops.filter(w => 
-          w.location.city.toLowerCase().includes(filters.location!.toLowerCase()) ||
-          w.location.state.toLowerCase().includes(filters.location!.toLowerCase())
+        workshops = workshops.filter(
+          (w) =>
+            w.location.city.toLowerCase().includes(filters.location!.toLowerCase()) ||
+            w.location.state.toLowerCase().includes(filters.location!.toLowerCase())
         );
       }
-      
+
       if (filters.difficulty) {
-        workshops = workshops.filter(w => w.difficulty === filters.difficulty);
+        workshops = workshops.filter((w) => w.difficulty === filters.difficulty);
       }
-      
+
       if (filters.priceRange) {
-        workshops = workshops.filter(w => 
-          w.price.amount >= filters.priceRange!.min && 
-          w.price.amount <= filters.priceRange!.max
+        workshops = workshops.filter(
+          (w) =>
+            w.price.amount >= filters.priceRange!.min && w.price.amount <= filters.priceRange!.max
         );
       }
-      
+
       if (filters.virtualOption !== undefined) {
-        workshops = workshops.filter(w => w.features.virtualOption === filters.virtualOption);
+        workshops = workshops.filter((w) => w.features.virtualOption === filters.virtualOption);
       }
     }
-    
-    return workshops.filter(w => w.status === 'active');
+
+    return workshops.filter((w) => w.status === 'active');
   }
 
   /**
@@ -345,22 +358,22 @@ export class WorkshopBookingService {
    */
   async createBooking(request: BookingRequest): Promise<Booking> {
     const workshop = await this.getWorkshopById(request.workshopId);
-    
+
     if (!workshop) {
       throw new Error('Workshop not found');
     }
-    
+
     // Find schedule
-    const schedule = workshop.schedule.find(s => s.id === request.scheduleId);
+    const schedule = workshop.schedule.find((s) => s.id === request.scheduleId);
     if (!schedule) {
       throw new Error('Schedule not found');
     }
-    
+
     // Check availability
     if (schedule.availableSpots < request.participants.length) {
       throw new Error('Not enough spots available');
     }
-    
+
     // Create booking
     const booking: Booking = {
       id: `booking-${Date.now()}`,
@@ -378,18 +391,18 @@ export class WorkshopBookingService {
       specialRequests: request.specialRequests,
       dietaryRestrictions: request.dietaryRestrictions,
       reminderSent: false,
-      feedbackSubmitted: false
+      feedbackSubmitted: false,
     };
-    
+
     this.bookings.set(booking.id, booking);
-    
+
     // Update schedule availability
     schedule.bookedSpots += request.participants.length;
     schedule.availableSpots -= request.participants.length;
     if (schedule.availableSpots === 0) {
       schedule.status = 'full';
     }
-    
+
     return booking;
   }
 
@@ -404,7 +417,7 @@ export class WorkshopBookingService {
    * Get user bookings
    */
   async getUserBookings(userId: string): Promise<Booking[]> {
-    return Array.from(this.bookings.values()).filter(b => b.userId === userId);
+    return Array.from(this.bookings.values()).filter((b) => b.userId === userId);
   }
 
   /**
@@ -412,23 +425,23 @@ export class WorkshopBookingService {
    */
   async cancelBooking(bookingId: string): Promise<Booking> {
     const booking = await this.getBooking(bookingId);
-    
+
     if (!booking) {
       throw new Error('Booking not found');
     }
-    
+
     if (booking.status === 'cancelled') {
       throw new Error('Booking already cancelled');
     }
-    
+
     // Update booking status
     booking.status = 'cancelled';
     booking.paymentStatus = 'refunded';
-    
+
     // Update schedule availability
     const workshop = await this.getWorkshopById(booking.workshopId);
     if (workshop) {
-      const schedule = workshop.schedule.find(s => s.id === booking.scheduleId);
+      const schedule = workshop.schedule.find((s) => s.id === booking.scheduleId);
       if (schedule) {
         schedule.bookedSpots -= booking.numberOfParticipants;
         schedule.availableSpots += booking.numberOfParticipants;
@@ -437,50 +450,58 @@ export class WorkshopBookingService {
         }
       }
     }
-    
+
     return booking;
   }
 
   /**
    * Confirm booking payment
    */
-  async confirmPayment(bookingId: string, paymentId: string, paymentMethod: string): Promise<Booking> {
+  async confirmPayment(
+    bookingId: string,
+    paymentId: string,
+    paymentMethod: string
+  ): Promise<Booking> {
     const booking = await this.getBooking(bookingId);
-    
+
     if (!booking) {
       throw new Error('Booking not found');
     }
-    
+
     booking.paymentStatus = 'paid';
     booking.paymentId = paymentId;
     booking.paymentMethod = paymentMethod;
     booking.status = 'confirmed';
-    
+
     // TODO: Send confirmation email
-    
+
     return booking;
   }
 
   /**
    * Get available schedules for workshop
    */
-  async getAvailableSchedules(workshopId: string, startDate?: Date, endDate?: Date): Promise<WorkshopSchedule[]> {
+  async getAvailableSchedules(
+    workshopId: string,
+    startDate?: Date,
+    endDate?: Date
+  ): Promise<WorkshopSchedule[]> {
     const workshop = await this.getWorkshopById(workshopId);
-    
+
     if (!workshop) {
       return [];
     }
-    
-    let schedules = workshop.schedule.filter(s => s.status === 'available');
-    
+
+    let schedules = workshop.schedule.filter((s) => s.status === 'available');
+
     if (startDate) {
-      schedules = schedules.filter(s => s.date >= startDate);
+      schedules = schedules.filter((s) => s.date >= startDate);
     }
-    
+
     if (endDate) {
-      schedules = schedules.filter(s => s.date <= endDate);
+      schedules = schedules.filter((s) => s.date <= endDate);
     }
-    
+
     return schedules.sort((a, b) => a.date.getTime() - b.date.getTime());
   }
 
@@ -501,13 +522,14 @@ export class WorkshopBookingService {
    */
   async searchWorkshops(query: string): Promise<Workshop[]> {
     const searchTerm = query.toLowerCase();
-    
-    return Array.from(this.workshops.values()).filter(workshop => 
-      workshop.title.toLowerCase().includes(searchTerm) ||
-      workshop.description.toLowerCase().includes(searchTerm) ||
-      workshop.craftType.toLowerCase().includes(searchTerm) ||
-      workshop.artisanName.toLowerCase().includes(searchTerm) ||
-      workshop.location.city.toLowerCase().includes(searchTerm)
+
+    return Array.from(this.workshops.values()).filter(
+      (workshop) =>
+        workshop.title.toLowerCase().includes(searchTerm) ||
+        workshop.description.toLowerCase().includes(searchTerm) ||
+        workshop.craftType.toLowerCase().includes(searchTerm) ||
+        workshop.artisanName.toLowerCase().includes(searchTerm) ||
+        workshop.location.city.toLowerCase().includes(searchTerm)
     );
   }
 
@@ -515,7 +537,7 @@ export class WorkshopBookingService {
    * Get workshops by artisan
    */
   async getWorkshopsByArtisan(artisanId: string): Promise<Workshop[]> {
-    return Array.from(this.workshops.values()).filter(w => w.artisanId === artisanId);
+    return Array.from(this.workshops.values()).filter((w) => w.artisanId === artisanId);
   }
 
   /**
@@ -523,19 +545,19 @@ export class WorkshopBookingService {
    */
   async getWorkshopStats(workshopId: string) {
     const workshop = await this.getWorkshopById(workshopId);
-    const bookings = Array.from(this.bookings.values()).filter(b => b.workshopId === workshopId);
-    
+    const bookings = Array.from(this.bookings.values()).filter((b) => b.workshopId === workshopId);
+
     const totalBookings = bookings.length;
-    const confirmedBookings = bookings.filter(b => b.status === 'confirmed').length;
-    const cancelledBookings = bookings.filter(b => b.status === 'cancelled').length;
+    const confirmedBookings = bookings.filter((b) => b.status === 'confirmed').length;
+    const cancelledBookings = bookings.filter((b) => b.status === 'cancelled').length;
     const totalRevenue = bookings
-      .filter(b => b.paymentStatus === 'paid')
+      .filter((b) => b.paymentStatus === 'paid')
       .reduce((sum, b) => sum + b.totalAmount, 0);
-    
+
     const totalParticipants = bookings
-      .filter(b => b.status === 'confirmed')
+      .filter((b) => b.status === 'confirmed')
       .reduce((sum, b) => sum + b.numberOfParticipants, 0);
-    
+
     return {
       workshop,
       totalBookings,
@@ -543,7 +565,7 @@ export class WorkshopBookingService {
       cancelledBookings,
       totalRevenue,
       totalParticipants,
-      averageParticipantsPerSession: totalParticipants / Math.max(confirmedBookings, 1)
+      averageParticipantsPerSession: totalParticipants / Math.max(confirmedBookings, 1),
     };
   }
 }

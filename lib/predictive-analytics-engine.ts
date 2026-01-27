@@ -1,6 +1,6 @@
 /**
  * Predictive Analytics Engine
- * 
+ *
  * AI-powered predictive analytics and forecasting:
  * - Demand forecasting
  * - Sales predictions
@@ -15,14 +15,14 @@ export interface DemandForecast {
   productId: string;
   productName: string;
   category: string;
-  
+
   // Forecast period
   period: {
     start: Date;
     end: Date;
     granularity: 'daily' | 'weekly' | 'monthly';
   };
-  
+
   // Predictions
   predictions: {
     date: Date;
@@ -39,7 +39,7 @@ export interface DemandForecast {
       promotions: number;
     };
   }[];
-  
+
   // Historical accuracy
   accuracy: {
     mape: number; // Mean Absolute Percentage Error
@@ -47,7 +47,7 @@ export interface DemandForecast {
     rmse: number; // Root Mean Square Error
     r2Score: number; // R-squared
   };
-  
+
   // Model information
   model: {
     type: 'arima' | 'prophet' | 'lstm' | 'random_forest' | 'gradient_boosting' | 'ensemble';
@@ -55,7 +55,7 @@ export interface DemandForecast {
     trainedAt: Date;
     features: string[];
   };
-  
+
   // Recommendations
   recommendations: {
     stockLevel: number;
@@ -70,7 +70,7 @@ export interface SalesPrediction {
     start: Date;
     end: Date;
   };
-  
+
   // Overall predictions
   overall: {
     predictedRevenue: number;
@@ -82,7 +82,7 @@ export interface SalesPrediction {
       level: number;
     };
   };
-  
+
   // Daily breakdown
   daily: {
     date: Date;
@@ -94,7 +94,7 @@ export interface SalesPrediction {
       high: number;
     };
   }[];
-  
+
   // By category
   byCategory: {
     category: string;
@@ -102,7 +102,7 @@ export interface SalesPrediction {
     predictedOrders: number;
     growth: number; // percentage
   }[];
-  
+
   // By channel
   byChannel: {
     channel: string;
@@ -110,7 +110,7 @@ export interface SalesPrediction {
     predictedOrders: number;
     growth: number;
   }[];
-  
+
   // Factors
   factors: {
     seasonality: {
@@ -127,7 +127,7 @@ export interface SalesPrediction {
       confidence: number;
     }[];
   };
-  
+
   // Model performance
   performance: {
     accuracy: number;
@@ -144,7 +144,7 @@ export interface SalesPrediction {
 export interface CustomerBehaviorPrediction {
   customerId: string;
   customerName: string;
-  
+
   // Purchase prediction
   purchase: {
     nextPurchaseDate: Date;
@@ -156,7 +156,7 @@ export interface CustomerBehaviorPrediction {
       probability: number;
     }[];
   };
-  
+
   // Churn prediction
   churn: {
     churnProbability: number;
@@ -164,7 +164,7 @@ export interface CustomerBehaviorPrediction {
     riskLevel: 'low' | 'medium' | 'high' | 'critical';
     riskScore: number;
   };
-  
+
   // Lifetime value prediction
   lifetimeValue: {
     predicted: number;
@@ -174,7 +174,7 @@ export interface CustomerBehaviorPrediction {
     };
     timeframe: number; // months
   };
-  
+
   // Engagement prediction
   engagement: {
     emailEngagement: number;
@@ -182,7 +182,7 @@ export interface CustomerBehaviorPrediction {
     socialEngagement: number;
     overallScore: number;
   };
-  
+
   // Recommendations
   recommendations: {
     action: string;
@@ -198,7 +198,7 @@ export interface InventoryOptimization {
   productName: string;
   locationId: string;
   locationName: string;
-  
+
   // Current state
   current: {
     stock: number;
@@ -206,7 +206,7 @@ export interface InventoryOptimization {
     available: number;
     inTransit: number;
   };
-  
+
   // Optimal levels
   optimal: {
     minimumStock: number;
@@ -215,14 +215,14 @@ export interface InventoryOptimization {
     economicOrderQuantity: number;
     safetyStock: number;
   };
-  
+
   // Forecasted demand
   demand: {
     next7Days: number;
     next30Days: number;
     next90Days: number;
   };
-  
+
   // Recommendations
   recommendations: {
     action: 'order' | 'transfer' | 'reduce' | 'maintain';
@@ -232,7 +232,7 @@ export interface InventoryOptimization {
     estimatedStockoutDate?: Date;
     estimatedOverstockDate?: Date;
   };
-  
+
   // Costs
   costs: {
     holdingCost: number;
@@ -246,7 +246,7 @@ export interface InventoryOptimization {
 export interface PriceOptimization {
   productId: string;
   productName: string;
-  
+
   // Current pricing
   current: {
     price: number;
@@ -255,7 +255,7 @@ export interface PriceOptimization {
     sales: number;
     revenue: number;
   };
-  
+
   // Optimal price
   optimal: {
     price: number;
@@ -264,14 +264,14 @@ export interface PriceOptimization {
     expectedMargin: number;
     confidence: number;
   };
-  
+
   // Price elasticity
   elasticity: {
     coefficient: number;
     interpretation: 'elastic' | 'inelastic' | 'unit_elastic';
     demandChange: number; // % change for 1% price change
   };
-  
+
   // Scenarios
   scenarios: {
     priceChange: number; // percentage
@@ -281,7 +281,7 @@ export interface PriceOptimization {
     expectedProfit: number;
     probability: number;
   }[];
-  
+
   // Competitive analysis
   competitive: {
     averageMarketPrice: number;
@@ -289,7 +289,7 @@ export interface PriceOptimization {
     highestCompetitorPrice: number;
     pricePosition: 'premium' | 'competitive' | 'value';
   };
-  
+
   // Recommendations
   recommendations: {
     action: 'increase' | 'decrease' | 'maintain';
@@ -305,7 +305,7 @@ export interface PriceOptimization {
 
 export interface TrendAnalysis {
   category: string;
-  
+
   // Trend detection
   trends: {
     id: string;
@@ -315,7 +315,7 @@ export interface TrendAnalysis {
     velocity: number; // Rate of change
     startDate: Date;
     peakDate?: Date;
-    
+
     // Metrics
     metrics: {
       searchVolume: number;
@@ -325,27 +325,27 @@ export interface TrendAnalysis {
       sales: number;
       salesGrowth: number;
     };
-    
+
     // Related
     relatedKeywords: string[];
     relatedProducts: string[];
     targetAudience: string[];
   }[];
-  
+
   // Seasonal patterns
   seasonality: {
     pattern: 'weekly' | 'monthly' | 'quarterly' | 'yearly';
     peaks: { period: string; multiplier: number }[];
     troughs: { period: string; multiplier: number }[];
   };
-  
+
   // Future outlook
   outlook: {
     next30Days: 'increasing' | 'stable' | 'decreasing';
     next90Days: 'increasing' | 'stable' | 'decreasing';
     confidence: number;
   };
-  
+
   // Opportunities
   opportunities: {
     type: string;
@@ -359,7 +359,7 @@ export interface TrendAnalysis {
 export interface AnomalyDetection {
   timestamp: Date;
   category: 'sales' | 'traffic' | 'inventory' | 'customer' | 'system';
-  
+
   // Anomaly details
   anomaly: {
     type: 'spike' | 'drop' | 'pattern_break' | 'unusual_behavior';
@@ -367,7 +367,7 @@ export interface AnomalyDetection {
     confidence: number;
     score: number; // Anomaly score
   };
-  
+
   // Metrics
   metrics: {
     expected: number;
@@ -376,7 +376,7 @@ export interface AnomalyDetection {
     deviationPercentage: number;
     stdDeviation: number;
   };
-  
+
   // Context
   context: {
     metric: string;
@@ -384,7 +384,7 @@ export interface AnomalyDetection {
     location?: string;
     timeframe: string;
   };
-  
+
   // Analysis
   analysis: {
     possibleCauses: string[];
@@ -395,21 +395,21 @@ export interface AnomalyDetection {
       frequency: string;
     };
   };
-  
+
   // Impact
   impact: {
     estimated: string;
     affectedMetrics: { metric: string; impact: number }[];
     affectedEntities: string[];
   };
-  
+
   // Actions
   recommendations: {
     action: string;
     priority: 'immediate' | 'high' | 'medium' | 'low';
     reasoning: string;
   }[];
-  
+
   // Status
   status: 'new' | 'investigating' | 'resolved' | 'false_positive';
   investigatedBy?: string;
@@ -421,7 +421,7 @@ export interface PredictiveInsights {
     start: Date;
     end: Date;
   };
-  
+
   // Top insights
   insights: {
     id: string;
@@ -429,7 +429,7 @@ export interface PredictiveInsights {
     priority: 'critical' | 'high' | 'medium' | 'low';
     title: string;
     description: string;
-    
+
     // Metrics
     metrics: {
       currentState: number;
@@ -437,7 +437,7 @@ export interface PredictiveInsights {
       potentialImpact: number;
       confidence: number;
     };
-    
+
     // Recommendations
     recommendations: {
       action: string;
@@ -445,7 +445,7 @@ export interface PredictiveInsights {
       timeline: string;
       expectedOutcome: string;
     }[];
-    
+
     // Deadline
     timeframe: {
       urgent: boolean;
@@ -453,7 +453,7 @@ export interface PredictiveInsights {
       optimalActionDate?: Date;
     };
   }[];
-  
+
   // Model confidence
   overallConfidence: number;
   lastUpdated: Date;
@@ -504,12 +504,12 @@ export class PredictiveAnalyticsEngine {
       predictions: Array.from({ length: params.days }, (_, i) => {
         const date = new Date(startDate);
         date.setDate(date.getDate() + i);
-        
+
         const baseValue = 50;
         const trend = i * 0.5;
         const seasonality = Math.sin((i / 7) * Math.PI) * 10;
         const predicted = baseValue + trend + seasonality + (Math.random() * 10 - 5);
-        
+
         return {
           date,
           predicted: Number(Math.max(0, predicted).toFixed(2)),
@@ -561,12 +561,12 @@ export class PredictiveAnalyticsEngine {
     const daily = Array.from({ length: days }, (_, i) => {
       const date = new Date(startDate);
       date.setDate(date.getDate() + i);
-      
+
       const baseRevenue = 42000;
       const trend = i * 150;
       const seasonality = Math.sin((i / 30) * Math.PI) * 5000;
       const revenue = baseRevenue + trend + seasonality;
-      
+
       return {
         date,
         revenue: Number(revenue.toFixed(2)),
@@ -597,15 +597,50 @@ export class PredictiveAnalyticsEngine {
       },
       daily,
       byCategory: [
-        { category: 'Textiles', predictedRevenue: totalRevenue * 0.36, predictedOrders: Math.floor(totalOrders * 0.36), growth: 15.2 },
-        { category: 'Pottery', predictedRevenue: totalRevenue * 0.26, predictedOrders: Math.floor(totalOrders * 0.26), growth: 22.3 },
-        { category: 'Jewelry', predictedRevenue: totalRevenue * 0.224, predictedOrders: Math.floor(totalOrders * 0.224), growth: 8.5 },
-        { category: 'Woodwork', predictedRevenue: totalRevenue * 0.156, predictedOrders: Math.floor(totalOrders * 0.156), growth: 5.8 },
+        {
+          category: 'Textiles',
+          predictedRevenue: totalRevenue * 0.36,
+          predictedOrders: Math.floor(totalOrders * 0.36),
+          growth: 15.2,
+        },
+        {
+          category: 'Pottery',
+          predictedRevenue: totalRevenue * 0.26,
+          predictedOrders: Math.floor(totalOrders * 0.26),
+          growth: 22.3,
+        },
+        {
+          category: 'Jewelry',
+          predictedRevenue: totalRevenue * 0.224,
+          predictedOrders: Math.floor(totalOrders * 0.224),
+          growth: 8.5,
+        },
+        {
+          category: 'Woodwork',
+          predictedRevenue: totalRevenue * 0.156,
+          predictedOrders: Math.floor(totalOrders * 0.156),
+          growth: 5.8,
+        },
       ],
       byChannel: [
-        { channel: 'Website', predictedRevenue: totalRevenue * 0.7, predictedOrders: Math.floor(totalOrders * 0.7), growth: 12.5 },
-        { channel: 'Mobile App', predictedRevenue: totalRevenue * 0.2, predictedOrders: Math.floor(totalOrders * 0.2), growth: 25.8 },
-        { channel: 'Marketplace', predictedRevenue: totalRevenue * 0.1, predictedOrders: Math.floor(totalOrders * 0.1), growth: 8.3 },
+        {
+          channel: 'Website',
+          predictedRevenue: totalRevenue * 0.7,
+          predictedOrders: Math.floor(totalOrders * 0.7),
+          growth: 12.5,
+        },
+        {
+          channel: 'Mobile App',
+          predictedRevenue: totalRevenue * 0.2,
+          predictedOrders: Math.floor(totalOrders * 0.2),
+          growth: 25.8,
+        },
+        {
+          channel: 'Marketplace',
+          predictedRevenue: totalRevenue * 0.1,
+          predictedOrders: Math.floor(totalOrders * 0.1),
+          growth: 8.3,
+        },
       ],
       factors: {
         seasonality: { impact: 0.15, pattern: 'monthly' },
@@ -641,7 +676,7 @@ export class PredictiveAnalyticsEngine {
         predictedProducts: [
           { productId: 'prod-1', productName: 'Handwoven Silk Saree', probability: 0.45 },
           { productId: 'prod-3', productName: 'Silver Jewelry Collection', probability: 0.35 },
-          { productId: 'prod-2', productName: 'Terracotta Vase Set', probability: 0.20 },
+          { productId: 'prod-2', productName: 'Terracotta Vase Set', probability: 0.2 },
         ],
       },
       churn: {
@@ -766,9 +801,30 @@ export class PredictiveAnalyticsEngine {
         demandChange: -1.2,
       },
       scenarios: [
-        { priceChange: 5, newPrice: 525, expectedSales: 238, expectedRevenue: 124950, expectedProfit: 53550, probability: 0.85 },
-        { priceChange: 10, newPrice: 550, expectedSales: 225, expectedRevenue: 123750, expectedProfit: 56250, probability: 0.72 },
-        { priceChange: -5, newPrice: 475, expectedSales: 265, expectedRevenue: 125875, expectedProfit: 46375, probability: 0.90 },
+        {
+          priceChange: 5,
+          newPrice: 525,
+          expectedSales: 238,
+          expectedRevenue: 124950,
+          expectedProfit: 53550,
+          probability: 0.85,
+        },
+        {
+          priceChange: 10,
+          newPrice: 550,
+          expectedSales: 225,
+          expectedRevenue: 123750,
+          expectedProfit: 56250,
+          probability: 0.72,
+        },
+        {
+          priceChange: -5,
+          newPrice: 475,
+          expectedSales: 265,
+          expectedRevenue: 125875,
+          expectedProfit: 46375,
+          probability: 0.9,
+        },
       ],
       competitive: {
         averageMarketPrice: 520,
@@ -779,7 +835,8 @@ export class PredictiveAnalyticsEngine {
       recommendations: {
         action: 'increase',
         amount: 25,
-        reasoning: 'Market research shows room for price increase while maintaining competitive position. Demand elasticity suggests minimal volume impact.',
+        reasoning:
+          'Market research shows room for price increase while maintaining competitive position. Demand elasticity suggests minimal volume impact.',
         expectedImpact: {
           revenueChange: -50,
           profitChange: 3550,
@@ -955,7 +1012,8 @@ export class PredictiveAnalyticsEngine {
           type: 'opportunity',
           priority: 'critical',
           title: 'High-Potential Product Category Identified',
-          description: 'Sustainable textiles showing 35% search growth and 28% sales growth. Predicted to continue for next 90 days.',
+          description:
+            'Sustainable textiles showing 35% search growth and 28% sales growth. Predicted to continue for next 90 days.',
           metrics: {
             currentState: 285000,
             predictedState: 425000,
@@ -987,7 +1045,8 @@ export class PredictiveAnalyticsEngine {
           type: 'risk',
           priority: 'high',
           title: 'Inventory Stockout Risk for Top Product',
-          description: 'Handwoven Silk Saree predicted to stock out in 32 days based on current demand forecast.',
+          description:
+            'Handwoven Silk Saree predicted to stock out in 32 days based on current demand forecast.',
           metrics: {
             currentState: 450,
             predictedState: 0,
@@ -1013,7 +1072,8 @@ export class PredictiveAnalyticsEngine {
           type: 'optimization',
           priority: 'medium',
           title: 'Price Optimization Opportunity',
-          description: 'Analysis suggests 5% price increase can improve profit margin by 7% with minimal volume impact.',
+          description:
+            'Analysis suggests 5% price increase can improve profit margin by 7% with minimal volume impact.',
           metrics: {
             currentState: 40,
             predictedState: 42.9,

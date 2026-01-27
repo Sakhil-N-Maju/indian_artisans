@@ -4,18 +4,10 @@ import { razorpayService } from '@/lib/services/razorpay';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const {
-      orderId,
-      razorpayOrderId,
-      razorpayPaymentId,
-      razorpaySignature,
-    } = body;
+    const { orderId, razorpayOrderId, razorpayPaymentId, razorpaySignature } = body;
 
     if (!orderId || !razorpayOrderId || !razorpayPaymentId || !razorpaySignature) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     // Process payment

@@ -1,7 +1,7 @@
 // Voice Recording Service with Multi-Language Support
 // Phase 1: Voice-First AI Interface Implementation
 
-export type SupportedLanguage = 
+export type SupportedLanguage =
   | 'en' // English
   | 'hi' // Hindi
   | 'bn' // Bengali
@@ -13,48 +13,48 @@ export type SupportedLanguage =
   | 'ml' // Malayalam
   | 'pa' // Punjabi
   | 'or' // Odia
-  | 'as' // Assamese
+  | 'as'; // Assamese
 
 export interface VoiceRecordingOptions {
-  language: SupportedLanguage
-  maxDuration?: number // in seconds
-  autoStop?: boolean
+  language: SupportedLanguage;
+  maxDuration?: number; // in seconds
+  autoStop?: boolean;
 }
 
 export interface TranscriptionResult {
-  text: string
-  language: SupportedLanguage
-  confidence: number
-  duration: number
-  timestamp: Date
+  text: string;
+  language: SupportedLanguage;
+  confidence: number;
+  duration: number;
+  timestamp: Date;
   translatedText?: {
-    [key: string]: string // language code -> translated text
-  }
+    [key: string]: string; // language code -> translated text
+  };
 }
 
 class VoiceRecordingService {
-  private mediaRecorder: MediaRecorder | null = null
-  private audioChunks: Blob[] = []
-  private stream: MediaStream | null = null
-  private startTime: number = 0
-  private recordingTimer: NodeJS.Timeout | null = null
+  private mediaRecorder: MediaRecorder | null = null;
+  private audioChunks: Blob[] = [];
+  private stream: MediaStream | null = null;
+  private startTime: number = 0;
+  private recordingTimer: NodeJS.Timeout | null = null;
 
   /**
    * Initialize microphone access
    */
   async initialize(): Promise<boolean> {
     try {
-      this.stream = await navigator.mediaDevices.getUserMedia({ 
+      this.stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
           autoGainControl: true,
-        } 
-      })
-      return true
+        },
+      });
+      return true;
     } catch (error) {
-      console.error('Failed to access microphone:', error)
-      return false
+      console.error('Failed to access microphone:', error);
+      return false;
     }
   }
 
@@ -63,31 +63,31 @@ class VoiceRecordingService {
    */
   async startRecording(options: VoiceRecordingOptions): Promise<void> {
     if (!this.stream) {
-      const initialized = await this.initialize()
+      const initialized = await this.initialize();
       if (!initialized) {
-        throw new Error('Failed to initialize microphone')
+        throw new Error('Failed to initialize microphone');
       }
     }
 
-    this.audioChunks = []
+    this.audioChunks = [];
     this.mediaRecorder = new MediaRecorder(this.stream!, {
       mimeType: 'audio/webm',
-    })
+    });
 
     this.mediaRecorder.ondataavailable = (event) => {
       if (event.data.size > 0) {
-        this.audioChunks.push(event.data)
+        this.audioChunks.push(event.data);
       }
-    }
+    };
 
-    this.startTime = Date.now()
-    this.mediaRecorder.start(100) // Collect data every 100ms
+    this.startTime = Date.now();
+    this.mediaRecorder.start(100); // Collect data every 100ms
 
     // Auto-stop if maxDuration is set
     if (options.maxDuration && options.autoStop) {
       this.recordingTimer = setTimeout(() => {
-        this.stopRecording()
-      }, options.maxDuration * 1000)
+        this.stopRecording();
+      }, options.maxDuration * 1000);
     }
   }
 
@@ -97,30 +97,30 @@ class VoiceRecordingService {
   async stopRecording(): Promise<Blob> {
     return new Promise((resolve, reject) => {
       if (!this.mediaRecorder) {
-        reject(new Error('No active recording'))
-        return
+        reject(new Error('No active recording'));
+        return;
       }
 
       if (this.recordingTimer) {
-        clearTimeout(this.recordingTimer)
-        this.recordingTimer = null
+        clearTimeout(this.recordingTimer);
+        this.recordingTimer = null;
       }
 
       this.mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' })
-        resolve(audioBlob)
-      }
+        const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
+        resolve(audioBlob);
+      };
 
-      this.mediaRecorder.stop()
-    })
+      this.mediaRecorder.stop();
+    });
   }
 
   /**
    * Get recording duration in seconds
    */
   getRecordingDuration(): number {
-    if (this.startTime === 0) return 0
-    return Math.floor((Date.now() - this.startTime) / 1000)
+    if (this.startTime === 0) return 0;
+    return Math.floor((Date.now() - this.startTime) / 1000);
   }
 
   /**
@@ -133,9 +133,9 @@ class VoiceRecordingService {
   ): Promise<TranscriptionResult> {
     // TODO: Replace with actual API call to speech-to-text service
     // Example: Google Cloud Speech-to-Text, Azure Cognitive Services, or AWS Transcribe
-    
-    const duration = this.getRecordingDuration()
-    
+
+    const duration = this.getRecordingDuration();
+
     // Simulated transcription for development
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -146,9 +146,9 @@ class VoiceRecordingService {
           duration,
           timestamp: new Date(),
           translatedText: this.getSimulatedTranslations(language),
-        })
-      }, 1500) // Simulate API delay
-    })
+        });
+      }, 1500); // Simulate API delay
+    });
   }
 
   /**
@@ -160,42 +160,38 @@ class VoiceRecordingService {
     targetLanguages: SupportedLanguage[]
   ): Promise<{ [key: string]: string }> {
     // TODO: Replace with actual translation API (Google Translate, Azure Translator, etc.)
-    
-    const translations: { [key: string]: string } = {}
-    
+
+    const translations: { [key: string]: string } = {};
+
     for (const lang of targetLanguages) {
-      translations[lang] = `[${lang}] ${text}` // Placeholder
+      translations[lang] = `[${lang}] ${text}`; // Placeholder
     }
-    
-    return translations
+
+    return translations;
   }
 
   /**
    * Convert text to speech for playback
    */
-  async textToSpeech(
-    text: string,
-    language: SupportedLanguage,
-    voice?: string
-  ): Promise<Blob> {
+  async textToSpeech(text: string, language: SupportedLanguage, voice?: string): Promise<Blob> {
     // TODO: Replace with actual TTS API
-    
+
     // Using browser's built-in speech synthesis as fallback
     return new Promise((resolve, reject) => {
       if ('speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance(text)
-        utterance.lang = this.getLanguageCode(language)
-        
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = this.getLanguageCode(language);
+
         // This is a placeholder - actual implementation would use cloud TTS
-        const chunks: BlobPart[] = []
-        window.speechSynthesis.speak(utterance)
-        
+        const chunks: BlobPart[] = [];
+        window.speechSynthesis.speak(utterance);
+
         // Return empty blob for now (real implementation would record the audio)
-        resolve(new Blob(chunks, { type: 'audio/wav' }))
+        resolve(new Blob(chunks, { type: 'audio/wav' }));
       } else {
-        reject(new Error('Speech synthesis not supported'))
+        reject(new Error('Speech synthesis not supported'));
       }
-    })
+    });
   }
 
   /**
@@ -203,15 +199,15 @@ class VoiceRecordingService {
    */
   cleanup(): void {
     if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
-      this.mediaRecorder.stop()
+      this.mediaRecorder.stop();
     }
     if (this.stream) {
-      this.stream.getTracks().forEach(track => track.stop())
-      this.stream = null
+      this.stream.getTracks().forEach((track) => track.stop());
+      this.stream = null;
     }
     if (this.recordingTimer) {
-      clearTimeout(this.recordingTimer)
-      this.recordingTimer = null
+      clearTimeout(this.recordingTimer);
+      this.recordingTimer = null;
     }
   }
 
@@ -231,31 +227,31 @@ class VoiceRecordingService {
       pa: 'pa-IN',
       or: 'or-IN',
       as: 'as-IN',
-    }
-    return languageMap[language] || 'en-US'
+    };
+    return languageMap[language] || 'en-US';
   }
 
   private getSimulatedTranscription(language: SupportedLanguage): string {
     const samples: { [key: string]: string } = {
-      en: "I create beautiful handwoven textiles using traditional techniques passed down through generations in my family.",
-      hi: "मैं अपने परिवार में पीढ़ियों से चली आ रही पारंपरिक तकनीकों का उपयोग करके सुंदर हस्तनिर्मित वस्त्र बनाता हूं।",
-      bn: "আমি আমার পরিবারে প্রজন্মের মধ্য দিয়ে চলে আসা ঐতিহ্যবাহী কৌশল ব্যবহার করে সুন্দর হস্তনির্মিত বস্ত্র তৈরি করি।",
-      ta: "எனது குடும்பத்தில் தலைமுறை தலைமுறையாக வந்த பாரம்பரிய நுட்பங்களைப் பயன்படுத்தி அழகான கைத்தறி ஜவுளிகளை உருவாக்குகிறேன்.",
-    }
-    return samples[language] || samples.en
+      en: 'I create beautiful handwoven textiles using traditional techniques passed down through generations in my family.',
+      hi: 'मैं अपने परिवार में पीढ़ियों से चली आ रही पारंपरिक तकनीकों का उपयोग करके सुंदर हस्तनिर्मित वस्त्र बनाता हूं।',
+      bn: 'আমি আমার পরিবারে প্রজন্মের মধ্য দিয়ে চলে আসা ঐতিহ্যবাহী কৌশল ব্যবহার করে সুন্দর হস্তনির্মিত বস্ত্র তৈরি করি।',
+      ta: 'எனது குடும்பத்தில் தலைமுறை தலைமுறையாக வந்த பாரம்பரிய நுட்பங்களைப் பயன்படுத்தி அழகான கைத்தறி ஜவுளிகளை உருவாக்குகிறேன்.',
+    };
+    return samples[language] || samples.en;
   }
 
   private getSimulatedTranslations(language: SupportedLanguage): { [key: string]: string } {
     if (language === 'en') {
       return {
-        hi: "मैं पारंपरिक तकनीकों का उपयोग करके सुंदर हस्तनिर्मित वस्त्र बनाता हूं।",
-        ta: "பாரம்பரிய நுட்பங்களைப் பயன்படுத்தி அழகான கைத்தறி ஜவுளிகளை உருவாக்குகிறேன்.",
-      }
+        hi: 'मैं पारंपरिक तकनीकों का उपयोग करके सुंदर हस्तनिर्मित वस्त्र बनाता हूं।',
+        ta: 'பாரம்பரிய நுட்பங்களைப் பயன்படுத்தி அழகான கைத்தறி ஜவுளிகளை உருவாக்குகிறேன்.',
+      };
     }
     return {
-      en: "I create beautiful handwoven textiles using traditional techniques.",
-    }
+      en: 'I create beautiful handwoven textiles using traditional techniques.',
+    };
   }
 }
 
-export const voiceRecordingService = new VoiceRecordingService()
+export const voiceRecordingService = new VoiceRecordingService();

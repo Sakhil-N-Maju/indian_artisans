@@ -1,6 +1,6 @@
 /**
  * Social Commerce Integration
- * 
+ *
  * Integrates social media platforms for commerce:
  * - Instagram Shopping
  * - Facebook Marketplace
@@ -62,7 +62,7 @@ export interface SocialPost {
   id: string;
   platform: SocialPlatform['type'];
   type: 'product' | 'story' | 'artisan' | 'workshop' | 'general';
-  
+
   // Content
   content: {
     caption: string;
@@ -74,7 +74,7 @@ export interface SocialPost {
       altText?: string;
     };
   };
-  
+
   // Product Tagging
   taggedProducts?: {
     productId: string;
@@ -82,11 +82,11 @@ export interface SocialPost {
     price: number;
     currency: string;
   }[];
-  
+
   // Scheduling
   scheduledFor?: Date;
   publishedAt?: Date;
-  
+
   // Analytics
   analytics: {
     reach: number;
@@ -98,7 +98,7 @@ export interface SocialPost {
     saves: number;
     clicks: number;
   };
-  
+
   status: 'draft' | 'scheduled' | 'published' | 'failed';
 }
 
@@ -106,7 +106,7 @@ export interface InfluencerCampaign {
   id: string;
   name: string;
   description: string;
-  
+
   // Influencer
   influencer: {
     id: string;
@@ -116,7 +116,7 @@ export interface InfluencerCampaign {
     followers: number;
     engagementRate: number;
   };
-  
+
   // Campaign Details
   campaign: {
     type: 'sponsored_post' | 'affiliate' | 'brand_ambassador' | 'collaboration';
@@ -128,7 +128,7 @@ export interface InfluencerCampaign {
       completed: number;
     }[];
   };
-  
+
   // Compensation
   compensation: {
     type: 'fixed' | 'commission' | 'product' | 'hybrid';
@@ -137,7 +137,7 @@ export interface InfluencerCampaign {
     commissionRate?: number;
     products?: string[];
   };
-  
+
   // Performance
   performance: {
     posts: number;
@@ -147,7 +147,7 @@ export interface InfluencerCampaign {
     revenue: number;
     roi: number;
   };
-  
+
   status: 'draft' | 'active' | 'completed' | 'cancelled';
 }
 
@@ -156,7 +156,7 @@ export interface SocialAnalytics {
     start: Date;
     end: Date;
   };
-  
+
   // Overall Metrics
   overall: {
     totalReach: number;
@@ -169,16 +169,19 @@ export interface SocialAnalytics {
     conversionRate: number;
     socialRevenue: number;
   };
-  
+
   // By Platform
-  byPlatform: Record<string, {
-    reach: number;
-    engagement: number;
-    clicks: number;
-    conversions: number;
-    revenue: number;
-  }>;
-  
+  byPlatform: Record<
+    string,
+    {
+      reach: number;
+      engagement: number;
+      clicks: number;
+      conversions: number;
+      revenue: number;
+    }
+  >;
+
   // Top Performing
   topPosts: SocialPost[];
   topProducts: {
@@ -189,7 +192,7 @@ export interface SocialAnalytics {
     conversions: number;
     revenue: number;
   }[];
-  
+
   // Audience Insights
   audience: {
     demographics: {
@@ -207,21 +210,21 @@ export interface WhatsAppMessage {
   customerId: string;
   customerPhone: string;
   customerName: string;
-  
+
   // Message
   type: 'text' | 'image' | 'video' | 'document' | 'product' | 'order';
   content: string;
   mediaUrl?: string;
-  
+
   // Context
   productId?: string;
   orderId?: string;
-  
+
   // Status
   direction: 'inbound' | 'outbound';
   status: 'sent' | 'delivered' | 'read' | 'failed';
   timestamp: Date;
-  
+
   // Conversation
   conversationId: string;
   replyTo?: string;
@@ -298,7 +301,7 @@ export class SocialCommerceIntegration {
       },
     ];
 
-    platforms.forEach(platform => {
+    platforms.forEach((platform) => {
       this.platforms.set(platform.id, platform);
     });
   }
@@ -306,7 +309,10 @@ export class SocialCommerceIntegration {
   /**
    * Connect social platform
    */
-  async connectPlatform(platformId: string, credentials: SocialPlatform['credentials']): Promise<void> {
+  async connectPlatform(
+    platformId: string,
+    credentials: SocialPlatform['credentials']
+  ): Promise<void> {
     const platform = this.platforms.get(platformId);
     if (!platform) {
       throw new Error('Platform not found');
@@ -358,8 +364,8 @@ export class SocialCommerceIntegration {
 
     // Sync to each platform
     for (const platformType of params.platforms) {
-      const platform = Array.from(this.platforms.values()).find(p => p.type === platformType);
-      
+      const platform = Array.from(this.platforms.values()).find((p) => p.type === platformType);
+
       if (!platform || !platform.isConnected) {
         continue;
       }
@@ -368,7 +374,7 @@ export class SocialCommerceIntegration {
         socialProduct.platforms.instagram = {
           status: 'pending',
         };
-        
+
         // Simulate API call to Instagram Shopping
         setTimeout(() => {
           if (socialProduct.platforms.instagram) {
@@ -382,7 +388,7 @@ export class SocialCommerceIntegration {
         socialProduct.platforms.facebook = {
           status: 'pending',
         };
-        
+
         // Simulate API call to Facebook Catalog
         setTimeout(() => {
           if (socialProduct.platforms.facebook) {
@@ -397,7 +403,7 @@ export class SocialCommerceIntegration {
         socialProduct.platforms.pinterest = {
           status: 'pending',
         };
-        
+
         // Simulate API call to Pinterest Product Pins
         setTimeout(() => {
           if (socialProduct.platforms.pinterest) {
@@ -424,8 +430,8 @@ export class SocialCommerceIntegration {
     taggedProducts?: SocialPost['taggedProducts'];
     scheduledFor?: Date;
   }): Promise<SocialPost> {
-    const platform = Array.from(this.platforms.values()).find(p => p.type === params.platform);
-    
+    const platform = Array.from(this.platforms.values()).find((p) => p.type === params.platform);
+
     if (!platform || !platform.isConnected) {
       throw new Error('Platform not connected');
     }
@@ -483,13 +489,14 @@ export class SocialCommerceIntegration {
     post.analytics.shares = Math.floor(post.analytics.likes * 0.02);
     post.analytics.saves = Math.floor(post.analytics.likes * 0.03);
     post.analytics.clicks = Math.floor(post.analytics.reach * 0.02);
-    post.analytics.engagement = post.analytics.likes + post.analytics.comments + post.analytics.shares + post.analytics.saves;
+    post.analytics.engagement =
+      post.analytics.likes + post.analytics.comments + post.analytics.shares + post.analytics.saves;
 
     // Update product analytics if products are tagged
     if (post.taggedProducts) {
-      post.taggedProducts.forEach(product => {
+      post.taggedProducts.forEach((product) => {
         const socialProduct = Array.from(this.socialProducts.values()).find(
-          sp => sp.productId === product.productId
+          (sp) => sp.productId === product.productId
         );
         if (socialProduct) {
           socialProduct.analytics.views += post.analytics.reach;
@@ -521,7 +528,7 @@ export class SocialCommerceIntegration {
         type: params.type,
         startDate: params.startDate,
         endDate: params.endDate,
-        deliverables: params.deliverables.map(d => ({ ...d, completed: 0 })),
+        deliverables: params.deliverables.map((d) => ({ ...d, completed: 0 })),
       },
       compensation: params.compensation,
       performance: {
@@ -553,7 +560,7 @@ export class SocialCommerceIntegration {
     orderId?: string;
   }): Promise<WhatsAppMessage> {
     const platform = this.platforms.get('whatsapp');
-    
+
     if (!platform || !platform.isConnected) {
       throw new Error('WhatsApp not connected');
     }
@@ -591,7 +598,7 @@ export class SocialCommerceIntegration {
    */
   async getSocialAnalytics(startDate: Date, endDate: Date): Promise<SocialAnalytics> {
     const posts = Array.from(this.posts.values()).filter(
-      p => p.publishedAt && p.publishedAt >= startDate && p.publishedAt <= endDate
+      (p) => p.publishedAt && p.publishedAt >= startDate && p.publishedAt <= endDate
     );
 
     const overall = {
@@ -608,7 +615,7 @@ export class SocialCommerceIntegration {
 
     const byPlatform: Record<string, any> = {};
 
-    posts.forEach(post => {
+    posts.forEach((post) => {
       overall.totalReach += post.analytics.reach;
       overall.totalImpressions += post.analytics.impressions;
       overall.totalEngagement += post.analytics.engagement;
@@ -629,13 +636,11 @@ export class SocialCommerceIntegration {
       byPlatform[post.platform].clicks += post.analytics.clicks;
     });
 
-    overall.engagementRate = overall.totalReach > 0
-      ? (overall.totalEngagement / overall.totalReach) * 100
-      : 0;
-    
-    overall.clickThroughRate = overall.totalImpressions > 0
-      ? (overall.totalClicks / overall.totalImpressions) * 100
-      : 0;
+    overall.engagementRate =
+      overall.totalReach > 0 ? (overall.totalEngagement / overall.totalReach) * 100 : 0;
+
+    overall.clickThroughRate =
+      overall.totalImpressions > 0 ? (overall.totalClicks / overall.totalImpressions) * 100 : 0;
 
     // Get top performing posts
     const topPosts = posts
@@ -644,8 +649,8 @@ export class SocialCommerceIntegration {
 
     // Get top products
     const productStats = new Map<string, any>();
-    
-    Array.from(this.socialProducts.values()).forEach(sp => {
+
+    Array.from(this.socialProducts.values()).forEach((sp) => {
       productStats.set(sp.productId, {
         productId: sp.productId,
         productName: 'Product Name', // Would fetch from product service
@@ -682,7 +687,7 @@ export class SocialCommerceIntegration {
    * Get connected platforms
    */
   getConnectedPlatforms(): SocialPlatform[] {
-    return Array.from(this.platforms.values()).filter(p => p.isConnected);
+    return Array.from(this.platforms.values()).filter((p) => p.isConnected);
   }
 
   /**
@@ -693,11 +698,11 @@ export class SocialCommerceIntegration {
     const posts = Array.from(this.posts.values());
     const campaigns = Array.from(this.campaigns.values());
 
-    const connectedPlatforms = platforms.filter(p => p.isConnected).length;
+    const connectedPlatforms = platforms.filter((p) => p.isConnected).length;
     const totalPosts = posts.length;
-    const publishedPosts = posts.filter(p => p.status === 'published').length;
-    const scheduledPosts = posts.filter(p => p.status === 'scheduled').length;
-    const activeCampaigns = campaigns.filter(c => c.status === 'active').length;
+    const publishedPosts = posts.filter((p) => p.status === 'published').length;
+    const scheduledPosts = posts.filter((p) => p.status === 'scheduled').length;
+    const activeCampaigns = campaigns.filter((c) => c.status === 'active').length;
 
     const totalReach = posts.reduce((sum, p) => sum + p.analytics.reach, 0);
     const totalEngagement = posts.reduce((sum, p) => sum + p.analytics.engagement, 0);

@@ -1,6 +1,6 @@
 /**
  * Shipping & Logistics Integration System
- * 
+ *
  * Multi-carrier shipping integration with rate calculation, label generation,
  * tracking, fulfillment, and warehouse management.
  */
@@ -9,7 +9,7 @@
 // Types & Interfaces
 // ============================================================================
 
-export type ShippingCarrier = 
+export type ShippingCarrier =
   | 'usps'
   | 'fedex'
   | 'ups'
@@ -21,7 +21,7 @@ export type ShippingCarrier =
   | 'india-post'
   | 'local-courier';
 
-export type ServiceLevel = 
+export type ServiceLevel =
   | 'standard'
   | 'express'
   | 'overnight'
@@ -31,15 +31,9 @@ export type ServiceLevel =
   | 'priority'
   | 'international';
 
-export type PackageType = 
-  | 'envelope'
-  | 'pak'
-  | 'box'
-  | 'tube'
-  | 'pallet'
-  | 'custom';
+export type PackageType = 'envelope' | 'pak' | 'box' | 'tube' | 'pallet' | 'custom';
 
-export type ShipmentStatus = 
+export type ShipmentStatus =
   | 'pending'
   | 'label-created'
   | 'picked-up'
@@ -50,7 +44,7 @@ export type ShipmentStatus =
   | 'returned'
   | 'cancelled';
 
-export type FulfillmentStatus = 
+export type FulfillmentStatus =
   | 'pending'
   | 'processing'
   | 'picked'
@@ -60,7 +54,7 @@ export type FulfillmentStatus =
   | 'fulfilled'
   | 'cancelled';
 
-export type TrackingEventType = 
+export type TrackingEventType =
   | 'label-created'
   | 'picked-up'
   | 'in-transit'
@@ -83,9 +77,9 @@ export interface Address {
   country: string;
   phone?: string;
   email?: string;
-  
+
   residential: boolean;
-  
+
   validation?: {
     validated: boolean;
     validatedAt?: Date;
@@ -99,7 +93,7 @@ export interface CarrierConfiguration {
   carrier: ShippingCarrier;
   name: string;
   enabled: boolean;
-  
+
   credentials: {
     accountNumber: string;
     apiKey: string;
@@ -108,7 +102,7 @@ export interface CarrierConfiguration {
     password?: string;
     environment: 'sandbox' | 'production';
   };
-  
+
   services: Array<{
     code: string;
     name: string;
@@ -116,7 +110,7 @@ export interface CarrierConfiguration {
     estimatedDays: number;
     enabled: boolean;
   }>;
-  
+
   features: {
     tracking: boolean;
     labelGeneration: boolean;
@@ -126,34 +120,34 @@ export interface CarrierConfiguration {
     insuranceAvailable: boolean;
     internationalShipping: boolean;
   };
-  
+
   settings: {
     defaultPackageType: PackageType;
     defaultServiceLevel: ServiceLevel;
-    
+
     insurance: {
       enabled: boolean;
       maxValue: number;
       feePercentage: number;
     };
-    
+
     signature: {
       available: boolean;
       fee: number;
     };
-    
+
     packaging: {
       ownPackaging: boolean;
       carrierPackaging: boolean;
     };
   };
-  
+
   coverage: {
     domestic: boolean;
     international: boolean;
     countries: string[];
   };
-  
+
   pricing: {
     markup: {
       type: 'percentage' | 'fixed';
@@ -161,7 +155,7 @@ export interface CarrierConfiguration {
     };
     freeShippingThreshold?: number;
   };
-  
+
   metadata: {
     createdAt: Date;
     updatedAt: Date;
@@ -171,21 +165,21 @@ export interface CarrierConfiguration {
 
 export interface Package {
   id: string;
-  
+
   dimensions: {
     length: number;
     width: number;
     height: number;
     unit: 'in' | 'cm';
   };
-  
+
   weight: {
     value: number;
     unit: 'lb' | 'oz' | 'kg' | 'g';
   };
-  
+
   type: PackageType;
-  
+
   items: Array<{
     productId: string;
     sku: string;
@@ -197,13 +191,13 @@ export interface Package {
     hsCode?: string; // Harmonized System code for customs
     countryOfOrigin?: string;
   }>;
-  
+
   value: {
     total: number;
     currency: string;
     insurance?: number;
   };
-  
+
   options: {
     signature: boolean;
     insurance: boolean;
@@ -219,11 +213,11 @@ export interface ShippingRate {
   serviceName: string;
   serviceLevel: ServiceLevel;
   serviceCode: string;
-  
+
   cost: {
     amount: number;
     currency: string;
-    
+
     breakdown: {
       base: number;
       fuel: number;
@@ -231,22 +225,22 @@ export interface ShippingRate {
       signature: number;
       additional: number;
     };
-    
+
     retailRate?: number;
     listRate?: number;
   };
-  
+
   delivery: {
     estimatedDays: number;
     guaranteedDelivery: boolean;
     estimatedDeliveryDate?: Date;
   };
-  
+
   features: string[];
-  
+
   available: boolean;
   errors?: string[];
-  
+
   createdAt: Date;
 }
 
@@ -254,20 +248,20 @@ export interface Shipment {
   id: string;
   orderId: string;
   fulfillmentId?: string;
-  
+
   carrier: {
     provider: ShippingCarrier;
     service: string;
     serviceLevel: ServiceLevel;
     accountNumber: string;
   };
-  
+
   tracking: {
     number: string;
     url: string;
     qrCode?: string;
   };
-  
+
   label: {
     id: string;
     format: 'pdf' | 'png' | 'zpl';
@@ -275,19 +269,19 @@ export interface Shipment {
     base64?: string;
     size: '4x6' | '4x8' | '8.5x11';
   };
-  
+
   addresses: {
     from: Address;
     to: Address;
     returnTo?: Address;
   };
-  
+
   package: Package;
-  
+
   rate: ShippingRate;
-  
+
   status: ShipmentStatus;
-  
+
   timeline: {
     created: Date;
     labelCreated?: Date;
@@ -298,7 +292,7 @@ export interface Shipment {
     returned?: Date;
     cancelled?: Date;
   };
-  
+
   delivery: {
     estimatedDate?: Date;
     actualDate?: Date;
@@ -306,7 +300,7 @@ export interface Shipment {
     location?: string;
     instructions?: string;
   };
-  
+
   customs?: {
     required: boolean;
     forms: Array<{
@@ -317,23 +311,23 @@ export interface Shipment {
     duties: number;
     taxes: number;
   };
-  
+
   insurance?: {
     insured: boolean;
     value: number;
     provider: string;
     policyNumber?: string;
   };
-  
+
   events: TrackingEvent[];
-  
+
   metadata: {
     notes?: string;
     internalReference?: string;
     customerReference?: string;
     createdBy: string;
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -343,7 +337,7 @@ export interface TrackingEvent {
   type: TrackingEventType;
   status: string;
   description: string;
-  
+
   location?: {
     city?: string;
     state?: string;
@@ -354,9 +348,9 @@ export interface TrackingEvent {
       longitude: number;
     };
   };
-  
+
   timestamp: Date;
-  
+
   details?: {
     signedBy?: string;
     exceptionCode?: string;
@@ -369,7 +363,7 @@ export interface FulfillmentOrder {
   id: string;
   orderId: string;
   warehouseId: string;
-  
+
   items: Array<{
     productId: string;
     sku: string;
@@ -378,16 +372,16 @@ export interface FulfillmentOrder {
     quantityPicked: number;
     quantityPacked: number;
     quantityShipped: number;
-    
+
     location?: {
       aisle: string;
       bin: string;
       shelf: string;
     };
   }>;
-  
+
   status: FulfillmentStatus;
-  
+
   timeline: {
     created: Date;
     processing?: Date;
@@ -397,7 +391,7 @@ export interface FulfillmentOrder {
     fulfilled?: Date;
     cancelled?: Date;
   };
-  
+
   assignments: {
     picker?: {
       userId: string;
@@ -412,9 +406,9 @@ export interface FulfillmentOrder {
       completedAt?: Date;
     };
   };
-  
+
   shipments: string[]; // Shipment IDs
-  
+
   packaging: {
     packages: Package[];
     materials: Array<{
@@ -422,17 +416,17 @@ export interface FulfillmentOrder {
       quantity: number;
     }>;
   };
-  
+
   shipping: {
     method: string;
     carrier?: ShippingCarrier;
     cost: number;
   };
-  
+
   priority: 'low' | 'normal' | 'high' | 'urgent';
-  
+
   notes?: string;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -441,11 +435,11 @@ export interface Warehouse {
   id: string;
   name: string;
   code: string;
-  
+
   address: Address;
-  
+
   type: 'owned' | 'third-party' | '3pl' | 'dropship';
-  
+
   capabilities: {
     storage: boolean;
     picking: boolean;
@@ -455,14 +449,14 @@ export interface Warehouse {
     kitting: boolean;
     customPackaging: boolean;
   };
-  
+
   capacity: {
     total: number; // square feet or cubic meters
     used: number;
     available: number;
     unit: 'sqft' | 'cbm';
   };
-  
+
   zones: Array<{
     id: string;
     name: string;
@@ -470,27 +464,27 @@ export interface Warehouse {
     capacity: number;
     used: number;
   }>;
-  
+
   inventory: Array<{
     productId: string;
     sku: string;
     quantity: number;
     allocated: number;
     available: number;
-    
+
     location: {
       zone: string;
       aisle: string;
       bin: string;
       shelf: string;
     };
-    
+
     reorderPoint: number;
     reorderQuantity: number;
   }>;
-  
+
   carriers: ShippingCarrier[];
-  
+
   operatingHours: {
     monday: { open: string; close: string };
     tuesday: { open: string; close: string };
@@ -500,14 +494,14 @@ export interface Warehouse {
     saturday?: { open: string; close: string };
     sunday?: { open: string; close: string };
   };
-  
+
   contacts: Array<{
     name: string;
     role: string;
     email: string;
     phone: string;
   }>;
-  
+
   metrics: {
     ordersProcessed: number;
     averagePickTime: number; // minutes
@@ -515,9 +509,9 @@ export interface Warehouse {
     accuracyRate: number; // percentage
     onTimeShipRate: number; // percentage
   };
-  
+
   enabled: boolean;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -525,31 +519,31 @@ export interface Warehouse {
 export interface PickupRequest {
   id: string;
   carrier: ShippingCarrier;
-  
+
   location: Address;
-  
+
   date: Date;
   timeWindow: {
     start: string; // HH:MM
     end: string; // HH:MM
   };
-  
+
   packages: {
     count: number;
     totalWeight: number;
   };
-  
+
   shipments: string[]; // Shipment IDs
-  
+
   status: 'requested' | 'confirmed' | 'completed' | 'failed' | 'cancelled';
-  
+
   confirmation: {
     number?: string;
     confirmedAt?: Date;
   };
-  
+
   instructions?: string;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -559,13 +553,13 @@ export interface ShippingRule {
   name: string;
   enabled: boolean;
   priority: number;
-  
+
   conditions: Array<{
     field: string;
     operator: 'equals' | 'not-equals' | 'greater-than' | 'less-than' | 'contains' | 'in';
     value: any;
   }>;
-  
+
   actions: {
     carrier?: ShippingCarrier;
     serviceLevel?: ServiceLevel;
@@ -574,7 +568,7 @@ export interface ShippingRule {
     markup?: number;
     maxCost?: number;
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -584,36 +578,36 @@ export interface ReturnShipment {
   originalShipmentId: string;
   orderId: string;
   returnId: string;
-  
+
   carrier: {
     provider: ShippingCarrier;
     service: string;
   };
-  
+
   tracking: {
     number: string;
     url: string;
   };
-  
+
   label: {
     url: string;
     format: 'pdf' | 'png';
   };
-  
+
   items: Array<{
     productId: string;
     sku: string;
     quantity: number;
     reason: string;
   }>;
-  
+
   status: ShipmentStatus;
-  
+
   cost: {
     amount: number;
     paidBy: 'customer' | 'merchant';
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -623,20 +617,20 @@ export interface ShippingAnalytics {
     start: Date;
     end: Date;
   };
-  
+
   shipments: {
     total: number;
     delivered: number;
     inTransit: number;
     failed: number;
     returned: number;
-    
+
     deliveryRate: number; // percentage
     onTimeRate: number; // percentage
-    
+
     averageDeliveryTime: number; // days
   };
-  
+
   byCarrier: Array<{
     carrier: ShippingCarrier;
     shipments: number;
@@ -644,33 +638,33 @@ export interface ShippingAnalytics {
     deliveryRate: number;
     averageDeliveryTime: number;
   }>;
-  
+
   byServiceLevel: Array<{
     serviceLevel: ServiceLevel;
     shipments: number;
     cost: number;
   }>;
-  
+
   byDestination: Array<{
     country: string;
     state?: string;
     shipments: number;
     cost: number;
   }>;
-  
+
   costs: {
     total: number;
     average: number;
     byCarrier: Record<ShippingCarrier, number>;
   };
-  
+
   fulfillment: {
     averagePickTime: number;
     averagePackTime: number;
     averageShipTime: number;
     totalCycleTime: number;
   };
-  
+
   issues: {
     totalExceptions: number;
     deliveryAttempts: number;
@@ -734,7 +728,7 @@ export class ShippingLogisticsIntegrationSystem {
         },
         signature: {
           available: true,
-          fee: 5.00,
+          fee: 5.0,
         },
         packaging: {
           ownPackaging: true,
@@ -793,7 +787,7 @@ export class ShippingLogisticsIntegrationSystem {
       if (!this.isDestinationCovered(config, params.to.country)) continue;
 
       // Get rates for each service
-      for (const service of config.services.filter(s => s.enabled)) {
+      for (const service of config.services.filter((s) => s.enabled)) {
         const rate = await this.calculateRate({
           carrier,
           service,
@@ -824,54 +818,55 @@ export class ShippingLogisticsIntegrationSystem {
 
     const distance = this.calculateDistance(params.from, params.to);
     const weight = params.package.weight.value;
-    
+
     // Base calculation
     let baseRate = 5.99;
-    
+
     // Weight-based pricing
     if (weight <= 1) baseRate += 0;
     else if (weight <= 5) baseRate += (weight - 1) * 1.5;
     else if (weight <= 10) baseRate += 6 + (weight - 5) * 1.2;
     else baseRate += 12 + (weight - 10) * 1.0;
-    
+
     // Distance-based pricing
     if (distance > 1000) baseRate += 5;
     else if (distance > 500) baseRate += 3;
     else if (distance > 100) baseRate += 1;
-    
+
     // Service level multiplier
     const multipliers: Record<ServiceLevel, number> = {
-      'economy': 0.8,
-      'standard': 1.0,
-      'express': 1.5,
+      economy: 0.8,
+      standard: 1.0,
+      express: 1.5,
       'two-day': 1.3,
-      'overnight': 2.5,
+      overnight: 2.5,
       'same-day': 3.5,
-      'priority': 1.4,
-      'international': 2.0,
+      priority: 1.4,
+      international: 2.0,
     };
-    
+
     baseRate *= multipliers[params.service.serviceLevel] || 1.0;
-    
+
     // Fuel surcharge
     const fuelSurcharge = baseRate * 0.12;
-    
+
     // Insurance
-    const insuranceFee = params.package.options.insurance 
+    const insuranceFee = params.package.options.insurance
       ? params.package.value.total * (params.config.settings.insurance.feePercentage / 100)
       : 0;
-    
+
     // Signature
-    const signatureFee = params.package.options.signature 
-      ? params.config.settings.signature.fee 
+    const signatureFee = params.package.options.signature
+      ? params.config.settings.signature.fee
       : 0;
-    
+
     const total = baseRate + fuelSurcharge + insuranceFee + signatureFee;
-    
+
     // Apply markup
-    const finalAmount = params.config.pricing.markup.type === 'percentage'
-      ? total * (1 + params.config.pricing.markup.value / 100)
-      : total + params.config.pricing.markup.value;
+    const finalAmount =
+      params.config.pricing.markup.type === 'percentage'
+        ? total * (1 + params.config.pricing.markup.value / 100)
+        : total + params.config.pricing.markup.value;
 
     const rate: ShippingRate = {
       id: `rate_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -893,8 +888,11 @@ export class ShippingLogisticsIntegrationSystem {
       },
       delivery: {
         estimatedDays: params.service.estimatedDays,
-        guaranteedDelivery: params.service.serviceLevel === 'overnight' || params.service.serviceLevel === 'same-day',
-        estimatedDeliveryDate: new Date(Date.now() + params.service.estimatedDays * 24 * 60 * 60 * 1000),
+        guaranteedDelivery:
+          params.service.serviceLevel === 'overnight' || params.service.serviceLevel === 'same-day',
+        estimatedDeliveryDate: new Date(
+          Date.now() + params.service.estimatedDays * 24 * 60 * 60 * 1000
+        ),
       },
       features: this.getServiceFeatures(params.service.serviceLevel),
       available: true,
@@ -920,7 +918,7 @@ export class ShippingLogisticsIntegrationSystem {
     const config = this.carriers.get(params.carrier);
     if (!config || !config.enabled) throw new Error('Carrier not available');
 
-    const service = config.services.find(s => s.serviceLevel === params.serviceLevel);
+    const service = config.services.find((s) => s.serviceLevel === params.serviceLevel);
     if (!service) throw new Error('Service not available');
 
     // Get rate
@@ -1025,8 +1023,9 @@ export class ShippingLogisticsIntegrationSystem {
   // ============================================================================
 
   async trackShipment(trackingNumber: string): Promise<Shipment | null> {
-    const shipment = Array.from(this.shipments.values())
-      .find(s => s.tracking.number === trackingNumber);
+    const shipment = Array.from(this.shipments.values()).find(
+      (s) => s.tracking.number === trackingNumber
+    );
 
     if (!shipment) return null;
 
@@ -1095,7 +1094,7 @@ export class ShippingLogisticsIntegrationSystem {
       id: `ffl_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       orderId: params.orderId,
       warehouseId: params.warehouseId,
-      items: params.items.map(item => ({
+      items: params.items.map((item) => ({
         ...item,
         quantityPicked: 0,
         quantityPacked: 0,
@@ -1140,19 +1139,22 @@ export class ShippingLogisticsIntegrationSystem {
     return fulfillment;
   }
 
-  completePicking(fulfillmentId: string, pickedItems: Array<{ sku: string; quantity: number }>): FulfillmentOrder {
+  completePicking(
+    fulfillmentId: string,
+    pickedItems: Array<{ sku: string; quantity: number }>
+  ): FulfillmentOrder {
     const fulfillment = this.fulfillmentOrders.get(fulfillmentId);
     if (!fulfillment) throw new Error('Fulfillment order not found');
 
-    pickedItems.forEach(picked => {
-      const item = fulfillment.items.find(i => i.sku === picked.sku);
+    pickedItems.forEach((picked) => {
+      const item = fulfillment.items.find((i) => i.sku === picked.sku);
       if (item) {
         item.quantityPicked = picked.quantity;
       }
     });
 
-    const allPicked = fulfillment.items.every(i => i.quantityPicked >= i.quantity);
-    
+    const allPicked = fulfillment.items.every((i) => i.quantityPicked >= i.quantity);
+
     if (allPicked) {
       fulfillment.status = 'picked';
       fulfillment.timeline.picked = new Date();
@@ -1187,7 +1189,7 @@ export class ShippingLogisticsIntegrationSystem {
     fulfillment.packaging.packages = packages;
     fulfillment.status = 'packed';
     fulfillment.timeline.packed = new Date();
-    
+
     if (fulfillment.assignments.packer) {
       fulfillment.assignments.packer.completedAt = new Date();
     }
@@ -1196,12 +1198,15 @@ export class ShippingLogisticsIntegrationSystem {
     return fulfillment;
   }
 
-  async shipFulfillmentOrder(fulfillmentId: string, params: {
-    carrier: ShippingCarrier;
-    serviceLevel: ServiceLevel;
-    from: Address;
-    to: Address;
-  }): Promise<FulfillmentOrder> {
+  async shipFulfillmentOrder(
+    fulfillmentId: string,
+    params: {
+      carrier: ShippingCarrier;
+      serviceLevel: ServiceLevel;
+      from: Address;
+      to: Address;
+    }
+  ): Promise<FulfillmentOrder> {
     const fulfillment = this.fulfillmentOrders.get(fulfillmentId);
     if (!fulfillment) throw new Error('Fulfillment order not found');
     if (fulfillment.status !== 'packed') throw new Error('Order not ready for shipping');
@@ -1299,8 +1304,8 @@ export class ShippingLogisticsIntegrationSystem {
     const warehouse = this.warehouses.get(warehouseId);
     if (!warehouse) throw new Error('Warehouse not found');
 
-    const existing = warehouse.inventory.find(i => i.productId === productId);
-    
+    const existing = warehouse.inventory.find((i) => i.productId === productId);
+
     if (existing) {
       existing.quantity += quantity;
       existing.available = existing.quantity - existing.allocated;
@@ -1330,7 +1335,7 @@ export class ShippingLogisticsIntegrationSystem {
     const warehouse = this.warehouses.get(warehouseId);
     if (!warehouse) throw new Error('Warehouse not found');
 
-    const item = warehouse.inventory.find(i => i.productId === productId);
+    const item = warehouse.inventory.find((i) => i.productId === productId);
     if (!item) throw new Error('Product not found in warehouse');
     if (item.available < quantity) throw new Error('Insufficient inventory');
 
@@ -1355,8 +1360,8 @@ export class ShippingLogisticsIntegrationSystem {
     }
 
     const shipments = params.shipments
-      .map(id => this.shipments.get(id))
-      .filter(s => s !== undefined) as Shipment[];
+      .map((id) => this.shipments.get(id))
+      .filter((s) => s !== undefined) as Shipment[];
 
     const totalWeight = shipments.reduce((sum, s) => sum + s.package.weight.value, 0);
 
@@ -1440,15 +1445,17 @@ export class ShippingLogisticsIntegrationSystem {
   // ============================================================================
 
   getShippingAnalytics(period: { start: Date; end: Date }): ShippingAnalytics {
-    const shipmentsInPeriod = Array.from(this.shipments.values())
-      .filter(s => s.createdAt >= period.start && s.createdAt <= period.end);
-
-    const delivered = shipmentsInPeriod.filter(s => s.status === 'delivered');
-    const inTransit = shipmentsInPeriod.filter(s => 
-      s.status === 'in-transit' || s.status === 'out-for-delivery' || s.status === 'picked-up'
+    const shipmentsInPeriod = Array.from(this.shipments.values()).filter(
+      (s) => s.createdAt >= period.start && s.createdAt <= period.end
     );
-    const failed = shipmentsInPeriod.filter(s => s.status === 'failed-delivery');
-    const returned = shipmentsInPeriod.filter(s => s.status === 'returned');
+
+    const delivered = shipmentsInPeriod.filter((s) => s.status === 'delivered');
+    const inTransit = shipmentsInPeriod.filter(
+      (s) =>
+        s.status === 'in-transit' || s.status === 'out-for-delivery' || s.status === 'picked-up'
+    );
+    const failed = shipmentsInPeriod.filter((s) => s.status === 'failed-delivery');
+    const returned = shipmentsInPeriod.filter((s) => s.status === 'returned');
 
     const analytics: ShippingAnalytics = {
       period,
@@ -1467,7 +1474,9 @@ export class ShippingLogisticsIntegrationSystem {
       byDestination: this.getDestinationAnalytics(shipmentsInPeriod),
       costs: {
         total: shipmentsInPeriod.reduce((sum, s) => sum + s.rate.cost.amount, 0),
-        average: shipmentsInPeriod.reduce((sum, s) => sum + s.rate.cost.amount, 0) / shipmentsInPeriod.length || 0,
+        average:
+          shipmentsInPeriod.reduce((sum, s) => sum + s.rate.cost.amount, 0) /
+            shipmentsInPeriod.length || 0,
         byCarrier: {} as Record<ShippingCarrier, number>,
       },
       fulfillment: {
@@ -1499,10 +1508,10 @@ export class ShippingLogisticsIntegrationSystem {
 
   private generateTrackingUrl(carrier: ShippingCarrier, trackingNumber: string): string {
     const urls: Record<ShippingCarrier, string> = {
-      'usps': `https://tools.usps.com/go/TrackConfirmAction?tLabels=${trackingNumber}`,
-      'fedex': `https://www.fedex.com/fedextrack/?tracknumbers=${trackingNumber}`,
-      'ups': `https://www.ups.com/track?tracknum=${trackingNumber}`,
-      'dhl': `https://www.dhl.com/en/express/tracking.html?AWB=${trackingNumber}`,
+      usps: `https://tools.usps.com/go/TrackConfirmAction?tLabels=${trackingNumber}`,
+      fedex: `https://www.fedex.com/fedextrack/?tracknumbers=${trackingNumber}`,
+      ups: `https://www.ups.com/track?tracknum=${trackingNumber}`,
+      dhl: `https://www.dhl.com/en/express/tracking.html?AWB=${trackingNumber}`,
       'amazon-shipping': `https://track.amazon.com/${trackingNumber}`,
       'canada-post': `https://www.canadapost.ca/track/${trackingNumber}`,
       'royal-mail': `https://www.royalmail.com/track-your-item?trackNumber=${trackingNumber}`,
@@ -1528,21 +1537,21 @@ export class ShippingLogisticsIntegrationSystem {
 
   private getServiceFeatures(serviceLevel: ServiceLevel): string[] {
     const features: Record<ServiceLevel, string[]> = {
-      'economy': ['Basic tracking', 'No delivery guarantee'],
-      'standard': ['Full tracking', 'Standard delivery'],
-      'express': ['Priority handling', 'Expedited delivery', 'Full tracking'],
+      economy: ['Basic tracking', 'No delivery guarantee'],
+      standard: ['Full tracking', 'Standard delivery'],
+      express: ['Priority handling', 'Expedited delivery', 'Full tracking'],
       'two-day': ['Guaranteed 2-day delivery', 'Full tracking', 'Priority handling'],
-      'overnight': ['Next-day delivery', 'Money-back guarantee', 'Premium tracking'],
+      overnight: ['Next-day delivery', 'Money-back guarantee', 'Premium tracking'],
       'same-day': ['Same-day delivery', 'Real-time tracking', 'Premium service'],
-      'priority': ['Priority handling', 'Enhanced tracking'],
-      'international': ['Customs clearance', 'International tracking'],
+      priority: ['Priority handling', 'Enhanced tracking'],
+      international: ['Customs clearance', 'International tracking'],
     };
 
     return features[serviceLevel] || ['Standard service'];
   }
 
   private calculateOnTimeRate(deliveredShipments: Shipment[]): number {
-    const onTime = deliveredShipments.filter(s => {
+    const onTime = deliveredShipments.filter((s) => {
       if (!s.delivery.estimatedDate || !s.delivery.actualDate) return false;
       return s.delivery.actualDate <= s.delivery.estimatedDate;
     });
@@ -1552,8 +1561,8 @@ export class ShippingLogisticsIntegrationSystem {
 
   private calculateAverageDeliveryTime(deliveredShipments: Shipment[]): number {
     const times = deliveredShipments
-      .filter(s => s.timeline.created && s.timeline.delivered)
-      .map(s => {
+      .filter((s) => s.timeline.created && s.timeline.delivered)
+      .map((s) => {
         const created = s.timeline.created.getTime();
         const delivered = s.timeline.delivered!.getTime();
         return (delivered - created) / (1000 * 60 * 60 * 24); // days
@@ -1563,12 +1572,12 @@ export class ShippingLogisticsIntegrationSystem {
   }
 
   private getCarrierAnalytics(shipments: Shipment[]): ShippingAnalytics['byCarrier'] {
-    const carriers = Array.from(new Set(shipments.map(s => s.carrier.provider)));
-    
-    return carriers.map(carrier => {
-      const carrierShipments = shipments.filter(s => s.carrier.provider === carrier);
-      const delivered = carrierShipments.filter(s => s.status === 'delivered');
-      
+    const carriers = Array.from(new Set(shipments.map((s) => s.carrier.provider)));
+
+    return carriers.map((carrier) => {
+      const carrierShipments = shipments.filter((s) => s.carrier.provider === carrier);
+      const delivered = carrierShipments.filter((s) => s.status === 'delivered');
+
       return {
         carrier,
         shipments: carrierShipments.length,
@@ -1580,11 +1589,11 @@ export class ShippingLogisticsIntegrationSystem {
   }
 
   private getServiceLevelAnalytics(shipments: Shipment[]): ShippingAnalytics['byServiceLevel'] {
-    const levels = Array.from(new Set(shipments.map(s => s.carrier.serviceLevel)));
-    
-    return levels.map(serviceLevel => {
-      const levelShipments = shipments.filter(s => s.carrier.serviceLevel === serviceLevel);
-      
+    const levels = Array.from(new Set(shipments.map((s) => s.carrier.serviceLevel)));
+
+    return levels.map((serviceLevel) => {
+      const levelShipments = shipments.filter((s) => s.carrier.serviceLevel === serviceLevel);
+
       return {
         serviceLevel,
         shipments: levelShipments.length,
@@ -1595,8 +1604,8 @@ export class ShippingLogisticsIntegrationSystem {
 
   private getDestinationAnalytics(shipments: Shipment[]): ShippingAnalytics['byDestination'] {
     const destinations = new Map<string, { shipments: number; cost: number }>();
-    
-    shipments.forEach(s => {
+
+    shipments.forEach((s) => {
       const key = s.addresses.to.country;
       const existing = destinations.get(key) || { shipments: 0, cost: 0 };
       destinations.set(key, {
@@ -1614,7 +1623,7 @@ export class ShippingLogisticsIntegrationSystem {
 
   private countExceptions(shipments: Shipment[]): number {
     return shipments.reduce((count, s) => {
-      return count + s.events.filter(e => e.type === 'exception').length;
+      return count + s.events.filter((e) => e.type === 'exception').length;
     }, 0);
   }
 
@@ -1644,7 +1653,7 @@ export class ShippingLogisticsIntegrationSystem {
   }
 
   private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   // ============================================================================
@@ -1662,9 +1671,27 @@ export class ShippingLogisticsIntegrationSystem {
         environment: 'sandbox',
       },
       services: [
-        { code: 'USPS_PRIORITY', name: 'Priority Mail', serviceLevel: 'priority', estimatedDays: 3, enabled: true },
-        { code: 'USPS_EXPRESS', name: 'Priority Mail Express', serviceLevel: 'overnight', estimatedDays: 1, enabled: true },
-        { code: 'USPS_FIRST', name: 'First-Class Mail', serviceLevel: 'standard', estimatedDays: 5, enabled: true },
+        {
+          code: 'USPS_PRIORITY',
+          name: 'Priority Mail',
+          serviceLevel: 'priority',
+          estimatedDays: 3,
+          enabled: true,
+        },
+        {
+          code: 'USPS_EXPRESS',
+          name: 'Priority Mail Express',
+          serviceLevel: 'overnight',
+          estimatedDays: 1,
+          enabled: true,
+        },
+        {
+          code: 'USPS_FIRST',
+          name: 'First-Class Mail',
+          serviceLevel: 'standard',
+          estimatedDays: 5,
+          enabled: true,
+        },
       ],
     });
     this.enableCarrier('usps');
@@ -1680,10 +1707,34 @@ export class ShippingLogisticsIntegrationSystem {
         environment: 'sandbox',
       },
       services: [
-        { code: 'FEDEX_GROUND', name: 'FedEx Ground', serviceLevel: 'standard', estimatedDays: 5, enabled: true },
-        { code: 'FEDEX_2DAY', name: 'FedEx 2Day', serviceLevel: 'two-day', estimatedDays: 2, enabled: true },
-        { code: 'FEDEX_OVERNIGHT', name: 'FedEx Standard Overnight', serviceLevel: 'overnight', estimatedDays: 1, enabled: true },
-        { code: 'FEDEX_EXPRESS', name: 'FedEx International Priority', serviceLevel: 'international', estimatedDays: 3, enabled: true },
+        {
+          code: 'FEDEX_GROUND',
+          name: 'FedEx Ground',
+          serviceLevel: 'standard',
+          estimatedDays: 5,
+          enabled: true,
+        },
+        {
+          code: 'FEDEX_2DAY',
+          name: 'FedEx 2Day',
+          serviceLevel: 'two-day',
+          estimatedDays: 2,
+          enabled: true,
+        },
+        {
+          code: 'FEDEX_OVERNIGHT',
+          name: 'FedEx Standard Overnight',
+          serviceLevel: 'overnight',
+          estimatedDays: 1,
+          enabled: true,
+        },
+        {
+          code: 'FEDEX_EXPRESS',
+          name: 'FedEx International Priority',
+          serviceLevel: 'international',
+          estimatedDays: 3,
+          enabled: true,
+        },
       ],
     });
     this.enableCarrier('fedex');
@@ -1700,10 +1751,34 @@ export class ShippingLogisticsIntegrationSystem {
         environment: 'sandbox',
       },
       services: [
-        { code: 'UPS_GROUND', name: 'UPS Ground', serviceLevel: 'standard', estimatedDays: 5, enabled: true },
-        { code: 'UPS_3DAY', name: 'UPS 3 Day Select', serviceLevel: 'express', estimatedDays: 3, enabled: true },
-        { code: 'UPS_2DAY', name: 'UPS 2nd Day Air', serviceLevel: 'two-day', estimatedDays: 2, enabled: true },
-        { code: 'UPS_NEXTDAY', name: 'UPS Next Day Air', serviceLevel: 'overnight', estimatedDays: 1, enabled: true },
+        {
+          code: 'UPS_GROUND',
+          name: 'UPS Ground',
+          serviceLevel: 'standard',
+          estimatedDays: 5,
+          enabled: true,
+        },
+        {
+          code: 'UPS_3DAY',
+          name: 'UPS 3 Day Select',
+          serviceLevel: 'express',
+          estimatedDays: 3,
+          enabled: true,
+        },
+        {
+          code: 'UPS_2DAY',
+          name: 'UPS 2nd Day Air',
+          serviceLevel: 'two-day',
+          estimatedDays: 2,
+          enabled: true,
+        },
+        {
+          code: 'UPS_NEXTDAY',
+          name: 'UPS Next Day Air',
+          serviceLevel: 'overnight',
+          estimatedDays: 1,
+          enabled: true,
+        },
       ],
     });
     this.enableCarrier('ups');
@@ -1734,9 +1809,7 @@ export class ShippingLogisticsIntegrationSystem {
       name: 'Free Shipping Over $50',
       enabled: true,
       priority: 1,
-      conditions: [
-        { field: 'order.total', operator: 'greater-than', value: 50 },
-      ],
+      conditions: [{ field: 'order.total', operator: 'greater-than', value: 50 }],
       actions: {
         freeShipping: true,
       },
@@ -1752,13 +1825,11 @@ export class ShippingLogisticsIntegrationSystem {
   // ============================================================================
 
   getShipmentsByOrder(orderId: string): Shipment[] {
-    return Array.from(this.shipments.values())
-      .filter(s => s.orderId === orderId);
+    return Array.from(this.shipments.values()).filter((s) => s.orderId === orderId);
   }
 
   getFulfillmentsByStatus(status: FulfillmentStatus): FulfillmentOrder[] {
-    return Array.from(this.fulfillmentOrders.values())
-      .filter(f => f.status === status);
+    return Array.from(this.fulfillmentOrders.values()).filter((f) => f.status === status);
   }
 
   getWarehouseInventory(warehouseId: string): Warehouse['inventory'] {
@@ -1767,8 +1838,9 @@ export class ShippingLogisticsIntegrationSystem {
   }
 
   getPendingPickups(): PickupRequest[] {
-    return Array.from(this.pickupRequests.values())
-      .filter(p => p.status === 'requested' || p.status === 'confirmed');
+    return Array.from(this.pickupRequests.values()).filter(
+      (p) => p.status === 'requested' || p.status === 'confirmed'
+    );
   }
 }
 

@@ -1,6 +1,6 @@
 /**
  * Business Analytics Dashboard
- * 
+ *
  * Comprehensive analytics and reporting system:
  * - Real-time business metrics
  * - KPI tracking and monitoring
@@ -16,7 +16,7 @@ export interface DashboardWidget {
   type: 'metric' | 'chart' | 'table' | 'map' | 'gauge' | 'funnel' | 'heatmap' | 'timeline';
   title: string;
   description?: string;
-  
+
   // Data source
   dataSource: {
     type: 'realtime' | 'scheduled' | 'on_demand';
@@ -24,7 +24,7 @@ export interface DashboardWidget {
     refreshInterval?: number; // seconds
     lastUpdated?: Date;
   };
-  
+
   // Configuration
   config: {
     // For metric widgets
@@ -45,7 +45,7 @@ export interface DashboardWidget {
       target?: number;
       status?: 'good' | 'warning' | 'critical';
     };
-    
+
     // For chart widgets
     chart?: {
       chartType: 'line' | 'bar' | 'pie' | 'area' | 'scatter' | 'radar' | 'donut';
@@ -59,7 +59,7 @@ export interface DashboardWidget {
       labels?: string[];
       options?: Record<string, any>;
     };
-    
+
     // For table widgets
     table?: {
       columns: {
@@ -75,7 +75,7 @@ export interface DashboardWidget {
         total: number;
       };
     };
-    
+
     // For map widgets
     map?: {
       center: { lat: number; lng: number };
@@ -89,7 +89,7 @@ export interface DashboardWidget {
       }[];
     };
   };
-  
+
   // Layout
   layout: {
     x: number;
@@ -99,13 +99,13 @@ export interface DashboardWidget {
     minWidth?: number;
     minHeight?: number;
   };
-  
+
   // Permissions
   permissions: {
     view: string[]; // role IDs
     edit: string[];
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -115,22 +115,31 @@ export interface Dashboard {
   name: string;
   description?: string;
   category: 'overview' | 'sales' | 'operations' | 'marketing' | 'finance' | 'customer' | 'custom';
-  
+
   // Widgets
   widgets: DashboardWidget[];
-  
+
   // Settings
   settings: {
     refreshInterval?: number; // Auto-refresh in seconds
     dateRange: {
-      type: 'today' | 'yesterday' | 'last_7_days' | 'last_30_days' | 'this_month' | 'last_month' | 'this_quarter' | 'this_year' | 'custom';
+      type:
+        | 'today'
+        | 'yesterday'
+        | 'last_7_days'
+        | 'last_30_days'
+        | 'this_month'
+        | 'last_month'
+        | 'this_quarter'
+        | 'this_year'
+        | 'custom';
       start?: Date;
       end?: Date;
     };
     timezone: string;
     currency: string;
   };
-  
+
   // Sharing
   sharing: {
     isPublic: boolean;
@@ -142,7 +151,7 @@ export interface Dashboard {
       sharedAt: Date;
     }[];
   };
-  
+
   // Metadata
   isDefault: boolean;
   isTemplate: boolean;
@@ -156,18 +165,18 @@ export interface KPI {
   name: string;
   description: string;
   category: 'financial' | 'operational' | 'customer' | 'marketing' | 'quality';
-  
+
   // Calculation
   calculation: {
     formula: string;
     dataSources: string[];
     aggregation: 'sum' | 'avg' | 'min' | 'max' | 'count' | 'distinct_count';
   };
-  
+
   // Current value
   currentValue: number;
   unit?: string;
-  
+
   // Target
   target?: {
     value: number;
@@ -175,7 +184,7 @@ export interface KPI {
     rangeMin?: number;
     rangeMax?: number;
   };
-  
+
   // Performance
   performance: {
     status: 'on_track' | 'at_risk' | 'off_track';
@@ -186,13 +195,13 @@ export interface KPI {
       changePeriod: string;
     };
   };
-  
+
   // Historical data
   history: {
     date: Date;
     value: number;
   }[];
-  
+
   // Alert settings
   alerts: {
     enabled: boolean;
@@ -203,7 +212,7 @@ export interface KPI {
     }[];
     recipients: string[];
   };
-  
+
   // Metadata
   owner: string;
   updateFrequency: 'realtime' | 'hourly' | 'daily' | 'weekly' | 'monthly';
@@ -217,7 +226,7 @@ export interface Report {
   description?: string;
   type: 'standard' | 'custom' | 'scheduled' | 'adhoc';
   category: string;
-  
+
   // Data
   data: {
     source: string;
@@ -226,10 +235,10 @@ export interface Report {
     sortBy?: { field: string; order: 'asc' | 'desc' }[];
     limit?: number;
   };
-  
+
   // Format
   format: 'pdf' | 'excel' | 'csv' | 'json' | 'html';
-  
+
   // Schedule (for scheduled reports)
   schedule?: {
     frequency: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly';
@@ -240,7 +249,7 @@ export interface Report {
     nextRun?: Date;
     lastRun?: Date;
   };
-  
+
   // Distribution
   distribution: {
     method: 'email' | 'download' | 'api' | 'storage';
@@ -248,10 +257,10 @@ export interface Report {
     subject?: string;
     message?: string;
   };
-  
+
   // Status
   status: 'draft' | 'active' | 'paused' | 'completed' | 'failed';
-  
+
   // Generated files
   generatedFiles: {
     id: string;
@@ -261,7 +270,7 @@ export interface Report {
     expiresAt?: Date;
     downloadCount: number;
   }[];
-  
+
   createdBy: string;
   createdAt: Date;
   updatedAt: Date;
@@ -271,7 +280,7 @@ export interface DataExport {
   id: string;
   name: string;
   description?: string;
-  
+
   // Export configuration
   config: {
     dataSource: string;
@@ -283,7 +292,7 @@ export interface DataExport {
       end: Date;
     };
   };
-  
+
   // Processing
   processing: {
     status: 'pending' | 'processing' | 'completed' | 'failed';
@@ -294,7 +303,7 @@ export interface DataExport {
     completedAt?: Date;
     error?: string;
   };
-  
+
   // Output
   output?: {
     url: string;
@@ -302,7 +311,7 @@ export interface DataExport {
     expiresAt: Date;
     downloadCount: number;
   };
-  
+
   requestedBy: string;
   createdAt: Date;
 }
@@ -321,7 +330,7 @@ export interface AnalyticsMetrics {
     conversionRate: number;
     conversionGrowth: number;
   };
-  
+
   // Financial metrics
   financial: {
     grossRevenue: number;
@@ -335,7 +344,7 @@ export interface AnalyticsMetrics {
     netMargin: number;
     ebitda: number;
   };
-  
+
   // Sales metrics
   sales: {
     totalSales: number;
@@ -356,7 +365,7 @@ export interface AnalyticsMetrics {
       units: number;
     }[];
   };
-  
+
   // Customer metrics
   customer: {
     activeCustomers: number;
@@ -368,7 +377,7 @@ export interface AnalyticsMetrics {
     customerAcquisitionCost: number;
     ltvcacRatio: number;
   };
-  
+
   // Operational metrics
   operational: {
     inventoryTurnover: number;
@@ -379,7 +388,7 @@ export interface AnalyticsMetrics {
     defectRate: number;
     onTimeDeliveryRate: number;
   };
-  
+
   // Marketing metrics
   marketing: {
     websiteVisits: number;
@@ -402,10 +411,10 @@ export interface AnalyticsMetrics {
 export interface BenchmarkData {
   category: string;
   metric: string;
-  
+
   // Your performance
   yourValue: number;
-  
+
   // Industry benchmarks
   benchmarks: {
     industryAverage: number;
@@ -413,17 +422,17 @@ export interface BenchmarkData {
     median: number;
     bottomQuartile: number;
   };
-  
+
   // Performance rating
   performance: {
     score: number; // 0-100
     rating: 'excellent' | 'good' | 'average' | 'below_average' | 'poor';
     percentile: number;
   };
-  
+
   // Recommendations
   recommendations?: string[];
-  
+
   updatedAt: Date;
 }
 
@@ -438,7 +447,7 @@ export class BusinessAnalyticsDashboard {
     this.kpis = new Map();
     this.reports = new Map();
     this.exports = new Map();
-    
+
     // Initialize default dashboards
     this.initializeDefaultDashboards();
   }
@@ -496,7 +505,11 @@ export class BusinessAnalyticsDashboard {
           id: 'widget-customers',
           type: 'metric',
           title: 'Active Customers',
-          dataSource: { type: 'realtime', endpoint: '/api/metrics/customers', refreshInterval: 300 },
+          dataSource: {
+            type: 'realtime',
+            endpoint: '/api/metrics/customers',
+            refreshInterval: 300,
+          },
           config: {
             metric: {
               value: 15230,
@@ -516,7 +529,7 @@ export class BusinessAnalyticsDashboard {
           dataSource: { type: 'realtime', endpoint: '/api/metrics/aov', refreshInterval: 300 },
           config: {
             metric: {
-              value: 510.20,
+              value: 510.2,
               unit: 'currency',
               prefix: '₹',
               trend: { direction: 'up', percentage: 3.8, period: 'vs last month' },
@@ -532,7 +545,11 @@ export class BusinessAnalyticsDashboard {
           id: 'widget-revenue-trend',
           type: 'chart',
           title: 'Revenue Trend',
-          dataSource: { type: 'scheduled', endpoint: '/api/charts/revenue-trend', refreshInterval: 3600 },
+          dataSource: {
+            type: 'scheduled',
+            endpoint: '/api/charts/revenue-trend',
+            refreshInterval: 3600,
+          },
           config: {
             chart: {
               chartType: 'area',
@@ -557,7 +574,11 @@ export class BusinessAnalyticsDashboard {
           id: 'widget-category-sales',
           type: 'chart',
           title: 'Sales by Category',
-          dataSource: { type: 'scheduled', endpoint: '/api/charts/category-sales', refreshInterval: 3600 },
+          dataSource: {
+            type: 'scheduled',
+            endpoint: '/api/charts/category-sales',
+            refreshInterval: 3600,
+          },
           config: {
             chart: {
               chartType: 'donut',
@@ -758,7 +779,10 @@ export class BusinessAnalyticsDashboard {
   /**
    * Add widget to dashboard
    */
-  async addWidget(dashboardId: string, widget: Omit<DashboardWidget, 'id' | 'createdAt' | 'updatedAt'>): Promise<void> {
+  async addWidget(
+    dashboardId: string,
+    widget: Omit<DashboardWidget, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<void> {
     const dashboard = this.dashboards.get(dashboardId);
     if (!dashboard) return;
 
@@ -776,7 +800,12 @@ export class BusinessAnalyticsDashboard {
   /**
    * Create KPI
    */
-  async createKPI(params: Omit<KPI, 'id' | 'currentValue' | 'performance' | 'history' | 'lastUpdated' | 'createdAt'>): Promise<KPI> {
+  async createKPI(
+    params: Omit<
+      KPI,
+      'id' | 'currentValue' | 'performance' | 'history' | 'lastUpdated' | 'createdAt'
+    >
+  ): Promise<KPI> {
     const kpi: KPI = {
       ...params,
       id: `kpi-${Date.now()}`,
@@ -811,7 +840,7 @@ export class BusinessAnalyticsDashboard {
     if (kpi.history.length >= 2) {
       const previousValue = kpi.history[kpi.history.length - 2].value;
       const changePercentage = ((value - previousValue) / previousValue) * 100;
-      
+
       kpi.performance.trend = {
         direction: changePercentage > 0 ? 'up' : changePercentage < 0 ? 'down' : 'stable',
         changePercentage: Math.abs(changePercentage),
@@ -828,8 +857,12 @@ export class BusinessAnalyticsDashboard {
       kpi.performance.percentageToTarget = percentageToTarget;
 
       if (kpi.target.type === 'minimum') {
-        kpi.performance.status = value >= kpi.target.value ? 'on_track' 
-          : value >= kpi.target.value * 0.9 ? 'at_risk' : 'off_track';
+        kpi.performance.status =
+          value >= kpi.target.value
+            ? 'on_track'
+            : value >= kpi.target.value * 0.9
+              ? 'at_risk'
+              : 'off_track';
       }
     }
 
@@ -927,7 +960,7 @@ export class BusinessAnalyticsDashboard {
     for (let i = 0; i <= 100; i += 20) {
       dataExport.processing.progress = i;
       dataExport.processing.rowsProcessed = Math.floor((i / 100) * dataExport.processing.totalRows);
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
     }
 
     dataExport.processing.status = 'completed';
@@ -952,7 +985,7 @@ export class BusinessAnalyticsDashboard {
         ordersGrowth: 8.3,
         totalCustomers: 15230,
         customersGrowth: 15.2,
-        averageOrderValue: 510.20,
+        averageOrderValue: 510.2,
         aovGrowth: 3.8,
         conversionRate: 2.85,
         conversionGrowth: 5.2,
@@ -985,7 +1018,12 @@ export class BusinessAnalyticsDashboard {
         topProducts: [
           { productId: 'prod-1', productName: 'Handwoven Silk Saree', sales: 125000, units: 250 },
           { productId: 'prod-2', productName: 'Terracotta Vase Set', sales: 98000, units: 490 },
-          { productId: 'prod-3', productName: 'Silver Jewelry Collection', sales: 87500, units: 175 },
+          {
+            productId: 'prod-3',
+            productName: 'Silver Jewelry Collection',
+            sales: 87500,
+            units: 175,
+          },
         ],
       },
       customer: {
@@ -1087,11 +1125,11 @@ export class BusinessAnalyticsDashboard {
    */
   async getAllDashboards(category?: Dashboard['category']): Promise<Dashboard[]> {
     let dashboards = Array.from(this.dashboards.values());
-    
+
     if (category) {
-      dashboards = dashboards.filter(d => d.category === category);
+      dashboards = dashboards.filter((d) => d.category === category);
     }
-    
+
     return dashboards;
   }
 
@@ -1100,11 +1138,11 @@ export class BusinessAnalyticsDashboard {
    */
   async getAllKPIs(category?: KPI['category']): Promise<KPI[]> {
     let kpis = Array.from(this.kpis.values());
-    
+
     if (category) {
-      kpis = kpis.filter(k => k.category === category);
+      kpis = kpis.filter((k) => k.category === category);
     }
-    
+
     return kpis;
   }
 }

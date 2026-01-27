@@ -1,6 +1,6 @@
 /**
  * Security Threat Management System
- * 
+ *
  * Comprehensive security threat detection and management:
  * - Threat detection and analysis
  * - Vulnerability management
@@ -15,15 +15,34 @@
 export interface SecurityThreat {
   id: string;
   timestamp: Date;
-  
+
   // Threat classification
-  type: 'sql_injection' | 'xss' | 'csrf' | 'ddos' | 'brute_force' | 'malware' | 'phishing' | 'data_breach' | 'unauthorized_access' | 'privilege_escalation' | 'code_injection' | 'other';
-  category: 'web_attack' | 'network_attack' | 'application_attack' | 'social_engineering' | 'insider_threat' | 'malware' | 'data_exfiltration';
-  
+  type:
+    | 'sql_injection'
+    | 'xss'
+    | 'csrf'
+    | 'ddos'
+    | 'brute_force'
+    | 'malware'
+    | 'phishing'
+    | 'data_breach'
+    | 'unauthorized_access'
+    | 'privilege_escalation'
+    | 'code_injection'
+    | 'other';
+  category:
+    | 'web_attack'
+    | 'network_attack'
+    | 'application_attack'
+    | 'social_engineering'
+    | 'insider_threat'
+    | 'malware'
+    | 'data_exfiltration';
+
   // Severity
   severity: 'low' | 'medium' | 'high' | 'critical';
   confidenceScore: number; // 0-1
-  
+
   // Source
   source: {
     ipAddress: string;
@@ -35,7 +54,7 @@ export interface SecurityThreat {
     isDatacenter: boolean;
     reputation: number; // 0-1
   };
-  
+
   // Target
   target: {
     endpoint?: string;
@@ -43,7 +62,7 @@ export interface SecurityThreat {
     userId?: string;
     assetId?: string;
   };
-  
+
   // Attack details
   attack: {
     method: string;
@@ -51,14 +70,14 @@ export interface SecurityThreat {
     vector: string;
     pattern?: string;
   };
-  
+
   // Detection
   detectedBy: {
     method: 'signature' | 'anomaly' | 'behavioral' | 'heuristic' | 'ml';
     rule?: string;
     model?: string;
   };
-  
+
   // Impact
   impact: {
     level: 'none' | 'low' | 'medium' | 'high' | 'critical';
@@ -66,10 +85,10 @@ export interface SecurityThreat {
     dataCompromised: boolean;
     serviceDisruption: boolean;
   };
-  
+
   // Response
   status: 'detected' | 'investigating' | 'contained' | 'mitigated' | 'resolved' | 'false_positive';
-  
+
   // Actions taken
   actions: {
     timestamp: Date;
@@ -77,7 +96,7 @@ export interface SecurityThreat {
     performedBy: 'system' | 'admin' | 'soc';
     details: string;
   }[];
-  
+
   // Related threats
   relatedThreats?: string[];
   partOfCampaign: boolean;
@@ -86,20 +105,30 @@ export interface SecurityThreat {
 
 export interface Vulnerability {
   id: string;
-  
+
   // Identification
   cveId?: string; // Common Vulnerabilities and Exposures ID
   title: string;
   description: string;
-  
+
   // Classification
-  type: 'injection' | 'broken_authentication' | 'sensitive_data_exposure' | 'xxe' | 'broken_access_control' | 'security_misconfiguration' | 'xss' | 'insecure_deserialization' | 'using_components_with_known_vulnerabilities' | 'insufficient_logging';
+  type:
+    | 'injection'
+    | 'broken_authentication'
+    | 'sensitive_data_exposure'
+    | 'xxe'
+    | 'broken_access_control'
+    | 'security_misconfiguration'
+    | 'xss'
+    | 'insecure_deserialization'
+    | 'using_components_with_known_vulnerabilities'
+    | 'insufficient_logging';
   category: 'application' | 'infrastructure' | 'network' | 'configuration' | 'dependency';
-  
+
   // Severity (CVSS)
   cvssScore: number; // 0-10
   severity: 'low' | 'medium' | 'high' | 'critical';
-  
+
   // CVSS Metrics
   cvssMetrics?: {
     attackVector: 'network' | 'adjacent' | 'local' | 'physical';
@@ -111,7 +140,7 @@ export interface Vulnerability {
     integrityImpact: 'none' | 'low' | 'high';
     availabilityImpact: 'none' | 'low' | 'high';
   };
-  
+
   // Affected assets
   affectedAssets: {
     type: string;
@@ -119,10 +148,10 @@ export interface Vulnerability {
     name: string;
     version?: string;
   }[];
-  
+
   // Status
   status: 'open' | 'acknowledged' | 'in_progress' | 'resolved' | 'wont_fix' | 'false_positive';
-  
+
   // Remediation
   remediation?: {
     recommendation: string;
@@ -131,17 +160,17 @@ export interface Vulnerability {
     estimatedEffort: 'low' | 'medium' | 'high';
     priority: number; // 1-5
   };
-  
+
   // Discovery
   discoveredAt: Date;
   discoveredBy: string;
   discoveryMethod: 'scan' | 'manual' | 'report' | 'automated';
-  
+
   // Resolution
   resolvedAt?: Date;
   resolvedBy?: string;
   resolution?: string;
-  
+
   // References
   references?: {
     type: 'url' | 'cve' | 'advisory' | 'blog';
@@ -153,14 +182,24 @@ export interface Vulnerability {
 export interface SecurityIncident {
   id: string;
   incidentNumber: string;
-  
+
   // Classification
-  type: 'data_breach' | 'unauthorized_access' | 'malware_infection' | 'ddos_attack' | 'insider_threat' | 'phishing' | 'ransomware' | 'account_compromise' | 'service_disruption' | 'other';
+  type:
+    | 'data_breach'
+    | 'unauthorized_access'
+    | 'malware_infection'
+    | 'ddos_attack'
+    | 'insider_threat'
+    | 'phishing'
+    | 'ransomware'
+    | 'account_compromise'
+    | 'service_disruption'
+    | 'other';
   severity: 'low' | 'medium' | 'high' | 'critical';
-  
+
   // Status
   status: 'new' | 'investigating' | 'contained' | 'eradicated' | 'recovered' | 'closed';
-  
+
   // Timeline
   detectedAt: Date;
   reportedAt: Date;
@@ -168,7 +207,7 @@ export interface SecurityIncident {
   containedAt?: Date;
   resolvedAt?: Date;
   closedAt?: Date;
-  
+
   // Impact
   impact: {
     scope: 'isolated' | 'limited' | 'moderate' | 'widespread' | 'catastrophic';
@@ -180,7 +219,7 @@ export interface SecurityIncident {
     financialImpact?: number;
     reputationalImpact: 'low' | 'medium' | 'high' | 'critical';
   };
-  
+
   // Investigation
   investigation: {
     lead?: string;
@@ -193,7 +232,7 @@ export interface SecurityIncident {
     }[];
     rootCause?: string;
   };
-  
+
   // Response
   response: {
     containmentActions: {
@@ -202,14 +241,14 @@ export interface SecurityIncident {
       performedBy: string;
       result: string;
     }[];
-    
+
     eradicationActions: {
       timestamp: Date;
       action: string;
       performedBy: string;
       result: string;
     }[];
-    
+
     recoveryActions: {
       timestamp: Date;
       action: string;
@@ -217,7 +256,7 @@ export interface SecurityIncident {
       result: string;
     }[];
   };
-  
+
   // Communication
   notifications: {
     timestamp: Date;
@@ -225,7 +264,7 @@ export interface SecurityIncident {
     channel: 'email' | 'sms' | 'call' | 'slack' | 'ticket';
     message: string;
   }[];
-  
+
   // Compliance
   regulatoryReportingRequired: boolean;
   regulatoryReports?: {
@@ -233,7 +272,7 @@ export interface SecurityIncident {
     reportedAt: Date;
     reportId: string;
   }[];
-  
+
   // Lessons learned
   lessonsLearned?: {
     whatHappened: string;
@@ -247,44 +286,44 @@ export interface AttackPattern {
   id: string;
   name: string;
   description: string;
-  
+
   // Classification
   type: SecurityThreat['type'];
   tactics: string[]; // MITRE ATT&CK tactics
   techniques: string[]; // MITRE ATT&CK techniques
-  
+
   // Indicators
   indicators: {
     type: 'ip' | 'domain' | 'url' | 'hash' | 'email' | 'pattern';
     value: string;
     confidence: number;
   }[];
-  
+
   // Signatures
   signatures: {
     type: 'regex' | 'yara' | 'snort' | 'custom';
     signature: string;
     description: string;
   }[];
-  
+
   // Detection
   detectionMethods: string[];
   falsePositiveRate: number;
-  
+
   // Instances
   instances: {
     timestamp: Date;
     threatId: string;
     confirmed: boolean;
   }[];
-  
+
   // Mitigation
   mitigation: {
     preventive: string[];
     detective: string[];
     corrective: string[];
   };
-  
+
   lastSeen?: Date;
   firstSeen?: Date;
 }
@@ -294,17 +333,31 @@ export interface SecurityRule {
   name: string;
   description: string;
   enabled: boolean;
-  
+
   // Rule type
-  type: 'waf' | 'ids' | 'ips' | 'firewall' | 'rate_limit' | 'access_control' | 'data_loss_prevention';
-  
+  type:
+    | 'waf'
+    | 'ids'
+    | 'ips'
+    | 'firewall'
+    | 'rate_limit'
+    | 'access_control'
+    | 'data_loss_prevention';
+
   // Conditions
   conditions: {
     field: string;
-    operator: 'equals' | 'not_equals' | 'contains' | 'not_contains' | 'matches' | 'greater_than' | 'less_than';
+    operator:
+      | 'equals'
+      | 'not_equals'
+      | 'contains'
+      | 'not_contains'
+      | 'matches'
+      | 'greater_than'
+      | 'less_than';
     value: any;
   }[];
-  
+
   // Action
   action: 'allow' | 'block' | 'alert' | 'rate_limit' | 'challenge' | 'log';
   actionConfig?: {
@@ -316,10 +369,10 @@ export interface SecurityRule {
       type: 'captcha' | 'otp' | 'verification';
     };
   };
-  
+
   // Severity
   severity: 'low' | 'medium' | 'high' | 'critical';
-  
+
   // Statistics
   stats: {
     totalMatches: number;
@@ -328,21 +381,21 @@ export interface SecurityRule {
     falsePositives: number;
     lastTriggered?: Date;
   };
-  
+
   // Priority
   priority: number; // 1-100
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface IPReputation {
   ipAddress: string;
-  
+
   // Reputation score
   reputationScore: number; // 0-100, higher is better
   riskLevel: 'safe' | 'low_risk' | 'medium_risk' | 'high_risk' | 'malicious';
-  
+
   // Classification
   classifications: {
     isBot: boolean;
@@ -352,7 +405,7 @@ export interface IPReputation {
     isDatacenter: boolean;
     isResidential: boolean;
   };
-  
+
   // Geolocation
   location: {
     country: string;
@@ -361,14 +414,14 @@ export interface IPReputation {
     region?: string;
     coordinates?: { lat: number; lng: number };
   };
-  
+
   // Network info
   network: {
     asn: string;
     asnName: string;
     isp?: string;
   };
-  
+
   // Threat intelligence
   threats: {
     type: string;
@@ -377,7 +430,7 @@ export interface IPReputation {
     lastSeen: Date;
     confidence: number;
   }[];
-  
+
   // Activity
   activity: {
     totalRequests: number;
@@ -385,11 +438,11 @@ export interface IPReputation {
     suspiciousActivity: number;
     lastSeen: Date;
   };
-  
+
   // Status
   isBlocked: boolean;
   isWhitelisted: boolean;
-  
+
   lastUpdated: Date;
 }
 
@@ -401,17 +454,17 @@ export interface DDoSProtection {
       connectionsPerIP: number;
       bandwidthMbps: number;
     };
-    
+
     currentMetrics: {
       requestsPerSecond: number;
       totalConnections: number;
       bandwidthMbps: number;
       suspiciousIPs: number;
     };
-    
+
     status: 'normal' | 'elevated' | 'under_attack' | 'mitigating';
   };
-  
+
   // Active attacks
   activeAttacks: {
     id: string;
@@ -421,7 +474,7 @@ export interface DDoSProtection {
     sourceIPs: number;
     mitigationActive: boolean;
   }[];
-  
+
   // Mitigation
   mitigation: {
     rateLimiting: {
@@ -429,17 +482,17 @@ export interface DDoSProtection {
       globalLimit: number;
       perIPLimit: number;
     };
-    
+
     geoBlocking: {
       enabled: boolean;
       blockedCountries: string[];
     };
-    
+
     challengeMode: {
       enabled: boolean;
       type: 'captcha' | 'javascript_challenge' | 'managed_challenge';
     };
-    
+
     ipBlocking: {
       enabled: boolean;
       blockedIPs: string[];
@@ -450,17 +503,17 @@ export interface DDoSProtection {
 
 export interface WebApplicationFirewall {
   id: string;
-  
+
   // Configuration
   mode: 'monitor' | 'block' | 'challenge';
-  
+
   // Rule sets
   ruleSets: {
     name: string;
     enabled: boolean;
     rules: string[];
   }[];
-  
+
   // OWASP Top 10 Protection
   owaspProtection: {
     sqlInjection: boolean;
@@ -474,10 +527,10 @@ export interface WebApplicationFirewall {
     insecureDeserialization: boolean;
     knownVulnerabilities: boolean;
   };
-  
+
   // Custom rules
   customRules: SecurityRule[];
-  
+
   // Statistics
   stats: {
     totalRequests: number;
@@ -489,14 +542,14 @@ export interface WebApplicationFirewall {
       count: number;
     }[];
   };
-  
+
   // Allowlist/Blocklist
   allowlist: {
     ips: string[];
     userAgents: string[];
     paths: string[];
   };
-  
+
   blocklist: {
     ips: string[];
     userAgents: string[];
@@ -513,7 +566,7 @@ export interface ThreatIntelligence {
     lastUpdated: Date;
     totalIndicators: number;
   }[];
-  
+
   // Indicators of Compromise (IoCs)
   iocs: {
     type: 'ip' | 'domain' | 'hash' | 'url' | 'email';
@@ -525,7 +578,7 @@ export interface ThreatIntelligence {
     lastSeen: Date;
     source: string;
   }[];
-  
+
   // Threat actors
   threatActors: {
     name: string;
@@ -557,7 +610,7 @@ export class SecurityThreatManagement {
     this.ipReputations = new Map();
     this.blockedIPs = new Set();
     this.whitelistedIPs = new Set();
-    
+
     // Initialize default security rules
     this.initializeDefaults();
   }
@@ -574,7 +627,11 @@ export class SecurityThreatManagement {
         enabled: true,
         type: 'waf',
         conditions: [
-          { field: 'request.body', operator: 'matches', value: /(\bUNION\b.*\bSELECT\b|\bSELECT\b.*\bFROM\b.*\bWHERE\b|;\s*DROP\s+TABLE)/i },
+          {
+            field: 'request.body',
+            operator: 'matches',
+            value: /(\bUNION\b.*\bSELECT\b|\bSELECT\b.*\bFROM\b.*\bWHERE\b|;\s*DROP\s+TABLE)/i,
+          },
           { field: 'request.query', operator: 'matches', value: /('|--|;|\bOR\b\s+\d+=\d+)/i },
         ],
         action: 'block',
@@ -593,7 +650,11 @@ export class SecurityThreatManagement {
         enabled: true,
         type: 'waf',
         conditions: [
-          { field: 'request.body', operator: 'matches', value: /<script|javascript:|onerror=|onload=/i },
+          {
+            field: 'request.body',
+            operator: 'matches',
+            value: /<script|javascript:|onerror=|onload=/i,
+          },
           { field: 'request.headers', operator: 'matches', value: /<script|javascript:/i },
         ],
         action: 'block',
@@ -611,9 +672,7 @@ export class SecurityThreatManagement {
         description: 'Limit API requests per IP',
         enabled: true,
         type: 'rate_limit',
-        conditions: [
-          { field: 'request.path', operator: 'contains', value: '/api/' },
-        ],
+        conditions: [{ field: 'request.path', operator: 'contains', value: '/api/' }],
         action: 'rate_limit',
         actionConfig: {
           rateLimit: {
@@ -792,7 +851,8 @@ export class SecurityThreatManagement {
         method: 'signature',
       },
       impact: {
-        level: params.severity === 'critical' ? 'high' : params.severity === 'high' ? 'medium' : 'low',
+        level:
+          params.severity === 'critical' ? 'high' : params.severity === 'high' ? 'medium' : 'low',
         affectedSystems: params.target.resource ? [params.target.resource] : [],
         dataCompromised: false,
         serviceDisruption: false,
@@ -807,7 +867,7 @@ export class SecurityThreatManagement {
     // Auto-block critical threats
     if (params.severity === 'critical') {
       await this.blockIP(params.source.ipAddress, `Critical threat detected: ${params.type}`);
-      
+
       threat.actions.push({
         timestamp: new Date(),
         action: 'blocked',
@@ -840,7 +900,7 @@ export class SecurityThreatManagement {
       code_injection: 'web_attack',
       other: 'application_attack',
     };
-    
+
     return mapping[type] || 'application_attack';
   }
 
@@ -915,7 +975,7 @@ export class SecurityThreatManagement {
    */
   async blockIP(ipAddress: string, reason: string): Promise<void> {
     this.blockedIPs.add(ipAddress);
-    
+
     // Update IP reputation
     const reputation = this.ipReputations.get(ipAddress) || {
       ipAddress,
@@ -960,7 +1020,7 @@ export class SecurityThreatManagement {
   async whitelistIP(ipAddress: string): Promise<void> {
     this.whitelistedIPs.add(ipAddress);
     this.blockedIPs.delete(ipAddress);
-    
+
     const reputation = this.ipReputations.get(ipAddress);
     if (reputation) {
       reputation.isWhitelisted = true;
@@ -1015,7 +1075,7 @@ export class SecurityThreatManagement {
 
     if (threat) {
       reputation.activity.suspiciousActivity++;
-      
+
       if (threat.status === 'detected') {
         reputation.activity.blockedRequests++;
       }
@@ -1036,8 +1096,11 @@ export class SecurityThreatManagement {
         high: 30,
         critical: 50,
       };
-      
-      reputation.reputationScore = Math.max(0, reputation.reputationScore - severityPenalty[threat.severity]);
+
+      reputation.reputationScore = Math.max(
+        0,
+        reputation.reputationScore - severityPenalty[threat.severity]
+      );
 
       // Update risk level
       if (reputation.reputationScore < 20) reputation.riskLevel = 'malicious';
@@ -1162,15 +1225,15 @@ export class SecurityThreatManagement {
     let threats = Array.from(this.threats.values());
 
     if (params.severity) {
-      threats = threats.filter(t => t.severity === params.severity);
+      threats = threats.filter((t) => t.severity === params.severity);
     }
 
     if (params.type) {
-      threats = threats.filter(t => t.type === params.type);
+      threats = threats.filter((t) => t.type === params.type);
     }
 
     if (params.status) {
-      threats = threats.filter(t => t.status === params.status);
+      threats = threats.filter((t) => t.status === params.status);
     }
 
     threats.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
@@ -1189,7 +1252,7 @@ export class SecurityThreatManagement {
     let vulnerabilities = Array.from(this.vulnerabilities.values());
 
     if (status) {
-      vulnerabilities = vulnerabilities.filter(v => v.status === status);
+      vulnerabilities = vulnerabilities.filter((v) => v.status === status);
     }
 
     return vulnerabilities.sort((a, b) => b.cvssScore - a.cvssScore);
@@ -1206,11 +1269,11 @@ export class SecurityThreatManagement {
     let incidents = Array.from(this.incidents.values());
 
     if (params.severity) {
-      incidents = incidents.filter(i => i.severity === params.severity);
+      incidents = incidents.filter((i) => i.severity === params.severity);
     }
 
     if (params.status) {
-      incidents = incidents.filter(i => i.status === params.status);
+      incidents = incidents.filter((i) => i.status === params.status);
     }
 
     incidents.sort((a, b) => b.detectedAt.getTime() - a.detectedAt.getTime());
@@ -1236,7 +1299,7 @@ export class SecurityThreatManagement {
     let rules = Array.from(this.securityRules.values());
 
     if (type) {
-      rules = rules.filter(r => r.type === type);
+      rules = rules.filter((r) => r.type === type);
     }
 
     return rules.sort((a, b) => b.priority - a.priority);

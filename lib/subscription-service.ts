@@ -1,6 +1,6 @@
 /**
  * Subscription Service
- * 
+ *
  * Manages recurring subscription plans:
  * - Product subscriptions (curated boxes)
  * - Membership tiers
@@ -14,10 +14,10 @@ export interface SubscriptionPlan {
   id: string;
   name: string;
   description: string;
-  
+
   // Type
   type: 'product_box' | 'membership' | 'workshop_series' | 'artisan_support' | 'premium_access';
-  
+
   // Pricing
   pricing: {
     basePrice: number;
@@ -26,14 +26,21 @@ export interface SubscriptionPlan {
     discountPercentage?: number; // vs. one-time purchase
     setupFee?: number;
   };
-  
+
   // Benefits
   benefits: {
-    type: 'product_delivery' | 'workshop_access' | 'exclusive_content' | 'discount' | 'early_access' | 'free_shipping' | 'priority_support';
+    type:
+      | 'product_delivery'
+      | 'workshop_access'
+      | 'exclusive_content'
+      | 'discount'
+      | 'early_access'
+      | 'free_shipping'
+      | 'priority_support';
     description: string;
     value?: string;
   }[];
-  
+
   // Customization options
   customization?: {
     canSelectCategories: boolean;
@@ -41,7 +48,7 @@ export interface SubscriptionPlan {
     canChooseDeliveryDate: boolean;
     preferencesRequired: string[];
   };
-  
+
   // Limits
   limits?: {
     itemsPerDelivery?: number;
@@ -49,25 +56,25 @@ export interface SubscriptionPlan {
     discountPercentage?: number;
     maxValue?: number;
   };
-  
+
   // Trial
   trial?: {
     available: boolean;
     durationDays: number;
     price: number;
   };
-  
+
   // Status
   isActive: boolean;
   isPopular: boolean;
-  
+
   // Stats
   stats: {
     totalSubscribers: number;
     averageRating: number;
     retentionRate: number; // percentage
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -76,17 +83,17 @@ export interface Subscription {
   id: string;
   userId: string;
   planId: string;
-  
+
   // Status
   status: 'active' | 'paused' | 'cancelled' | 'expired' | 'pending' | 'past_due';
-  
+
   // Dates
   startDate: Date;
   nextBillingDate?: Date;
   pausedUntil?: Date;
   cancelledAt?: Date;
   endDate?: Date;
-  
+
   // Payment
   payment: {
     method: string; // payment method ID
@@ -95,7 +102,7 @@ export interface Subscription {
     nextPaymentAmount: number;
     failedPaymentAttempts: number;
   };
-  
+
   // Customization
   preferences?: {
     categories?: string[];
@@ -103,14 +110,14 @@ export interface Subscription {
     deliveryDay?: string;
     customNotes?: string;
   };
-  
+
   // Delivery tracking
   deliveries: string[]; // Delivery IDs
   upcomingDelivery?: {
     scheduledDate: Date;
     status: 'preparing' | 'packed' | 'shipped' | 'delivered';
   };
-  
+
   // Billing history
   billingHistory: {
     date: Date;
@@ -118,7 +125,7 @@ export interface Subscription {
     status: 'paid' | 'failed' | 'refunded';
     invoiceId: string;
   }[];
-  
+
   // Notifications
   notifications: {
     upcomingBilling: boolean;
@@ -126,7 +133,7 @@ export interface Subscription {
     newProducts: boolean;
     pauseReminders: boolean;
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -135,12 +142,12 @@ export interface SubscriptionDelivery {
   id: string;
   subscriptionId: string;
   userId: string;
-  
+
   // Delivery info
   deliveryNumber: number;
   scheduledDate: Date;
   actualDeliveryDate?: Date;
-  
+
   // Contents
   items: {
     productId: string;
@@ -150,14 +157,14 @@ export interface SubscriptionDelivery {
     artisanId: string;
     imageUrl: string;
   }[];
-  
+
   // Value
   totalValue: number;
   discountApplied: number;
-  
+
   // Status
   status: 'scheduled' | 'curating' | 'packed' | 'shipped' | 'delivered' | 'failed';
-  
+
   // Shipping
   shipping?: {
     trackingNumber: string;
@@ -165,7 +172,7 @@ export interface SubscriptionDelivery {
     shippedDate: Date;
     estimatedDeliveryDate: Date;
   };
-  
+
   // Feedback
   feedback?: {
     rating: number;
@@ -177,7 +184,7 @@ export interface SubscriptionDelivery {
     generalFeedback?: string;
     submittedAt: Date;
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -186,14 +193,14 @@ export interface MembershipTier {
   id: string;
   name: string;
   level: number; // 1=basic, 2=premium, 3=elite
-  
+
   // Requirements
   requirements: {
     minMonthlySpend?: number;
     minPurchases?: number;
     subscriptionRequired?: boolean;
   };
-  
+
   // Perks
   perks: {
     discountPercentage: number;
@@ -204,7 +211,7 @@ export interface MembershipTier {
     workshopDiscount: number;
     bonusPoints: number; // % bonus on purchases
   };
-  
+
   // Branding
   badge: {
     icon: string;
@@ -216,7 +223,7 @@ export interface SubscriptionBox {
   id: string;
   name: string;
   theme: string;
-  
+
   // Curation
   curation: {
     category: string;
@@ -228,14 +235,14 @@ export interface SubscriptionBox {
     itemCount: number;
     curatedBy: string; // curator ID
   };
-  
+
   // Contents (for preview)
   previewItems: {
     productId: string;
     imageUrl: string;
     description: string;
   }[];
-  
+
   // Availability
   availableForPlans: string[]; // plan IDs
   limitedEdition: boolean;
@@ -247,7 +254,7 @@ export interface SubscriptionAnalytics {
     start: Date;
     end: Date;
   };
-  
+
   overview: {
     totalSubscriptions: number;
     activeSubscriptions: number;
@@ -255,14 +262,14 @@ export interface SubscriptionAnalytics {
     cancelledSubscriptions: number;
     pausedSubscriptions: number;
   };
-  
+
   revenue: {
     totalRevenue: number;
     recurringRevenue: number; // MRR
     averageSubscriptionValue: number;
     churnRate: number; // percentage
   };
-  
+
   plans: {
     planId: string;
     planName: string;
@@ -270,14 +277,14 @@ export interface SubscriptionAnalytics {
     revenue: number;
     churnRate: number;
   }[];
-  
+
   retention: {
     month1: number;
     month3: number;
     month6: number;
     month12: number;
   };
-  
+
   deliveries: {
     totalDeliveries: number;
     onTimeDeliveries: number;
@@ -320,7 +327,11 @@ export class SubscriptionService {
           discountPercentage: 15,
         },
         benefits: [
-          { type: 'product_delivery', description: '3-5 handpicked artisan products', value: '₹4000+ worth' },
+          {
+            type: 'product_delivery',
+            description: '3-5 handpicked artisan products',
+            value: '₹4000+ worth',
+          },
           { type: 'exclusive_content', description: 'Artisan stories and craft insights' },
           { type: 'free_shipping', description: 'Free shipping on all deliveries' },
         ],
@@ -430,7 +441,7 @@ export class SubscriptionService {
       },
     ];
 
-    plans.forEach(plan => this.plans.set(plan.id, plan));
+    plans.forEach((plan) => this.plans.set(plan.id, plan));
   }
 
   /**
@@ -503,19 +514,19 @@ export class SubscriptionService {
       },
     ];
 
-    tiers.forEach(tier => this.membershipTiers.set(tier.id, tier));
+    tiers.forEach((tier) => this.membershipTiers.set(tier.id, tier));
   }
 
   /**
    * Get all subscription plans
    */
   async getPlans(type?: SubscriptionPlan['type']): Promise<SubscriptionPlan[]> {
-    let plans = Array.from(this.plans.values()).filter(p => p.isActive);
-    
+    let plans = Array.from(this.plans.values()).filter((p) => p.isActive);
+
     if (type) {
-      plans = plans.filter(p => p.type === type);
+      plans = plans.filter((p) => p.type === type);
     }
-    
+
     return plans;
   }
 
@@ -584,9 +595,12 @@ export class SubscriptionService {
   /**
    * Calculate next billing date
    */
-  private calculateNextBillingDate(from: Date, cycle: SubscriptionPlan['pricing']['billingCycle']): Date {
+  private calculateNextBillingDate(
+    from: Date,
+    cycle: SubscriptionPlan['pricing']['billingCycle']
+  ): Date {
     const next = new Date(from);
-    
+
     switch (cycle) {
       case 'weekly':
         next.setDate(next.getDate() + 7);
@@ -601,7 +615,7 @@ export class SubscriptionService {
         next.setFullYear(next.getFullYear() + 1);
         break;
     }
-    
+
     return next;
   }
 
@@ -703,7 +717,10 @@ export class SubscriptionService {
         subscription.payment.lastPaymentDate = new Date();
         subscription.payment.lastPaymentAmount = plan.pricing.basePrice;
         subscription.payment.failedPaymentAttempts = 0;
-        subscription.nextBillingDate = this.calculateNextBillingDate(new Date(), plan.pricing.billingCycle);
+        subscription.nextBillingDate = this.calculateNextBillingDate(
+          new Date(),
+          plan.pricing.billingCycle
+        );
 
         subscription.billingHistory.push({
           date: new Date(),
@@ -720,7 +737,7 @@ export class SubscriptionService {
         return true;
       } else {
         subscription.payment.failedPaymentAttempts++;
-        
+
         subscription.billingHistory.push({
           date: new Date(),
           amount: plan.pricing.basePrice,
@@ -742,13 +759,16 @@ export class SubscriptionService {
   /**
    * Get user subscriptions
    */
-  async getUserSubscriptions(userId: string, status?: Subscription['status']): Promise<Subscription[]> {
-    let subs = Array.from(this.subscriptions.values()).filter(s => s.userId === userId);
-    
+  async getUserSubscriptions(
+    userId: string,
+    status?: Subscription['status']
+  ): Promise<Subscription[]> {
+    let subs = Array.from(this.subscriptions.values()).filter((s) => s.userId === userId);
+
     if (status) {
-      subs = subs.filter(s => s.status === status);
+      subs = subs.filter((s) => s.status === status);
     }
-    
+
     return subs;
   }
 
@@ -762,7 +782,10 @@ export class SubscriptionService {
   /**
    * Update subscription preferences
    */
-  async updatePreferences(subscriptionId: string, preferences: Subscription['preferences']): Promise<void> {
+  async updatePreferences(
+    subscriptionId: string,
+    preferences: Subscription['preferences']
+  ): Promise<void> {
     const subscription = this.subscriptions.get(subscriptionId);
     if (!subscription) return;
 
@@ -801,20 +824,25 @@ export class SubscriptionService {
   /**
    * Get user membership tier
    */
-  async getUserTier(userId: string, monthlySpend: number, hasSubscription: boolean): Promise<MembershipTier> {
+  async getUserTier(
+    userId: string,
+    monthlySpend: number,
+    hasSubscription: boolean
+  ): Promise<MembershipTier> {
     const tiers = await this.getMembershipTiers();
-    
+
     // Find highest tier user qualifies for
     for (let i = tiers.length - 1; i >= 0; i--) {
       const tier = tiers[i];
-      const meetsSpend = !tier.requirements.minMonthlySpend || monthlySpend >= tier.requirements.minMonthlySpend;
+      const meetsSpend =
+        !tier.requirements.minMonthlySpend || monthlySpend >= tier.requirements.minMonthlySpend;
       const meetsSubscription = !tier.requirements.subscriptionRequired || hasSubscription;
-      
+
       if (meetsSpend && meetsSubscription) {
         return tier;
       }
     }
-    
+
     return tiers[0]; // Return basic tier
   }
 
@@ -824,37 +852,38 @@ export class SubscriptionService {
   async getAnalytics(period: { start: Date; end: Date }): Promise<SubscriptionAnalytics> {
     const allSubscriptions = Array.from(this.subscriptions.values());
     const periodSubscriptions = allSubscriptions.filter(
-      s => s.createdAt >= period.start && s.createdAt <= period.end
+      (s) => s.createdAt >= period.start && s.createdAt <= period.end
     );
 
-    const activeSubscriptions = allSubscriptions.filter(s => s.status === 'active');
+    const activeSubscriptions = allSubscriptions.filter((s) => s.status === 'active');
     const cancelledInPeriod = allSubscriptions.filter(
-      s => s.cancelledAt && s.cancelledAt >= period.start && s.cancelledAt <= period.end
+      (s) => s.cancelledAt && s.cancelledAt >= period.start && s.cancelledAt <= period.end
     );
-    const pausedSubscriptions = allSubscriptions.filter(s => s.status === 'paused');
+    const pausedSubscriptions = allSubscriptions.filter((s) => s.status === 'paused');
 
     // Revenue calculations
     const totalRevenue = periodSubscriptions.reduce((sum, sub) => {
-      return sum + sub.billingHistory
-        .filter(b => b.status === 'paid' && b.date >= period.start && b.date <= period.end)
-        .reduce((s, b) => s + b.amount, 0);
+      return (
+        sum +
+        sub.billingHistory
+          .filter((b) => b.status === 'paid' && b.date >= period.start && b.date <= period.end)
+          .reduce((s, b) => s + b.amount, 0)
+      );
     }, 0);
 
     const recurringRevenue = activeSubscriptions.reduce((sum, sub) => {
       return sum + (sub.payment.nextPaymentAmount || 0);
     }, 0);
 
-    const averageSubscriptionValue = activeSubscriptions.length > 0
-      ? recurringRevenue / activeSubscriptions.length
-      : 0;
+    const averageSubscriptionValue =
+      activeSubscriptions.length > 0 ? recurringRevenue / activeSubscriptions.length : 0;
 
-    const churnRate = allSubscriptions.length > 0
-      ? (cancelledInPeriod.length / allSubscriptions.length) * 100
-      : 0;
+    const churnRate =
+      allSubscriptions.length > 0 ? (cancelledInPeriod.length / allSubscriptions.length) * 100 : 0;
 
     // Plan breakdown
     const planStats = new Map<string, any>();
-    allSubscriptions.forEach(sub => {
+    allSubscriptions.forEach((sub) => {
       if (!planStats.has(sub.planId)) {
         const plan = this.plans.get(sub.planId);
         planStats.set(sub.planId, {
@@ -865,14 +894,14 @@ export class SubscriptionService {
           cancelled: 0,
         });
       }
-      
+
       const stats = planStats.get(sub.planId);
       if (sub.status === 'active') stats.subscribers++;
       stats.revenue += sub.payment.lastPaymentAmount || 0;
       if (sub.status === 'cancelled') stats.cancelled++;
     });
 
-    const plans = Array.from(planStats.values()).map(p => ({
+    const plans = Array.from(planStats.values()).map((p) => ({
       planId: p.planId,
       planName: p.planName,
       subscribers: p.subscribers,
@@ -891,24 +920,24 @@ export class SubscriptionService {
     // Deliveries
     const allDeliveries = Array.from(this.deliveries.values());
     const periodDeliveries = allDeliveries.filter(
-      d => d.createdAt >= period.start && d.createdAt <= period.end
+      (d) => d.createdAt >= period.start && d.createdAt <= period.end
     );
 
-    const onTimeDeliveries = periodDeliveries.filter(d => 
-      d.status === 'delivered' && 
-      d.actualDeliveryDate && 
-      d.actualDeliveryDate <= d.scheduledDate
+    const onTimeDeliveries = periodDeliveries.filter(
+      (d) =>
+        d.status === 'delivered' && d.actualDeliveryDate && d.actualDeliveryDate <= d.scheduledDate
     ).length;
 
-    const deliveriesWithRatings = periodDeliveries.filter(d => d.feedback?.rating);
-    const averageRating = deliveriesWithRatings.length > 0
-      ? deliveriesWithRatings.reduce((sum, d) => sum + (d.feedback?.rating || 0), 0) / deliveriesWithRatings.length
-      : 0;
+    const deliveriesWithRatings = periodDeliveries.filter((d) => d.feedback?.rating);
+    const averageRating =
+      deliveriesWithRatings.length > 0
+        ? deliveriesWithRatings.reduce((sum, d) => sum + (d.feedback?.rating || 0), 0) /
+          deliveriesWithRatings.length
+        : 0;
 
-    const failedDeliveries = periodDeliveries.filter(d => d.status === 'failed').length;
-    const failureRate = periodDeliveries.length > 0
-      ? (failedDeliveries / periodDeliveries.length) * 100
-      : 0;
+    const failedDeliveries = periodDeliveries.filter((d) => d.status === 'failed').length;
+    const failureRate =
+      periodDeliveries.length > 0 ? (failedDeliveries / periodDeliveries.length) * 100 : 0;
 
     return {
       period,

@@ -1,79 +1,90 @@
-"use client"
+'use client';
 
-import { Volume2, Sparkles, Zap, Users } from "lucide-react"
+import { Volume2, Sparkles, Zap, Users } from 'lucide-react';
 
 interface VoiceWelcomeProps {
-  onStart: () => void
+  onStart: () => void;
 }
 
 export function VoiceWelcome({ onStart }: VoiceWelcomeProps) {
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="max-w-2xl text-center space-y-12">
+    <div className="flex min-h-screen items-center justify-center px-4">
+      <div className="max-w-2xl space-y-12 text-center">
         {/* Animated Icon */}
         <div className="flex justify-center">
-          <div className="relative w-24 h-24">
-            <div className="absolute inset-0 bg-primary/20 rounded-full animate-pulse" />
+          <div className="relative h-24 w-24">
+            <div className="bg-primary/20 absolute inset-0 animate-pulse rounded-full" />
             <div
-              className="absolute inset-2 bg-primary/10 rounded-full animate-ping"
-              style={{ animationDuration: "2s" }}
+              className="bg-primary/10 absolute inset-2 animate-ping rounded-full"
+              style={{ animationDuration: '2s' }}
             />
             <div className="absolute inset-0 flex items-center justify-center">
-              <Volume2 className="w-12 h-12 text-primary animate-bounce" style={{ animationDuration: "2s" }} />
+              <Volume2
+                className="text-primary h-12 w-12 animate-bounce"
+                style={{ animationDuration: '2s' }}
+              />
             </div>
           </div>
         </div>
 
         {/* Heading */}
         <div className="space-y-4">
-          <h1 className="text-5xl sm:text-6xl font-serif font-bold text-warm-charcoal text-balance-heading">
+          <h1 className="text-warm-charcoal text-balance-heading font-serif text-5xl font-bold sm:text-6xl">
             Discover with Your Voice
           </h1>
-          <p className="text-xl text-warm-charcoal/60">
-            Experience the revolutionary voice-first shopping platform. Just speak, and we'll find the perfect
-            handcrafted products for you.
+          <p className="text-warm-charcoal/60 text-xl">
+            Experience the revolutionary voice-first shopping platform. Just speak, and we&apos;ll
+            find the perfect handcrafted products for you.
           </p>
         </div>
 
         {/* Features */}
-        <div className="grid sm:grid-cols-3 gap-6">
+        <div className="grid gap-6 sm:grid-cols-3">
           <div className="space-y-3">
-            <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mx-auto">
-              <Sparkles className="w-6 h-6 text-primary" />
+            <div className="bg-primary/20 mx-auto flex h-12 w-12 items-center justify-center rounded-lg">
+              <Sparkles className="text-primary h-6 w-6" />
             </div>
-            <h3 className="font-semibold text-warm-charcoal">Smart Discovery</h3>
-            <p className="text-sm text-warm-charcoal/60">Describe what you're looking for in natural language</p>
+            <h3 className="text-warm-charcoal font-semibold">Smart Discovery</h3>
+            <p className="text-warm-charcoal/60 text-sm">
+              Describe what you&apos;re looking for in natural language
+            </p>
           </div>
 
           <div className="space-y-3">
-            <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mx-auto">
-              <Zap className="w-6 h-6 text-primary" />
+            <div className="bg-primary/20 mx-auto flex h-12 w-12 items-center justify-center rounded-lg">
+              <Zap className="text-primary h-6 w-6" />
             </div>
-            <h3 className="font-semibold text-warm-charcoal">Instant Results</h3>
-            <p className="text-sm text-warm-charcoal/60">Get personalized recommendations in seconds</p>
+            <h3 className="text-warm-charcoal font-semibold">Instant Results</h3>
+            <p className="text-warm-charcoal/60 text-sm">
+              Get personalized recommendations in seconds
+            </p>
           </div>
 
           <div className="space-y-3">
-            <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mx-auto">
-              <Users className="w-6 h-6 text-primary" />
+            <div className="bg-primary/20 mx-auto flex h-12 w-12 items-center justify-center rounded-lg">
+              <Users className="text-primary h-6 w-6" />
             </div>
-            <h3 className="font-semibold text-warm-charcoal">Connect with Artisans</h3>
-            <p className="text-sm text-warm-charcoal/60">Learn artisan stories behind each product</p>
+            <h3 className="text-warm-charcoal font-semibold">Connect with Artisans</h3>
+            <p className="text-warm-charcoal/60 text-sm">
+              Learn artisan stories behind each product
+            </p>
           </div>
         </div>
 
         {/* CTA Button */}
         <button
           onClick={onStart}
-          className="px-12 py-4 bg-primary text-white rounded-lg font-semibold text-lg hover:bg-warm-rust transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 inline-flex items-center gap-3"
+          className="bg-primary hover:bg-warm-rust inline-flex items-center gap-3 rounded-lg px-12 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
         >
-          <Volume2 className="w-6 h-6" />
+          <Volume2 className="h-6 w-6" />
           Start Voice Discovery
         </button>
 
         {/* Language Support */}
-        <p className="text-sm text-warm-charcoal/60">Available in English and Hindi. Works on all devices.</p>
+        <p className="text-warm-charcoal/60 text-sm">
+          Available in English and Hindi. Works on all devices.
+        </p>
       </div>
     </div>
-  )
+  );
 }

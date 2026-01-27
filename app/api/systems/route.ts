@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const system = searchParams.get('system')
+    const { searchParams } = new URL(request.url);
+    const system = searchParams.get('system');
 
     // Return mock stats for demonstration
     // In production, these would call the actual backend systems
@@ -11,8 +11,8 @@ export async function GET(request: NextRequest) {
       totalSystems: 40,
       totalRequests: 15234,
       averageResponseTime: 142,
-      uptime: 99.8
-    }
+      uptime: 99.8,
+    };
 
     const allStats = {
       // Phase 5: Advanced Experience & Discovery
@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
       socialMedia: { totalAccounts: 23, totalPosts: 456, totalEngagement: 12345 },
       thirdPartyServices: { totalIntegrations: 15, totalCalls: 45678, successRate: 99.2 },
       exportImport: { totalExports: 123, totalImports: 89, recordsProcessed: 234567 },
-    }
+    };
 
     if (!system) {
       return NextResponse.json({
@@ -78,24 +78,18 @@ export async function GET(request: NextRequest) {
         totalSystems: 40,
         stats: mockStats,
         data: allStats,
-      })
+      });
     }
 
     // Return specific system stats
-    const systemData = (allStats as any)[system]
+    const systemData = (allStats as any)[system];
     if (systemData) {
-      return NextResponse.json({ success: true, system, data: systemData })
+      return NextResponse.json({ success: true, system, data: systemData });
     }
 
-    return NextResponse.json(
-      { success: false, error: 'System not found' },
-      { status: 404 }
-    )
+    return NextResponse.json({ success: false, error: 'System not found' }, { status: 404 });
   } catch (error) {
-    console.error('API Error:', error)
-    return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 }
-    )
+    console.error('API Error:', error);
+    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }

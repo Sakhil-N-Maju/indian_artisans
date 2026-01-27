@@ -1,50 +1,54 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Navigation } from "@/components/navigation"
-import { Footer } from "@/components/footer"
-import { useParams } from "next/navigation"
-import { Clock, Users, MapPin, Heart, Share2, Check } from "lucide-react"
+import { useState } from 'react';
+import { Navigation } from '@/components/navigation';
+import { Footer } from '@/components/footer';
+import { useParams } from 'next/navigation';
+import { Clock, Users, MapPin, Heart, Share2, Check } from 'lucide-react';
 
 export default function WorkshopDetailPage() {
-  const params = useParams()
-  const id = params.id as string
-  const [isWishlisted, setIsWishlisted] = useState(false)
-  const [selectedDate, setSelectedDate] = useState("")
-  const [quantity, setQuantity] = useState(1)
-  const [scrolled, setScrolled] = useState(false)
+  const params = useParams();
+  const id = params.id as string;
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [selectedDate, setSelectedDate] = useState('');
+  const [quantity, setQuantity] = useState(1);
+  const [scrolled, setScrolled] = useState(false);
 
   const workshop = {
     id: Number.parseInt(id),
-    name: "Hand-Weaving Masterclass with Priya Sharma",
-    artisan: "Priya Sharma",
-    location: "Jaipur, Rajasthan",
-    image: "/placeholder.svg?key=workshop-detail",
-    gallery: ["/placeholder.svg?key=wdetail1", "/placeholder.svg?key=wdetail2", "/placeholder.svg?key=wdetail3"],
+    name: 'Hand-Weaving Masterclass with Priya Sharma',
+    artisan: 'Priya Sharma',
+    location: 'Jaipur, Rajasthan',
+    image: '/placeholder.svg?key=workshop-detail',
+    gallery: [
+      '/placeholder.svg?key=wdetail1',
+      '/placeholder.svg?key=wdetail2',
+      '/placeholder.svg?key=wdetail3',
+    ],
     rating: 4.9,
     reviews: 234,
     price: 8500,
-    duration: "Full Day (8 hours)",
+    duration: 'Full Day (8 hours)',
     groupSize: 8,
-    language: "English & Hindi",
-    startDate: "Dec 15, 2025",
+    language: 'English & Hindi',
+    startDate: 'Dec 15, 2025',
     schedule: [
-      { time: "9:00 AM - 10:30 AM", activity: "Introduction & Thread Selection" },
-      { time: "10:30 AM - 12:30 PM", activity: "Loom Setup & Basic Techniques" },
-      { time: "12:30 PM - 1:30 PM", activity: "Lunch Break" },
-      { time: "1:30 PM - 4:00 PM", activity: "Hands-on Weaving Practice" },
-      { time: "4:00 PM - 5:00 PM", activity: "Q&A & Certificate Ceremony" },
+      { time: '9:00 AM - 10:30 AM', activity: 'Introduction & Thread Selection' },
+      { time: '10:30 AM - 12:30 PM', activity: 'Loom Setup & Basic Techniques' },
+      { time: '12:30 PM - 1:30 PM', activity: 'Lunch Break' },
+      { time: '1:30 PM - 4:00 PM', activity: 'Hands-on Weaving Practice' },
+      { time: '4:00 PM - 5:00 PM', activity: 'Q&A & Certificate Ceremony' },
     ],
     includes: [
-      "All materials and equipment",
-      "Professional instruction from master weaver",
-      "Lunch & refreshments",
-      "Certificate of completion",
-      "Take-home woven sample",
-      "Photo memory collection",
-      "Access to artisan community",
+      'All materials and equipment',
+      'Professional instruction from master weaver',
+      'Lunch & refreshments',
+      'Certificate of completion',
+      'Take-home woven sample',
+      'Photo memory collection',
+      'Access to artisan community',
     ],
-    whatToBring: ["Comfortable clothing", "Closed-toe shoes", "Water bottle", "Camera (optional)"],
+    whatToBring: ['Comfortable clothing', 'Closed-toe shoes', 'Water bottle', 'Camera (optional)'],
     description: `
       Learn the ancient art of hand-weaving from Priya Sharma, a master weaver with over 35 years of experience. This immersive full-day workshop takes you through the complete hand-weaving process, from thread selection to creating your first woven piece.
 
@@ -53,40 +57,40 @@ export default function WorkshopDetailPage() {
       This is not just a workshop—it's a cultural immersion that connects you to centuries of Indian textile heritage. Whether you're a complete beginner or have some experience, this workshop is designed to be both accessible and enriching.
     `,
     highlights: [
-      "Work with traditional looms",
-      "Learn from a decorated master craftsperson",
-      "Create your own woven piece",
-      "Understand natural dye processes",
-      "Connect with a global community of artisans",
+      'Work with traditional looms',
+      'Learn from a decorated master craftsperson',
+      'Create your own woven piece',
+      'Understand natural dye processes',
+      'Connect with a global community of artisans',
     ],
-  }
+  };
 
   return (
-    <main className="min-h-screen bg-warm-cream">
+    <main className="bg-warm-cream min-h-screen">
       <Navigation scrolled={scrolled} />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
+        <div className="mb-12 grid gap-8 md:grid-cols-2">
           {/* Images */}
           <div className="space-y-4">
-            <div className="aspect-square rounded-2xl overflow-hidden bg-warm-sand">
+            <div className="bg-warm-sand aspect-square overflow-hidden rounded-2xl">
               <img
-                src={workshop.image || "/placeholder.svg"}
+                src={workshop.image || '/placeholder.svg'}
                 alt={workshop.name}
-                className="w-full h-full object-cover"
+                className="h-full w-full object-cover"
               />
             </div>
             <div className="grid grid-cols-3 gap-4">
               {workshop.gallery.map((img, idx) => (
                 <button
                   key={idx}
-                  className="aspect-square rounded-lg overflow-hidden border-2 border-primary hover:scale-105 transition"
+                  className="border-primary aspect-square overflow-hidden rounded-lg border-2 transition hover:scale-105"
                 >
                   <img
-                    src={img || "/placeholder.svg"}
+                    src={img || '/placeholder.svg'}
                     alt={`Gallery ${idx + 1}`}
-                    className="w-full h-full object-cover"
+                    className="h-full w-full object-cover"
                   />
                 </button>
               ))}
@@ -96,8 +100,12 @@ export default function WorkshopDetailPage() {
           {/* Info */}
           <div className="space-y-6">
             <div>
-              <p className="text-secondary font-semibold uppercase tracking-wide text-sm mb-2">Hand-Weaving</p>
-              <h1 className="text-4xl font-serif font-bold text-warm-charcoal mb-3">{workshop.name}</h1>
+              <p className="text-secondary mb-2 text-sm font-semibold tracking-wide uppercase">
+                Hand-Weaving
+              </p>
+              <h1 className="text-warm-charcoal mb-3 font-serif text-4xl font-bold">
+                {workshop.name}
+              </h1>
               <p className="text-warm-charcoal/70">By {workshop.artisan}</p>
             </div>
 
@@ -108,7 +116,9 @@ export default function WorkshopDetailPage() {
                   <span
                     key={i}
                     className={
-                      i < Math.floor(workshop.rating) ? "text-yellow-400 text-xl" : "text-warm-charcoal/20 text-xl"
+                      i < Math.floor(workshop.rating)
+                        ? 'text-xl text-yellow-400'
+                        : 'text-warm-charcoal/20 text-xl'
                     }
                   >
                     ★
@@ -119,31 +129,31 @@ export default function WorkshopDetailPage() {
             </div>
 
             {/* Details Grid */}
-            <div className="grid grid-cols-2 gap-4 p-4 bg-warm-sand/50 rounded-lg">
+            <div className="bg-warm-sand/50 grid grid-cols-2 gap-4 rounded-lg p-4">
               <div>
-                <p className="text-sm text-warm-charcoal/60 mb-1">Duration</p>
-                <p className="font-semibold text-warm-charcoal flex items-center gap-2">
-                  <Clock className="w-4 h-4" />
+                <p className="text-warm-charcoal/60 mb-1 text-sm">Duration</p>
+                <p className="text-warm-charcoal flex items-center gap-2 font-semibold">
+                  <Clock className="h-4 w-4" />
                   {workshop.duration}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-warm-charcoal/60 mb-1">Group Size</p>
-                <p className="font-semibold text-warm-charcoal flex items-center gap-2">
-                  <Users className="w-4 h-4" />
+                <p className="text-warm-charcoal/60 mb-1 text-sm">Group Size</p>
+                <p className="text-warm-charcoal flex items-center gap-2 font-semibold">
+                  <Users className="h-4 w-4" />
                   Max {workshop.groupSize}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-warm-charcoal/60 mb-1">Location</p>
-                <p className="font-semibold text-warm-charcoal flex items-center gap-2">
-                  <MapPin className="w-4 h-4" />
+                <p className="text-warm-charcoal/60 mb-1 text-sm">Location</p>
+                <p className="text-warm-charcoal flex items-center gap-2 font-semibold">
+                  <MapPin className="h-4 w-4" />
                   {workshop.location}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-warm-charcoal/60 mb-1">Language</p>
-                <p className="font-semibold text-warm-charcoal">{workshop.language}</p>
+                <p className="text-warm-charcoal/60 mb-1 text-sm">Language</p>
+                <p className="text-warm-charcoal font-semibold">{workshop.language}</p>
               </div>
             </div>
 
@@ -151,21 +161,23 @@ export default function WorkshopDetailPage() {
             <p className="text-warm-charcoal/70 leading-relaxed">{workshop.description}</p>
 
             {/* Action Buttons */}
-            <div className="space-y-3 border-t border-border pt-6">
-              <div className="text-3xl font-bold text-primary">₹{workshop.price.toLocaleString()}</div>
-              <button className="w-full py-4 bg-primary text-white rounded-lg font-semibold hover:bg-warm-rust transition">
+            <div className="border-border space-y-3 border-t pt-6">
+              <div className="text-primary text-3xl font-bold">
+                ₹{workshop.price.toLocaleString()}
+              </div>
+              <button className="bg-primary hover:bg-warm-rust w-full rounded-lg py-4 font-semibold text-white transition">
                 Book This Workshop
               </button>
               <div className="flex gap-3">
                 <button
                   onClick={() => setIsWishlisted(!isWishlisted)}
-                  className="flex-1 py-3 border-2 border-primary text-primary rounded-lg font-semibold hover:bg-primary hover:text-white transition flex items-center justify-center gap-2"
+                  className="border-primary text-primary hover:bg-primary flex flex-1 items-center justify-center gap-2 rounded-lg border-2 py-3 font-semibold transition hover:text-white"
                 >
-                  <Heart className={`w-5 h-5 ${isWishlisted ? "fill-current" : ""}`} />
-                  {isWishlisted ? "Saved" : "Save"}
+                  <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-current' : ''}`} />
+                  {isWishlisted ? 'Saved' : 'Save'}
                 </button>
-                <button className="flex-1 py-3 border-2 border-border text-warm-charcoal rounded-lg font-semibold hover:bg-warm-sand transition flex items-center justify-center gap-2">
-                  <Share2 className="w-5 h-5" />
+                <button className="border-border text-warm-charcoal hover:bg-warm-sand flex flex-1 items-center justify-center gap-2 rounded-lg border-2 py-3 font-semibold transition">
+                  <Share2 className="h-5 w-5" />
                   Share
                 </button>
               </div>
@@ -174,14 +186,16 @@ export default function WorkshopDetailPage() {
         </div>
 
         {/* Schedule & Info */}
-        <div className="grid md:grid-cols-2 gap-12 mb-12">
+        <div className="mb-12 grid gap-12 md:grid-cols-2">
           {/* Schedule */}
           <div className="card-light">
-            <h2 className="text-2xl font-serif font-bold text-warm-charcoal mb-6">Daily Schedule</h2>
+            <h2 className="text-warm-charcoal mb-6 font-serif text-2xl font-bold">
+              Daily Schedule
+            </h2>
             <div className="space-y-4">
               {workshop.schedule.map((item, idx) => (
-                <div key={idx} className="border-l-4 border-primary pl-4">
-                  <p className="font-semibold text-warm-charcoal">{item.time}</p>
+                <div key={idx} className="border-primary border-l-4 pl-4">
+                  <p className="text-warm-charcoal font-semibold">{item.time}</p>
                   <p className="text-warm-charcoal/70 text-sm">{item.activity}</p>
                 </div>
               ))}
@@ -190,19 +204,21 @@ export default function WorkshopDetailPage() {
 
           {/* What's Included */}
           <div className="card-light">
-            <h2 className="text-2xl font-serif font-bold text-warm-charcoal mb-6">What's Included</h2>
-            <div className="space-y-3 mb-8">
+            <h2 className="text-warm-charcoal mb-6 font-serif text-2xl font-bold">
+              What&apos;s Included
+            </h2>
+            <div className="mb-8 space-y-3">
               {workshop.includes.map((item, idx) => (
                 <div key={idx} className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                  <Check className="text-primary mt-0.5 h-5 w-5 flex-shrink-0" />
                   <span className="text-warm-charcoal/70">{item}</span>
                 </div>
               ))}
             </div>
 
-            <div className="border-t border-border pt-6">
-              <h3 className="font-bold text-warm-charcoal mb-3">What to Bring</h3>
-              <ul className="space-y-2 text-sm text-warm-charcoal/70">
+            <div className="border-border border-t pt-6">
+              <h3 className="text-warm-charcoal mb-3 font-bold">What to Bring</h3>
+              <ul className="text-warm-charcoal/70 space-y-2 text-sm">
                 {workshop.whatToBring.map((item, idx) => (
                   <li key={idx}>• {item}</li>
                 ))}
@@ -213,10 +229,10 @@ export default function WorkshopDetailPage() {
 
         {/* Highlights */}
         <div className="card-light mb-12">
-          <h2 className="text-2xl font-serif font-bold text-warm-charcoal mb-6">Highlights</h2>
-          <div className="grid md:grid-cols-3 gap-4">
+          <h2 className="text-warm-charcoal mb-6 font-serif text-2xl font-bold">Highlights</h2>
+          <div className="grid gap-4 md:grid-cols-3">
             {workshop.highlights.map((highlight, idx) => (
-              <div key={idx} className="p-4 bg-primary/5 rounded-lg">
+              <div key={idx} className="bg-primary/5 rounded-lg p-4">
                 <p className="text-warm-charcoal font-semibold">{highlight}</p>
               </div>
             ))}
@@ -225,32 +241,32 @@ export default function WorkshopDetailPage() {
 
         {/* Reviews Section */}
         <div className="card-light">
-          <h2 className="text-2xl font-serif font-bold text-warm-charcoal mb-6">Guest Reviews</h2>
+          <h2 className="text-warm-charcoal mb-6 font-serif text-2xl font-bold">Guest Reviews</h2>
           <div className="space-y-6">
             {[1, 2, 3].map((idx) => (
-              <div key={idx} className="border-b border-border pb-6 last:border-0">
+              <div key={idx} className="border-border border-b pb-6 last:border-0">
                 <div className="flex items-start gap-4">
                   <img
                     src={`/ceholder-svg-key-reviewer.jpg?key=reviewer${idx}`}
                     alt="Reviewer"
-                    className="w-12 h-12 rounded-full object-cover"
+                    className="h-12 w-12 rounded-full object-cover"
                   />
                   <div className="flex-1">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-semibold text-warm-charcoal">Guest Reviewer {idx}</h3>
+                    <div className="mb-2 flex items-center justify-between">
+                      <h3 className="text-warm-charcoal font-semibold">Guest Reviewer {idx}</h3>
                       <div className="flex gap-1">
                         {Array.from({ length: 5 }).map((_, i) => (
-                          <span key={i} className="text-yellow-400 text-sm">
+                          <span key={i} className="text-sm text-yellow-400">
                             ★
                           </span>
                         ))}
                       </div>
                     </div>
                     <p className="text-warm-charcoal/70">
-                      An absolutely transformative experience! Priya's patience and expertise made it perfect for
-                      beginners while still challenging. Highly recommended!
+                      An absolutely transformative experience! Priya&apos;s patience and expertise
+                      made it perfect for beginners while still challenging. Highly recommended!
                     </p>
-                    <p className="text-xs text-warm-charcoal/60 mt-2">1 week ago</p>
+                    <p className="text-warm-charcoal/60 mt-2 text-xs">1 week ago</p>
                   </div>
                 </div>
               </div>
@@ -261,5 +277,5 @@ export default function WorkshopDetailPage() {
 
       <Footer />
     </main>
-  )
+  );
 }

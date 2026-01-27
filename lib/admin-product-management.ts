@@ -1,6 +1,6 @@
 /**
  * Admin Product Management System
- * 
+ *
  * Product catalog management for administrators
  */
 
@@ -23,10 +23,14 @@ export class AdminProductManagementSystem {
     return this.products.get(id) || null;
   }
 
-  async searchProducts(query: { status?: string; category?: string; limit?: number }): Promise<AdminProduct[]> {
+  async searchProducts(query: {
+    status?: string;
+    category?: string;
+    limit?: number;
+  }): Promise<AdminProduct[]> {
     let results = Array.from(this.products.values());
-    if (query.status) results = results.filter(p => p.status === query.status);
-    if (query.category) results = results.filter(p => p.category === query.category);
+    if (query.status) results = results.filter((p) => p.status === query.status);
+    if (query.category) results = results.filter((p) => p.category === query.category);
     if (query.limit) results = results.slice(0, query.limit);
     return results;
   }
@@ -43,10 +47,13 @@ export class AdminProductManagementSystem {
 
   async getAnalytics(): Promise<{ total: number; byStatus: Record<string, number> }> {
     const products = Array.from(this.products.values());
-    const byStatus = products.reduce((acc, p) => {
-      acc[p.status] = (acc[p.status] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const byStatus = products.reduce(
+      (acc, p) => {
+        acc[p.status] = (acc[p.status] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
     return { total: products.length, byStatus };
   }
 }

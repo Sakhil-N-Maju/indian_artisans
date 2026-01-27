@@ -1,6 +1,6 @@
 /**
  * Supplier Management System
- * 
+ *
  * Comprehensive supplier and vendor management:
  * - Supplier profiles and onboarding
  * - Purchase order management
@@ -14,12 +14,12 @@
 export interface Supplier {
   id: string;
   code: string; // Unique supplier code
-  
+
   // Basic info
   name: string;
   legalName: string;
   type: 'manufacturer' | 'wholesaler' | 'distributor' | 'artisan' | 'cooperative' | 'other';
-  
+
   // Contact
   contact: {
     primaryContact: string;
@@ -28,7 +28,7 @@ export interface Supplier {
     alternatePhone?: string;
     website?: string;
   };
-  
+
   // Address
   addresses: {
     type: 'billing' | 'shipping' | 'registered';
@@ -39,7 +39,7 @@ export interface Supplier {
     country: string;
     isPrimary: boolean;
   }[];
-  
+
   // Business details
   business: {
     registrationNumber?: string;
@@ -49,11 +49,11 @@ export interface Supplier {
     yearsInBusiness: number;
     certifications?: string[];
   };
-  
+
   // Products/Categories
   categories: string[];
   specializations: string[];
-  
+
   // Terms
   terms: {
     paymentTerms: 'net_15' | 'net_30' | 'net_45' | 'net_60' | 'cod' | 'advance' | 'custom';
@@ -63,7 +63,7 @@ export interface Supplier {
     leadTimeDays: number;
     returnPolicy?: string;
   };
-  
+
   // Banking
   banking?: {
     bankName: string;
@@ -73,7 +73,7 @@ export interface Supplier {
     swiftCode?: string;
     routingNumber?: string;
   };
-  
+
   // Performance
   performance: {
     rating: number; // 0-5
@@ -82,14 +82,14 @@ export interface Supplier {
     qualityScore: number; // 0-100
     responseTime: number; // hours
   };
-  
+
   // Status
   status: 'active' | 'inactive' | 'suspended' | 'pending_approval' | 'blacklisted';
   tier: 'platinum' | 'gold' | 'silver' | 'bronze';
-  
+
   // Relationships
   assignedBuyer?: string;
-  
+
   // Documents
   documents: {
     type: 'contract' | 'license' | 'certificate' | 'tax_document' | 'insurance' | 'other';
@@ -98,11 +98,11 @@ export interface Supplier {
     expiryDate?: Date;
     verified: boolean;
   }[];
-  
+
   // Notes
   notes?: string;
   internalNotes?: string;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -110,15 +110,15 @@ export interface Supplier {
 export interface PurchaseOrder {
   id: string;
   poNumber: string;
-  
+
   // Supplier
   supplierId: string;
   supplierName: string;
-  
+
   // Buyer
   buyerId: string;
   buyerName: string;
-  
+
   // Items
   items: {
     id: string;
@@ -135,7 +135,7 @@ export interface PurchaseOrder {
     receivedQuantity: number;
     status: 'pending' | 'partial' | 'received' | 'cancelled';
   }[];
-  
+
   // Pricing
   pricing: {
     subtotal: number;
@@ -146,7 +146,7 @@ export interface PurchaseOrder {
     total: number;
     currency: string;
   };
-  
+
   // Shipping
   shipping: {
     address: Supplier['addresses'][0];
@@ -155,10 +155,20 @@ export interface PurchaseOrder {
     estimatedDeliveryDate: Date;
     trackingNumber?: string;
   };
-  
+
   // Status
-  status: 'draft' | 'pending_approval' | 'approved' | 'sent' | 'acknowledged' | 'in_production' | 'shipped' | 'received' | 'cancelled' | 'completed';
-  
+  status:
+    | 'draft'
+    | 'pending_approval'
+    | 'approved'
+    | 'sent'
+    | 'acknowledged'
+    | 'in_production'
+    | 'shipped'
+    | 'received'
+    | 'cancelled'
+    | 'completed';
+
   // Workflow
   workflow: {
     createdBy: string;
@@ -173,7 +183,7 @@ export interface PurchaseOrder {
     cancelledAt?: Date;
     cancellationReason?: string;
   };
-  
+
   // Payment
   payment: {
     terms: Supplier['terms']['paymentTerms'];
@@ -182,15 +192,15 @@ export interface PurchaseOrder {
     paidAmount: number;
     paidAt?: Date;
   };
-  
+
   // References
   requisitionId?: string;
   rfqId?: string;
-  
+
   // Notes
   notes?: string;
   internalNotes?: string;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -198,19 +208,19 @@ export interface PurchaseOrder {
 export interface SupplierInvoice {
   id: string;
   invoiceNumber: string;
-  
+
   // Supplier
   supplierId: string;
   supplierName: string;
-  
+
   // PO reference
   purchaseOrderId: string;
   poNumber: string;
-  
+
   // Invoice details
   invoiceDate: Date;
   dueDate: Date;
-  
+
   // Amounts
   amounts: {
     subtotal: number;
@@ -220,7 +230,7 @@ export interface SupplierInvoice {
     total: number;
     currency: string;
   };
-  
+
   // Payment
   payment: {
     status: 'pending' | 'partial' | 'paid' | 'overdue' | 'disputed';
@@ -230,20 +240,20 @@ export interface SupplierInvoice {
     paymentMethod?: string;
     transactionId?: string;
   };
-  
+
   // Status
   status: 'received' | 'under_review' | 'approved' | 'rejected' | 'paid';
-  
+
   // Approval
   approvedBy?: string;
   approvedAt?: Date;
   rejectedBy?: string;
   rejectedAt?: Date;
   rejectionReason?: string;
-  
+
   // Documents
   documentUrl?: string;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -252,13 +262,13 @@ export interface SupplierPerformanceReview {
   id: string;
   supplierId: string;
   supplierName: string;
-  
+
   // Review period
   period: {
     start: Date;
     end: Date;
   };
-  
+
   // Metrics
   metrics: {
     totalOrders: number;
@@ -271,7 +281,7 @@ export interface SupplierPerformanceReview {
     averageLeadTime: number; // days
     responseTime: number; // hours
   };
-  
+
   // Scores (0-100)
   scores: {
     quality: number;
@@ -281,7 +291,7 @@ export interface SupplierPerformanceReview {
     compliance: number;
     overall: number;
   };
-  
+
   // Feedback
   strengths: string[];
   improvements: string[];
@@ -292,26 +302,26 @@ export interface SupplierPerformanceReview {
     date: Date;
     resolved: boolean;
   }[];
-  
+
   // Reviewer
   reviewedBy: string;
   reviewedAt: Date;
-  
+
   // Recommendations
   recommendation: 'continue' | 'improve' | 'reduce_orders' | 'discontinue';
   actionItems?: string[];
-  
+
   createdAt: Date;
 }
 
 export interface RequestForQuotation {
   id: string;
   rfqNumber: string;
-  
+
   // Requestor
   requestedBy: string;
   department?: string;
-  
+
   // Items
   items: {
     id: string;
@@ -323,7 +333,7 @@ export interface RequestForQuotation {
     targetPrice?: number;
     preferredBrand?: string;
   }[];
-  
+
   // Requirements
   requirements: {
     deliveryDate: Date;
@@ -332,7 +342,7 @@ export interface RequestForQuotation {
     certifications?: string[];
     sampleRequired: boolean;
   };
-  
+
   // Suppliers invited
   suppliers: {
     supplierId: string;
@@ -341,10 +351,10 @@ export interface RequestForQuotation {
     respondedAt?: Date;
     status: 'invited' | 'responded' | 'declined' | 'no_response';
   }[];
-  
+
   // Status
   status: 'draft' | 'sent' | 'responses_received' | 'evaluating' | 'awarded' | 'cancelled';
-  
+
   // Timeline
   timeline: {
     issueDate: Date;
@@ -352,11 +362,11 @@ export interface RequestForQuotation {
     evaluationCompleteBy: Date;
     awardedDate?: Date;
   };
-  
+
   // Awarded supplier
   awardedSupplierId?: string;
   awardedQuoteId?: string;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -365,11 +375,11 @@ export interface SupplierQuote {
   id: string;
   rfqId: string;
   rfqNumber: string;
-  
+
   // Supplier
   supplierId: string;
   supplierName: string;
-  
+
   // Quote details
   items: {
     rfqItemId: string;
@@ -381,7 +391,7 @@ export interface SupplierQuote {
     totalPrice: number;
     notes?: string;
   }[];
-  
+
   // Pricing
   pricing: {
     subtotal: number;
@@ -391,7 +401,7 @@ export interface SupplierQuote {
     total: number;
     currency: string;
   };
-  
+
   // Terms
   terms: {
     paymentTerms: string;
@@ -399,10 +409,10 @@ export interface SupplierQuote {
     deliveryTerms: string;
     warranty?: string;
   };
-  
+
   // Status
   status: 'submitted' | 'under_review' | 'shortlisted' | 'accepted' | 'rejected';
-  
+
   // Evaluation
   evaluation?: {
     priceScore: number; // 0-100
@@ -414,13 +424,13 @@ export interface SupplierQuote {
     evaluatedAt: Date;
     notes?: string;
   };
-  
+
   // Documents
   documents?: {
     type: string;
     url: string;
   }[];
-  
+
   submittedAt: Date;
   createdAt: Date;
 }
@@ -430,7 +440,7 @@ export interface SupplierAnalytics {
     start: Date;
     end: Date;
   };
-  
+
   overview: {
     totalSuppliers: number;
     activeSuppliers: number;
@@ -438,28 +448,28 @@ export interface SupplierAnalytics {
     totalPurchaseValue: number;
     averageOrderValue: number;
   };
-  
+
   byTier: {
     tier: Supplier['tier'];
     count: number;
     purchaseValue: number;
     percentage: number;
   }[];
-  
+
   byCategory: {
     category: string;
     suppliers: number;
     purchaseOrders: number;
     value: number;
   }[];
-  
+
   performance: {
     averageOnTimeDelivery: number; // percentage
     averageQualityScore: number;
     averageResponseTime: number; // hours
     averageLeadTime: number; // days
   };
-  
+
   topSuppliers: {
     supplierId: string;
     supplierName: string;
@@ -467,7 +477,7 @@ export interface SupplierAnalytics {
     orders: number;
     performanceScore: number;
   }[];
-  
+
   purchaseOrders: {
     total: number;
     byStatus: {
@@ -477,7 +487,7 @@ export interface SupplierAnalytics {
     }[];
     averageProcessingTime: number; // days
   };
-  
+
   savings: {
     totalDiscount: number;
     volumeDiscounts: number;
@@ -569,15 +579,15 @@ export class SupplierManagementSystem {
     // Calculate pricing
     let subtotal = 0;
     let totalTax = 0;
-    
+
     const items = params.items.map((item, index) => {
-      const itemSubtotal = (item.quantity * item.unitPrice) - item.discount;
+      const itemSubtotal = item.quantity * item.unitPrice - item.discount;
       const itemTax = itemSubtotal * (item.tax / 100);
       const itemTotal = itemSubtotal + itemTax;
-      
+
       subtotal += itemSubtotal;
       totalTax += itemTax;
-      
+
       return {
         ...item,
         id: `item-${index + 1}`,
@@ -673,11 +683,11 @@ export class SupplierManagementSystem {
     if (!po) return;
 
     // Update received quantities
-    params.items.forEach(item => {
-      const poItem = po.items.find(i => i.id === item.itemId);
+    params.items.forEach((item) => {
+      const poItem = po.items.find((i) => i.id === item.itemId);
       if (poItem) {
         poItem.receivedQuantity += item.receivedQuantity;
-        
+
         if (poItem.receivedQuantity >= poItem.quantity) {
           poItem.status = 'received';
         } else if (poItem.receivedQuantity > 0) {
@@ -687,11 +697,11 @@ export class SupplierManagementSystem {
     });
 
     // Check if PO fully received
-    const allReceived = po.items.every(i => i.status === 'received');
+    const allReceived = po.items.every((i) => i.status === 'received');
     if (allReceived) {
       po.status = 'completed';
       po.workflow.completedAt = new Date();
-      
+
       // Update supplier performance
       const supplier = this.suppliers.get(po.supplierId);
       if (supplier) {
@@ -723,7 +733,7 @@ export class SupplierManagementSystem {
       department: params.department,
       items: params.items,
       requirements: params.requirements,
-      suppliers: params.supplierIds.map(supplierId => {
+      suppliers: params.supplierIds.map((supplierId) => {
         const supplier = this.suppliers.get(supplierId);
         return {
           supplierId,
@@ -785,7 +795,7 @@ export class SupplierManagementSystem {
     this.quotes.set(quote.id, quote);
 
     // Update RFQ supplier status
-    const rfqSupplier = rfq.suppliers.find(s => s.supplierId === params.supplierId);
+    const rfqSupplier = rfq.suppliers.find((s) => s.supplierId === params.supplierId);
     if (rfqSupplier) {
       rfqSupplier.status = 'responded';
       rfqSupplier.respondedAt = new Date();
@@ -854,23 +864,22 @@ export class SupplierManagementSystem {
    */
   async getAnalytics(period: { start: Date; end: Date }): Promise<SupplierAnalytics> {
     const suppliers = Array.from(this.suppliers.values());
-    const activeSuppliers = suppliers.filter(s => s.status === 'active');
+    const activeSuppliers = suppliers.filter((s) => s.status === 'active');
     const newSuppliers = suppliers.filter(
-      s => s.createdAt >= period.start && s.createdAt <= period.end
+      (s) => s.createdAt >= period.start && s.createdAt <= period.end
     );
 
     const purchaseOrders = Array.from(this.purchaseOrders.values()).filter(
-      po => po.createdAt >= period.start && po.createdAt <= period.end
+      (po) => po.createdAt >= period.start && po.createdAt <= period.end
     );
 
     const totalPurchaseValue = purchaseOrders.reduce((sum, po) => sum + po.pricing.total, 0);
-    const averageOrderValue = purchaseOrders.length > 0 
-      ? totalPurchaseValue / purchaseOrders.length 
-      : 0;
+    const averageOrderValue =
+      purchaseOrders.length > 0 ? totalPurchaseValue / purchaseOrders.length : 0;
 
     // Tier distribution
     const tierCounts = new Map<Supplier['tier'], { count: number; value: number }>();
-    suppliers.forEach(s => {
+    suppliers.forEach((s) => {
       const data = tierCounts.get(s.tier) || { count: 0, value: 0 };
       data.count++;
       tierCounts.set(s.tier, data);
@@ -885,7 +894,7 @@ export class SupplierManagementSystem {
 
     // PO status breakdown
     const statusCounts = new Map<PurchaseOrder['status'], { count: number; value: number }>();
-    purchaseOrders.forEach(po => {
+    purchaseOrders.forEach((po) => {
       const data = statusCounts.get(po.status) || { count: 0, value: 0 };
       data.count++;
       data.value += po.pricing.total;
@@ -899,17 +908,23 @@ export class SupplierManagementSystem {
     }));
 
     // Performance averages
-    const avgOnTimeDelivery = activeSuppliers.length > 0
-      ? activeSuppliers.reduce((sum, s) => sum + s.performance.onTimeDeliveryRate, 0) / activeSuppliers.length
-      : 0;
+    const avgOnTimeDelivery =
+      activeSuppliers.length > 0
+        ? activeSuppliers.reduce((sum, s) => sum + s.performance.onTimeDeliveryRate, 0) /
+          activeSuppliers.length
+        : 0;
 
-    const avgQualityScore = activeSuppliers.length > 0
-      ? activeSuppliers.reduce((sum, s) => sum + s.performance.qualityScore, 0) / activeSuppliers.length
-      : 0;
+    const avgQualityScore =
+      activeSuppliers.length > 0
+        ? activeSuppliers.reduce((sum, s) => sum + s.performance.qualityScore, 0) /
+          activeSuppliers.length
+        : 0;
 
-    const avgResponseTime = activeSuppliers.length > 0
-      ? activeSuppliers.reduce((sum, s) => sum + s.performance.responseTime, 0) / activeSuppliers.length
-      : 0;
+    const avgResponseTime =
+      activeSuppliers.length > 0
+        ? activeSuppliers.reduce((sum, s) => sum + s.performance.responseTime, 0) /
+          activeSuppliers.length
+        : 0;
 
     return {
       period,
@@ -934,7 +949,7 @@ export class SupplierManagementSystem {
       topSuppliers: suppliers
         .sort((a, b) => b.performance.totalOrders - a.performance.totalOrders)
         .slice(0, 10)
-        .map(s => ({
+        .map((s) => ({
           supplierId: s.id,
           supplierName: s.name,
           purchaseValue: 0, // Would calculate from POs
@@ -966,11 +981,11 @@ export class SupplierManagementSystem {
    */
   async getAllSuppliers(status?: Supplier['status']): Promise<Supplier[]> {
     let suppliers = Array.from(this.suppliers.values());
-    
+
     if (status) {
-      suppliers = suppliers.filter(s => s.status === status);
+      suppliers = suppliers.filter((s) => s.status === status);
     }
-    
+
     return suppliers;
   }
 }

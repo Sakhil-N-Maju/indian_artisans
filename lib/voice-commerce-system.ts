@@ -1,6 +1,6 @@
 /**
  * Voice Commerce System
- * 
+ *
  * Enables voice-powered shopping:
  * - Voice search and navigation
  * - Voice-guided shopping
@@ -13,7 +13,7 @@
 export interface VoiceCommand {
   id: string;
   userId: string;
-  
+
   // Audio data
   audio: {
     url: string;
@@ -21,7 +21,7 @@ export interface VoiceCommand {
     format: 'wav' | 'mp3' | 'webm';
     sampleRate: number;
   };
-  
+
   // Transcription
   transcription: {
     text: string;
@@ -32,10 +32,17 @@ export interface VoiceCommand {
       confidence: number;
     }[];
   };
-  
+
   // Intent
   intent: {
-    type: 'search' | 'navigate' | 'add_to_cart' | 'checkout' | 'track_order' | 'get_info' | 'general';
+    type:
+      | 'search'
+      | 'navigate'
+      | 'add_to_cart'
+      | 'checkout'
+      | 'track_order'
+      | 'get_info'
+      | 'general';
     entities: {
       productName?: string;
       category?: string;
@@ -47,7 +54,7 @@ export interface VoiceCommand {
     };
     confidence: number;
   };
-  
+
   // Response
   response: {
     text: string;
@@ -57,11 +64,11 @@ export interface VoiceCommand {
       data: any;
     };
   };
-  
+
   // Metadata
   deviceType: 'mobile' | 'smart_speaker' | 'desktop' | 'wearable';
   platform: 'web' | 'ios' | 'android' | 'alexa' | 'google_assistant';
-  
+
   processingTime: number; // ms
   createdAt: Date;
 }
@@ -69,15 +76,15 @@ export interface VoiceCommand {
 export interface VoiceSession {
   id: string;
   userId: string;
-  
+
   // Session info
   startTime: Date;
   endTime?: Date;
   duration?: number;
-  
+
   // Commands
   commands: string[]; // Command IDs
-  
+
   // Context
   context: {
     currentPage?: string;
@@ -89,7 +96,7 @@ export interface VoiceSession {
       timestamp: Date;
     }[];
   };
-  
+
   // Shopping outcomes
   outcomes: {
     productsViewed: string[];
@@ -98,7 +105,7 @@ export interface VoiceSession {
     orderPlaced: boolean;
     orderId?: string;
   };
-  
+
   // Analytics
   deviceType: VoiceCommand['deviceType'];
   platform: VoiceCommand['platform'];
@@ -123,7 +130,7 @@ export interface VoiceSearchResult {
 export interface VoiceShoppingAssistant {
   id: string;
   name: string;
-  
+
   // Voice characteristics
   voice: {
     provider: 'aws_polly' | 'google_tts' | 'azure_speech' | 'elevenlabs';
@@ -132,14 +139,14 @@ export interface VoiceShoppingAssistant {
     gender: 'male' | 'female' | 'neutral';
     style: 'conversational' | 'professional' | 'friendly' | 'concise';
   };
-  
+
   // Personality
   personality: {
     tone: 'helpful' | 'enthusiastic' | 'calm' | 'expert';
     verbosity: 'brief' | 'moderate' | 'detailed';
     formality: 'casual' | 'semi-formal' | 'formal';
   };
-  
+
   // Capabilities
   capabilities: {
     canSearch: boolean;
@@ -149,7 +156,7 @@ export interface VoiceShoppingAssistant {
     canProcessOrders: boolean;
     canProvideSupport: boolean;
   };
-  
+
   // Knowledge base
   knowledge: {
     productCatalog: boolean;
@@ -165,7 +172,7 @@ export interface VoicePayment {
   id: string;
   userId: string;
   sessionId: string;
-  
+
   // Authorization
   authorization: {
     method: 'voice_pin' | 'biometric' | 'device_verification' | 'two_factor';
@@ -177,7 +184,7 @@ export interface VoicePayment {
     challenge?: string;
     challengeResponse?: string;
   };
-  
+
   // Payment details
   payment: {
     amount: number;
@@ -185,7 +192,7 @@ export interface VoicePayment {
     method: 'saved_card' | 'wallet' | 'upi';
     lastFourDigits?: string;
   };
-  
+
   // Verification
   verification: {
     attemptCount: number;
@@ -193,7 +200,7 @@ export interface VoicePayment {
     verified: boolean;
     verificationTime?: Date;
   };
-  
+
   status: 'pending' | 'verified' | 'failed' | 'completed';
   createdAt: Date;
 }
@@ -203,7 +210,7 @@ export interface VoiceAnalytics {
     start: Date;
     end: Date;
   };
-  
+
   usage: {
     totalCommands: number;
     totalSessions: number;
@@ -211,32 +218,32 @@ export interface VoiceAnalytics {
     averageSessionDuration: number;
     averageCommandsPerSession: number;
   };
-  
+
   intents: {
     type: VoiceCommand['intent']['type'];
     count: number;
     successRate: number;
   }[];
-  
+
   languages: {
     language: string;
     usage: number;
     percentage: number;
   }[];
-  
+
   devices: {
     type: VoiceCommand['deviceType'];
     usage: number;
     percentage: number;
   }[];
-  
+
   conversion: {
     sessionsWithSearch: number;
     sessionsWithCartAdd: number;
     sessionsWithPurchase: number;
     conversionRate: number;
   };
-  
+
   performance: {
     averageProcessingTime: number;
     averageTranscriptionAccuracy: number;
@@ -346,10 +353,10 @@ export class VoiceCommerceSystem {
 
     // Simulate speech-to-text transcription
     const transcription = await this.transcribeAudio(params.audio, session.language);
-    
+
     // Extract intent
     const intent = await this.extractIntent(transcription.text, session);
-    
+
     // Generate response
     const response = await this.generateResponse(intent, session);
 
@@ -384,23 +391,27 @@ export class VoiceCommerceSystem {
   /**
    * Transcribe audio
    */
-  private async transcribeAudio(audio: VoiceCommand['audio'], language: string): Promise<VoiceCommand['transcription']> {
+  private async transcribeAudio(
+    audio: VoiceCommand['audio'],
+    language: string
+  ): Promise<VoiceCommand['transcription']> {
     // Simulate transcription (in production, use AWS Transcribe, Google Speech-to-Text, etc.)
     // This is mock data - in real implementation, call speech recognition API
     return {
       text: 'Show me handwoven silk scarves under 5000 rupees',
       language,
       confidence: 0.95,
-      alternates: [
-        { text: 'Show me hand woven silk scarves under 5000 rupees', confidence: 0.92 },
-      ],
+      alternates: [{ text: 'Show me hand woven silk scarves under 5000 rupees', confidence: 0.92 }],
     };
   }
 
   /**
    * Extract intent from text
    */
-  private async extractIntent(text: string, session: VoiceSession): Promise<VoiceCommand['intent']> {
+  private async extractIntent(
+    text: string,
+    session: VoiceSession
+  ): Promise<VoiceCommand['intent']> {
     const lowerText = text.toLowerCase();
 
     // Simple intent detection (in production, use NLP model)
@@ -409,17 +420,17 @@ export class VoiceCommerceSystem {
 
     if (lowerText.includes('search') || lowerText.includes('show') || lowerText.includes('find')) {
       type = 'search';
-      
+
       // Extract product type
       if (lowerText.includes('scarf') || lowerText.includes('scarves')) {
         entities.productName = 'scarves';
       }
-      
+
       // Extract category
       if (lowerText.includes('handwoven') || lowerText.includes('silk')) {
         entities.category = 'handwoven_silk';
       }
-      
+
       // Extract price
       const priceMatch = lowerText.match(/under (\d+)/);
       if (priceMatch) {
@@ -427,7 +438,7 @@ export class VoiceCommerceSystem {
       }
     } else if (lowerText.includes('add to cart') || lowerText.includes('buy')) {
       type = 'add_to_cart';
-      
+
       // Extract quantity
       const quantityMatch = lowerText.match(/(\d+)\s+(piece|item)/);
       if (quantityMatch) {
@@ -437,7 +448,7 @@ export class VoiceCommerceSystem {
       type = 'checkout';
     } else if (lowerText.includes('track') || lowerText.includes('order status')) {
       type = 'track_order';
-      
+
       // Extract order ID
       const orderMatch = lowerText.match(/order\s+([A-Z0-9]+)/i);
       if (orderMatch) {
@@ -455,7 +466,10 @@ export class VoiceCommerceSystem {
   /**
    * Generate response
    */
-  private async generateResponse(intent: VoiceCommand['intent'], session: VoiceSession): Promise<VoiceCommand['response']> {
+  private async generateResponse(
+    intent: VoiceCommand['intent'],
+    session: VoiceSession
+  ): Promise<VoiceCommand['response']> {
     let text = '';
     let action: VoiceCommand['response']['action'];
 
@@ -510,7 +524,8 @@ export class VoiceCommerceSystem {
         break;
 
       default:
-        text = 'I can help you search for products, add items to cart, track orders, or answer questions about our artisan marketplace. What would you like to do?';
+        text =
+          'I can help you search for products, add items to cart, track orders, or answer questions about our artisan marketplace. What would you like to do?';
     }
 
     // Generate TTS audio URL (in production, call TTS service)
@@ -545,12 +560,15 @@ export class VoiceCommerceSystem {
   /**
    * Voice search
    */
-  async voiceSearch(query: string, filters?: {
-    category?: string;
-    maxPrice?: number;
-    minPrice?: number;
-    artisan?: string;
-  }): Promise<VoiceSearchResult> {
+  async voiceSearch(
+    query: string,
+    filters?: {
+      category?: string;
+      maxPrice?: number;
+      minPrice?: number;
+      artisan?: string;
+    }
+  ): Promise<VoiceSearchResult> {
     // Simulate search (in production, integrate with actual search service)
     const results = [
       {
@@ -576,7 +594,7 @@ export class VoiceCommerceSystem {
     // Apply filters
     let filteredResults = results;
     if (filters?.maxPrice) {
-      filteredResults = filteredResults.filter(r => (r.price || 0) <= filters.maxPrice!);
+      filteredResults = filteredResults.filter((r) => (r.price || 0) <= filters.maxPrice!);
     }
 
     return {
@@ -670,27 +688,29 @@ export class VoiceCommerceSystem {
    */
   async getAnalytics(period: { start: Date; end: Date }): Promise<VoiceAnalytics> {
     const commands = Array.from(this.commands.values()).filter(
-      cmd => cmd.createdAt >= period.start && cmd.createdAt <= period.end
+      (cmd) => cmd.createdAt >= period.start && cmd.createdAt <= period.end
     );
 
     const sessions = Array.from(this.sessions.values()).filter(
-      session => session.startTime >= period.start && session.startTime <= period.end
+      (session) => session.startTime >= period.start && session.startTime <= period.end
     );
 
     // Calculate usage metrics
     const totalCommands = commands.length;
     const totalSessions = sessions.length;
-    const uniqueUsers = new Set(sessions.map(s => s.userId)).size;
-    const averageSessionDuration = sessions.length > 0
-      ? sessions.reduce((sum, s) => sum + (s.duration || 0), 0) / sessions.length
-      : 0;
-    const averageCommandsPerSession = totalSessions > 0
-      ? totalCommands / totalSessions
-      : 0;
+    const uniqueUsers = new Set(sessions.map((s) => s.userId)).size;
+    const averageSessionDuration =
+      sessions.length > 0
+        ? sessions.reduce((sum, s) => sum + (s.duration || 0), 0) / sessions.length
+        : 0;
+    const averageCommandsPerSession = totalSessions > 0 ? totalCommands / totalSessions : 0;
 
     // Calculate intent distribution
-    const intentCounts = new Map<VoiceCommand['intent']['type'], { total: number; success: number }>();
-    commands.forEach(cmd => {
+    const intentCounts = new Map<
+      VoiceCommand['intent']['type'],
+      { total: number; success: number }
+    >();
+    commands.forEach((cmd) => {
       const current = intentCounts.get(cmd.intent.type) || { total: 0, success: 0 };
       current.total++;
       if (cmd.intent.confidence > 0.8) current.success++;
@@ -705,7 +725,7 @@ export class VoiceCommerceSystem {
 
     // Calculate language distribution
     const languageCounts = new Map<string, number>();
-    sessions.forEach(session => {
+    sessions.forEach((session) => {
       languageCounts.set(session.language, (languageCounts.get(session.language) || 0) + 1);
     });
 
@@ -717,7 +737,7 @@ export class VoiceCommerceSystem {
 
     // Calculate device distribution
     const deviceCounts = new Map<VoiceCommand['deviceType'], number>();
-    sessions.forEach(session => {
+    sessions.forEach((session) => {
       deviceCounts.set(session.deviceType, (deviceCounts.get(session.deviceType) || 0) + 1);
     });
 
@@ -728,23 +748,28 @@ export class VoiceCommerceSystem {
     }));
 
     // Calculate conversion metrics
-    const sessionsWithSearch = sessions.filter(s => s.outcomes.searchesPerformed > 0).length;
-    const sessionsWithCartAdd = sessions.filter(s => s.outcomes.productsAddedToCart.length > 0).length;
-    const sessionsWithPurchase = sessions.filter(s => s.outcomes.orderPlaced).length;
+    const sessionsWithSearch = sessions.filter((s) => s.outcomes.searchesPerformed > 0).length;
+    const sessionsWithCartAdd = sessions.filter(
+      (s) => s.outcomes.productsAddedToCart.length > 0
+    ).length;
+    const sessionsWithPurchase = sessions.filter((s) => s.outcomes.orderPlaced).length;
     const conversionRate = totalSessions > 0 ? (sessionsWithPurchase / totalSessions) * 100 : 0;
 
     // Calculate performance metrics
-    const averageProcessingTime = commands.length > 0
-      ? commands.reduce((sum, cmd) => sum + cmd.processingTime, 0) / commands.length
-      : 0;
+    const averageProcessingTime =
+      commands.length > 0
+        ? commands.reduce((sum, cmd) => sum + cmd.processingTime, 0) / commands.length
+        : 0;
 
-    const averageTranscriptionAccuracy = commands.length > 0
-      ? commands.reduce((sum, cmd) => sum + cmd.transcription.confidence, 0) / commands.length
-      : 0;
+    const averageTranscriptionAccuracy =
+      commands.length > 0
+        ? commands.reduce((sum, cmd) => sum + cmd.transcription.confidence, 0) / commands.length
+        : 0;
 
-    const averageIntentConfidence = commands.length > 0
-      ? commands.reduce((sum, cmd) => sum + cmd.intent.confidence, 0) / commands.length
-      : 0;
+    const averageIntentConfidence =
+      commands.length > 0
+        ? commands.reduce((sum, cmd) => sum + cmd.intent.confidence, 0) / commands.length
+        : 0;
 
     return {
       period,

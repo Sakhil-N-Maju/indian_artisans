@@ -1,6 +1,6 @@
 /**
  * API Gateway Service
- * 
+ *
  * Central API gateway for external integrations
  */
 
@@ -96,8 +96,7 @@ export class APIGatewayService {
   }
 
   async validateAPIKey(key: string): Promise<APIKey | null> {
-    const apiKey = Array.from(this.apiKeys.values())
-      .find(k => k.key === key);
+    const apiKey = Array.from(this.apiKeys.values()).find((k) => k.key === key);
 
     if (!apiKey) return null;
 
@@ -146,8 +145,9 @@ export class APIGatewayService {
     if (!apiKey) return false;
 
     const oneMinuteAgo = new Date(Date.now() - 60000);
-    const recentRequests = Array.from(this.requests.values())
-      .filter(r => r.apiKeyId === apiKeyId && r.timestamp > oneMinuteAgo);
+    const recentRequests = Array.from(this.requests.values()).filter(
+      (r) => r.apiKeyId === apiKeyId && r.timestamp > oneMinuteAgo
+    );
 
     return recentRequests.length < apiKey.rateLimit;
   }
@@ -161,20 +161,27 @@ export class APIGatewayService {
     requestsByStatus: Record<string, number>;
   }> {
     const requests = Array.from(this.requests.values());
-    const avgResponseTime = requests.length > 0
-      ? requests.reduce((sum, r) => sum + r.responseTime, 0) / requests.length
-      : 0;
+    const avgResponseTime =
+      requests.length > 0
+        ? requests.reduce((sum, r) => sum + r.responseTime, 0) / requests.length
+        : 0;
 
-    const byEndpoint = requests.reduce((acc, r) => {
-      acc[r.endpoint] = (acc[r.endpoint] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const byEndpoint = requests.reduce(
+      (acc, r) => {
+        acc[r.endpoint] = (acc[r.endpoint] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const byStatus = requests.reduce((acc, r) => {
-      const status = `${Math.floor(r.statusCode / 100)}xx`;
-      acc[status] = (acc[status] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const byStatus = requests.reduce(
+      (acc, r) => {
+        const status = `${Math.floor(r.statusCode / 100)}xx`;
+        acc[status] = (acc[status] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     return {
       totalEndpoints: this.endpoints.size,

@@ -1,6 +1,6 @@
 /**
  * Data Encryption & Privacy System
- * 
+ *
  * Comprehensive system for managing data encryption, privacy controls,
  * PII protection, and compliance with data protection regulations.
  */
@@ -9,7 +9,7 @@
 // Types & Interfaces
 // ============================================================================
 
-export type EncryptionAlgorithm = 
+export type EncryptionAlgorithm =
   | 'AES-256-GCM'
   | 'AES-128-GCM'
   | 'ChaCha20-Poly1305'
@@ -18,7 +18,7 @@ export type EncryptionAlgorithm =
   | 'ECDH-P256'
   | 'ECDH-P384';
 
-export type KeyType = 
+export type KeyType =
   | 'master'
   | 'data-encryption'
   | 'key-encryption'
@@ -26,14 +26,9 @@ export type KeyType =
   | 'api'
   | 'backup';
 
-export type KeyStatus = 
-  | 'active'
-  | 'rotating'
-  | 'deprecated'
-  | 'revoked'
-  | 'expired';
+export type KeyStatus = 'active' | 'rotating' | 'deprecated' | 'revoked' | 'expired';
 
-export type DataClassification = 
+export type DataClassification =
   | 'public'
   | 'internal'
   | 'confidential'
@@ -41,7 +36,7 @@ export type DataClassification =
   | 'pii'
   | 'sensitive';
 
-export type PIIType = 
+export type PIIType =
   | 'name'
   | 'email'
   | 'phone'
@@ -55,15 +50,9 @@ export type PIIType =
   | 'biometric'
   | 'ip-address';
 
-export type PrivacyRegulation = 
-  | 'GDPR'
-  | 'CCPA'
-  | 'HIPAA'
-  | 'PIPEDA'
-  | 'LGPD'
-  | 'PDPA';
+export type PrivacyRegulation = 'GDPR' | 'CCPA' | 'HIPAA' | 'PIPEDA' | 'LGPD' | 'PDPA';
 
-export type ConsentType = 
+export type ConsentType =
   | 'marketing'
   | 'analytics'
   | 'personalization'
@@ -71,14 +60,9 @@ export type ConsentType =
   | 'profiling'
   | 'automated-decision';
 
-export type ConsentStatus = 
-  | 'granted'
-  | 'denied'
-  | 'pending'
-  | 'withdrawn'
-  | 'expired';
+export type ConsentStatus = 'granted' | 'denied' | 'pending' | 'withdrawn' | 'expired';
 
-export type DataSubjectRight = 
+export type DataSubjectRight =
   | 'access'
   | 'rectification'
   | 'erasure'
@@ -86,7 +70,7 @@ export type DataSubjectRight =
   | 'restriction'
   | 'objection';
 
-export type AnonymizationMethod = 
+export type AnonymizationMethod =
   | 'masking'
   | 'hashing'
   | 'tokenization'
@@ -499,7 +483,7 @@ export interface PrivacyImpactAssessment {
 export interface EncryptionAuditLog {
   id: string;
   timestamp: Date;
-  operation: 
+  operation:
     | 'encrypt'
     | 'decrypt'
     | 'key-generate'
@@ -693,7 +677,7 @@ export class DataEncryptionPrivacySystem {
     rotationDays?: number;
   }): EncryptionKey {
     const keyId = `key_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     const key: EncryptionKey = {
       id: keyId,
       type: params.type,
@@ -727,12 +711,14 @@ export class DataEncryptionPrivacySystem {
         lastUsed: new Date(),
         failedAttempts: 0,
       },
-      auditLog: [{
-        timestamp: new Date(),
-        action: 'key-generated',
-        user: params.owner,
-        result: 'success',
-      }],
+      auditLog: [
+        {
+          timestamp: new Date(),
+          action: 'key-generated',
+          user: params.owner,
+          result: 'success',
+        },
+      ],
     };
 
     this.keys.set(keyId, key);
@@ -762,7 +748,9 @@ export class DataEncryptionPrivacySystem {
       createdAt: new Date(),
       rotationSchedule: {
         ...existingKey.rotationSchedule,
-        nextRotation: new Date(Date.now() + existingKey.rotationSchedule.frequency * 24 * 60 * 60 * 1000),
+        nextRotation: new Date(
+          Date.now() + existingKey.rotationSchedule.frequency * 24 * 60 * 60 * 1000
+        ),
       },
       usageStats: {
         encryptionCount: 0,
@@ -809,7 +797,7 @@ export class DataEncryptionPrivacySystem {
     const encryptedDataId = `enc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const iv = this.generateIV();
     const ciphertext = this.performEncryption(params.data, key.keyMaterial, iv, key.algorithm);
-    
+
     const encrypted: EncryptedData = {
       id: encryptedDataId,
       ciphertext,
@@ -832,7 +820,7 @@ export class DataEncryptionPrivacySystem {
     };
 
     this.encryptedData.set(encryptedDataId, encrypted);
-    
+
     // Update key usage stats
     key.usageStats.encryptionCount++;
     key.usageStats.lastUsed = new Date();
@@ -935,8 +923,8 @@ export class DataEncryptionPrivacySystem {
     const detected = this.detectPII(params.sampleData);
 
     detected.forEach((item) => {
-      const rule = Array.from(this.piiRules.values()).find(r => r.piiType === item.type);
-      
+      const rule = Array.from(this.piiRules.values()).find((r) => r.piiType === item.type);
+
       const discovery: PIIDiscovery = {
         id: `pii_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         scanId,
@@ -950,7 +938,7 @@ export class DataEncryptionPrivacySystem {
         risk: this.assessPIIRisk(item.type, params.location),
         remediation: {
           status: 'pending',
-          actions: rule?.actions.map(a => a.type) || [],
+          actions: rule?.actions.map((a) => a.type) || [],
         },
       };
 
@@ -1009,10 +997,12 @@ export class DataEncryptionPrivacySystem {
         consentText: `User ${params.status} consent for ${params.type}`,
         checksum: this.calculateHash(`${params.userId}${params.type}${Date.now()}`),
       },
-      auditTrail: [{
-        timestamp: new Date(),
-        action: params.status === 'granted' ? 'granted' : 'withdrawn',
-      }],
+      auditTrail: [
+        {
+          timestamp: new Date(),
+          action: params.status === 'granted' ? 'granted' : 'withdrawn',
+        },
+      ],
     };
 
     const userConsents = this.consents.get(params.userId) || [];
@@ -1024,8 +1014,8 @@ export class DataEncryptionPrivacySystem {
 
   withdrawConsent(userId: string, consentId: string): void {
     const userConsents = this.consents.get(userId) || [];
-    const consent = userConsents.find(c => c.id === consentId);
-    
+    const consent = userConsents.find((c) => c.id === consentId);
+
     if (consent) {
       consent.status = 'withdrawn';
       consent.withdrawnAt = new Date();
@@ -1039,12 +1029,14 @@ export class DataEncryptionPrivacySystem {
   checkConsent(userId: string, type: ConsentType): boolean {
     const userConsents = this.consents.get(userId) || [];
     const relevantConsent = userConsents
-      .filter(c => c.type === type && c.status === 'granted')
+      .filter((c) => c.type === type && c.status === 'granted')
       .sort((a, b) => b.grantedAt!.getTime() - a.grantedAt!.getTime())[0];
 
-    return relevantConsent ? 
-      (relevantConsent.expiresAt ? relevantConsent.expiresAt > new Date() : true) : 
-      false;
+    return relevantConsent
+      ? relevantConsent.expiresAt
+        ? relevantConsent.expiresAt > new Date()
+        : true
+      : false;
   }
 
   // ============================================================================
@@ -1059,7 +1051,7 @@ export class DataEncryptionPrivacySystem {
     reason?: string;
   }): DataSubjectRequest {
     const deadline = this.calculateDSRDeadline(params.regulation);
-    
+
     const dsr: DataSubjectRequest = {
       id: `dsr_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       userId: params.userId,
@@ -1085,12 +1077,14 @@ export class DataEncryptionPrivacySystem {
         errors: [],
       },
       response: {},
-      auditLog: [{
-        timestamp: new Date(),
-        action: 'request-submitted',
-        user: params.userId,
-        details: `${params.type} request submitted`,
-      }],
+      auditLog: [
+        {
+          timestamp: new Date(),
+          action: 'request-submitted',
+          user: params.userId,
+          details: `${params.type} request submitted`,
+        },
+      ],
     };
 
     this.dsrRequests.set(dsr.id, dsr);
@@ -1244,7 +1238,7 @@ export class DataEncryptionPrivacySystem {
 
   updatePrivacySettings(userId: string, settings: Partial<PrivacySettings>): PrivacySettings {
     const existing = this.privacySettings.get(userId) || this.getDefaultPrivacySettings(userId);
-    
+
     const updated: PrivacySettings = {
       ...existing,
       ...settings,
@@ -1283,11 +1277,13 @@ export class DataEncryptionPrivacySystem {
         lead: params.reportedBy,
         team: [],
         findings: [],
-        timeline: [{
-          timestamp: new Date(),
-          event: 'Breach detected',
-          impact: 'Investigation initiated',
-        }],
+        timeline: [
+          {
+            timestamp: new Date(),
+            event: 'Breach detected',
+            impact: 'Investigation initiated',
+          },
+        ],
       },
       notification: {
         required: this.isNotificationRequired(params.severity, params.affectedData),
@@ -1432,10 +1428,12 @@ export class DataEncryptionPrivacySystem {
       piiType: 'email',
       name: 'Email Address Detection',
       description: 'Detects email addresses',
-      patterns: [{
-        regex: '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}',
-        confidence: 0.95,
-      }],
+      patterns: [
+        {
+          regex: '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}',
+          confidence: 0.95,
+        },
+      ],
       enabled: true,
       severity: 'medium',
       actions: [
@@ -1454,15 +1452,15 @@ export class DataEncryptionPrivacySystem {
       piiType: 'phone',
       name: 'Phone Number Detection',
       description: 'Detects phone numbers',
-      patterns: [{
-        regex: '\\+?[1-9]\\d{1,14}',
-        confidence: 0.85,
-      }],
+      patterns: [
+        {
+          regex: '\\+?[1-9]\\d{1,14}',
+          confidence: 0.85,
+        },
+      ],
       enabled: true,
       severity: 'medium',
-      actions: [
-        { type: 'mask', config: {} },
-      ],
+      actions: [{ type: 'mask', config: {} }],
       exemptions: {
         users: [],
         roles: ['admin'],
@@ -1475,10 +1473,12 @@ export class DataEncryptionPrivacySystem {
       piiType: 'credit-card',
       name: 'Credit Card Detection',
       description: 'Detects credit card numbers',
-      patterns: [{
-        regex: '\\b\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}\\b',
-        confidence: 0.90,
-      }],
+      patterns: [
+        {
+          regex: '\\b\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}\\b',
+          confidence: 0.9,
+        },
+      ],
       enabled: true,
       severity: 'critical',
       actions: [
@@ -1519,7 +1519,7 @@ export class DataEncryptionPrivacySystem {
     // Simulated hash calculation
     let hash = 0;
     for (let i = 0; i < data.length; i++) {
-      hash = ((hash << 5) - hash) + data.charCodeAt(i);
+      hash = (hash << 5) - hash + data.charCodeAt(i);
       hash = hash & hash;
     }
     return Math.abs(hash).toString(36);
@@ -1530,16 +1530,28 @@ export class DataEncryptionPrivacySystem {
   }
 
   private canAccessKey(key: EncryptionKey, userId: string): boolean {
-    return key.accessControl.allowedUsers.includes(userId) ||
-           key.accessControl.allowedRoles.includes('admin');
+    return (
+      key.accessControl.allowedUsers.includes(userId) ||
+      key.accessControl.allowedRoles.includes('admin')
+    );
   }
 
-  private performEncryption(data: string, keyMaterial: string, iv: string, algorithm: EncryptionAlgorithm): string {
+  private performEncryption(
+    data: string,
+    keyMaterial: string,
+    iv: string,
+    algorithm: EncryptionAlgorithm
+  ): string {
     // Simulated encryption
     return Buffer.from(`${algorithm}:${iv}:${data}`).toString('base64');
   }
 
-  private performDecryption(ciphertext: string, keyMaterial: string, iv: string, algorithm: EncryptionAlgorithm): string {
+  private performDecryption(
+    ciphertext: string,
+    keyMaterial: string,
+    iv: string,
+    algorithm: EncryptionAlgorithm
+  ): string {
     // Simulated decryption
     const decoded = Buffer.from(ciphertext, 'base64').toString();
     return decoded.split(':')[2] || '';
@@ -1563,14 +1575,14 @@ export class DataEncryptionPrivacySystem {
 
   private calculateDSRDeadline(regulation: PrivacyRegulation): Date {
     const deadlineDays = {
-      'GDPR': 30,
-      'CCPA': 45,
-      'HIPAA': 60,
-      'PIPEDA': 30,
-      'LGPD': 15,
-      'PDPA': 30,
+      GDPR: 30,
+      CCPA: 45,
+      HIPAA: 60,
+      PIPEDA: 30,
+      LGPD: 15,
+      PDPA: 30,
     };
-    
+
     const days = deadlineDays[regulation] || 30;
     return new Date(Date.now() + days * 24 * 60 * 60 * 1000);
   }
@@ -1685,28 +1697,35 @@ export class DataEncryptionPrivacySystem {
     };
   }
 
-  private isNotificationRequired(severity: DataBreachIncident['severity'], affectedData: DataBreachIncident['affectedData']): boolean {
+  private isNotificationRequired(
+    severity: DataBreachIncident['severity'],
+    affectedData: DataBreachIncident['affectedData']
+  ): boolean {
     return severity === 'high' || severity === 'critical' || affectedData.userCount > 500;
   }
 
-  private getApplicableRegulations(affectedData: DataBreachIncident['affectedData']): PrivacyRegulation[] {
+  private getApplicableRegulations(
+    affectedData: DataBreachIncident['affectedData']
+  ): PrivacyRegulation[] {
     const regulations: PrivacyRegulation[] = ['GDPR'];
-    
+
     if (affectedData.types.includes('medical')) {
       regulations.push('HIPAA');
     }
-    
+
     regulations.push('CCPA');
-    
+
     return regulations;
   }
 
-  private calculateNotificationDeadlines(severity: DataBreachIncident['severity']): Record<string, Date> {
+  private calculateNotificationDeadlines(
+    severity: DataBreachIncident['severity']
+  ): Record<string, Date> {
     const hours = severity === 'critical' ? 72 : 120;
-    
+
     return {
-      'GDPR': new Date(Date.now() + hours * 60 * 60 * 1000),
-      'CCPA': new Date(Date.now() + hours * 60 * 60 * 1000),
+      GDPR: new Date(Date.now() + hours * 60 * 60 * 1000),
+      CCPA: new Date(Date.now() + hours * 60 * 60 * 1000),
     };
   }
 
@@ -1751,48 +1770,52 @@ export class DataEncryptionPrivacySystem {
 
   getKeyStatistics(): any {
     const keys = Array.from(this.keys.values());
-    
+
     return {
       total: keys.length,
       byStatus: {
-        active: keys.filter(k => k.status === 'active').length,
-        rotating: keys.filter(k => k.status === 'rotating').length,
-        deprecated: keys.filter(k => k.status === 'deprecated').length,
-        revoked: keys.filter(k => k.status === 'revoked').length,
-        expired: keys.filter(k => k.status === 'expired').length,
+        active: keys.filter((k) => k.status === 'active').length,
+        rotating: keys.filter((k) => k.status === 'rotating').length,
+        deprecated: keys.filter((k) => k.status === 'deprecated').length,
+        revoked: keys.filter((k) => k.status === 'revoked').length,
+        expired: keys.filter((k) => k.status === 'expired').length,
       },
       byType: {
-        master: keys.filter(k => k.type === 'master').length,
-        'data-encryption': keys.filter(k => k.type === 'data-encryption').length,
-        'key-encryption': keys.filter(k => k.type === 'key-encryption').length,
-        session: keys.filter(k => k.type === 'session').length,
+        master: keys.filter((k) => k.type === 'master').length,
+        'data-encryption': keys.filter((k) => k.type === 'data-encryption').length,
+        'key-encryption': keys.filter((k) => k.type === 'key-encryption').length,
+        session: keys.filter((k) => k.type === 'session').length,
       },
-      dueForRotation: keys.filter(k => k.rotationSchedule.nextRotation < new Date()).length,
+      dueForRotation: keys.filter((k) => k.rotationSchedule.nextRotation < new Date()).length,
     };
   }
 
   getPrivacyCompliance(): any {
     const consents = Array.from(this.consents.values()).flat();
     const dsrs = Array.from(this.dsrRequests.values());
-    
+
     return {
       consents: {
         total: consents.length,
-        granted: consents.filter(c => c.status === 'granted').length,
-        withdrawn: consents.filter(c => c.status === 'withdrawn').length,
-        pending: consents.filter(c => c.status === 'pending').length,
+        granted: consents.filter((c) => c.status === 'granted').length,
+        withdrawn: consents.filter((c) => c.status === 'withdrawn').length,
+        pending: consents.filter((c) => c.status === 'pending').length,
       },
       dsrs: {
         total: dsrs.length,
-        pending: dsrs.filter(d => d.status === 'pending').length,
-        processing: dsrs.filter(d => d.status === 'processing').length,
-        completed: dsrs.filter(d => d.status === 'completed').length,
-        overdue: dsrs.filter(d => d.deadline < new Date() && d.status !== 'completed').length,
+        pending: dsrs.filter((d) => d.status === 'pending').length,
+        processing: dsrs.filter((d) => d.status === 'processing').length,
+        completed: dsrs.filter((d) => d.status === 'completed').length,
+        overdue: dsrs.filter((d) => d.deadline < new Date() && d.status !== 'completed').length,
       },
       piiDiscoveries: {
         total: this.piiDiscoveries.size,
-        highRisk: Array.from(this.piiDiscoveries.values()).filter(p => p.risk.level === 'high' || p.risk.level === 'critical').length,
-        remediated: Array.from(this.piiDiscoveries.values()).filter(p => p.remediation.status === 'completed').length,
+        highRisk: Array.from(this.piiDiscoveries.values()).filter(
+          (p) => p.risk.level === 'high' || p.risk.level === 'critical'
+        ).length,
+        remediated: Array.from(this.piiDiscoveries.values()).filter(
+          (p) => p.remediation.status === 'completed'
+        ).length,
       },
     };
   }

@@ -1,6 +1,6 @@
 /**
  * Mobile App Service
- * 
+ *
  * Comprehensive mobile app backend service supporting:
  * - Native iOS and Android apps
  * - React Native / Flutter integration
@@ -171,13 +171,14 @@ export class MobileAppService {
     scheduledFor?: Date;
   }): Promise<PushNotification> {
     // Get all user's devices with push tokens
-    const userDevices = Array.from(this.devices.values())
-      .filter(d => d.userId === data.userId && d.pushToken && d.settings.notificationsEnabled);
+    const userDevices = Array.from(this.devices.values()).filter(
+      (d) => d.userId === data.userId && d.pushToken && d.settings.notificationsEnabled
+    );
 
     const notification: PushNotification = {
       id: `notif-${Date.now()}-${Math.random().toString(36).substring(7)}`,
       userId: data.userId,
-      deviceIds: userDevices.map(d => d.id),
+      deviceIds: userDevices.map((d) => d.id),
       type: data.type,
       title: data.title,
       message: data.message,
@@ -215,7 +216,7 @@ export class MobileAppService {
     priority?: PushNotification['priority'];
   }): Promise<PushNotification[]> {
     const notifications = await Promise.all(
-      data.userIds.map(userId =>
+      data.userIds.map((userId) =>
         this.sendPushNotification({
           userId,
           type: data.type,
@@ -283,8 +284,9 @@ export class MobileAppService {
     failed: number;
     actions: OfflineAction[];
   }> {
-    const deviceActions = Array.from(this.offlineActions.values())
-      .filter(a => a.deviceId === deviceId && !a.synced);
+    const deviceActions = Array.from(this.offlineActions.values()).filter(
+      (a) => a.deviceId === deviceId && !a.synced
+    );
 
     let synced = 0;
     let failed = 0;
@@ -358,11 +360,7 @@ export class MobileAppService {
   /**
    * Track screen view
    */
-  async trackScreenView(
-    sessionId: string,
-    screen: string,
-    duration?: number
-  ): Promise<void> {
+  async trackScreenView(sessionId: string, screen: string, duration?: number): Promise<void> {
     const session = this.sessions.get(sessionId);
     if (!session) {
       throw new Error('Session not found');
@@ -375,7 +373,9 @@ export class MobileAppService {
     });
 
     session.lastActivity = new Date();
-    session.duration = Math.floor((session.lastActivity.getTime() - session.startTime.getTime()) / 1000);
+    session.duration = Math.floor(
+      (session.lastActivity.getTime() - session.startTime.getTime()) / 1000
+    );
 
     this.sessions.set(sessionId, session);
   }
@@ -383,11 +383,7 @@ export class MobileAppService {
   /**
    * Track event
    */
-  async trackEvent(
-    sessionId: string,
-    event: string,
-    data?: any
-  ): Promise<void> {
+  async trackEvent(sessionId: string, event: string, data?: any): Promise<void> {
     const session = this.sessions.get(sessionId);
     if (!session) {
       throw new Error('Session not found');
@@ -413,7 +409,9 @@ export class MobileAppService {
     }
 
     session.lastActivity = new Date();
-    session.duration = Math.floor((session.lastActivity.getTime() - session.startTime.getTime()) / 1000);
+    session.duration = Math.floor(
+      (session.lastActivity.getTime() - session.startTime.getTime()) / 1000
+    );
 
     this.sessions.set(sessionId, session);
     return session;
@@ -449,9 +447,10 @@ export class MobileAppService {
     currentVersion: string
   ): Promise<AppUpdate | null> {
     const updates = Array.from(this.updates.values())
-      .filter(u => 
-        (u.platform === platform || u.platform === 'both') &&
-        this.isNewerVersion(u.version, currentVersion)
+      .filter(
+        (u) =>
+          (u.platform === platform || u.platform === 'both') &&
+          this.isNewerVersion(u.version, currentVersion)
       )
       .sort((a, b) => b.releaseDate.getTime() - a.releaseDate.getTime());
 
@@ -487,8 +486,7 @@ export class MobileAppService {
    * Track deep link click
    */
   async trackDeepLinkClick(shortUrl: string): Promise<DeepLink | null> {
-    const deepLink = Array.from(this.deepLinks.values())
-      .find(dl => dl.shortUrl === shortUrl);
+    const deepLink = Array.from(this.deepLinks.values()).find((dl) => dl.shortUrl === shortUrl);
 
     if (deepLink) {
       deepLink.clicks++;
@@ -516,30 +514,33 @@ export class MobileAppService {
     const periodMs = period === 'day' ? 86400000 : period === 'week' ? 604800000 : 2592000000;
     const cutoff = new Date(now.getTime() - periodMs);
 
-    const activeDevices = Array.from(this.devices.values())
-      .filter(d => d.lastActive >= cutoff);
+    const activeDevices = Array.from(this.devices.values()).filter((d) => d.lastActive >= cutoff);
 
-    const devicesByPlatform = activeDevices.reduce((acc, d) => {
-      acc[d.deviceType] = (acc[d.deviceType] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const devicesByPlatform = activeDevices.reduce(
+      (acc, d) => {
+        acc[d.deviceType] = (acc[d.deviceType] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const recentNotifications = Array.from(this.notifications.values())
-      .filter(n => n.sentAt && n.sentAt >= cutoff);
+    const recentNotifications = Array.from(this.notifications.values()).filter(
+      (n) => n.sentAt && n.sentAt >= cutoff
+    );
 
     const totalDelivered = recentNotifications.reduce((sum, n) => sum + n.delivered, 0);
     const totalOpened = recentNotifications.reduce((sum, n) => sum + n.opened, 0);
 
-    const recentSessions = Array.from(this.sessions.values())
-      .filter(s => s.startTime >= cutoff);
+    const recentSessions = Array.from(this.sessions.values()).filter((s) => s.startTime >= cutoff);
 
-    const avgSessionDuration = recentSessions.length > 0
-      ? recentSessions.reduce((sum, s) => sum + s.duration, 0) / recentSessions.length
-      : 0;
+    const avgSessionDuration =
+      recentSessions.length > 0
+        ? recentSessions.reduce((sum, s) => sum + s.duration, 0) / recentSessions.length
+        : 0;
 
     const screenCounts = new Map<string, number>();
-    recentSessions.forEach(session => {
-      session.screens.forEach(screen => {
+    recentSessions.forEach((session) => {
+      session.screens.forEach((screen) => {
         screenCounts.set(screen.screen, (screenCounts.get(screen.screen) || 0) + 1);
       });
     });
@@ -549,11 +550,12 @@ export class MobileAppService {
       .sort((a, b) => b.views - a.views)
       .slice(0, 10);
 
-    const pendingActions = Array.from(this.offlineActions.values())
-      .filter(a => !a.synced).length;
+    const pendingActions = Array.from(this.offlineActions.values()).filter((a) => !a.synced).length;
 
-    const deepLinkClicks = Array.from(this.deepLinks.values())
-      .reduce((sum, dl) => sum + dl.clicks, 0);
+    const deepLinkClicks = Array.from(this.deepLinks.values()).reduce(
+      (sum, dl) => sum + dl.clicks,
+      0
+    );
 
     return {
       totalDevices: this.devices.size,
@@ -629,10 +631,7 @@ export class MobileAppService {
         'Improved AR product visualization',
         'Enhanced offline mode',
       ],
-      bugFixes: [
-        'Fixed crash on product search',
-        'Improved performance',
-      ],
+      bugFixes: ['Fixed crash on product search', 'Improved performance'],
       downloadUrl: 'https://artisan.app/download/2.2.0',
       releaseNotes: 'Major feature update with voice commerce and AR improvements',
     });

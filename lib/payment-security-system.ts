@@ -1,6 +1,6 @@
 /**
  * Payment Security System
- * 
+ *
  * Comprehensive PCI-DSS compliant payment security system with tokenization,
  * 3D Secure authentication, payment fraud prevention, and secure payment processing.
  */
@@ -9,7 +9,7 @@
 // Types & Interfaces
 // ============================================================================
 
-export type PaymentMethod = 
+export type PaymentMethod =
   | 'credit-card'
   | 'debit-card'
   | 'bank-transfer'
@@ -17,16 +17,9 @@ export type PaymentMethod =
   | 'cryptocurrency'
   | 'buy-now-pay-later';
 
-export type CardBrand = 
-  | 'visa'
-  | 'mastercard'
-  | 'amex'
-  | 'discover'
-  | 'jcb'
-  | 'diners'
-  | 'unionpay';
+export type CardBrand = 'visa' | 'mastercard' | 'amex' | 'discover' | 'jcb' | 'diners' | 'unionpay';
 
-export type TransactionStatus = 
+export type TransactionStatus =
   | 'pending'
   | 'authorized'
   | 'captured'
@@ -36,7 +29,7 @@ export type TransactionStatus =
   | 'cancelled'
   | 'disputed';
 
-export type SecurityCheckType = 
+export type SecurityCheckType =
   | 'cvv'
   | 'avs'
   | '3ds'
@@ -45,26 +38,13 @@ export type SecurityCheckType =
   | 'device-fingerprint'
   | 'behavioral';
 
-export type FraudRiskLevel = 
-  | 'very-low'
-  | 'low'
-  | 'medium'
-  | 'high'
-  | 'very-high';
+export type FraudRiskLevel = 'very-low' | 'low' | 'medium' | 'high' | 'very-high';
 
-export type PCIComplianceLevel = 
-  | 'level-1'
-  | 'level-2'
-  | 'level-3'
-  | 'level-4';
+export type PCIComplianceLevel = 'level-1' | 'level-2' | 'level-3' | 'level-4';
 
-export type TokenizationMethod = 
-  | 'vault'
-  | 'network'
-  | 'gateway'
-  | 'merchant';
+export type TokenizationMethod = 'vault' | 'network' | 'gateway' | 'merchant';
 
-export type DisputeReason = 
+export type DisputeReason =
   | 'fraudulent'
   | 'unrecognized'
   | 'duplicate'
@@ -683,10 +663,10 @@ export class PaymentSecuritySystem {
 
     const brand = this.detectCardBrand(params.cardNumber);
     const bin = params.cardNumber.substring(0, 6);
-    
+
     // Generate secure token
     const token = this.generateSecureToken(params.cardNumber);
-    
+
     const paymentToken: PaymentToken = {
       id: `token_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       userId: params.userId,
@@ -733,7 +713,7 @@ export class PaymentSecuritySystem {
     };
 
     this.tokens.set(paymentToken.id, paymentToken);
-    
+
     this.logAudit({
       type: 'token',
       action: 'tokenize-card',
@@ -747,7 +727,7 @@ export class PaymentSecuritySystem {
 
   detokenizeCard(tokenId: string, userId: string): { lastFourDigits: string; brand?: CardBrand } {
     const token = this.tokens.get(tokenId);
-    
+
     if (!token || token.userId !== userId) {
       this.logAudit({
         type: 'token',
@@ -817,11 +797,13 @@ export class PaymentSecuritySystem {
         flags: [],
       },
       deviceInfo: params.deviceInfo,
-      timeline: [{
-        timestamp: new Date(),
-        event: 'transaction-initiated',
-        status: 'pending',
-      }],
+      timeline: [
+        {
+          timestamp: new Date(),
+          event: 'transaction-initiated',
+          status: 'pending',
+        },
+      ],
       refunds: [],
       chargebacks: [],
     };
@@ -905,7 +887,7 @@ export class PaymentSecuritySystem {
       if (!rule.enabled) return;
 
       const triggered = this.evaluateFraudRule(rule, transaction);
-      
+
       if (triggered) {
         riskScore += rule.scoring.baseScore;
         triggeredRules.push({
@@ -938,7 +920,7 @@ export class PaymentSecuritySystem {
       rules: triggeredRules,
       decision,
       reviewRequired: decision === 'review',
-      flags: triggeredRules.map(r => r.ruleName),
+      flags: triggeredRules.map((r) => r.ruleName),
     };
   }
 
@@ -946,10 +928,16 @@ export class PaymentSecuritySystem {
     // Check amount conditions
     if (rule.conditions.transactionAmount) {
       const { min, max, operator } = rule.conditions.transactionAmount;
-      
+
       if (operator === 'greater-than' && min && transaction.amount <= min) return false;
       if (operator === 'less-than' && max && transaction.amount >= max) return false;
-      if (operator === 'between' && min && max && (transaction.amount < min || transaction.amount > max)) return false;
+      if (
+        operator === 'between' &&
+        min &&
+        max &&
+        (transaction.amount < min || transaction.amount > max)
+      )
+        return false;
     }
 
     // Check velocity
@@ -967,8 +955,11 @@ export class PaymentSecuritySystem {
       const location = transaction.deviceInfo.location?.country;
       if (location) {
         if (rule.conditions.geolocation.blockedCountries?.includes(location)) return true;
-        if (rule.conditions.geolocation.allowedCountries && 
-            !rule.conditions.geolocation.allowedCountries.includes(location)) return true;
+        if (
+          rule.conditions.geolocation.allowedCountries &&
+          !rule.conditions.geolocation.allowedCountries.includes(location)
+        )
+          return true;
       }
     }
 
@@ -982,14 +973,13 @@ export class PaymentSecuritySystem {
   ): { passed: boolean; details: any } {
     const config = velocityConfig || { count: 5, timeWindow: 60, scope: 'user' as const };
     const cutoffTime = new Date(Date.now() - config.timeWindow * 60 * 1000);
-    
-    const recentTransactions = Array.from(this.transactions.values())
-      .filter(t => {
-        if (t.createdAt < cutoffTime) return false;
-        if (config.scope === 'user' && t.userId !== userId) return false;
-        if (config.scope === 'ip' && t.deviceInfo.ipAddress !== ipAddress) return false;
-        return true;
-      });
+
+    const recentTransactions = Array.from(this.transactions.values()).filter((t) => {
+      if (t.createdAt < cutoffTime) return false;
+      if (config.scope === 'user' && t.userId !== userId) return false;
+      if (config.scope === 'ip' && t.deviceInfo.ipAddress !== ipAddress) return false;
+      return true;
+    });
 
     const passed = recentTransactions.length < config.count;
 
@@ -1006,7 +996,7 @@ export class PaymentSecuritySystem {
   private authorizeTransaction(transaction: SecureTransaction): void {
     transaction.status = 'authorized';
     transaction.processedAt = new Date();
-    
+
     transaction.authorizationDetails = {
       authCode: this.generateAuthCode(),
       avsResponse: 'Y',
@@ -1045,11 +1035,14 @@ export class PaymentSecuritySystem {
   private require3DS(transaction: SecureTransaction): boolean {
     // Require 3DS for transactions over certain amount
     if (transaction.amount > 1000) return true;
-    
+
     // Require for high-risk transactions
-    if (transaction.fraudAssessment.riskLevel === 'high' || 
-        transaction.fraudAssessment.riskLevel === 'very-high') return true;
-    
+    if (
+      transaction.fraudAssessment.riskLevel === 'high' ||
+      transaction.fraudAssessment.riskLevel === 'very-high'
+    )
+      return true;
+
     // Check if card supports 3DS
     const token = this.tokens.get(transaction.tokenId!);
     if (token?.verification.threeDSEnabled) return true;
@@ -1059,7 +1052,7 @@ export class PaymentSecuritySystem {
 
   private initiate3DS(transaction: SecureTransaction): ThreeDSecureAuthentication {
     const token = this.tokens.get(transaction.tokenId!)!;
-    
+
     const threeds: ThreeDSecureAuthentication = {
       id: `3ds_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       transactionId: transaction.id,
@@ -1118,7 +1111,7 @@ export class PaymentSecuritySystem {
     }
 
     this.threeDSAuthentications.set(threeds.id, threeds);
-    
+
     transaction.threeDSecure = {
       version: '2.2',
       status: threeds.status === 'challenge-required' ? 'attempted' : 'authenticated',
@@ -1187,7 +1180,7 @@ export class PaymentSecuritySystem {
     };
 
     transaction.refunds.push(refund);
-    
+
     if (transaction.refunds.reduce((sum, r) => sum + r.amount, 0) >= transaction.amount) {
       transaction.status = 'refunded';
     }
@@ -1243,16 +1236,18 @@ export class PaymentSecuritySystem {
         chargebackFee: 15,
         totalLoss: params.amount + 15,
       },
-      timeline: [{
-        timestamp: new Date(),
-        event: 'chargeback-received',
-        actor: 'issuing-bank',
-        details: `Reason: ${params.reason}`,
-      }],
+      timeline: [
+        {
+          timestamp: new Date(),
+          event: 'chargeback-received',
+          actor: 'issuing-bank',
+          details: `Reason: ${params.reason}`,
+        },
+      ],
     };
 
     this.chargebacks.set(chargeback.id, chargeback);
-    
+
     transaction.chargebacks.push({
       chargebackId: chargeback.id,
       amount: params.amount,
@@ -1382,16 +1377,20 @@ export class PaymentSecuritySystem {
   // ============================================================================
 
   getPaymentAnalytics(period: { start: Date; end: Date }): PaymentAnalytics {
-    const transactions = Array.from(this.transactions.values())
-      .filter(t => t.createdAt >= period.start && t.createdAt <= period.end);
+    const transactions = Array.from(this.transactions.values()).filter(
+      (t) => t.createdAt >= period.start && t.createdAt <= period.end
+    );
 
-    const successful = transactions.filter(t => t.status === 'authorized' || t.status === 'captured');
-    const declined = transactions.filter(t => t.status === 'declined');
-    const refunded = transactions.filter(t => t.status === 'refunded');
+    const successful = transactions.filter(
+      (t) => t.status === 'authorized' || t.status === 'captured'
+    );
+    const declined = transactions.filter((t) => t.status === 'declined');
+    const refunded = transactions.filter((t) => t.status === 'refunded');
 
     const totalVolume = successful.reduce((sum, t) => sum + t.amount, 0);
-    const chargebackList = Array.from(this.chargebacks.values())
-      .filter(cb => cb.receivedAt >= period.start && cb.receivedAt <= period.end);
+    const chargebackList = Array.from(this.chargebacks.values()).filter(
+      (cb) => cb.receivedAt >= period.start && cb.receivedAt <= period.end
+    );
 
     return {
       period,
@@ -1407,18 +1406,20 @@ export class PaymentSecuritySystem {
         byCountry: {},
       },
       security: {
-        fraudDetected: transactions.filter(t => t.fraudAssessment.decision === 'decline').length,
-        fraudBlocked: transactions.filter(t => t.fraudAssessment.decision === 'decline').length,
+        fraudDetected: transactions.filter((t) => t.fraudAssessment.decision === 'decline').length,
+        fraudBlocked: transactions.filter((t) => t.fraudAssessment.decision === 'decline').length,
         fraudRate: (declined.length / transactions.length) * 100,
-        avgRiskScore: transactions.reduce((sum, t) => sum + t.fraudAssessment.riskScore, 0) / transactions.length,
-        threeDSUsage: transactions.filter(t => t.threeDSecure).length,
+        avgRiskScore:
+          transactions.reduce((sum, t) => sum + t.fraudAssessment.riskScore, 0) /
+          transactions.length,
+        threeDSUsage: transactions.filter((t) => t.threeDSecure).length,
         threeDSSuccessRate: 95,
       },
       chargebacks: {
         total: chargebackList.length,
         amount: chargebackList.reduce((sum, cb) => sum + cb.amount, 0),
-        won: chargebackList.filter(cb => cb.status === 'won').length,
-        lost: chargebackList.filter(cb => cb.status === 'lost').length,
+        won: chargebackList.filter((cb) => cb.status === 'won').length,
+        lost: chargebackList.filter((cb) => cb.status === 'lost').length,
         chargebackRate: (chargebackList.length / successful.length) * 100,
         byReason: {} as Record<DisputeReason, number>,
       },
@@ -1487,9 +1488,7 @@ export class PaymentSecuritySystem {
           scope: 'user',
         },
       },
-      actions: [
-        { type: 'review', config: {} },
-      ],
+      actions: [{ type: 'review', config: {} }],
       scoring: {
         baseScore: 25,
       },
@@ -1569,7 +1568,7 @@ export class PaymentSecuritySystem {
       },
       fees: {
         transactionFee: 2.9,
-        fixedFee: 0.30,
+        fixedFee: 0.3,
         currency: 'USD',
         chargebackFee: 15,
       },
@@ -1614,7 +1613,7 @@ export class PaymentSecuritySystem {
 
   private detectCardBrand(cardNumber: string): CardBrand {
     const digits = cardNumber.replace(/\D/g, '');
-    
+
     if (/^4/.test(digits)) return 'visa';
     if (/^5[1-5]/.test(digits)) return 'mastercard';
     if (/^3[47]/.test(digits)) return 'amex';
@@ -1622,7 +1621,7 @@ export class PaymentSecuritySystem {
     if (/^35/.test(digits)) return 'jcb';
     if (/^3(?:0[0-5]|[68])/.test(digits)) return 'diners';
     if (/^62/.test(digits)) return 'unionpay';
-    
+
     return 'visa'; // default
   }
 
@@ -1659,12 +1658,14 @@ export class PaymentSecuritySystem {
 
   private getUserTransactionCount(userId: string, days: number): number {
     const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
-    return Array.from(this.transactions.values())
-      .filter(t => t.userId === userId && t.createdAt >= cutoff)
-      .length;
+    return Array.from(this.transactions.values()).filter(
+      (t) => t.userId === userId && t.createdAt >= cutoff
+    ).length;
   }
 
-  private getCardNetwork(transaction: SecureTransaction): 'visa' | 'mastercard' | 'amex' | 'discover' {
+  private getCardNetwork(
+    transaction: SecureTransaction
+  ): 'visa' | 'mastercard' | 'amex' | 'discover' {
     const token = this.tokens.get(transaction.tokenId!);
     return (token?.brand as any) || 'visa';
   }
@@ -1675,13 +1676,37 @@ export class PaymentSecuritySystem {
 
   private getChargebackPreventionRecommendations(reason: DisputeReason): string[] {
     const recommendations: Record<DisputeReason, string[]> = {
-      'fraudulent': ['Enable 3DS', 'Implement stronger fraud rules', 'Verify delivery address'],
-      'unrecognized': ['Improve merchant descriptor', 'Send confirmation emails', 'Enable transaction notifications'],
-      'duplicate': ['Implement idempotency keys', 'Show clear order confirmation', 'Prevent double-click submissions'],
-      'product-not-received': ['Provide tracking information', 'Update delivery status regularly', 'Require signature confirmation'],
-      'product-unacceptable': ['Improve product descriptions', 'Show clear return policy', 'Enable quality photos'],
-      'credit-not-processed': ['Process refunds promptly', 'Send refund confirmations', 'Clearly communicate refund timelines'],
-      'cancelled-recurring': ['Send cancellation confirmations', 'Make cancellation easy', 'Provide grace period'],
+      fraudulent: ['Enable 3DS', 'Implement stronger fraud rules', 'Verify delivery address'],
+      unrecognized: [
+        'Improve merchant descriptor',
+        'Send confirmation emails',
+        'Enable transaction notifications',
+      ],
+      duplicate: [
+        'Implement idempotency keys',
+        'Show clear order confirmation',
+        'Prevent double-click submissions',
+      ],
+      'product-not-received': [
+        'Provide tracking information',
+        'Update delivery status regularly',
+        'Require signature confirmation',
+      ],
+      'product-unacceptable': [
+        'Improve product descriptions',
+        'Show clear return policy',
+        'Enable quality photos',
+      ],
+      'credit-not-processed': [
+        'Process refunds promptly',
+        'Send refund confirmations',
+        'Clearly communicate refund timelines',
+      ],
+      'cancelled-recurring': [
+        'Send cancellation confirmations',
+        'Make cancellation easy',
+        'Provide grace period',
+      ],
     };
 
     return recommendations[reason] || [];
@@ -1728,20 +1753,25 @@ export class PaymentSecuritySystem {
     return {
       tokens: {
         total: this.tokens.size,
-        active: Array.from(this.tokens.values()).filter(t => t.status === 'active').length,
-        suspended: Array.from(this.tokens.values()).filter(t => t.status === 'suspended').length,
+        active: Array.from(this.tokens.values()).filter((t) => t.status === 'active').length,
+        suspended: Array.from(this.tokens.values()).filter((t) => t.status === 'suspended').length,
       },
       transactions: {
         total: this.transactions.size,
-        authorized: Array.from(this.transactions.values()).filter(t => t.status === 'authorized').length,
-        declined: Array.from(this.transactions.values()).filter(t => t.status === 'declined').length,
-        disputed: Array.from(this.transactions.values()).filter(t => t.status === 'disputed').length,
+        authorized: Array.from(this.transactions.values()).filter((t) => t.status === 'authorized')
+          .length,
+        declined: Array.from(this.transactions.values()).filter((t) => t.status === 'declined')
+          .length,
+        disputed: Array.from(this.transactions.values()).filter((t) => t.status === 'disputed')
+          .length,
       },
       chargebacks: {
         total: this.chargebacks.size,
-        open: Array.from(this.chargebacks.values()).filter(cb => cb.status === 'received' || cb.status === 'evidence-required').length,
-        won: Array.from(this.chargebacks.values()).filter(cb => cb.status === 'won').length,
-        lost: Array.from(this.chargebacks.values()).filter(cb => cb.status === 'lost').length,
+        open: Array.from(this.chargebacks.values()).filter(
+          (cb) => cb.status === 'received' || cb.status === 'evidence-required'
+        ).length,
+        won: Array.from(this.chargebacks.values()).filter((cb) => cb.status === 'won').length,
+        lost: Array.from(this.chargebacks.values()).filter((cb) => cb.status === 'lost').length,
       },
       security: {
         fraudRules: this.fraudRules.size,

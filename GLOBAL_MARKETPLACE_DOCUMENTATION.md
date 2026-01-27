@@ -35,12 +35,12 @@ The Global Marketplace system enables international commerce for the Artisans pl
 
 ### Supported Regions
 
-| Region | Code | Currency | Languages | Status |
-|--------|------|----------|-----------|--------|
-| India | IN | INR | en, hi, bn, te, mr, ta | Active |
-| United States | US | USD | en, es | Active |
-| United Kingdom | UK | GBP | en | Active |
-| European Union | EU | EUR | en, de, fr, es, it | Active |
+| Region         | Code | Currency | Languages              | Status |
+| -------------- | ---- | -------- | ---------------------- | ------ |
+| India          | IN   | INR      | en, hi, bn, te, mr, ta | Active |
+| United States  | US   | USD      | en, es                 | Active |
+| United Kingdom | UK   | GBP      | en                     | Active |
+| European Union | EU   | EUR      | en, de, fr, es, it     | Active |
 
 ### Key Components
 
@@ -84,26 +84,38 @@ interface GlobalProduct {
   id: string;
   baseProductId: string;
   availableInRegions: string[];
-  regionalPricing: Record<string, {
-    price: number;
-    currency: string;
-    includingTax: boolean;
-  }>;
-  regionalContent: Record<string, {
-    title: string;
-    description: string;
-    keywords: string[];
-  }>;
-  compliance: Record<string, {
-    approved: boolean;
-    certifications: string[];
-    restrictions?: string[];
-  }>;
-  regionalInventory: Record<string, {
-    quantity: number;
-    warehouse: string;
-    reorderPoint: number;
-  }>;
+  regionalPricing: Record<
+    string,
+    {
+      price: number;
+      currency: string;
+      includingTax: boolean;
+    }
+  >;
+  regionalContent: Record<
+    string,
+    {
+      title: string;
+      description: string;
+      keywords: string[];
+    }
+  >;
+  compliance: Record<
+    string,
+    {
+      approved: boolean;
+      certifications: string[];
+      restrictions?: string[];
+    }
+  >;
+  regionalInventory: Record<
+    string,
+    {
+      quantity: number;
+      warehouse: string;
+      reorderPoint: number;
+    }
+  >;
 }
 ```
 
@@ -121,10 +133,7 @@ console.log(`Available in ${regions.length} regions`);
 #### Check Product Availability
 
 ```typescript
-const isAvailable = await globalMarketplaceService.isProductAvailableInRegion(
-  'product-123',
-  'UK'
-);
+const isAvailable = await globalMarketplaceService.isProductAvailableInRegion('product-123', 'UK');
 ```
 
 #### Create Cross-Border Order
@@ -134,10 +143,12 @@ const order = await globalMarketplaceService.createCrossBorderOrder({
   orderId: 'order-456',
   productId: 'product-123',
   origin: { country: 'IN', warehouse: 'warehouse-mumbai' },
-  destination: { 
-    country: 'US', 
+  destination: {
+    country: 'US',
     region: 'NY',
-    address: { /* address details */ }
+    address: {
+      /* address details */
+    },
   },
   productValue: 150,
   currency: 'USD',
@@ -178,26 +189,26 @@ const stats = await globalMarketplaceService.getMarketplaceStats();
 
 ### Supported Currencies
 
-| Code | Symbol | Name | Decimals |
-|------|--------|------|----------|
-| USD | $ | US Dollar | 2 |
-| EUR | € | Euro | 2 |
-| GBP | £ | British Pound | 2 |
-| INR | ₹ | Indian Rupee | 2 |
-| JPY | ¥ | Japanese Yen | 0 |
-| AUD | A$ | Australian Dollar | 2 |
-| CAD | C$ | Canadian Dollar | 2 |
-| SGD | S$ | Singapore Dollar | 2 |
-| AED | د.إ | UAE Dirham | 2 |
+| Code | Symbol | Name              | Decimals |
+| ---- | ------ | ----------------- | -------- |
+| USD  | $      | US Dollar         | 2        |
+| EUR  | €      | Euro              | 2        |
+| GBP  | £      | British Pound     | 2        |
+| INR  | ₹      | Indian Rupee      | 2        |
+| JPY  | ¥      | Japanese Yen      | 0        |
+| AUD  | A$     | Australian Dollar | 2        |
+| CAD  | C$     | Canadian Dollar   | 2        |
+| SGD  | S$     | Singapore Dollar  | 2        |
+| AED  | د.إ    | UAE Dirham        | 2        |
 
 ### Payment Gateways
 
-| Gateway | Type | Countries | Currencies | Fee Structure |
-|---------|------|-----------|------------|---------------|
-| Stripe | Card | US, UK, EU, IN, AU, CA, SG, AE | USD, EUR, GBP, INR, AUD, CAD, SGD, AED | 2.9% + $0.30 |
-| Razorpay | Card | IN | INR | 2.0% |
-| PayPal | Wallet | US, UK, EU, IN, AU, CA | USD, EUR, GBP, INR, AUD, CAD | 3.49% + $0.49 |
-| Wise | Bank Transfer | Global | All supported | 0.5% |
+| Gateway  | Type          | Countries                      | Currencies                             | Fee Structure |
+| -------- | ------------- | ------------------------------ | -------------------------------------- | ------------- |
+| Stripe   | Card          | US, UK, EU, IN, AU, CA, SG, AE | USD, EUR, GBP, INR, AUD, CAD, SGD, AED | 2.9% + $0.30  |
+| Razorpay | Card          | IN                             | INR                                    | 2.0%          |
+| PayPal   | Wallet        | US, UK, EU, IN, AU, CA         | USD, EUR, GBP, INR, AUD, CAD           | 3.49% + $0.49 |
+| Wise     | Bank Transfer | Global                         | All supported                          | 0.5%          |
 
 ### Usage Examples
 
@@ -213,11 +224,7 @@ const rate = await multiCurrencyPaymentSystem.getExchangeRate('USD', 'INR');
 #### Convert Currency
 
 ```typescript
-const conversion = await multiCurrencyPaymentSystem.convertCurrency(
-  100,
-  'USD',
-  'EUR'
-);
+const conversion = await multiCurrencyPaymentSystem.convertCurrency(100, 'USD', 'EUR');
 /*
 {
   original: 100,
@@ -246,10 +253,7 @@ const payment = await multiCurrencyPaymentSystem.processPayment({
 #### Get Available Gateways
 
 ```typescript
-const gateways = await multiCurrencyPaymentSystem.getAvailableGateways(
-  'INR',
-  'IN'
-);
+const gateways = await multiCurrencyPaymentSystem.getAvailableGateways('INR', 'IN');
 // Returns: [Stripe, Razorpay]
 ```
 
@@ -263,12 +267,7 @@ const wallet = await multiCurrencyPaymentSystem.getWallet('user-123');
 await multiCurrencyPaymentSystem.addFundsToWallet('user-123', 1000, 'USD');
 
 // Convert balance
-await multiCurrencyPaymentSystem.convertWalletBalance(
-  'user-123',
-  500,
-  'USD',
-  'EUR'
-);
+await multiCurrencyPaymentSystem.convertWalletBalance('user-123', 500, 'USD', 'EUR');
 ```
 
 ---
@@ -288,24 +287,24 @@ await multiCurrencyPaymentSystem.convertWalletBalance(
 
 ### Shipping Zones
 
-| Zone | Name | Countries | Base Delivery Days |
-|------|------|-----------|-------------------|
-| Domestic | India | IN | 3 |
-| Zone 1 | South Asia | BD, LK, NP, BT, MV, PK | 5 |
-| Zone 2 | Southeast Asia & Middle East | SG, MY, TH, ID, VN, AE, SA, QA | 7 |
-| Zone 3 | East Asia & Australia | JP, KR, CN, HK, TW, AU, NZ | 8 |
-| Zone 4 | Europe | UK, DE, FR, IT, ES, NL, BE, CH, AT | 9 |
-| Zone 5 | North America | US, CA, MX | 10 |
-| Zone 6 | Rest of World | BR, AR, CL, ZA, RU | 12 |
+| Zone     | Name                         | Countries                          | Base Delivery Days |
+| -------- | ---------------------------- | ---------------------------------- | ------------------ |
+| Domestic | India                        | IN                                 | 3                  |
+| Zone 1   | South Asia                   | BD, LK, NP, BT, MV, PK             | 5                  |
+| Zone 2   | Southeast Asia & Middle East | SG, MY, TH, ID, VN, AE, SA, QA     | 7                  |
+| Zone 3   | East Asia & Australia        | JP, KR, CN, HK, TW, AU, NZ         | 8                  |
+| Zone 4   | Europe                       | UK, DE, FR, IT, ES, NL, BE, CH, AT | 9                  |
+| Zone 5   | North America                | US, CA, MX                         | 10                 |
+| Zone 6   | Rest of World                | BR, AR, CL, ZA, RU                 | 12                 |
 
 ### Carrier Comparison
 
-| Carrier | Type | Max Weight | Base Rate | Per Kg Rate | Features |
-|---------|------|------------|-----------|-------------|----------|
-| DHL Express | Express | 70kg | $25 | $12 | Tracking, Insurance, Signature, Customs |
-| FedEx International | Express | 68kg | $22 | $11 | Tracking, Insurance, Signature, Customs |
-| Aramex | Standard | 50kg | $15 | $8 | Tracking, Insurance, Customs |
-| India Post | Economy | 30kg | $8 | $5 | Tracking |
+| Carrier             | Type     | Max Weight | Base Rate | Per Kg Rate | Features                                |
+| ------------------- | -------- | ---------- | --------- | ----------- | --------------------------------------- |
+| DHL Express         | Express  | 70kg       | $25       | $12         | Tracking, Insurance, Signature, Customs |
+| FedEx International | Express  | 68kg       | $22       | $11         | Tracking, Insurance, Signature, Customs |
+| Aramex              | Standard | 50kg       | $15       | $8          | Tracking, Insurance, Customs            |
+| India Post          | Economy  | 30kg       | $8        | $5          | Tracking                                |
 
 ### Usage Examples
 
@@ -329,9 +328,9 @@ const quotes = await internationalShippingCalculator.calculateShippingQuote({
     addressLine1: 'Customer Address',
   },
   package: {
-    length: 30,  // cm
-    width: 20,   // cm
-    height: 15,  // cm
+    length: 30, // cm
+    width: 20, // cm
+    height: 15, // cm
     weight: 2.5, // kg
   },
   insuranceValue: 150,
@@ -374,8 +373,12 @@ const quotes = await internationalShippingCalculator.calculateShippingQuote({
 ```typescript
 const shipment = await internationalShippingCalculator.createShipment({
   orderId: 'order-789',
-  origin: { /* origin address */ },
-  destination: { /* destination address */ },
+  origin: {
+    /* origin address */
+  },
+  destination: {
+    /* destination address */
+  },
   package: {
     length: 30,
     width: 20,
@@ -400,9 +403,7 @@ console.log(shipment.carrier.trackingNumber); // TRK1734...ABC
 #### Track Shipment
 
 ```typescript
-const shipment = await internationalShippingCalculator.trackShipment(
-  'TRK1734...ABC'
-);
+const shipment = await internationalShippingCalculator.trackShipment('TRK1734...ABC');
 
 console.log(shipment.status); // 'in_transit'
 console.log(shipment.statusHistory);
@@ -422,12 +423,16 @@ const declaration = await internationalShippingCalculator.createCustomsDeclarati
   shipmentId: 'ship-123',
   shipper: {
     name: 'Artisan Exports Ltd',
-    address: { /* address */ },
+    address: {
+      /* address */
+    },
     taxId: 'GSTIN123...',
   },
   recipient: {
     name: 'Customer Name',
-    address: { /* address */ },
+    address: {
+      /* address */
+    },
   },
   items: [
     {
@@ -462,16 +467,16 @@ const declaration = await internationalShippingCalculator.createCustomsDeclarati
 
 ### Tax Regions
 
-| Region | Tax Type | Rate | Tax Included | Threshold | E-Invoicing |
-|--------|----------|------|--------------|-----------|-------------|
-| India | GST | 18% | Yes | ₹0 | Yes |
-| US | Sales Tax | ~8% | No | $0 | No |
-| UK | VAT | 20% | Yes | £0 | No |
-| EU | VAT | ~21% | Yes | €150 | No |
-| Australia | GST | 10% | Yes | A$1000 | No |
-| Canada | GST + PST | 5% + 8% | No | C$0 | No |
-| Singapore | GST | 9% | Yes | S$400 | No |
-| UAE | VAT | 5% | Yes | AED 0 | No |
+| Region    | Tax Type  | Rate    | Tax Included | Threshold | E-Invoicing |
+| --------- | --------- | ------- | ------------ | --------- | ----------- |
+| India     | GST       | 18%     | Yes          | ₹0        | Yes         |
+| US        | Sales Tax | ~8%     | No           | $0        | No          |
+| UK        | VAT       | 20%     | Yes          | £0        | No          |
+| EU        | VAT       | ~21%    | Yes          | €150      | No          |
+| Australia | GST       | 10%     | Yes          | A$1000    | No          |
+| Canada    | GST + PST | 5% + 8% | No           | C$0       | No          |
+| Singapore | GST       | 9%      | Yes          | S$400     | No          |
+| UAE       | VAT       | 5%      | Yes          | AED 0     | No          |
 
 ### Usage Examples
 
@@ -580,10 +585,7 @@ console.log(certificate.validUntil); // 90 days from issue
 #### Check Export Compliance
 
 ```typescript
-const compliance = await complianceTaxSystem.checkExportCompliance(
-  'product-123',
-  'US'
-);
+const compliance = await complianceTaxSystem.checkExportCompliance('product-123', 'US');
 
 /*
 {
@@ -713,7 +715,7 @@ import { useRegional } from '@/lib/regional-adaptation-component';
 
 export function ProductPrice({ amount }: { amount: number }) {
   const { settings } = useRegional();
-  
+
   return (
     <div>
       Price: {settings.currency} {amount}
@@ -729,7 +731,7 @@ import { useFormatCurrency } from '@/lib/regional-adaptation-component';
 
 export function Price({ amount }: { amount: number }) {
   const formatCurrency = useFormatCurrency();
-  
+
   return <div>{formatCurrency(amount)}</div>;
   // Output: $150.00 (if USD selected)
   // Output: ₹12,468.00 (if INR selected)
@@ -743,7 +745,7 @@ import { useFormatDate } from '@/lib/regional-adaptation-component';
 
 export function OrderDate({ date }: { date: Date }) {
   const formatDate = useFormatDate();
-  
+
   return <div>{formatDate(date)}</div>;
   // Output varies by selected region's locale
 }
@@ -756,7 +758,7 @@ import { useFormatNumber } from '@/lib/regional-adaptation-component';
 
 export function ProductViews({ count }: { count: number }) {
   const formatNumber = useFormatNumber();
-  
+
   return <div>{formatNumber(count)} views</div>;
   // US: 1,234,567 views
   // India: 12,34,567 views
@@ -772,10 +774,7 @@ export function ProductViews({ count }: { count: number }) {
 ```typescript
 // 1. Customer browses products (regional pricing)
 const { settings } = useRegional();
-const price = await globalMarketplaceService.getRegionalPrice(
-  productId,
-  settings.region
-);
+const price = await globalMarketplaceService.getRegionalPrice(productId, settings.region);
 
 // 2. Add to cart and calculate totals
 const taxCalc = await complianceTaxSystem.calculateTax({
@@ -964,10 +963,7 @@ const total = costs.product + costs.tax + costs.shipping;
 ### 3. **Validate Compliance Before Checkout**
 
 ```typescript
-const compliance = await complianceTaxSystem.checkExportCompliance(
-  productId,
-  destinationCountry
-);
+const compliance = await complianceTaxSystem.checkExportCompliance(productId, destinationCountry);
 
 if (!compliance.allowed) {
   // Block purchase

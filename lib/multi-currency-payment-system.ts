@@ -1,6 +1,6 @@
 /**
  * Multi-Currency Payment System
- * 
+ *
  * Handles international payments:
  * - Multiple currency support
  * - Real-time exchange rates
@@ -43,7 +43,7 @@ export interface PaymentGateway {
 export interface MultiCurrencyPayment {
   id: string;
   orderId: string;
-  
+
   // Amount Details
   amount: {
     original: number;
@@ -52,14 +52,14 @@ export interface MultiCurrencyPayment {
     convertedCurrency?: string;
     exchangeRate?: number;
   };
-  
+
   // Gateway
   gateway: {
     id: string;
     name: string;
     transactionId?: string;
   };
-  
+
   // Fees
   fees: {
     gatewayFee: number;
@@ -67,19 +67,19 @@ export interface MultiCurrencyPayment {
     total: number;
     currency: string;
   };
-  
+
   // Customer
   customer: {
     id: string;
     country: string;
     preferredCurrency: string;
   };
-  
+
   // Status
   status: 'pending' | 'processing' | 'completed' | 'failed' | 'refunded';
   createdAt: Date;
   completedAt?: Date;
-  
+
   // Refund
   refund?: {
     amount: number;
@@ -92,11 +92,14 @@ export interface MultiCurrencyPayment {
 
 export interface CurrencyWallet {
   userId: string;
-  balances: Record<string, {
-    amount: number;
-    frozen: number;
-    available: number;
-  }>;
+  balances: Record<
+    string,
+    {
+      amount: number;
+      frozen: number;
+      available: number;
+    }
+  >;
   transactions: WalletTransaction[];
 }
 
@@ -145,7 +148,7 @@ export class MultiCurrencyPaymentSystem {
       { code: 'AED', symbol: 'د.إ', name: 'UAE Dirham', decimals: 2, countries: ['AE'] },
     ];
 
-    currencies.forEach(currency => {
+    currencies.forEach((currency) => {
       this.currencies.set(currency.code, currency);
     });
   }
@@ -161,7 +164,7 @@ export class MultiCurrencyPaymentSystem {
         type: 'card',
         supportedCurrencies: ['USD', 'EUR', 'GBP', 'INR', 'AUD', 'CAD', 'SGD', 'AED'],
         supportedCountries: ['US', 'UK', 'EU', 'IN', 'AU', 'CA', 'SG', 'AE'],
-        fees: { percentage: 2.9, fixed: 0.30, currency: 'USD' },
+        fees: { percentage: 2.9, fixed: 0.3, currency: 'USD' },
         processingTime: 'instant',
         isActive: true,
       },
@@ -197,7 +200,7 @@ export class MultiCurrencyPaymentSystem {
       },
     ];
 
-    gateways.forEach(gateway => {
+    gateways.forEach((gateway) => {
       this.gateways.set(gateway.id, gateway);
     });
   }
@@ -211,12 +214,12 @@ export class MultiCurrencyPaymentSystem {
       { from: 'USD', to: 'EUR', rate: 0.92 },
       { from: 'USD', to: 'GBP', rate: 0.79 },
       { from: 'USD', to: 'INR', rate: 83.12 },
-      { from: 'USD', to: 'JPY', rate: 149.50 },
+      { from: 'USD', to: 'JPY', rate: 149.5 },
       { from: 'USD', to: 'AUD', rate: 1.52 },
       { from: 'USD', to: 'CAD', rate: 1.36 },
       { from: 'USD', to: 'SGD', rate: 1.34 },
       { from: 'USD', to: 'AED', rate: 3.67 },
-      
+
       // Reverse rates
       { from: 'EUR', to: 'USD', rate: 1.09 },
       { from: 'GBP', to: 'USD', rate: 1.27 },
@@ -224,7 +227,7 @@ export class MultiCurrencyPaymentSystem {
       { from: 'JPY', to: 'USD', rate: 0.0067 },
     ];
 
-    rates.forEach(rate => {
+    rates.forEach((rate) => {
       const key = `${rate.from}-${rate.to}`;
       this.exchangeRates.set(key, {
         ...rate,
@@ -250,7 +253,7 @@ export class MultiCurrencyPaymentSystem {
     // Try reverse rate
     const reverseKey = `${to}-${from}`;
     const reverseRate = this.exchangeRates.get(reverseKey);
-    
+
     if (reverseRate) {
       return 1 / reverseRate.rate;
     }
@@ -268,7 +271,11 @@ export class MultiCurrencyPaymentSystem {
   /**
    * Convert amount between currencies
    */
-  async convertCurrency(amount: number, from: string, to: string): Promise<{
+  async convertCurrency(
+    amount: number,
+    from: string,
+    to: string
+  ): Promise<{
     original: number;
     converted: number;
     rate: number;
@@ -293,10 +300,11 @@ export class MultiCurrencyPaymentSystem {
    * Get available payment gateways for currency and country
    */
   async getAvailableGateways(currency: string, country: string): Promise<PaymentGateway[]> {
-    return Array.from(this.gateways.values()).filter(gateway =>
-      gateway.isActive &&
-      gateway.supportedCurrencies.includes(currency) &&
-      gateway.supportedCountries.includes(country)
+    return Array.from(this.gateways.values()).filter(
+      (gateway) =>
+        gateway.isActive &&
+        gateway.supportedCurrencies.includes(currency) &&
+        gateway.supportedCountries.includes(country)
     );
   }
 
@@ -324,7 +332,11 @@ export class MultiCurrencyPaymentSystem {
 
     // Convert if needed
     if (params.convertToCurrency && params.convertToCurrency !== params.currency) {
-      const conversion = await this.convertCurrency(amount, params.currency, params.convertToCurrency);
+      const conversion = await this.convertCurrency(
+        amount,
+        params.currency,
+        params.convertToCurrency
+      );
       amount = conversion.converted;
       currency = params.convertToCurrency;
     }
@@ -334,9 +346,8 @@ export class MultiCurrencyPaymentSystem {
     const gatewayFee = percentageFee + gateway.fees.fixed;
 
     // Conversion fee (1% for currency conversion)
-    const conversionFee = params.convertToCurrency && params.convertToCurrency !== params.currency
-      ? amount * 0.01
-      : 0;
+    const conversionFee =
+      params.convertToCurrency && params.convertToCurrency !== params.currency ? amount * 0.01 : 0;
 
     return {
       gatewayFee: Number(gatewayFee.toFixed(2)),
@@ -464,7 +475,7 @@ export class MultiCurrencyPaymentSystem {
    */
   async getWallet(userId: string): Promise<CurrencyWallet> {
     let wallet = this.wallets.get(userId);
-    
+
     if (!wallet) {
       wallet = {
         userId,
@@ -504,7 +515,12 @@ export class MultiCurrencyPaymentSystem {
   /**
    * Convert wallet balance
    */
-  async convertWalletBalance(userId: string, amount: number, from: string, to: string): Promise<void> {
+  async convertWalletBalance(
+    userId: string,
+    amount: number,
+    from: string,
+    to: string
+  ): Promise<void> {
     const wallet = await this.getWallet(userId);
 
     if (!wallet.balances[from] || wallet.balances[from].available < amount) {
@@ -568,11 +584,11 @@ export class MultiCurrencyPaymentSystem {
    */
   async getPaymentStats() {
     const payments = Array.from(this.payments.values());
-    
+
     const totalPayments = payments.length;
-    const completedPayments = payments.filter(p => p.status === 'completed').length;
-    const failedPayments = payments.filter(p => p.status === 'failed').length;
-    const refundedPayments = payments.filter(p => p.status === 'refunded').length;
+    const completedPayments = payments.filter((p) => p.status === 'completed').length;
+    const failedPayments = payments.filter((p) => p.status === 'failed').length;
+    const refundedPayments = payments.filter((p) => p.status === 'refunded').length;
 
     const totalVolume = payments.reduce((sum, p) => {
       if (p.status === 'completed') {
@@ -581,17 +597,23 @@ export class MultiCurrencyPaymentSystem {
       return sum;
     }, 0);
 
-    const byCurrency = payments.reduce((acc, p) => {
-      const curr = p.amount.originalCurrency;
-      acc[curr] = (acc[curr] || 0) + p.amount.original;
-      return acc;
-    }, {} as Record<string, number>);
+    const byCurrency = payments.reduce(
+      (acc, p) => {
+        const curr = p.amount.originalCurrency;
+        acc[curr] = (acc[curr] || 0) + p.amount.original;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const byGateway = payments.reduce((acc, p) => {
-      const gateway = p.gateway.name;
-      acc[gateway] = (acc[gateway] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const byGateway = payments.reduce(
+      (acc, p) => {
+        const gateway = p.gateway.name;
+        acc[gateway] = (acc[gateway] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     return {
       totalPayments,

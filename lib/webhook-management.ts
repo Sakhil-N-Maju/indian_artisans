@@ -1,6 +1,6 @@
 /**
  * Webhook Management System
- * 
+ *
  * Manage webhooks for event-driven integrations
  */
 
@@ -69,8 +69,9 @@ export class WebhookManagementSystem {
   }
 
   async triggerEvent(event: string, payload: any): Promise<WebhookDelivery[]> {
-    const relevantWebhooks = Array.from(this.webhooks.values())
-      .filter(w => w.active && w.events.includes(event));
+    const relevantWebhooks = Array.from(this.webhooks.values()).filter(
+      (w) => w.active && w.events.includes(event)
+    );
 
     const deliveries: WebhookDelivery[] = [];
 
@@ -82,7 +83,11 @@ export class WebhookManagementSystem {
     return deliveries;
   }
 
-  private async deliverWebhook(webhook: Webhook, event: string, payload: any): Promise<WebhookDelivery> {
+  private async deliverWebhook(
+    webhook: Webhook,
+    event: string,
+    payload: any
+  ): Promise<WebhookDelivery> {
     const delivery: WebhookDelivery = {
       id: `delivery-${Date.now()}-${Math.random().toString(36).substring(7)}`,
       webhookId: webhook.id,
@@ -128,7 +133,10 @@ export class WebhookManagementSystem {
       } else {
         delivery.status = 'retrying';
         // Schedule retry
-        setTimeout(() => this.attemptDelivery(deliveryId, webhookId), webhook.retryPolicy.retryDelay * 1000);
+        setTimeout(
+          () => this.attemptDelivery(deliveryId, webhookId),
+          webhook.retryPolicy.retryDelay * 1000
+        );
       }
     }
 
@@ -143,14 +151,14 @@ export class WebhookManagementSystem {
   async listWebhooks(createdBy?: string): Promise<Webhook[]> {
     let webhooks = Array.from(this.webhooks.values());
     if (createdBy) {
-      webhooks = webhooks.filter(w => w.createdBy === createdBy);
+      webhooks = webhooks.filter((w) => w.createdBy === createdBy);
     }
     return webhooks.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 
   async getDeliveries(webhookId: string, limit: number = 50): Promise<WebhookDelivery[]> {
     return Array.from(this.deliveries.values())
-      .filter(d => d.webhookId === webhookId)
+      .filter((d) => d.webhookId === webhookId)
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
       .slice(0, limit);
   }
@@ -166,13 +174,13 @@ export class WebhookManagementSystem {
     const webhooks = Array.from(this.webhooks.values());
     const deliveries = Array.from(this.deliveries.values());
 
-    const successful = deliveries.filter(d => d.status === 'success').length;
-    const failed = deliveries.filter(d => d.status === 'failed').length;
+    const successful = deliveries.filter((d) => d.status === 'success').length;
+    const failed = deliveries.filter((d) => d.status === 'failed').length;
     const successRate = deliveries.length > 0 ? (successful / deliveries.length) * 100 : 0;
 
     return {
       totalWebhooks: webhooks.length,
-      activeWebhooks: webhooks.filter(w => w.active).length,
+      activeWebhooks: webhooks.filter((w) => w.active).length,
       totalDeliveries: deliveries.length,
       successfulDeliveries: successful,
       failedDeliveries: failed,

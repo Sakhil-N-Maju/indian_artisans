@@ -1,6 +1,6 @@
 /**
  * Real-time Chat System
- * 
+ *
  * Provides real-time messaging capabilities:
  * - One-on-one chat
  * - Group chat
@@ -14,16 +14,16 @@
 export interface ChatMessage {
   id: string;
   conversationId: string;
-  
+
   // Sender
   senderId: string;
   senderName: string;
   senderAvatar?: string;
-  
+
   // Content
   type: 'text' | 'image' | 'video' | 'document' | 'audio' | 'product' | 'order';
   content: string;
-  
+
   // Attachments
   attachments?: {
     type: string;
@@ -32,25 +32,25 @@ export interface ChatMessage {
     size: number;
     thumbnail?: string;
   }[];
-  
+
   // Context
   productId?: string;
   orderId?: string;
-  
+
   // Metadata
   isEdited: boolean;
   editedAt?: Date;
   isDeleted: boolean;
-  
+
   // Reactions
   reactions: {
     emoji: string;
     userIds: string[];
   }[];
-  
+
   // Status
   status: 'sending' | 'sent' | 'delivered' | 'read' | 'failed';
-  
+
   // Timestamps
   timestamp: Date;
   deliveredAt?: Date;
@@ -60,7 +60,7 @@ export interface ChatMessage {
 export interface Conversation {
   id: string;
   type: 'direct' | 'group' | 'support';
-  
+
   // Participants
   participants: {
     userId: string;
@@ -70,7 +70,7 @@ export interface Conversation {
     joinedAt: Date;
     lastReadAt?: Date;
   }[];
-  
+
   // Group Info (for group chats)
   groupInfo?: {
     name: string;
@@ -78,22 +78,22 @@ export interface Conversation {
     avatar?: string;
     adminIds: string[];
   };
-  
+
   // Last Message
   lastMessage?: {
     content: string;
     senderId: string;
     timestamp: Date;
   };
-  
+
   // Status
   isActive: boolean;
   isArchived: boolean;
   isPinned: boolean;
-  
+
   // Mute
   mutedBy: string[];
-  
+
   // Timestamps
   createdAt: Date;
   updatedAt: Date;
@@ -111,12 +111,12 @@ export interface ChatNotification {
   userId: string;
   conversationId: string;
   messageId: string;
-  
+
   type: 'new_message' | 'mention' | 'reaction';
-  
+
   title: string;
   message: string;
-  
+
   isRead: boolean;
   createdAt: Date;
 }
@@ -144,10 +144,10 @@ export class RealtimeChatSystem {
   }): Promise<Conversation> {
     // Check if conversation already exists (for direct messages)
     if (params.type === 'direct' && params.participants.length === 2) {
-      const existingConv = Array.from(this.conversations.values()).find(conv => {
+      const existingConv = Array.from(this.conversations.values()).find((conv) => {
         if (conv.type !== 'direct') return false;
-        const participantIds = conv.participants.map(p => p.userId).sort();
-        const newParticipantIds = params.participants.map(p => p.userId).sort();
+        const participantIds = conv.participants.map((p) => p.userId).sort();
+        const newParticipantIds = params.participants.map((p) => p.userId).sort();
         return participantIds.join(',') === newParticipantIds.join(',');
       });
 
@@ -221,7 +221,7 @@ export class RealtimeChatSystem {
     conversation.updatedAt = new Date();
 
     // Create notifications for other participants
-    conversation.participants.forEach(participant => {
+    conversation.participants.forEach((participant) => {
       if (participant.userId !== params.senderId) {
         this.createChatNotification({
           userId: participant.userId,
@@ -246,17 +246,20 @@ export class RealtimeChatSystem {
   /**
    * Get messages for conversation
    */
-  async getMessages(conversationId: string, limit: number = 50, before?: Date): Promise<ChatMessage[]> {
-    let messages = Array.from(this.messages.values())
-      .filter(m => m.conversationId === conversationId && !m.isDeleted);
+  async getMessages(
+    conversationId: string,
+    limit: number = 50,
+    before?: Date
+  ): Promise<ChatMessage[]> {
+    let messages = Array.from(this.messages.values()).filter(
+      (m) => m.conversationId === conversationId && !m.isDeleted
+    );
 
     if (before) {
-      messages = messages.filter(m => m.timestamp < before);
+      messages = messages.filter((m) => m.timestamp < before);
     }
 
-    return messages
-      .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
-      .slice(0, limit);
+    return messages.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime()).slice(0, limit);
   }
 
   /**
@@ -264,10 +267,7 @@ export class RealtimeChatSystem {
    */
   async getConversations(userId: string): Promise<Conversation[]> {
     return Array.from(this.conversations.values())
-      .filter(conv => 
-        conv.participants.some(p => p.userId === userId) &&
-        !conv.isArchived
-      )
+      .filter((conv) => conv.participants.some((p) => p.userId === userId) && !conv.isArchived)
       .sort((a, b) => {
         // Pinned first
         if (a.isPinned && !b.isPinned) return -1;
@@ -284,16 +284,17 @@ export class RealtimeChatSystem {
     const conversation = this.conversations.get(conversationId);
     if (!conversation) return;
 
-    const participant = conversation.participants.find(p => p.userId === userId);
+    const participant = conversation.participants.find((p) => p.userId === userId);
     if (participant) {
       participant.lastReadAt = new Date();
     }
 
     // Mark messages as read
-    const messages = Array.from(this.messages.values())
-      .filter(m => m.conversationId === conversationId && m.senderId !== userId);
+    const messages = Array.from(this.messages.values()).filter(
+      (m) => m.conversationId === conversationId && m.senderId !== userId
+    );
 
-    messages.forEach(message => {
+    messages.forEach((message) => {
       if (message.status !== 'read') {
         message.status = 'read';
         message.readAt = new Date();
@@ -306,10 +307,10 @@ export class RealtimeChatSystem {
    */
   async setTyping(conversationId: string, userId: string, username: string): Promise<void> {
     let indicators = this.typingIndicators.get(conversationId) || [];
-    
+
     // Remove existing indicator for this user
-    indicators = indicators.filter(i => i.userId !== userId);
-    
+    indicators = indicators.filter((i) => i.userId !== userId);
+
     // Add new indicator
     indicators.push({
       conversationId,
@@ -331,7 +332,7 @@ export class RealtimeChatSystem {
    */
   async clearTyping(conversationId: string, userId: string): Promise<void> {
     const indicators = this.typingIndicators.get(conversationId) || [];
-    const filtered = indicators.filter(i => i.userId !== userId);
+    const filtered = indicators.filter((i) => i.userId !== userId);
     this.typingIndicators.set(conversationId, filtered);
   }
 
@@ -349,8 +350,8 @@ export class RealtimeChatSystem {
     const message = this.messages.get(messageId);
     if (!message) return;
 
-    let reaction = message.reactions.find(r => r.emoji === emoji);
-    
+    let reaction = message.reactions.find((r) => r.emoji === emoji);
+
     if (reaction) {
       if (!reaction.userIds.includes(userId)) {
         reaction.userIds.push(userId);
@@ -370,13 +371,13 @@ export class RealtimeChatSystem {
     const message = this.messages.get(messageId);
     if (!message) return;
 
-    const reaction = message.reactions.find(r => r.emoji === emoji);
+    const reaction = message.reactions.find((r) => r.emoji === emoji);
     if (reaction) {
-      reaction.userIds = reaction.userIds.filter(id => id !== userId);
-      
+      reaction.userIds = reaction.userIds.filter((id) => id !== userId);
+
       // Remove reaction if no users left
       if (reaction.userIds.length === 0) {
-        message.reactions = message.reactions.filter(r => r.emoji !== emoji);
+        message.reactions = message.reactions.filter((r) => r.emoji !== emoji);
       }
     }
   }
@@ -462,16 +463,16 @@ export class RealtimeChatSystem {
     const conversations = await this.getConversations(userId);
     let unreadCount = 0;
 
-    conversations.forEach(conv => {
-      const participant = conv.participants.find(p => p.userId === userId);
+    conversations.forEach((conv) => {
+      const participant = conv.participants.find((p) => p.userId === userId);
       if (!participant) return;
 
-      const messages = Array.from(this.messages.values())
-        .filter(m => 
+      const messages = Array.from(this.messages.values()).filter(
+        (m) =>
           m.conversationId === conv.id &&
           m.senderId !== userId &&
           (!participant.lastReadAt || m.timestamp > participant.lastReadAt)
-        );
+      );
 
       unreadCount += messages.length;
     });
@@ -487,9 +488,9 @@ export class RealtimeChatSystem {
     const messages = Array.from(this.messages.values());
 
     const totalConversations = conversations.length;
-    const activeConversations = conversations.filter(c => c.isActive).length;
+    const activeConversations = conversations.filter((c) => c.isActive).length;
     const totalMessages = messages.length;
-    const todayMessages = messages.filter(m => {
+    const todayMessages = messages.filter((m) => {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       return m.timestamp >= today;
@@ -500,9 +501,8 @@ export class RealtimeChatSystem {
       activeConversations,
       totalMessages,
       todayMessages,
-      averageMessagesPerConversation: totalConversations > 0
-        ? Number((totalMessages / totalConversations).toFixed(1))
-        : 0,
+      averageMessagesPerConversation:
+        totalConversations > 0 ? Number((totalMessages / totalConversations).toFixed(1)) : 0,
     };
   }
 }

@@ -1,6 +1,6 @@
 /**
  * Encryption Service
- * 
+ *
  * Data encryption and key management
  */
 
@@ -90,8 +90,8 @@ export class EncryptionService {
     const keys = Array.from(this.keys.values());
     return {
       totalKeys: keys.length,
-      activeKeys: keys.filter(k => !k.rotated).length,
-      rotatedKeys: keys.filter(k => k.rotated).length,
+      activeKeys: keys.filter((k) => !k.rotated).length,
+      rotatedKeys: keys.filter((k) => k.rotated).length,
       encryptedData: this.encryptedData.size,
     };
   }

@@ -128,21 +128,10 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const {
-      userId,
-      businessName,
-      craftType,
-      description,
-      state,
-      district,
-      ...rest
-    } = body;
+    const { userId, businessName, craftType, description, state, district, ...rest } = body;
 
     if (!userId || !businessName || !craftType || !state || !district) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     const artisan = await prisma.artisan.create({

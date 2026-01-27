@@ -1,6 +1,6 @@
 /**
  * Business Intelligence & Analytics System
- * 
+ *
  * Comprehensive analytics platform for data aggregation, metrics calculation,
  * report generation, and business intelligence insights.
  */
@@ -9,24 +9,11 @@
 // Types & Interfaces
 // ============================================================================
 
-export type MetricType = 
-  | 'count'
-  | 'sum'
-  | 'average'
-  | 'percentage'
-  | 'ratio'
-  | 'rate'
-  | 'duration';
+export type MetricType = 'count' | 'sum' | 'average' | 'percentage' | 'ratio' | 'rate' | 'duration';
 
-export type AggregationPeriod = 
-  | 'hourly'
-  | 'daily'
-  | 'weekly'
-  | 'monthly'
-  | 'quarterly'
-  | 'yearly';
+export type AggregationPeriod = 'hourly' | 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly';
 
-export type DataSourceType = 
+export type DataSourceType =
   | 'sales'
   | 'users'
   | 'products'
@@ -36,7 +23,7 @@ export type DataSourceType =
   | 'financial'
   | 'operational';
 
-export type VisualizationType = 
+export type VisualizationType =
   | 'line-chart'
   | 'bar-chart'
   | 'pie-chart'
@@ -46,24 +33,11 @@ export type VisualizationType =
   | 'table'
   | 'kpi-card';
 
-export type TrendDirection = 
-  | 'up'
-  | 'down'
-  | 'stable';
+export type TrendDirection = 'up' | 'down' | 'stable';
 
-export type ReportFormat = 
-  | 'pdf'
-  | 'excel'
-  | 'csv'
-  | 'json'
-  | 'html';
+export type ReportFormat = 'pdf' | 'excel' | 'csv' | 'json' | 'html';
 
-export type InsightType = 
-  | 'opportunity'
-  | 'risk'
-  | 'trend'
-  | 'anomaly'
-  | 'recommendation';
+export type InsightType = 'opportunity' | 'risk' | 'trend' | 'anomaly' | 'recommendation';
 
 export interface DataSource {
   id: string;
@@ -548,7 +522,14 @@ export interface AnalyticsQuery {
   }>;
   filters?: Array<{
     field: string;
-    operator: 'equals' | 'not-equals' | 'greater-than' | 'less-than' | 'in' | 'between' | 'contains';
+    operator:
+      | 'equals'
+      | 'not-equals'
+      | 'greater-than'
+      | 'less-than'
+      | 'in'
+      | 'between'
+      | 'contains';
     value: any;
   }>;
   groupBy?: string[];
@@ -728,7 +709,7 @@ export class BusinessIntelligenceSystem {
     };
 
     this.metrics.set(metric.id, metric);
-    
+
     // Add metric to data source
     const dataSource = this.dataSources.get(params.dataSource);
     if (dataSource) {
@@ -833,11 +814,13 @@ export class BusinessIntelligenceSystem {
         change: yoyChange,
         changePercent: yoyChangePercent,
       },
-      target: targetValue ? {
-        value: targetValue,
-        achievement: achievement!,
-        gap: gap!,
-      } : undefined,
+      target: targetValue
+        ? {
+            value: targetValue,
+            achievement: achievement!,
+            gap: gap!,
+          }
+        : undefined,
     };
   }
 
@@ -885,12 +868,14 @@ export class BusinessIntelligenceSystem {
       access: {
         allowedUsers: [params.createdBy],
         allowedRoles: [],
-        permissions: [{
-          user: params.createdBy,
-          canView: true,
-          canEdit: true,
-          canShare: true,
-        }],
+        permissions: [
+          {
+            user: params.createdBy,
+            canView: true,
+            canEdit: true,
+            canShare: true,
+          },
+        ],
       },
       usage: {
         viewCount: 0,
@@ -958,9 +943,9 @@ export class BusinessIntelligenceSystem {
     // Update usage stats
     dashboard.usage.viewCount++;
     dashboard.usage.lastViewed = new Date();
-    
+
     // Track unique viewers
-    const hasViewed = dashboard.access.permissions.some(p => p.user === userId);
+    const hasViewed = dashboard.access.permissions.some((p) => p.user === userId);
     if (!hasViewed) {
       dashboard.usage.uniqueViewers++;
     }
@@ -1027,7 +1012,7 @@ export class BusinessIntelligenceSystem {
       },
       delivery: {
         sent: false,
-        recipients: report.distribution.recipients.map(r => r.address),
+        recipients: report.distribution.recipients.map((r) => r.address),
       },
       performance: {
         generationTime: 0,
@@ -1054,7 +1039,7 @@ export class BusinessIntelligenceSystem {
     if (!report) return;
 
     // Fetch data for metrics
-    report.dataConfig.metrics.forEach(metricId => {
+    report.dataConfig.metrics.forEach((metricId) => {
       const metricValue = this.calculateMetric(metricId, report.dataConfig.dateRange);
       instance.data.metrics.push(metricValue);
     });
@@ -1087,7 +1072,7 @@ export class BusinessIntelligenceSystem {
   }): AnalyticalInsight[] {
     const insights: AnalyticalInsight[] = [];
 
-    params.metrics.forEach(metricId => {
+    params.metrics.forEach((metricId) => {
       const metric = this.metrics.get(metricId);
       if (!metric) return;
 
@@ -1095,49 +1080,57 @@ export class BusinessIntelligenceSystem {
 
       // Detect opportunities
       if (metricValue.comparisons?.previousPeriod?.changePercent! > 20) {
-        insights.push(this.createInsight({
-          type: 'opportunity',
-          severity: 'medium',
-          category: metric.category,
-          title: `${metric.name} Growing Rapidly`,
-          description: `${metric.name} has increased by ${metricValue.comparisons.previousPeriod.changePercent.toFixed(1)}% compared to previous period`,
-          metricId,
-          period: params.period,
-          value: metricValue.value,
-        }));
+        insights.push(
+          this.createInsight({
+            type: 'opportunity',
+            severity: 'medium',
+            category: metric.category,
+            title: `${metric.name} Growing Rapidly`,
+            description: `${metric.name} has increased by ${metricValue.comparisons.previousPeriod.changePercent.toFixed(1)}% compared to previous period`,
+            metricId,
+            period: params.period,
+            value: metricValue.value,
+          })
+        );
       }
 
       // Detect risks
       if (metricValue.comparisons?.previousPeriod?.changePercent! < -20) {
-        insights.push(this.createInsight({
-          type: 'risk',
-          severity: 'high',
-          category: metric.category,
-          title: `${metric.name} Declining`,
-          description: `${metric.name} has decreased by ${Math.abs(metricValue.comparisons.previousPeriod.changePercent).toFixed(1)}% compared to previous period`,
-          metricId,
-          period: params.period,
-          value: metricValue.value,
-        }));
+        insights.push(
+          this.createInsight({
+            type: 'risk',
+            severity: 'high',
+            category: metric.category,
+            title: `${metric.name} Declining`,
+            description: `${metric.name} has decreased by ${Math.abs(metricValue.comparisons.previousPeriod.changePercent).toFixed(1)}% compared to previous period`,
+            metricId,
+            period: params.period,
+            value: metricValue.value,
+          })
+        );
       }
 
       // Detect threshold violations
       if (metric.thresholds?.critical && metricValue.value > metric.thresholds.critical) {
-        insights.push(this.createInsight({
-          type: 'anomaly',
-          severity: 'critical',
-          category: metric.category,
-          title: `${metric.name} Exceeds Critical Threshold`,
-          description: `${metric.name} value of ${metricValue.value} exceeds critical threshold of ${metric.thresholds.critical}`,
-          metricId,
-          period: params.period,
-          value: metricValue.value,
-        }));
+        insights.push(
+          this.createInsight({
+            type: 'anomaly',
+            severity: 'critical',
+            category: metric.category,
+            title: `${metric.name} Exceeds Critical Threshold`,
+            description: `${metric.name} value of ${metricValue.value} exceeds critical threshold of ${metric.thresholds.critical}`,
+            metricId,
+            period: params.period,
+            value: metricValue.value,
+          })
+        );
       }
     });
 
-    return insights.filter(i => 
-      !params.minSeverity || this.getSeverityLevel(i.severity) >= this.getSeverityLevel(params.minSeverity)
+    return insights.filter(
+      (i) =>
+        !params.minSeverity ||
+        this.getSeverityLevel(i.severity) >= this.getSeverityLevel(params.minSeverity)
     );
   }
 
@@ -1164,10 +1157,12 @@ export class BusinessIntelligenceSystem {
         period: params.period,
       },
       evidence: {
-        dataPoints: [{
-          metric: params.metricId,
-          value: params.value,
-        }],
+        dataPoints: [
+          {
+            metric: params.metricId,
+            value: params.value,
+          },
+        ],
       },
       impact: {
         estimated: 0,
@@ -1182,7 +1177,10 @@ export class BusinessIntelligenceSystem {
     return insight;
   }
 
-  private generateRecommendations(type: InsightType, category: string): AnalyticalInsight['recommendations'] {
+  private generateRecommendations(
+    type: InsightType,
+    category: string
+  ): AnalyticalInsight['recommendations'] {
     const recommendations: AnalyticalInsight['recommendations'] = [];
 
     switch (type) {
@@ -1256,7 +1254,7 @@ export class BusinessIntelligenceSystem {
     // Generate retention curve
     let retention = 100;
     for (let i = 0; i < 12; i++) {
-      retention *= (0.85 + Math.random() * 0.1); // 85-95% retention each period
+      retention *= 0.85 + Math.random() * 0.1; // 85-95% retention each period
       cohort.analysis.retention.push(retention);
     }
 
@@ -1353,7 +1351,7 @@ export class BusinessIntelligenceSystem {
     if (query.cache?.enabled) {
       const cacheKey = this.generateCacheKey(query);
       const cached = this.queryCache.get(cacheKey);
-      
+
       if (cached && cached.expiresAt > new Date()) {
         analyticsQuery.execution.status = 'completed';
         analyticsQuery.execution.executionTime = 5; // Fast cache hit
@@ -1378,7 +1376,7 @@ export class BusinessIntelligenceSystem {
 
     // Simulate query execution
     const executionTime = 100 + Math.random() * 900; // 100-1000ms
-    
+
     setTimeout(() => {
       query.execution.status = 'completed';
       query.execution.completedAt = new Date();
@@ -1418,31 +1416,41 @@ export class BusinessIntelligenceSystem {
     return {
       dashboards: {
         totalDashboards: dashboards.length,
-        activeDashboards: dashboards.filter(d => d.usage.viewCount > 0).length,
-        avgLoadTime: dashboards.reduce((sum, d) => sum + (d.usage.avgLoadTime || 0), 0) / dashboards.length || 0,
+        activeDashboards: dashboards.filter((d) => d.usage.viewCount > 0).length,
+        avgLoadTime:
+          dashboards.reduce((sum, d) => sum + (d.usage.avgLoadTime || 0), 0) / dashboards.length ||
+          0,
         totalViews: dashboards.reduce((sum, d) => sum + d.usage.viewCount, 0),
         uniqueUsers: dashboards.reduce((sum, d) => sum + d.usage.uniqueViewers, 0),
       },
       reports: {
         totalReports: reports.length,
-        scheduledReports: reports.filter(r => r.schedule?.enabled).length,
-        generatedToday: Array.from(this.reportInstances.values())
-          .filter(i => i.generatedAt.toDateString() === new Date().toDateString()).length,
-        avgGenerationTime: Array.from(this.reportInstances.values())
-          .reduce((sum, i) => sum + i.performance.generationTime, 0) / this.reportInstances.size || 0,
+        scheduledReports: reports.filter((r) => r.schedule?.enabled).length,
+        generatedToday: Array.from(this.reportInstances.values()).filter(
+          (i) => i.generatedAt.toDateString() === new Date().toDateString()
+        ).length,
+        avgGenerationTime:
+          Array.from(this.reportInstances.values()).reduce(
+            (sum, i) => sum + i.performance.generationTime,
+            0
+          ) / this.reportInstances.size || 0,
         failureRate: 0,
       },
       queries: {
         totalQueries: queries.length,
-        avgExecutionTime: queries
-          .reduce((sum, q) => sum + (q.execution.executionTime || 0), 0) / queries.length || 0,
+        avgExecutionTime:
+          queries.reduce((sum, q) => sum + (q.execution.executionTime || 0), 0) / queries.length ||
+          0,
         cacheHitRate: 85,
-        slowQueries: queries.filter(q => (q.execution.executionTime || 0) > 5000).length,
+        slowQueries: queries.filter((q) => (q.execution.executionTime || 0) > 5000).length,
       },
       dataQuality: {
-        avgCompleteness: dataSources.reduce((sum, ds) => sum + ds.quality.completeness, 0) / dataSources.size || 0,
-        avgAccuracy: dataSources.reduce((sum, ds) => sum + ds.quality.accuracy, 0) / dataSources.size || 0,
-        avgFreshness: dataSources.reduce((sum, ds) => sum + ds.quality.freshness, 0) / dataSources.size || 0,
+        avgCompleteness:
+          dataSources.reduce((sum, ds) => sum + ds.quality.completeness, 0) / dataSources.size || 0,
+        avgAccuracy:
+          dataSources.reduce((sum, ds) => sum + ds.quality.accuracy, 0) / dataSources.size || 0,
+        avgFreshness:
+          dataSources.reduce((sum, ds) => sum + ds.quality.freshness, 0) / dataSources.size || 0,
         issuesDetected: 0,
       },
     };
@@ -1493,7 +1501,7 @@ export class BusinessIntelligenceSystem {
 
   private initializeDefaultMetrics(): void {
     const salesDataSource = Array.from(this.dataSources.values())[0];
-    
+
     if (salesDataSource) {
       this.createMetric({
         name: 'Total Revenue',

@@ -1,6 +1,6 @@
 /**
  * Smart Recommendations Engine
- * 
+ *
  * AI-powered personalized recommendations:
  * - Collaborative filtering
  * - Content-based recommendations
@@ -15,13 +15,13 @@
 export interface RecommendationContext {
   userId?: string;
   sessionId: string;
-  
+
   // Current context
   currentPage?: {
     type: 'home' | 'product' | 'category' | 'artisan' | 'cart' | 'search';
     id?: string;
   };
-  
+
   // User data
   userData?: {
     purchaseHistory: string[];
@@ -30,7 +30,7 @@ export interface RecommendationContext {
     cart: string[];
     searchHistory: string[];
   };
-  
+
   // Session data
   sessionData: {
     duration: number;
@@ -38,14 +38,14 @@ export interface RecommendationContext {
     productsViewed: string[];
     lastAction: Date;
   };
-  
+
   // Demographics
   demographics?: {
     location?: string;
     ageGroup?: string;
     interests?: string[];
   };
-  
+
   timestamp: Date;
 }
 
@@ -53,18 +53,26 @@ export interface Recommendation {
   id: string;
   type: 'product' | 'artisan' | 'workshop' | 'category' | 'story';
   itemId: string;
-  
+
   // Score
   score: number; // 0-1
   confidence: number; // 0-1
-  
+
   // Reason
   reason: {
-    type: 'similar_to_viewed' | 'purchased_together' | 'trending' | 'personalized' | 'popular' | 'new_arrival' | 'based_on_favorites' | 'frequently_bought';
+    type:
+      | 'similar_to_viewed'
+      | 'purchased_together'
+      | 'trending'
+      | 'personalized'
+      | 'popular'
+      | 'new_arrival'
+      | 'based_on_favorites'
+      | 'frequently_bought';
     explanation: string;
     referenceItems?: string[];
   };
-  
+
   // Item data
   item: {
     title: string;
@@ -74,7 +82,7 @@ export interface Recommendation {
     rating?: number;
     category?: string;
   };
-  
+
   // Position
   position: number;
   slot: string; // e.g., 'homepage_hero', 'product_page_similar', 'cart_upsell'
@@ -84,7 +92,7 @@ export interface RecommendationStrategy {
   id: string;
   name: string;
   type: 'collaborative' | 'content_based' | 'hybrid' | 'trending' | 'rule_based';
-  
+
   // Configuration
   config: {
     weight: number; // 0-1
@@ -93,7 +101,7 @@ export interface RecommendationStrategy {
     diversityFactor?: number; // 0-1
     recencyBias?: number; // 0-1
   };
-  
+
   // Filters
   filters?: {
     categories?: string[];
@@ -101,13 +109,13 @@ export interface RecommendationStrategy {
     minRating?: number;
     excludeOutOfStock?: boolean;
   };
-  
+
   isActive: boolean;
 }
 
 export interface UserProfile {
   userId: string;
-  
+
   // Preferences (learned)
   preferences: {
     categories: Map<string, number>; // category -> preference score
@@ -120,7 +128,7 @@ export interface UserProfile {
     materials: Map<string, number>;
     styles: Map<string, number>;
   };
-  
+
   // Behavior patterns
   behavior: {
     purchaseFrequency: number; // purchases per month
@@ -129,10 +137,10 @@ export interface UserProfile {
     preferredTime: string; // time of day
     devicePreference: 'mobile' | 'desktop' | 'tablet';
   };
-  
+
   // Embeddings (vector representation)
   embedding?: number[];
-  
+
   lastUpdated: Date;
 }
 
@@ -148,7 +156,7 @@ export interface SimilarityMatrix {
 export interface TrendingItem {
   itemId: string;
   type: 'product' | 'artisan' | 'workshop';
-  
+
   // Metrics
   metrics: {
     viewCount: number;
@@ -157,13 +165,13 @@ export interface TrendingItem {
     shareCount: number;
     trendScore: number; // 0-1
   };
-  
+
   // Time period
   period: {
     start: Date;
     end: Date;
   };
-  
+
   // Growth
   growth: {
     viewGrowth: number; // percentage
@@ -177,7 +185,7 @@ export interface RecommendationPerformance {
     start: Date;
     end: Date;
   };
-  
+
   overview: {
     totalRecommendations: number;
     uniqueUsers: number;
@@ -185,7 +193,7 @@ export interface RecommendationPerformance {
     conversionRate: number;
     revenueFromRecommendations: number;
   };
-  
+
   byStrategy: {
     strategyId: string;
     strategyName: string;
@@ -196,7 +204,7 @@ export interface RecommendationPerformance {
     ctr: number;
     conversionRate: number;
   }[];
-  
+
   bySlot: {
     slot: string;
     impressions: number;
@@ -204,7 +212,7 @@ export interface RecommendationPerformance {
     conversions: number;
     ctr: number;
   }[];
-  
+
   topRecommendedItems: {
     itemId: string;
     title: string;
@@ -289,7 +297,7 @@ export class SmartRecommendationEngine {
       },
     ];
 
-    strategies.forEach(s => this.strategies.set(s.id, s));
+    strategies.forEach((s) => this.strategies.set(s.id, s));
   }
 
   /**
@@ -301,7 +309,7 @@ export class SmartRecommendationEngine {
     limit?: number;
   }): Promise<Recommendation[]> {
     const { context, slot, limit = 10 } = params;
-    
+
     let recommendations: Recommendation[] = [];
 
     // Get user profile if available
@@ -319,7 +327,12 @@ export class SmartRecommendationEngine {
       recommendations = await this.getCartRecommendations(context, slot, limit);
     } else if (context.userId && userProfile) {
       // Personalized recommendations
-      recommendations = await this.getPersonalizedRecommendations(userProfile, context, slot, limit);
+      recommendations = await this.getPersonalizedRecommendations(
+        userProfile,
+        context,
+        slot,
+        limit
+      );
     } else {
       // Trending/popular items for new users
       recommendations = await this.getTrendingRecommendations(slot, limit);
@@ -335,9 +348,13 @@ export class SmartRecommendationEngine {
   /**
    * Get similar products
    */
-  private async getSimilarProducts(productId: string, slot: string, limit: number): Promise<Recommendation[]> {
+  private async getSimilarProducts(
+    productId: string,
+    slot: string,
+    limit: number
+  ): Promise<Recommendation[]> {
     let similarity = this.similarityMatrices.get(productId);
-    
+
     if (!similarity) {
       // Generate similarity on-the-fly (in production, pre-compute)
       similarity = await this.calculateSimilarity(productId);
@@ -376,7 +393,11 @@ export class SmartRecommendationEngine {
       { itemId: `sim-${productId}-1`, similarity: 0.92, reason: 'Same category and style' },
       { itemId: `sim-${productId}-2`, similarity: 0.88, reason: 'Similar craftsmanship technique' },
       { itemId: `sim-${productId}-3`, similarity: 0.85, reason: 'Same artisan region' },
-      { itemId: `sim-${productId}-4`, similarity: 0.80, reason: 'Similar price range and materials' },
+      {
+        itemId: `sim-${productId}-4`,
+        similarity: 0.8,
+        reason: 'Similar price range and materials',
+      },
       { itemId: `sim-${productId}-5`, similarity: 0.75, reason: 'Frequently viewed together' },
     ];
 
@@ -398,12 +419,12 @@ export class SmartRecommendationEngine {
     if (cartItems.length === 0) return [];
 
     // Mock complementary items
-    const recommendations: Recommendation[] = cartItems.slice(0, 3).flatMap((itemId, cartIndex) => 
+    const recommendations: Recommendation[] = cartItems.slice(0, 3).flatMap((itemId, cartIndex) =>
       Array.from({ length: 2 }, (_, i) => ({
         id: `rec-cart-${Date.now()}-${cartIndex}-${i}`,
         type: 'product' as const,
         itemId: `complement-${itemId}-${i}`,
-        score: 0.9 - (i * 0.1),
+        score: 0.9 - i * 0.1,
         confidence: 0.82,
         reason: {
           type: 'purchased_together' as const,
@@ -414,10 +435,10 @@ export class SmartRecommendationEngine {
           title: `Complementary Item ${i + 1}`,
           description: 'Perfect match for your selection',
           imageUrl: `/images/complement-${i}.jpg`,
-          price: 1500 + (i * 500),
+          price: 1500 + i * 500,
           rating: 4.6,
         },
-        position: (cartIndex * 2) + i,
+        position: cartIndex * 2 + i,
         slot,
       }))
     );
@@ -448,7 +469,7 @@ export class SmartRecommendationEngine {
         id: `rec-pers-${Date.now()}-${catIndex}-${i}`,
         type: 'product' as const,
         itemId: `pers-${category}-${i}`,
-        score: 0.95 - (i * 0.05),
+        score: 0.95 - i * 0.05,
         confidence: 0.88,
         reason: {
           type: 'personalized' as const,
@@ -459,11 +480,11 @@ export class SmartRecommendationEngine {
           title: `${category} Item ${i + 1}`,
           description: 'Curated for you based on your preferences',
           imageUrl: `/images/${category}-${i}.jpg`,
-          price: 3000 + (i * 1000),
+          price: 3000 + i * 1000,
           rating: 4.7,
           category,
         },
-        position: (catIndex * 3) + i,
+        position: catIndex * 3 + i,
         slot,
       }));
 
@@ -472,10 +493,12 @@ export class SmartRecommendationEngine {
 
     // Add some trending items for diversity
     const trending = await this.getTrendingRecommendations(slot, 3);
-    recommendations.push(...trending.map((rec, i) => ({
-      ...rec,
-      position: recommendations.length + i,
-    })));
+    recommendations.push(
+      ...trending.map((rec, i) => ({
+        ...rec,
+        position: recommendations.length + i,
+      }))
+    );
 
     return recommendations.slice(0, limit);
   }
@@ -489,8 +512,8 @@ export class SmartRecommendationEngine {
       id: `rec-trend-${Date.now()}-${i}`,
       type: 'product' as const,
       itemId: `trending-${i}`,
-      score: 0.9 - (i * 0.05),
-      confidence: 0.80,
+      score: 0.9 - i * 0.05,
+      confidence: 0.8,
       reason: {
         type: 'trending' as const,
         explanation: 'Popular this week',
@@ -499,7 +522,7 @@ export class SmartRecommendationEngine {
         title: `Trending Artisan Product ${i + 1}`,
         description: 'Loved by customers',
         imageUrl: `/images/trending-${i}.jpg`,
-        price: 2000 + (i * 800),
+        price: 2000 + i * 800,
         rating: 4.8,
       },
       position: i,
@@ -512,7 +535,7 @@ export class SmartRecommendationEngine {
    */
   async getUserProfile(userId: string): Promise<UserProfile> {
     let profile = this.userProfiles.get(userId);
-    
+
     if (!profile) {
       profile = {
         userId,
@@ -562,7 +585,8 @@ export class SmartRecommendationEngine {
     // Update category preference
     if (params.itemData.category) {
       const currentScore = profile.preferences.categories.get(params.itemData.category) || 0;
-      const increment = params.action === 'purchase' ? 0.5 : params.action === 'favorite' ? 0.3 : 0.1;
+      const increment =
+        params.action === 'purchase' ? 0.5 : params.action === 'favorite' ? 0.3 : 0.1;
       profile.preferences.categories.set(params.itemData.category, currentScore + increment);
     }
 
@@ -575,13 +599,16 @@ export class SmartRecommendationEngine {
 
     // Update price range
     if (params.itemData.price) {
-      const prices = [
-        profile.preferences.priceRange.average,
-        params.itemData.price,
-      ];
+      const prices = [profile.preferences.priceRange.average, params.itemData.price];
       profile.preferences.priceRange.average = prices.reduce((a, b) => a + b) / prices.length;
-      profile.preferences.priceRange.min = Math.min(profile.preferences.priceRange.min, params.itemData.price);
-      profile.preferences.priceRange.max = Math.max(profile.preferences.priceRange.max, params.itemData.price);
+      profile.preferences.priceRange.min = Math.min(
+        profile.preferences.priceRange.min,
+        params.itemData.price
+      );
+      profile.preferences.priceRange.max = Math.max(
+        profile.preferences.priceRange.max,
+        params.itemData.price
+      );
     }
 
     // Update material preference
@@ -613,7 +640,7 @@ export class SmartRecommendationEngine {
     };
 
     let trending = this.trendingItems.get(params.itemId);
-    
+
     if (!trending) {
       trending = {
         itemId: params.itemId,
@@ -652,11 +679,11 @@ export class SmartRecommendationEngine {
     }
 
     // Calculate trend score
-    trending.metrics.trendScore = 
-      (trending.metrics.viewCount * 0.2) +
-      (trending.metrics.addToCartCount * 0.3) +
-      (trending.metrics.purchaseCount * 0.4) +
-      (trending.metrics.shareCount * 0.1);
+    trending.metrics.trendScore =
+      trending.metrics.viewCount * 0.2 +
+      trending.metrics.addToCartCount * 0.3 +
+      trending.metrics.purchaseCount * 0.4 +
+      trending.metrics.shareCount * 0.1;
 
     // Normalize to 0-1
     trending.metrics.trendScore = Math.min(trending.metrics.trendScore / 100, 1);
@@ -673,7 +700,7 @@ export class SmartRecommendationEngine {
     const conversions = 456;
     const revenue = 1234500;
 
-    const byStrategy = Array.from(this.strategies.values()).map(strategy => ({
+    const byStrategy = Array.from(this.strategies.values()).map((strategy) => ({
       strategyId: strategy.id,
       strategyName: strategy.name,
       recommendations: Math.floor(totalRecommendations * strategy.config.weight),
@@ -690,7 +717,7 @@ export class SmartRecommendationEngine {
       impressions: Math.floor(totalRecommendations * (0.4 - i * 0.08)),
       clicks: Math.floor(clicks * (0.35 - i * 0.07)),
       conversions: Math.floor(conversions * (0.3 - i * 0.06)),
-      ctr: 0.14 - (i * 0.02),
+      ctr: 0.14 - i * 0.02,
     }));
 
     return {
@@ -705,9 +732,30 @@ export class SmartRecommendationEngine {
       byStrategy,
       bySlot,
       topRecommendedItems: [
-        { itemId: 'prod-1', title: 'Handwoven Silk Saree', recommendations: 1250, clicks: 180, conversions: 45, revenue: 382500 },
-        { itemId: 'prod-2', title: 'Blue Pottery Bowl', recommendations: 980, clicks: 145, conversions: 38, revenue: 45600 },
-        { itemId: 'prod-3', title: 'Pashmina Shawl', recommendations: 875, clicks: 132, conversions: 35, revenue: 192500 },
+        {
+          itemId: 'prod-1',
+          title: 'Handwoven Silk Saree',
+          recommendations: 1250,
+          clicks: 180,
+          conversions: 45,
+          revenue: 382500,
+        },
+        {
+          itemId: 'prod-2',
+          title: 'Blue Pottery Bowl',
+          recommendations: 980,
+          clicks: 145,
+          conversions: 38,
+          revenue: 45600,
+        },
+        {
+          itemId: 'prod-3',
+          title: 'Pashmina Shawl',
+          recommendations: 875,
+          clicks: 132,
+          conversions: 35,
+          revenue: 192500,
+        },
       ],
     };
   }
@@ -738,7 +786,7 @@ export class SmartRecommendationEngine {
       id: `rec-artisan-${Date.now()}-${i}`,
       type: 'artisan' as const,
       itemId: `artisan-sim-${artisanId}-${i}`,
-      score: 0.9 - (i * 0.1),
+      score: 0.9 - i * 0.1,
       confidence: 0.83,
       reason: {
         type: 'similar_to_viewed' as const,

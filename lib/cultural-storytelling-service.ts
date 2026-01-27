@@ -1,12 +1,12 @@
 /**
  * Cultural Storytelling Service
- * 
+ *
  * Automated storyteller v2 that generates:
  * - SEO-optimized product titles and descriptions
  * - Authentic craft stories with cultural context
  * - Artisan profile narratives
  * - Social media captions
- * 
+ *
  * Supports 12+ Indian languages with cultural authenticity
  */
 
@@ -29,29 +29,29 @@ export interface GeneratedStory {
   seoTitle: string;
   metaDescription: string;
   keywords: string[];
-  
+
   // Product Content
   productTitle: string;
   productDescription: string;
   craftStory: string;
-  
+
   // Artisan Content
   artisanStory: string;
   artisanProfile: string;
-  
+
   // Social Media
   instagramCaption: string;
   twitterCaption: string;
-  
+
   // Multi-language Support
   translations: {
     [languageCode: string]: {
       productTitle: string;
       productDescription: string;
       craftStory: string;
-    }
+    };
   };
-  
+
   // Metadata
   culturalContext: string[];
   relatedTraditions: string[];
@@ -69,10 +69,21 @@ export interface StoryGenerationOptions {
 
 export class CulturalStorytellingService {
   private culturalDB: CulturalHeritageDatabase;
-  
+
   // Supported languages
   private readonly SUPPORTED_LANGUAGES = [
-    'en', 'hi', 'bn', 'te', 'mr', 'ta', 'gu', 'kn', 'ml', 'pa', 'or', 'as'
+    'en',
+    'hi',
+    'bn',
+    'te',
+    'mr',
+    'ta',
+    'gu',
+    'kn',
+    'ml',
+    'pa',
+    'or',
+    'as',
   ];
 
   constructor() {
@@ -91,33 +102,33 @@ export class CulturalStorytellingService {
       seoOptimize = true,
       includeCulturalContext = true,
       tone = 'authentic',
-      length = 'medium'
+      length = 'medium',
     } = options;
 
     // Get cultural context from database
     const culturalInfo = await this.culturalDB.getCraftInfo(input.craftType, input.region);
-    
+
     // Generate primary English content
     const primaryContent = await this.generatePrimaryContent(input, culturalInfo, tone, length);
-    
+
     // Generate SEO content if requested
-    const seoContent = seoOptimize 
+    const seoContent = seoOptimize
       ? await this.generateSEOContent(input, culturalInfo)
       : this.getDefaultSEO(input);
-    
+
     // Generate artisan content
     const artisanContent = await this.generateArtisanContent(input, culturalInfo);
-    
+
     // Generate social media content
     const socialContent = await this.generateSocialMediaContent(input, culturalInfo);
-    
+
     // Generate translations
     const translations = await this.generateTranslations(
       primaryContent,
       targetLanguages,
       culturalInfo
     );
-    
+
     // Get cultural context
     const culturalContext = includeCulturalContext
       ? await this.extractCulturalContext(culturalInfo)
@@ -132,7 +143,7 @@ export class CulturalStorytellingService {
       culturalContext,
       relatedTraditions: culturalInfo.relatedCrafts || [],
       giTagInfo: culturalInfo.giTag,
-      unescoInfo: culturalInfo.unescoStatus
+      unescoInfo: culturalInfo.unescoStatus,
     };
   }
 
@@ -147,12 +158,12 @@ export class CulturalStorytellingService {
   ) {
     // In production, this would use AI models (Gemini/OpenAI)
     // For now, using template-based generation with cultural authenticity
-    
+
     const craftName = culturalInfo.name || input.craftType;
     const region = input.region;
     const materials = input.materials?.join(', ') || 'traditional materials';
     const techniques = input.techniques?.join(', ') || 'time-honored techniques';
-    
+
     const productTitle = this.generateProductTitle(input, culturalInfo);
     const productDescription = this.generateProductDescription(input, culturalInfo, length);
     const craftStory = this.generateCraftStory(input, culturalInfo, tone, length);
@@ -160,7 +171,7 @@ export class CulturalStorytellingService {
     return {
       productTitle,
       productDescription,
-      craftStory
+      craftStory,
     };
   }
 
@@ -170,13 +181,13 @@ export class CulturalStorytellingService {
   private async generateSEOContent(input: ProductStoryInput, culturalInfo: any) {
     const craftName = culturalInfo.name || input.craftType;
     const region = input.region;
-    
+
     // Generate SEO title (55-60 characters optimal)
     const seoTitle = `Authentic ${craftName} from ${region} | Handcrafted ${input.productName || 'Art'}`;
-    
+
     // Generate meta description (150-160 characters optimal)
     const metaDescription = `Discover genuine ${craftName} crafted by skilled artisans in ${region}. ${culturalInfo.shortDescription || 'Traditional Indian handicraft with centuries of heritage'}. Shop authentic handmade products.`;
-    
+
     // Generate keywords
     const keywords = [
       craftName.toLowerCase(),
@@ -184,14 +195,14 @@ export class CulturalStorytellingService {
       'handmade',
       'artisan made',
       'traditional indian crafts',
-      ...(input.materials || []).map(m => m.toLowerCase()),
-      ...(culturalInfo.keywords || [])
+      ...(input.materials || []).map((m) => m.toLowerCase()),
+      ...(culturalInfo.keywords || []),
     ];
 
     return {
       seoTitle: seoTitle.substring(0, 60),
       metaDescription: metaDescription.substring(0, 160),
-      keywords: [...new Set(keywords)] // Remove duplicates
+      keywords: [...new Set(keywords)], // Remove duplicates
     };
   }
 
@@ -202,14 +213,14 @@ export class CulturalStorytellingService {
     const artisanName = input.artisanName || 'Our skilled artisan';
     const experience = input.artisanExperience || 10;
     const craftName = culturalInfo.name || input.craftType;
-    
+
     const artisanStory = `${artisanName} has been practicing ${craftName} for ${experience} years, carrying forward a tradition passed down through generations. Each piece reflects their mastery of ${input.techniques?.join(' and ') || 'traditional techniques'} and deep understanding of ${input.region}'s cultural heritage.`;
-    
+
     const artisanProfile = `Master artisan specializing in ${craftName} from ${input.region}. ${experience}+ years of experience in traditional craftsmanship. Dedicated to preserving authentic techniques while creating contemporary pieces.`;
 
     return {
       artisanStory,
-      artisanProfile
+      artisanProfile,
     };
   }
 
@@ -219,19 +230,20 @@ export class CulturalStorytellingService {
   private async generateSocialMediaContent(input: ProductStoryInput, culturalInfo: any) {
     const craftName = culturalInfo.name || input.craftType;
     const region = input.region;
-    
-    const instagramCaption = `✨ Authentic ${craftName} from ${region} ✨\n\n` +
+
+    const instagramCaption =
+      `✨ Authentic ${craftName} from ${region} ✨\n\n` +
       `Handcrafted with love by skilled artisans, this piece embodies centuries of tradition. ` +
       `Each detail tells a story of cultural heritage and masterful craftsmanship.\n\n` +
       `🛍️ Shop now and support traditional artisans\n` +
       `🌍 Preserving heritage, one craft at a time\n\n` +
       `#${craftName.replace(/\s/g, '')} #IndianHandicrafts #Handmade #ArtisanMade #${region.replace(/\s/g, '')} #TraditionalCraft #SupportArtisans #CulturalHeritage`;
-    
+
     const twitterCaption = `Discover authentic ${craftName} from ${region}! Handcrafted by skilled artisans, preserving centuries of tradition. Support traditional craftsmanship 🇮🇳✨ #Handmade #IndianCrafts`;
 
     return {
       instagramCaption,
-      twitterCaption
+      twitterCaption,
     };
   }
 
@@ -241,7 +253,7 @@ export class CulturalStorytellingService {
   private generateProductTitle(input: ProductStoryInput, culturalInfo: any): string {
     const craftName = culturalInfo.name || input.craftType;
     const productName = input.productName || 'Handcrafted Art';
-    
+
     return `${productName} - Authentic ${craftName} from ${input.region}`;
   }
 
@@ -256,25 +268,30 @@ export class CulturalStorytellingService {
     const craftName = culturalInfo.name || input.craftType;
     const materials = input.materials?.join(', ') || 'traditional materials';
     const techniques = input.techniques?.join(', ') || 'time-honored techniques';
-    
+
     const short = `Handcrafted ${craftName} from ${input.region}, made with ${materials} using ${techniques}.`;
-    
-    const medium = `This exquisite piece showcases the authentic artistry of ${craftName} from ${input.region}. ` +
+
+    const medium =
+      `This exquisite piece showcases the authentic artistry of ${craftName} from ${input.region}. ` +
       `Crafted with ${materials} using ${techniques}, each item reflects the skill and dedication of master artisans. ` +
       `${culturalInfo.shortDescription || 'A beautiful example of traditional Indian craftsmanship.'}`;
-    
-    const long = `Discover the timeless beauty of authentic ${craftName} from ${input.region}. ` +
+
+    const long =
+      `Discover the timeless beauty of authentic ${craftName} from ${input.region}. ` +
       `This handcrafted masterpiece is created using ${materials} and traditional ${techniques} ` +
       `that have been passed down through generations. ` +
       `${culturalInfo.description || 'Each piece is a testament to the rich cultural heritage of India.'}\n\n` +
       `Our artisans pour their heart and soul into every creation, ensuring that you receive not just a product, ` +
       `but a piece of living history. The intricate details and authentic craftsmanship make each item unique, ` +
       `carrying forward the legacy of traditional Indian artistry.`;
-    
+
     switch (length) {
-      case 'short': return short;
-      case 'long': return long;
-      default: return medium;
+      case 'short':
+        return short;
+      case 'long':
+        return long;
+      default:
+        return medium;
     }
   }
 
@@ -290,14 +307,15 @@ export class CulturalStorytellingService {
     const craftName = culturalInfo.name || input.craftType;
     const region = input.region;
     const history = culturalInfo.history || `${craftName} has a rich history spanning centuries`;
-    
-    const story = `${history}. Originating from ${region}, this traditional craft represents ` +
+
+    const story =
+      `${history}. Originating from ${region}, this traditional craft represents ` +
       `the artistic excellence and cultural wisdom of generations of skilled artisans. ` +
       `${culturalInfo.culturalSignificance || 'Each piece carries deep cultural meaning and artistic value.'}\n\n` +
       `The creation process involves ${input.techniques?.join(', ') || 'traditional techniques'} ` +
       `that require years of practice to master. Using ${input.materials?.join(', ') || 'natural materials'}, ` +
       `artisans create pieces that are both functional and beautiful, embodying the spirit of Indian craftsmanship.`;
-    
+
     return story;
   }
 
@@ -310,7 +328,7 @@ export class CulturalStorytellingService {
     culturalInfo: any
   ) {
     const translations: any = {};
-    
+
     // In production, this would use translation APIs
     // For now, using placeholders
     for (const lang of targetLanguages) {
@@ -318,11 +336,11 @@ export class CulturalStorytellingService {
         translations[lang] = {
           productTitle: `[${lang.toUpperCase()}] ${primaryContent.productTitle}`,
           productDescription: `[${lang.toUpperCase()}] ${primaryContent.productDescription}`,
-          craftStory: `[${lang.toUpperCase()}] ${primaryContent.craftStory}`
+          craftStory: `[${lang.toUpperCase()}] ${primaryContent.craftStory}`,
         };
       }
     }
-    
+
     return translations;
   }
 
@@ -331,13 +349,14 @@ export class CulturalStorytellingService {
    */
   private async extractCulturalContext(culturalInfo: any): Promise<string[]> {
     const context = [];
-    
+
     if (culturalInfo.origin) context.push(`Origin: ${culturalInfo.origin}`);
     if (culturalInfo.period) context.push(`Historical Period: ${culturalInfo.period}`);
     if (culturalInfo.culturalSignificance) context.push(culturalInfo.culturalSignificance);
-    if (culturalInfo.traditionalUse) context.push(`Traditional Use: ${culturalInfo.traditionalUse}`);
+    if (culturalInfo.traditionalUse)
+      context.push(`Traditional Use: ${culturalInfo.traditionalUse}`);
     if (culturalInfo.symbolism) context.push(`Symbolism: ${culturalInfo.symbolism}`);
-    
+
     return context;
   }
 
@@ -348,7 +367,7 @@ export class CulturalStorytellingService {
     return {
       seoTitle: `${input.productName || input.craftType} from ${input.region}`,
       metaDescription: `Authentic handcrafted ${input.craftType} from ${input.region}`,
-      keywords: [input.craftType.toLowerCase(), input.region.toLowerCase(), 'handmade']
+      keywords: [input.craftType.toLowerCase(), input.region.toLowerCase(), 'handmade'],
     };
   }
 
@@ -360,9 +379,9 @@ export class CulturalStorytellingService {
     options: StoryGenerationOptions = {}
   ): Promise<GeneratedStory[]> {
     const stories = await Promise.all(
-      products.map(product => this.generateProductStory(product, options))
+      products.map((product) => this.generateProductStory(product, options))
     );
-    
+
     return stories;
   }
 
@@ -379,9 +398,9 @@ export class CulturalStorytellingService {
     const mergedInput: ProductStoryInput = {
       craftType: updates.craftType || '',
       region: updates.region || '',
-      ...updates
+      ...updates,
     };
-    
+
     return this.generateProductStory(mergedInput, options);
   }
 }

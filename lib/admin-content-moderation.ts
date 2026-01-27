@@ -1,6 +1,6 @@
 /**
  * Admin Content Moderation System
- * 
+ *
  * Comprehensive content moderation tools:
  * - Product review moderation
  * - User-generated content moderation
@@ -14,7 +14,14 @@ export interface ContentReport {
   reportedBy: string;
   contentType: 'product' | 'review' | 'comment' | 'message' | 'profile' | 'image';
   contentId: string;
-  reportReason: 'spam' | 'inappropriate' | 'fraud' | 'copyright' | 'harassment' | 'misinformation' | 'other';
+  reportReason:
+    | 'spam'
+    | 'inappropriate'
+    | 'fraud'
+    | 'copyright'
+    | 'harassment'
+    | 'misinformation'
+    | 'other';
   description?: string;
   status: 'pending' | 'reviewing' | 'resolved' | 'dismissed';
   priority: 'low' | 'medium' | 'high' | 'critical';
@@ -229,17 +236,16 @@ export class AdminContentModerationSystem {
   }> {
     const violations: { ruleId: string; ruleName: string; severity: string }[] = [];
 
-    const applicableRules = Array.from(this.moderationRules.values())
-      .filter(r => r.active && r.contentTypes.includes(contentType));
+    const applicableRules = Array.from(this.moderationRules.values()).filter(
+      (r) => r.active && r.contentTypes.includes(contentType)
+    );
 
     for (const rule of applicableRules) {
       let violated = false;
 
       if (rule.type === 'keyword' && content?.text && rule.rule.keywords) {
         const textLower = content.text.toLowerCase();
-        violated = rule.rule.keywords.some(keyword => 
-          textLower.includes(keyword.toLowerCase())
-        );
+        violated = rule.rule.keywords.some((keyword) => textLower.includes(keyword.toLowerCase()));
       } else if (rule.type === 'pattern' && content?.text && rule.rule.pattern) {
         const regex = new RegExp(rule.rule.pattern, 'i');
         violated = regex.test(content.text);
@@ -247,7 +253,7 @@ export class AdminContentModerationSystem {
         // Simple sentiment check (in production, would use ML)
         const negativeWords = ['hate', 'terrible', 'awful', 'scam', 'fraud'];
         const textLower = content.text.toLowerCase();
-        const negativeCount = negativeWords.filter(word => textLower.includes(word)).length;
+        const negativeCount = negativeWords.filter((word) => textLower.includes(word)).length;
         violated = negativeCount >= (rule.rule.threshold || 2);
       }
 
@@ -370,10 +376,7 @@ export class AdminContentModerationSystem {
   /**
    * Approve content
    */
-  async approveContent(
-    contentId: string,
-    moderatorId: string
-  ): Promise<ModeratedContent> {
+  async approveContent(contentId: string, moderatorId: string): Promise<ModeratedContent> {
     const content = this.moderatedContent.get(contentId);
     if (!content) {
       throw new Error('Content not found');
@@ -417,7 +420,7 @@ export class AdminContentModerationSystem {
    */
   async getUserWarnings(userId: string): Promise<UserWarning[]> {
     return Array.from(this.userWarnings.values())
-      .filter(w => w.userId === userId)
+      .filter((w) => w.userId === userId)
       .sort((a, b) => b.issuedAt.getTime() - a.issuedAt.getTime());
   }
 
@@ -452,14 +455,14 @@ export class AdminContentModerationSystem {
     let items = Array.from(this.moderatedContent.values());
 
     if (filters.contentType) {
-      items = items.filter(i => filters.contentType!.includes(i.contentType));
+      items = items.filter((i) => filters.contentType!.includes(i.contentType));
     }
 
     if (filters.status) {
-      items = items.filter(i => filters.status!.includes(i.status));
+      items = items.filter((i) => filters.status!.includes(i.status));
     }
 
-    return items.map(i => i.id);
+    return items.map((i) => i.id);
   }
 
   /**
@@ -467,7 +470,7 @@ export class AdminContentModerationSystem {
    */
   async getPendingReports(limit: number = 50): Promise<ContentReport[]> {
     return Array.from(this.contentReports.values())
-      .filter(r => r.status === 'pending' || r.status === 'reviewing')
+      .filter((r) => r.status === 'pending' || r.status === 'reviewing')
       .sort((a, b) => {
         const priorityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
         return priorityOrder[b.priority] - priorityOrder[a.priority];
@@ -508,54 +511,62 @@ export class AdminContentModerationSystem {
     const periodMs = period === 'day' ? 86400000 : period === 'week' ? 604800000 : 2592000000;
     const cutoff = new Date(now.getTime() - periodMs);
 
-    const reports = Array.from(this.contentReports.values())
-      .filter(r => r.createdAt >= cutoff);
+    const reports = Array.from(this.contentReports.values()).filter((r) => r.createdAt >= cutoff);
 
-    const byReason = reports.reduce((acc, r) => {
-      acc[r.reportReason] = (acc[r.reportReason] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const byReason = reports.reduce(
+      (acc, r) => {
+        acc[r.reportReason] = (acc[r.reportReason] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const byType = reports.reduce((acc, r) => {
-      acc[r.contentType] = (acc[r.contentType] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const byType = reports.reduce(
+      (acc, r) => {
+        acc[r.contentType] = (acc[r.contentType] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const moderated = Array.from(this.moderatedContent.values())
-      .filter(m => m.moderatedAt && m.moderatedAt >= cutoff);
+    const moderated = Array.from(this.moderatedContent.values()).filter(
+      (m) => m.moderatedAt && m.moderatedAt >= cutoff
+    );
 
     const rules = Array.from(this.moderationRules.values());
     const topRules = rules
-      .map(r => ({ name: r.name, triggered: r.triggeredCount }))
+      .map((r) => ({ name: r.name, triggered: r.triggeredCount }))
       .sort((a, b) => b.triggered - a.triggered)
       .slice(0, 5);
 
-    const warnings = Array.from(this.userWarnings.values())
-      .filter(w => w.issuedAt >= cutoff);
+    const warnings = Array.from(this.userWarnings.values()).filter((w) => w.issuedAt >= cutoff);
 
-    const warnBySeverity = warnings.reduce((acc, w) => {
-      acc[w.severity] = (acc[w.severity] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const warnBySeverity = warnings.reduce(
+      (acc, w) => {
+        acc[w.severity] = (acc[w.severity] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     return {
       reports: {
         total: reports.length,
-        pending: reports.filter(r => r.status === 'pending').length,
-        resolved: reports.filter(r => r.status === 'resolved').length,
+        pending: reports.filter((r) => r.status === 'pending').length,
+        resolved: reports.filter((r) => r.status === 'resolved').length,
         byReason,
         byType,
       },
       moderation: {
         totalModerated: moderated.length,
-        approved: moderated.filter(m => m.status === 'approved').length,
-        rejected: moderated.filter(m => m.status === 'rejected').length,
-        flagged: moderated.filter(m => m.status === 'flagged').length,
-        quarantined: moderated.filter(m => m.status === 'quarantined').length,
+        approved: moderated.filter((m) => m.status === 'approved').length,
+        rejected: moderated.filter((m) => m.status === 'rejected').length,
+        flagged: moderated.filter((m) => m.status === 'flagged').length,
+        quarantined: moderated.filter((m) => m.status === 'quarantined').length,
       },
       rules: {
         totalRules: rules.length,
-        activeRules: rules.filter(r => r.active).length,
+        activeRules: rules.filter((r) => r.active).length,
         totalTriggered: rules.reduce((sum, r) => sum + r.triggeredCount, 0),
         topRules,
       },

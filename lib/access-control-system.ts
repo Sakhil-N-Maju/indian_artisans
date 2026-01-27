@@ -1,6 +1,6 @@
 /**
  * Access Control System
- * 
+ *
  * Role-based access control and permissions
  */
 
@@ -40,7 +40,11 @@ export class AccessControlSystem {
     this.initializeDefaultRoles();
   }
 
-  async createRole(data: { name: string; permissions: string[]; inherits?: string[] }): Promise<Role> {
+  async createRole(data: {
+    name: string;
+    permissions: string[];
+    inherits?: string[];
+  }): Promise<Role> {
     const role: Role = {
       id: `role-${Date.now()}-${Math.random().toString(36).substring(7)}`,
       name: data.name,
@@ -67,12 +71,12 @@ export class AccessControlSystem {
     for (const roleId of userRoleIds) {
       const role = this.roles.get(roleId);
       if (role) {
-        role.permissions.forEach(p => permissions.add(p));
+        role.permissions.forEach((p) => permissions.add(p));
         if (role.inherits) {
           for (const inheritedId of role.inherits) {
             const inheritedRole = this.roles.get(inheritedId);
             if (inheritedRole) {
-              inheritedRole.permissions.forEach(p => permissions.add(p));
+              inheritedRole.permissions.forEach((p) => permissions.add(p));
             }
           }
         }
@@ -114,7 +118,7 @@ export class AccessControlSystem {
   async getAccessLogs(userId?: string, limit: number = 100): Promise<AccessLog[]> {
     let logs = Array.from(this.accessLogs.values());
     if (userId) {
-      logs = logs.filter(l => l.userId === userId);
+      logs = logs.filter((l) => l.userId === userId);
     }
     return logs.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime()).slice(0, limit);
   }
@@ -127,7 +131,7 @@ export class AccessControlSystem {
     denialRate: number;
   }> {
     const logs = Array.from(this.accessLogs.values());
-    const denied = logs.filter(l => !l.granted).length;
+    const denied = logs.filter((l) => !l.granted).length;
 
     return {
       totalRoles: this.roles.size,

@@ -1,6 +1,6 @@
 /**
  * AR/VR Product Visualization System
- * 
+ *
  * Enables immersive product experiences:
  * - AR try-on and placement
  * - 3D product models
@@ -12,7 +12,7 @@
 
 export interface Product3DModel {
   productId: string;
-  
+
   // Model Files
   models: {
     glb?: string; // Standard 3D format
@@ -20,7 +20,7 @@ export interface Product3DModel {
     fbx?: string; // High-quality format
     obj?: string; // Legacy format
   };
-  
+
   // Textures
   textures: {
     diffuse?: string;
@@ -29,7 +29,7 @@ export interface Product3DModel {
     metallic?: string;
     ambient?: string;
   };
-  
+
   // Metadata
   dimensions: {
     width: number;
@@ -37,7 +37,7 @@ export interface Product3DModel {
     depth: number;
     unit: 'cm' | 'inch' | 'meter';
   };
-  
+
   // Settings
   settings: {
     scale: number;
@@ -47,14 +47,14 @@ export interface Product3DModel {
     enableShadows: boolean;
     enableReflections: boolean;
   };
-  
+
   // Quality levels
   qualityLevels: {
     low: string; // Mobile
     medium: string; // Desktop
     high: string; // VR
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -63,17 +63,17 @@ export interface ARExperience {
   id: string;
   productId: string;
   userId: string;
-  
+
   // Type
   type: 'placement' | 'try-on' | 'visualization';
-  
+
   // Environment
   environment: {
     surfaceDetection: boolean;
     lightEstimation: boolean;
     planeTracking: boolean;
   };
-  
+
   // Interaction
   interactions: {
     canRotate: boolean;
@@ -81,7 +81,7 @@ export interface ARExperience {
     canMove: boolean;
     canSnapshot: boolean;
   };
-  
+
   // Session data
   session: {
     duration: number; // seconds
@@ -91,11 +91,11 @@ export interface ARExperience {
     }[];
     placementAttempts: number;
   };
-  
+
   // Analytics
   deviceType: 'mobile' | 'tablet' | 'ar_headset';
   platform: 'iOS' | 'Android' | 'WebAR';
-  
+
   createdAt: Date;
 }
 
@@ -103,7 +103,7 @@ export interface VirtualShowroom {
   id: string;
   name: string;
   description: string;
-  
+
   // Theme
   theme: {
     environment: 'gallery' | 'workshop' | 'store' | 'museum' | 'home';
@@ -111,13 +111,13 @@ export interface VirtualShowroom {
     floorMaterial: string;
     wallMaterial: string;
   };
-  
+
   // Layout
   layout: {
     type: 'grid' | 'pathway' | 'circular' | 'custom';
     capacity: number; // Max products
   };
-  
+
   // Products
   products: {
     productId: string;
@@ -126,14 +126,14 @@ export interface VirtualShowroom {
     scale: number;
     displayType: 'pedestal' | 'wall' | 'floating' | 'table';
   }[];
-  
+
   // Interactive Elements
   interactiveElements: {
     type: 'info_panel' | 'video_screen' | 'audio_guide' | 'teleport_point';
     position: { x: number; y: number; z: number };
     content: string;
   }[];
-  
+
   // Navigation
   navigation: {
     enableTeleport: boolean;
@@ -144,7 +144,7 @@ export interface VirtualShowroom {
       position: { x: number; y: number; z: number };
     }[];
   };
-  
+
   // Stats
   stats: {
     totalVisits: number;
@@ -152,7 +152,7 @@ export interface VirtualShowroom {
     uniqueVisitors: number;
     productInteractions: number;
   };
-  
+
   isPublished: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -162,20 +162,20 @@ export interface VRSession {
   id: string;
   userId: string;
   showroomId: string;
-  
+
   // Device
   device: {
     type: 'vr_headset' | 'desktop_vr' | 'mobile_vr';
     model: string;
   };
-  
+
   // Session data
   session: {
     startTime: Date;
     endTime?: Date;
     duration: number;
   };
-  
+
   // Interactions
   interactions: {
     productsViewed: string[];
@@ -183,7 +183,7 @@ export interface VRSession {
     waypointsVisited: string[];
     snapshotsTaken: number;
   };
-  
+
   // Analytics
   analytics: {
     averageGazeTime: number; // seconds per product
@@ -194,14 +194,14 @@ export interface VRSession {
 
 export interface Product360View {
   productId: string;
-  
+
   // Images
   frames: {
     angle: number;
     imageUrl: string;
     thumbnail: string;
   }[];
-  
+
   // Configuration
   config: {
     totalFrames: number;
@@ -212,7 +212,7 @@ export interface Product360View {
     enableZoom: boolean;
     maxZoom: number;
   };
-  
+
   // Hotspots (interactive points)
   hotspots: {
     angle: number;
@@ -279,7 +279,10 @@ export class ARVRVisualizationSystem {
   /**
    * Get 3D model
    */
-  async get3DModel(productId: string, quality: 'low' | 'medium' | 'high' = 'medium'): Promise<Product3DModel | null> {
+  async get3DModel(
+    productId: string,
+    quality: 'low' | 'medium' | 'high' = 'medium'
+  ): Promise<Product3DModel | null> {
     return this.models.get(productId) || null;
   }
 
@@ -451,15 +454,22 @@ export class ARVRVisualizationSystem {
   /**
    * Track product interaction in VR
    */
-  async trackVRInteraction(sessionId: string, productId: string, interactionType: 'view' | 'interact'): Promise<void> {
+  async trackVRInteraction(
+    sessionId: string,
+    productId: string,
+    interactionType: 'view' | 'interact'
+  ): Promise<void> {
     const session = this.vrSessions.get(sessionId);
     if (!session) return;
 
     if (interactionType === 'view' && !session.interactions.productsViewed.includes(productId)) {
       session.interactions.productsViewed.push(productId);
-    } else if (interactionType === 'interact' && !session.interactions.productsInteracted.includes(productId)) {
+    } else if (
+      interactionType === 'interact' &&
+      !session.interactions.productsInteracted.includes(productId)
+    ) {
       session.interactions.productsInteracted.push(productId);
-      
+
       // Update showroom stats
       const showroom = this.virtualShowrooms.get(session.showroomId);
       if (showroom) {
@@ -476,12 +486,15 @@ export class ARVRVisualizationSystem {
     if (!session) return;
 
     session.session.endTime = new Date();
-    session.session.duration = (session.session.endTime.getTime() - session.session.startTime.getTime()) / 1000;
+    session.session.duration =
+      (session.session.endTime.getTime() - session.session.startTime.getTime()) / 1000;
 
     // Update showroom stats
     const showroom = this.virtualShowrooms.get(session.showroomId);
     if (showroom) {
-      const totalDuration = showroom.stats.averageDuration * (showroom.stats.totalVisits - 1) + session.session.duration;
+      const totalDuration =
+        showroom.stats.averageDuration * (showroom.stats.totalVisits - 1) +
+        session.session.duration;
       showroom.stats.averageDuration = totalDuration / showroom.stats.totalVisits;
     }
   }
@@ -535,21 +548,29 @@ export class ARVRVisualizationSystem {
     const total3DModels = models.length;
     const totalARExperiences = arExperiences.length;
     const totalShowrooms = showrooms.length;
-    const publishedShowrooms = showrooms.filter(s => s.isPublished).length;
+    const publishedShowrooms = showrooms.filter((s) => s.isPublished).length;
     const totalVRSessions = vrSessions.length;
     const total360Views = view360s.length;
 
-    const averageARDuration = arExperiences.length > 0
-      ? arExperiences.reduce((sum, exp) => sum + exp.session.duration, 0) / arExperiences.length
-      : 0;
+    const averageARDuration =
+      arExperiences.length > 0
+        ? arExperiences.reduce((sum, exp) => sum + exp.session.duration, 0) / arExperiences.length
+        : 0;
 
-    const totalARSnapshots = arExperiences.reduce((sum, exp) => sum + exp.session.snapshots.length, 0);
+    const totalARSnapshots = arExperiences.reduce(
+      (sum, exp) => sum + exp.session.snapshots.length,
+      0
+    );
 
-    const averageVRDuration = vrSessions.length > 0
-      ? vrSessions.reduce((sum, session) => sum + session.session.duration, 0) / vrSessions.length
-      : 0;
+    const averageVRDuration =
+      vrSessions.length > 0
+        ? vrSessions.reduce((sum, session) => sum + session.session.duration, 0) / vrSessions.length
+        : 0;
 
-    const totalShowroomVisits = showrooms.reduce((sum, showroom) => sum + showroom.stats.totalVisits, 0);
+    const totalShowroomVisits = showrooms.reduce(
+      (sum, showroom) => sum + showroom.stats.totalVisits,
+      0
+    );
 
     return {
       total3DModels,
@@ -568,16 +589,18 @@ export class ARVRVisualizationSystem {
   /**
    * Get popular products in AR/VR
    */
-  async getPopularProducts(limit: number = 10): Promise<{
-    productId: string;
-    arViews: number;
-    vrInteractions: number;
-    snapshots: number;
-  }[]> {
+  async getPopularProducts(limit: number = 10): Promise<
+    {
+      productId: string;
+      arViews: number;
+      vrInteractions: number;
+      snapshots: number;
+    }[]
+  > {
     const productStats = new Map<string, any>();
 
     // Count AR experiences
-    this.arExperiences.forEach(exp => {
+    this.arExperiences.forEach((exp) => {
       if (!productStats.has(exp.productId)) {
         productStats.set(exp.productId, {
           productId: exp.productId,
@@ -592,8 +615,8 @@ export class ARVRVisualizationSystem {
     });
 
     // Count VR interactions
-    this.vrSessions.forEach(session => {
-      session.interactions.productsInteracted.forEach(productId => {
+    this.vrSessions.forEach((session) => {
+      session.interactions.productsInteracted.forEach((productId) => {
         if (!productStats.has(productId)) {
           productStats.set(productId, {
             productId,
@@ -608,7 +631,7 @@ export class ARVRVisualizationSystem {
     });
 
     return Array.from(productStats.values())
-      .sort((a, b) => (b.arViews + b.vrInteractions) - (a.arViews + a.vrInteractions))
+      .sort((a, b) => b.arViews + b.vrInteractions - (a.arViews + a.vrInteractions))
       .slice(0, limit);
   }
 }

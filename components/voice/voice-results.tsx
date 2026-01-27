@@ -1,60 +1,68 @@
-"use client"
+'use client';
 
-import Link from "next/link"
-import { Volume2, RotateCcw, Heart, ShoppingCart } from "lucide-react"
-import { useState } from "react"
+import Link from 'next/link';
+import { Volume2, RotateCcw, Heart, ShoppingCart } from 'lucide-react';
+import { useState } from 'react';
 
 interface Product {
-  id: number
-  name: string
-  price: number
-  image: string
+  id: number;
+  name: string;
+  price: number;
+  image: string;
 }
 
 interface VoiceResultsProps {
-  products: Product[]
-  onReset: () => void
+  products: Product[];
+  onReset: () => void;
 }
 
 export function VoiceResults({ products, onReset }: VoiceResultsProps) {
-  const [wishlist, setWishlist] = useState<number[]>([])
+  const [wishlist, setWishlist] = useState<number[]>([]);
 
   const toggleWishlist = (id: number) => {
-    setWishlist((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]))
-  }
+    setWishlist((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
+  };
 
   return (
     <div className="min-h-screen px-4 py-12">
-      <div className="max-w-6xl mx-auto">
+      <div className="mx-auto max-w-6xl">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-4">
-            <Volume2 className="w-5 h-5 text-primary" />
-            <span className="text-sm font-semibold text-primary">Voice Discovery Results</span>
+        <div className="mb-12 text-center">
+          <div className="bg-primary/10 mb-4 inline-flex items-center gap-2 rounded-full px-4 py-2">
+            <Volume2 className="text-primary h-5 w-5" />
+            <span className="text-primary text-sm font-semibold">Voice Discovery Results</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-serif font-bold text-warm-charcoal mb-4">Perfect Matches Found</h1>
-          <p className="text-warm-charcoal/60 max-w-2xl mx-auto">
-            We found {products.length} products that match your description. Curated by AI to match your voice request.
+          <h1 className="text-warm-charcoal mb-4 font-serif text-4xl font-bold sm:text-5xl">
+            Perfect Matches Found
+          </h1>
+          <p className="text-warm-charcoal/60 mx-auto max-w-2xl">
+            We found {products.length} products that match your description. Curated by AI to match
+            your voice request.
           </p>
         </div>
 
         {/* Results Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
+        <div className="mb-12 grid gap-8 md:grid-cols-3">
           {products.map((product) => (
-            <div key={product.id} className="card-light hover:shadow-2xl transition-all duration-300">
-              <div className="relative h-64 rounded-lg overflow-hidden mb-4 bg-warm-sand">
+            <div
+              key={product.id}
+              className="card-light transition-all duration-300 hover:shadow-2xl"
+            >
+              <div className="bg-warm-sand relative mb-4 h-64 overflow-hidden rounded-lg">
                 <img
-                  src={product.image || "/placeholder.svg"}
+                  src={product.image || '/placeholder.svg'}
                   alt={product.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <button
                   onClick={() => toggleWishlist(product.id)}
-                  className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md hover:bg-warm-sand transition"
+                  className="hover:bg-warm-sand absolute top-4 right-4 rounded-full bg-white p-2 shadow-md transition"
                 >
                   <Heart
-                    className={`w-5 h-5 transition ${
-                      wishlist.includes(product.id) ? "fill-primary text-primary" : "text-warm-charcoal"
+                    className={`h-5 w-5 transition ${
+                      wishlist.includes(product.id)
+                        ? 'fill-primary text-primary'
+                        : 'text-warm-charcoal'
                     }`}
                   />
                 </button>
@@ -62,15 +70,17 @@ export function VoiceResults({ products, onReset }: VoiceResultsProps) {
 
               <div className="space-y-3">
                 <Link href={`/products/${product.id}`}>
-                  <h3 className="text-lg font-serif font-bold text-warm-charcoal hover:text-primary transition">
+                  <h3 className="text-warm-charcoal hover:text-primary font-serif text-lg font-bold transition">
                     {product.name}
                   </h3>
                 </Link>
 
-                <div className="text-2xl font-bold text-primary">₹{product.price.toLocaleString()}</div>
+                <div className="text-primary text-2xl font-bold">
+                  ₹{product.price.toLocaleString()}
+                </div>
 
-                <button className="w-full py-3 bg-primary text-white rounded-lg font-semibold hover:bg-warm-rust transition flex items-center justify-center gap-2">
-                  <ShoppingCart className="w-5 h-5" />
+                <button className="bg-primary hover:bg-warm-rust flex w-full items-center justify-center gap-2 rounded-lg py-3 font-semibold text-white transition">
+                  <ShoppingCart className="h-5 w-5" />
                   Add to Cart
                 </button>
               </div>
@@ -79,23 +89,23 @@ export function VoiceResults({ products, onReset }: VoiceResultsProps) {
         </div>
 
         {/* Refine Search or Explore */}
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid gap-6 md:grid-cols-2">
           <button
             onClick={onReset}
-            className="py-6 border-2 border-primary text-primary rounded-lg font-semibold hover:bg-primary hover:text-white transition flex items-center justify-center gap-2"
+            className="border-primary text-primary hover:bg-primary flex items-center justify-center gap-2 rounded-lg border-2 py-6 font-semibold transition hover:text-white"
           >
-            <RotateCcw className="w-5 h-5" />
+            <RotateCcw className="h-5 w-5" />
             Try Another Search
           </button>
 
           <Link
             href="/shop"
-            className="py-6 bg-primary text-white rounded-lg font-semibold hover:bg-warm-rust transition flex items-center justify-center gap-2"
+            className="bg-primary hover:bg-warm-rust flex items-center justify-center gap-2 rounded-lg py-6 font-semibold text-white transition"
           >
             <span>Explore Full Catalog</span>
           </Link>
         </div>
       </div>
     </div>
-  )
+  );
 }

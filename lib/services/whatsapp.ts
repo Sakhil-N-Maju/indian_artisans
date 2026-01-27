@@ -60,7 +60,7 @@ class WhatsAppService {
       return { success: true, messageId: response.data.messages[0].id };
     } catch (error: any) {
       console.error('WhatsApp send error:', error.response?.data || error.message);
-      
+
       // Store failed message
       await prisma.whatsAppMessage.create({
         data: {
@@ -156,7 +156,13 @@ class WhatsAppService {
   /**
    * Send shipment tracking update
    */
-  async sendShipmentUpdate(phone: string, orderId: string, trackingNumber: string, carrier: string, userId?: string) {
+  async sendShipmentUpdate(
+    phone: string,
+    orderId: string,
+    trackingNumber: string,
+    carrier: string,
+    userId?: string
+  ) {
     const message = `📦 Your order is on the way!\n\nTracking: ${trackingNumber}\nCarrier: ${carrier}\n\nTrack your package and see when it arrives.`;
     return this.sendTextMessage(phone, message, userId);
   }
@@ -172,7 +178,12 @@ class WhatsAppService {
   /**
    * Send product back in stock notification
    */
-  async sendBackInStockNotification(phone: string, productName: string, productUrl: string, userId?: string) {
+  async sendBackInStockNotification(
+    phone: string,
+    productName: string,
+    productUrl: string,
+    userId?: string
+  ) {
     const message = `🔔 Good news! "${productName}" is back in stock!\n\nShop now: ${productUrl}`;
     return this.sendTextMessage(phone, message, userId);
   }
@@ -180,7 +191,12 @@ class WhatsAppService {
   /**
    * Send workshop reminder
    */
-  async sendWorkshopReminder(phone: string, workshopTitle: string, startTime: Date, userId?: string) {
+  async sendWorkshopReminder(
+    phone: string,
+    workshopTitle: string,
+    startTime: Date,
+    userId?: string
+  ) {
     const message = `🎨 Workshop Reminder!\n\n"${workshopTitle}"\n\nStarts: ${startTime.toLocaleString()}\n\nSee you there!`;
     return this.sendTextMessage(phone, message, userId);
   }

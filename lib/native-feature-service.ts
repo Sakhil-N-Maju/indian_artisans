@@ -1,6 +1,6 @@
 /**
  * Native Feature Service
- * 
+ *
  * Handles native mobile device features:
  * - Biometric authentication (Face ID, Touch ID, fingerprint)
  * - Camera and gallery access
@@ -176,8 +176,9 @@ export class NativeFeatureService {
     verified: boolean;
     method?: BiometricAuth['type'];
   }> {
-    const auth = Array.from(this.biometricAuths.values())
-      .find(a => a.userId === userId && a.deviceId === deviceId && a.enrolled);
+    const auth = Array.from(this.biometricAuths.values()).find(
+      (a) => a.userId === userId && a.deviceId === deviceId && a.enrolled
+    );
 
     if (!auth) {
       return { verified: false };
@@ -226,12 +227,9 @@ export class NativeFeatureService {
   /**
    * Get user's camera captures
    */
-  async getUserCaptures(
-    userId: string,
-    type?: CameraCapture['type']
-  ): Promise<CameraCapture[]> {
+  async getUserCaptures(userId: string, type?: CameraCapture['type']): Promise<CameraCapture[]> {
     return Array.from(this.cameraCaptures.values())
-      .filter(c => c.userId === userId && (!type || c.type === type))
+      .filter((c) => c.userId === userId && (!type || c.type === type))
       .sort((a, b) => b.capturedAt.getTime() - a.capturedAt.getTime());
   }
 
@@ -274,12 +272,9 @@ export class NativeFeatureService {
   /**
    * Get user's location history
    */
-  async getLocationHistory(
-    userId: string,
-    limit: number = 100
-  ): Promise<LocationData[]> {
+  async getLocationHistory(userId: string, limit: number = 100): Promise<LocationData[]> {
     return Array.from(this.locationData.values())
-      .filter(l => l.userId === userId)
+      .filter((l) => l.userId === userId)
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
       .slice(0, limit);
   }
@@ -311,13 +306,8 @@ export class NativeFeatureService {
   /**
    * Check geofences
    */
-  private async checkGeofences(
-    userId: string,
-    latitude: number,
-    longitude: number
-  ): Promise<void> {
-    const activeGeofences = Array.from(this.geofences.values())
-      .filter(g => g.active);
+  private async checkGeofences(userId: string, latitude: number, longitude: number): Promise<void> {
+    const activeGeofences = Array.from(this.geofences.values()).filter((g) => g.active);
 
     for (const geofence of activeGeofences) {
       const distance = this.calculateDistance(
@@ -327,9 +317,8 @@ export class NativeFeatureService {
         geofence.longitude
       );
 
-      const wasInside = geofence.triggers
-        .filter(t => t.userId === userId)
-        .slice(-1)[0]?.event === 'enter';
+      const wasInside =
+        geofence.triggers.filter((t) => t.userId === userId).slice(-1)[0]?.event === 'enter';
 
       const isInside = distance <= geofence.radius;
 
@@ -354,12 +343,10 @@ export class NativeFeatureService {
   /**
    * Request contact access
    */
-  async requestContactAccess(
-    userId: string,
-    deviceId: string
-  ): Promise<ContactAccess> {
-    const existing = Array.from(this.contactAccess.values())
-      .find(c => c.userId === userId && c.deviceId === deviceId);
+  async requestContactAccess(userId: string, deviceId: string): Promise<ContactAccess> {
+    const existing = Array.from(this.contactAccess.values()).find(
+      (c) => c.userId === userId && c.deviceId === deviceId
+    );
 
     if (existing) {
       return existing;
@@ -381,13 +368,10 @@ export class NativeFeatureService {
   /**
    * Sync contacts
    */
-  async syncContacts(
-    userId: string,
-    deviceId: string,
-    contactCount: number
-  ): Promise<void> {
-    const access = Array.from(this.contactAccess.values())
-      .find(c => c.userId === userId && c.deviceId === deviceId);
+  async syncContacts(userId: string, deviceId: string, contactCount: number): Promise<void> {
+    const access = Array.from(this.contactAccess.values()).find(
+      (c) => c.userId === userId && c.deviceId === deviceId
+    );
 
     if (access && access.permissionGranted) {
       access.contactsShared = contactCount;
@@ -439,7 +423,7 @@ export class NativeFeatureService {
     endDate?: Date
   ): Promise<CalendarEvent[]> {
     return Array.from(this.calendarEvents.values())
-      .filter(e => {
+      .filter((e) => {
         if (e.userId !== userId) return false;
         if (startDate && e.endTime < startDate) return false;
         if (endDate && e.startTime > endDate) return false;
@@ -532,22 +516,18 @@ export class NativeFeatureService {
     nfcScans: number;
     qrCodeScans: number;
   }> {
-    const enrolledBiometrics = Array.from(this.biometricAuths.values())
-      .filter(b => b.enrolled);
+    const enrolledBiometrics = Array.from(this.biometricAuths.values()).filter((b) => b.enrolled);
 
     const totalAttempts = enrolledBiometrics.reduce(
       (sum, b) => sum + b.successfulAttempts + b.failedAttempts,
       0
     );
-    const successfulAttempts = enrolledBiometrics.reduce(
-      (sum, b) => sum + b.successfulAttempts,
-      0
-    );
+    const successfulAttempts = enrolledBiometrics.reduce((sum, b) => sum + b.successfulAttempts, 0);
 
     const activeLocations = new Set(
       Array.from(this.locationData.values())
-        .filter(l => l.timestamp > new Date(Date.now() - 3600000))
-        .map(l => l.userId)
+        .filter((l) => l.timestamp > new Date(Date.now() - 3600000))
+        .map((l) => l.userId)
     ).size;
 
     return {
@@ -558,11 +538,12 @@ export class NativeFeatureService {
         active: activeLocations,
         total: this.locationData.size,
       },
-      activeGeofences: Array.from(this.geofences.values()).filter(g => g.active).length,
-      contactPermissions: Array.from(this.contactAccess.values())
-        .filter(c => c.permissionGranted).length,
-      calendarEvents: Array.from(this.calendarEvents.values())
-        .filter(e => e.status === 'scheduled').length,
+      activeGeofences: Array.from(this.geofences.values()).filter((g) => g.active).length,
+      contactPermissions: Array.from(this.contactAccess.values()).filter((c) => c.permissionGranted)
+        .length,
+      calendarEvents: Array.from(this.calendarEvents.values()).filter(
+        (e) => e.status === 'scheduled'
+      ).length,
       nfcScans: this.nfcScans.size,
       qrCodeScans: this.qrCodeScans.size,
     };
@@ -571,12 +552,7 @@ export class NativeFeatureService {
   /**
    * Helper: Calculate distance between two coordinates (Haversine formula)
    */
-  private calculateDistance(
-    lat1: number,
-    lon1: number,
-    lat2: number,
-    lon2: number
-  ): number {
+  private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
     const R = 6371000; // Earth's radius in meters
     const dLat = this.toRadians(lat2 - lat1);
     const dLon = this.toRadians(lon2 - lon1);
@@ -606,7 +582,7 @@ export class NativeFeatureService {
     // Sample geofences for stores
     this.createGeofence({
       name: 'Mumbai Artisan Store',
-      latitude: 19.0760,
+      latitude: 19.076,
       longitude: 72.8777,
       radius: 100,
     });
@@ -614,7 +590,7 @@ export class NativeFeatureService {
     this.createGeofence({
       name: 'Delhi Craft Center',
       latitude: 28.6139,
-      longitude: 77.2090,
+      longitude: 77.209,
       radius: 150,
     });
   }

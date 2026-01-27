@@ -8,10 +8,7 @@ export async function POST(request: NextRequest) {
     const { userId, items, shippingAddress, billingAddress } = body;
 
     if (!userId || !items || items.length === 0) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     // Calculate totals
@@ -24,10 +21,7 @@ export async function POST(request: NextRequest) {
       });
 
       if (!product) {
-        return NextResponse.json(
-          { error: `Product ${item.productId} not found` },
-          { status: 404 }
-        );
+        return NextResponse.json({ error: `Product ${item.productId} not found` }, { status: 404 });
       }
 
       if (product.stock < item.quantity) {
@@ -58,18 +52,13 @@ export async function POST(request: NextRequest) {
     const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
 
     // Create Razorpay order
-    const razorpayOrder = await razorpayService.createOrder(
-      total,
-      'INR',
+    const razorpayOrder = await razorpayService.createOrder(total, 'INR', orderNumber, {
+      userId,
       orderNumber,
-      { userId, orderNumber }
-    );
+    });
 
     if (!razorpayOrder.success) {
-      return NextResponse.json(
-        { error: 'Failed to create payment order' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Failed to create payment order' }, { status: 500 });
     }
 
     // Create order in database
@@ -125,10 +114,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error: any) {
     console.error('Order creation error:', error);
-    return NextResponse.json(
-      { error: error.message || 'Failed to create order' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message || 'Failed to create order' }, { status: 500 });
   }
 }
 
@@ -183,9 +169,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Missing parameters' }, { status: 400 });
   } catch (error: any) {
     console.error('Order fetch error:', error);
-    return NextResponse.json(
-      { error: error.message || 'Failed to fetch orders' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message || 'Failed to fetch orders' }, { status: 500 });
   }
 }

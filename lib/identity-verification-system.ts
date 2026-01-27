@@ -1,6 +1,6 @@
 /**
  * Identity Verification System
- * 
+ *
  * Comprehensive KYC/AML compliance system with document verification,
  * biometric authentication, identity proofing, and risk-based authentication.
  */
@@ -9,7 +9,7 @@
 // Types & Interfaces
 // ============================================================================
 
-export type VerificationType = 
+export type VerificationType =
   | 'identity'
   | 'age'
   | 'address'
@@ -18,7 +18,7 @@ export type VerificationType =
   | 'phone'
   | 'email';
 
-export type VerificationStatus = 
+export type VerificationStatus =
   | 'pending'
   | 'in-progress'
   | 'verified'
@@ -26,7 +26,7 @@ export type VerificationStatus =
   | 'expired'
   | 'requires-review';
 
-export type VerificationMethod = 
+export type VerificationMethod =
   | 'document'
   | 'biometric'
   | 'knowledge-based'
@@ -34,7 +34,7 @@ export type VerificationMethod =
   | 'manual-review'
   | 'third-party';
 
-export type DocumentType = 
+export type DocumentType =
   | 'passport'
   | 'drivers-license'
   | 'national-id'
@@ -45,27 +45,13 @@ export type DocumentType =
   | 'business-registration'
   | 'certificate-incorporation';
 
-export type BiometricType = 
-  | 'face'
-  | 'fingerprint'
-  | 'voice'
-  | 'iris'
-  | 'palm'
-  | 'behavioral';
+export type BiometricType = 'face' | 'fingerprint' | 'voice' | 'iris' | 'palm' | 'behavioral';
 
-export type RiskLevel = 
-  | 'low'
-  | 'medium'
-  | 'high'
-  | 'critical';
+export type RiskLevel = 'low' | 'medium' | 'high' | 'critical';
 
-export type KYCLevel = 
-  | 'basic'
-  | 'intermediate'
-  | 'enhanced'
-  | 'corporate';
+export type KYCLevel = 'basic' | 'intermediate' | 'enhanced' | 'corporate';
 
-export type AMLRiskCategory = 
+export type AMLRiskCategory =
   | 'pep'
   | 'sanctions'
   | 'adverse-media'
@@ -73,7 +59,7 @@ export type AMLRiskCategory =
   | 'high-risk-industry'
   | 'suspicious-activity';
 
-export type AuthenticationFactor = 
+export type AuthenticationFactor =
   | 'password'
   | 'biometric'
   | 'otp'
@@ -623,7 +609,12 @@ export interface FraudSignal {
   id: string;
   userId?: string;
   verificationId?: string;
-  type: 'document-fraud' | 'biometric-spoof' | 'identity-theft' | 'synthetic-identity' | 'account-takeover';
+  type:
+    | 'document-fraud'
+    | 'biometric-spoof'
+    | 'identity-theft'
+    | 'synthetic-identity'
+    | 'account-takeover';
   severity: 'low' | 'medium' | 'high' | 'critical';
   detectedAt: Date;
   indicators: Array<{
@@ -765,19 +756,21 @@ export class IdentityVerificationSystem {
         ipAddress: params.ipAddress,
         userAgent: params.userAgent,
       },
-      auditLog: [{
-        timestamp: new Date(),
-        action: 'uploaded',
-        user: params.userId,
-        details: `${params.type} uploaded`,
-      }],
+      auditLog: [
+        {
+          timestamp: new Date(),
+          action: 'uploaded',
+          user: params.userId,
+          details: `${params.type} uploaded`,
+        },
+      ],
     };
 
     this.documents.set(document.id, document);
-    
+
     // Trigger automated verification
     this.verifyDocument(document.id);
-    
+
     return document;
   }
 
@@ -786,27 +779,27 @@ export class IdentityVerificationSystem {
     if (!document) throw new Error('Document not found');
 
     document.status = 'in-progress';
-    
+
     // Extract data from document
     this.extractDocumentData(document);
-    
+
     // Perform verification checks
     const checks = this.performDocumentChecks(document);
     document.verification.checks = checks;
-    
+
     // Calculate overall confidence
-    const passedChecks = checks.filter(c => c.passed).length;
+    const passedChecks = checks.filter((c) => c.passed).length;
     document.verification.confidence = (passedChecks / checks.length) * 100;
-    
+
     // Determine if manual review is needed
-    document.verification.reviewRequired = 
+    document.verification.reviewRequired =
       document.verification.confidence < 80 ||
-      checks.some(c => !c.passed && c.type === 'authenticity');
-    
+      checks.some((c) => !c.passed && c.type === 'authenticity');
+
     // Update status
     if (document.verification.reviewRequired) {
       document.status = 'requires-review';
-    } else if (document.verification.confidence >= 80 && checks.every(c => c.passed)) {
+    } else if (document.verification.confidence >= 80 && checks.every((c) => c.passed)) {
       document.status = 'verified';
       document.verifiedAt = new Date();
     } else {
@@ -854,7 +847,9 @@ export class IdentityVerificationSystem {
     }
   }
 
-  private performDocumentChecks(document: IdentityDocument): IdentityDocument['verification']['checks'] {
+  private performDocumentChecks(
+    document: IdentityDocument
+  ): IdentityDocument['verification']['checks'] {
     const checks: IdentityDocument['verification']['checks'] = [];
 
     // Authenticity check
@@ -925,11 +920,13 @@ export class IdentityVerificationSystem {
       security: {
         encrypted: true,
         storageLocation: 'secure-enclave',
-        accessLog: [{
-          timestamp: new Date(),
-          accessor: params.userId,
-          purpose: 'enrollment',
-        }],
+        accessLog: [
+          {
+            timestamp: new Date(),
+            accessor: params.userId,
+            purpose: 'enrollment',
+          },
+        ],
       },
     };
 
@@ -944,8 +941,9 @@ export class IdentityVerificationSystem {
     context: string;
   }): { verified: boolean; matchScore: number; confidence: number } {
     // Find enrolled biometric for user
-    const enrolled = Array.from(this.biometrics.values())
-      .find(b => b.userId === params.userId && b.type === params.type);
+    const enrolled = Array.from(this.biometrics.values()).find(
+      (b) => b.userId === params.userId && b.type === params.type
+    );
 
     if (!enrolled) {
       throw new Error('No enrolled biometric found');
@@ -1028,10 +1026,10 @@ export class IdentityVerificationSystem {
     };
 
     this.kycProfiles.set(profile.id, profile);
-    
+
     // Trigger risk assessment
     this.assessKYCRisk(profile.id);
-    
+
     return profile;
   }
 
@@ -1123,17 +1121,19 @@ export class IdentityVerificationSystem {
           status: 'cleared',
           reviewRequired: false,
         },
-        auditTrail: [{
-          timestamp: new Date(),
-          action: 'initiated',
-          user: 'system',
-          details: `${type} screening initiated`,
-        }],
+        auditTrail: [
+          {
+            timestamp: new Date(),
+            action: 'initiated',
+            user: 'system',
+            details: `${type} screening initiated`,
+          },
+        ],
       };
 
       // Simulate screening
       this.executeAMLScreening(screening);
-      
+
       screenings.push(screening);
       this.amlScreenings.set(screening.id, screening);
     });
@@ -1222,7 +1222,7 @@ export class IdentityVerificationSystem {
           status: 'pending',
         });
         break;
-      
+
       case 'document-centric':
         steps.push(
           {
@@ -1239,7 +1239,7 @@ export class IdentityVerificationSystem {
           }
         );
         break;
-      
+
       case 'biometric':
         steps.push({
           step: 1,
@@ -1248,7 +1248,7 @@ export class IdentityVerificationSystem {
           status: 'pending',
         });
         break;
-      
+
       case 'hybrid':
         steps.push(
           {
@@ -1389,7 +1389,7 @@ export class IdentityVerificationSystem {
     }
 
     const userDevices = this.deviceTrusts.get(userId) || [];
-    const knownDevice = userDevices.find(d => d.deviceId === deviceId);
+    const knownDevice = userDevices.find((d) => d.deviceId === deviceId);
 
     if (knownDevice && knownDevice.trusted) {
       return { score: 10, suspicious: false };
@@ -1401,7 +1401,7 @@ export class IdentityVerificationSystem {
   private analyzeTimePattern(userId: string): { score: number; suspicious: boolean } {
     const hour = new Date().getHours();
     // Normal hours: 6 AM - 11 PM (lower risk)
-    const score = (hour >= 6 && hour <= 23) ? 5 : 20;
+    const score = hour >= 6 && hour <= 23 ? 5 : 20;
     return {
       score,
       suspicious: hour < 6 || hour > 23,
@@ -1412,16 +1412,13 @@ export class IdentityVerificationSystem {
   // Multi-Factor Authentication
   // ============================================================================
 
-  setupMFA(params: {
-    userId: string;
-    factors: AuthenticationFactor[];
-  }): MultiFactorAuth {
+  setupMFA(params: { userId: string; factors: AuthenticationFactor[] }): MultiFactorAuth {
     const mfa: MultiFactorAuth = {
       id: `mfa_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       userId: params.userId,
       enabled: true,
       enrolledAt: new Date(),
-      factors: params.factors.map(type => ({
+      factors: params.factors.map((type) => ({
         type,
         enabled: true,
         enrolledAt: new Date(),
@@ -1460,9 +1457,7 @@ export class IdentityVerificationSystem {
   }
 
   private generateBackupCodes(): string[] {
-    return Array.from({ length: 10 }, () =>
-      Math.random().toString(36).substr(2, 8).toUpperCase()
-    );
+    return Array.from({ length: 10 }, () => Math.random().toString(36).substr(2, 8).toUpperCase());
   }
 
   // ============================================================================
@@ -1588,7 +1583,7 @@ export class IdentityVerificationSystem {
       evidence: {},
       analysis: {
         ruleMatches: [],
-        anomalies: params.indicators.map(i => i.type),
+        anomalies: params.indicators.map((i) => i.type),
       },
       decision: {
         action: 'flag',
@@ -1611,7 +1606,7 @@ export class IdentityVerificationSystem {
 
   private calculateFraudSeverity(indicators: FraudSignal['indicators']): FraudSignal['severity'] {
     const avgConfidence = indicators.reduce((sum, i) => sum + i.confidence, 0) / indicators.length;
-    
+
     if (avgConfidence >= 90) return 'critical';
     if (avgConfidence >= 70) return 'high';
     if (avgConfidence >= 50) return 'medium';
@@ -1642,43 +1637,45 @@ export class IdentityVerificationSystem {
       generatedBy: params.generatedBy,
       data: {
         totalVerifications: workflows.length,
-        completedVerifications: workflows.filter(w => w.status === 'completed').length,
-        pendingVerifications: workflows.filter(w => w.status === 'in-progress').length,
-        rejectedVerifications: workflows.filter(w => w.status === 'rejected').length,
+        completedVerifications: workflows.filter((w) => w.status === 'completed').length,
+        pendingVerifications: workflows.filter((w) => w.status === 'in-progress').length,
+        rejectedVerifications: workflows.filter((w) => w.status === 'rejected').length,
         byLevel: {
-          basic: kycProfiles.filter(k => k.level === 'basic').length,
-          intermediate: kycProfiles.filter(k => k.level === 'intermediate').length,
-          enhanced: kycProfiles.filter(k => k.level === 'enhanced').length,
-          corporate: kycProfiles.filter(k => k.level === 'corporate').length,
+          basic: kycProfiles.filter((k) => k.level === 'basic').length,
+          intermediate: kycProfiles.filter((k) => k.level === 'intermediate').length,
+          enhanced: kycProfiles.filter((k) => k.level === 'enhanced').length,
+          corporate: kycProfiles.filter((k) => k.level === 'corporate').length,
         },
         byCountry: {},
         byRiskLevel: {
-          low: kycProfiles.filter(k => k.riskAssessment.level === 'low').length,
-          medium: kycProfiles.filter(k => k.riskAssessment.level === 'medium').length,
-          high: kycProfiles.filter(k => k.riskAssessment.level === 'high').length,
-          critical: kycProfiles.filter(k => k.riskAssessment.level === 'critical').length,
+          low: kycProfiles.filter((k) => k.riskAssessment.level === 'low').length,
+          medium: kycProfiles.filter((k) => k.riskAssessment.level === 'medium').length,
+          high: kycProfiles.filter((k) => k.riskAssessment.level === 'high').length,
+          critical: kycProfiles.filter((k) => k.riskAssessment.level === 'critical').length,
         },
         amlHits: {
-          sanctions: screenings.filter(s => s.type === 'sanctions' && s.results.length > 0).length,
-          pep: screenings.filter(s => s.type === 'pep' && s.results.length > 0).length,
-          adverseMedia: screenings.filter(s => s.type === 'adverse-media' && s.results.length > 0).length,
-          total: screenings.filter(s => s.results.length > 0).length,
+          sanctions: screenings.filter((s) => s.type === 'sanctions' && s.results.length > 0)
+            .length,
+          pep: screenings.filter((s) => s.type === 'pep' && s.results.length > 0).length,
+          adverseMedia: screenings.filter((s) => s.type === 'adverse-media' && s.results.length > 0)
+            .length,
+          total: screenings.filter((s) => s.results.length > 0).length,
         },
         fraudSignals: {
           total: fraudSignals.length,
           byType: {},
-          blocked: fraudSignals.filter(f => f.decision.action === 'block').length,
+          blocked: fraudSignals.filter((f) => f.decision.action === 'block').length,
         },
         documentStats: {
           uploaded: documents.length,
-          verified: documents.filter(d => d.status === 'verified').length,
-          rejected: documents.filter(d => d.status === 'rejected').length,
+          verified: documents.filter((d) => d.status === 'verified').length,
+          rejected: documents.filter((d) => d.status === 'rejected').length,
           byType: {} as Record<DocumentType, number>,
         },
         biometricStats: {
           enrolled: biometrics.length,
-          verified: biometrics.filter(b => b.status === 'verified').length,
-          failed: biometrics.filter(b => b.status === 'rejected').length,
+          verified: biometrics.filter((b) => b.status === 'verified').length,
+          failed: biometrics.filter((b) => b.status === 'rejected').length,
           byType: {} as Record<BiometricType, number>,
         },
         averageVerificationTime: 24,
@@ -1717,9 +1714,7 @@ export class IdentityVerificationSystem {
         transactionAmount: { max: 1000 },
       },
       requirements: {
-        documents: [
-          { type: 'national-id', required: true, validityDays: 365 },
-        ],
+        documents: [{ type: 'national-id', required: true, validityDays: 365 }],
         biometrics: [],
         screening: {
           sanctions: true,
@@ -1759,9 +1754,7 @@ export class IdentityVerificationSystem {
           { type: 'utility-bill', required: true, validityDays: 90 },
           { type: 'bank-statement', required: true, validityDays: 90 },
         ],
-        biometrics: [
-          { type: 'face', required: true, livenessCheck: true },
-        ],
+        biometrics: [{ type: 'face', required: true, livenessCheck: true }],
         screening: {
           sanctions: true,
           pep: true,
@@ -1790,11 +1783,11 @@ export class IdentityVerificationSystem {
     const today = new Date();
     let age = today.getFullYear() - dateOfBirth.getFullYear();
     const monthDiff = today.getMonth() - dateOfBirth.getMonth();
-    
+
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dateOfBirth.getDate())) {
       age--;
     }
-    
+
     return age;
   }
 
@@ -1805,41 +1798,46 @@ export class IdentityVerificationSystem {
   getVerificationStatistics(): any {
     const workflows = Array.from(this.workflows.values());
     const kycProfiles = Array.from(this.kycProfiles.values());
-    
+
     return {
       workflows: {
         total: workflows.length,
-        initiated: workflows.filter(w => w.status === 'initiated').length,
-        inProgress: workflows.filter(w => w.status === 'in-progress').length,
-        completed: workflows.filter(w => w.status === 'completed').length,
-        rejected: workflows.filter(w => w.status === 'rejected').length,
-        expired: workflows.filter(w => w.status === 'expired').length,
+        initiated: workflows.filter((w) => w.status === 'initiated').length,
+        inProgress: workflows.filter((w) => w.status === 'in-progress').length,
+        completed: workflows.filter((w) => w.status === 'completed').length,
+        rejected: workflows.filter((w) => w.status === 'rejected').length,
+        expired: workflows.filter((w) => w.status === 'expired').length,
       },
       kyc: {
         total: kycProfiles.length,
         byLevel: {
-          basic: kycProfiles.filter(k => k.level === 'basic').length,
-          intermediate: kycProfiles.filter(k => k.level === 'intermediate').length,
-          enhanced: kycProfiles.filter(k => k.level === 'enhanced').length,
-          corporate: kycProfiles.filter(k => k.level === 'corporate').length,
+          basic: kycProfiles.filter((k) => k.level === 'basic').length,
+          intermediate: kycProfiles.filter((k) => k.level === 'intermediate').length,
+          enhanced: kycProfiles.filter((k) => k.level === 'enhanced').length,
+          corporate: kycProfiles.filter((k) => k.level === 'corporate').length,
         },
-        verified: kycProfiles.filter(k => k.status === 'verified').length,
-        pending: kycProfiles.filter(k => k.status === 'pending').length,
+        verified: kycProfiles.filter((k) => k.status === 'verified').length,
+        pending: kycProfiles.filter((k) => k.status === 'pending').length,
       },
       documents: {
         total: this.documents.size,
-        verified: Array.from(this.documents.values()).filter(d => d.status === 'verified').length,
-        pending: Array.from(this.documents.values()).filter(d => d.status === 'pending').length,
-        requiresReview: Array.from(this.documents.values()).filter(d => d.status === 'requires-review').length,
+        verified: Array.from(this.documents.values()).filter((d) => d.status === 'verified').length,
+        pending: Array.from(this.documents.values()).filter((d) => d.status === 'pending').length,
+        requiresReview: Array.from(this.documents.values()).filter(
+          (d) => d.status === 'requires-review'
+        ).length,
       },
       biometrics: {
         total: this.biometrics.size,
-        enrolled: Array.from(this.biometrics.values()).filter(b => b.status === 'verified').length,
+        enrolled: Array.from(this.biometrics.values()).filter((b) => b.status === 'verified')
+          .length,
       },
       fraud: {
         total: this.fraudSignals.size,
-        critical: Array.from(this.fraudSignals.values()).filter(f => f.severity === 'critical').length,
-        blocked: Array.from(this.fraudSignals.values()).filter(f => f.decision.action === 'block').length,
+        critical: Array.from(this.fraudSignals.values()).filter((f) => f.severity === 'critical')
+          .length,
+        blocked: Array.from(this.fraudSignals.values()).filter((f) => f.decision.action === 'block')
+          .length,
       },
     };
   }

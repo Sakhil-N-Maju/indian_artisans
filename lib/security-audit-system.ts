@@ -1,12 +1,18 @@
 /**
  * Security Audit System
- * 
+ *
  * Security auditing and compliance tracking
  */
 
 export interface AuditEvent {
   id: string;
-  eventType: 'login' | 'logout' | 'data_access' | 'data_modification' | 'permission_change' | 'system_config';
+  eventType:
+    | 'login'
+    | 'logout'
+    | 'data_access'
+    | 'data_modification'
+    | 'permission_change'
+    | 'system_config';
   userId?: string;
   resource: string;
   action: string;
@@ -79,7 +85,11 @@ export class SecurityAuditSystem {
     return audit;
   }
 
-  async completeAudit(auditId: string, findings: SecurityAudit['findings'], score: number): Promise<SecurityAudit> {
+  async completeAudit(
+    auditId: string,
+    findings: SecurityAudit['findings'],
+    score: number
+  ): Promise<SecurityAudit> {
     const audit = this.securityAudits.get(auditId);
     if (!audit) throw new Error('Audit not found');
 
@@ -103,11 +113,11 @@ export class SecurityAuditSystem {
     let events = Array.from(this.auditEvents.values());
 
     if (filters) {
-      if (filters.userId) events = events.filter(e => e.userId === filters.userId);
-      if (filters.eventType) events = events.filter(e => e.eventType === filters.eventType);
-      if (filters.dateFrom) events = events.filter(e => e.timestamp >= filters.dateFrom!);
-      if (filters.dateTo) events = events.filter(e => e.timestamp <= filters.dateTo!);
-      if (filters.riskLevel) events = events.filter(e => e.riskLevel === filters.riskLevel);
+      if (filters.userId) events = events.filter((e) => e.userId === filters.userId);
+      if (filters.eventType) events = events.filter((e) => e.eventType === filters.eventType);
+      if (filters.dateFrom) events = events.filter((e) => e.timestamp >= filters.dateFrom!);
+      if (filters.dateTo) events = events.filter((e) => e.timestamp <= filters.dateTo!);
+      if (filters.riskLevel) events = events.filter((e) => e.riskLevel === filters.riskLevel);
     }
 
     events.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
@@ -131,32 +141,39 @@ export class SecurityAuditSystem {
     highRiskEvents: number;
   }> {
     const events = Array.from(this.auditEvents.values());
-    const byEventType = events.reduce((acc, e) => {
-      acc[e.eventType] = (acc[e.eventType] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const byEventType = events.reduce(
+      (acc, e) => {
+        acc[e.eventType] = (acc[e.eventType] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const byRiskLevel = events.reduce((acc, e) => {
-      acc[e.riskLevel] = (acc[e.riskLevel] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const byRiskLevel = events.reduce(
+      (acc, e) => {
+        acc[e.riskLevel] = (acc[e.riskLevel] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     const audits = Array.from(this.securityAudits.values());
-    const completedAudits = audits.filter(a => a.status === 'completed');
-    const avgScore = completedAudits.length > 0
-      ? completedAudits.reduce((sum, a) => sum + (a.score || 0), 0) / completedAudits.length
-      : 0;
+    const completedAudits = audits.filter((a) => a.status === 'completed');
+    const avgScore =
+      completedAudits.length > 0
+        ? completedAudits.reduce((sum, a) => sum + (a.score || 0), 0) / completedAudits.length
+        : 0;
 
     return {
       totalEvents: events.length,
       byEventType,
       byRiskLevel,
       audits: {
-        scheduled: audits.filter(a => a.status === 'scheduled').length,
+        scheduled: audits.filter((a) => a.status === 'scheduled').length,
         completed: completedAudits.length,
         averageScore: Math.round(avgScore * 10) / 10,
       },
-      highRiskEvents: events.filter(e => e.riskLevel === 'high').length,
+      highRiskEvents: events.filter((e) => e.riskLevel === 'high').length,
     };
   }
 

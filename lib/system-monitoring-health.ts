@@ -1,6 +1,6 @@
 /**
  * System Monitoring & Health System
- * 
+ *
  * Comprehensive system monitoring and health tracking:
  * - Server health monitoring
  * - Application performance metrics
@@ -15,7 +15,7 @@
 export interface SystemHealth {
   timestamp: Date;
   overallStatus: 'healthy' | 'degraded' | 'critical' | 'down';
-  
+
   // Component health
   components: {
     name: string;
@@ -25,7 +25,7 @@ export interface SystemHealth {
     lastChecked: Date;
     message?: string;
   }[];
-  
+
   // System metrics
   metrics: {
     cpu: {
@@ -51,10 +51,10 @@ export interface SystemHealth {
       requestsPerSecond: number;
     };
   };
-  
+
   // Active issues
   activeIssues: HealthIssue[];
-  
+
   // Uptime
   uptime: {
     current: number; // seconds
@@ -68,26 +68,26 @@ export interface HealthIssue {
   id: string;
   severity: 'low' | 'medium' | 'high' | 'critical';
   component: string;
-  
+
   // Details
   title: string;
   description: string;
-  
+
   // Status
   status: 'investigating' | 'identified' | 'monitoring' | 'resolved';
-  
+
   // Impact
   impact: {
     affectedUsers?: number;
     affectedServices: string[];
     impactLevel: 'none' | 'minor' | 'major' | 'critical';
   };
-  
+
   // Timeline
   detectedAt: Date;
   resolvedAt?: Date;
   duration?: number; // minutes
-  
+
   // Updates
   updates: {
     timestamp: Date;
@@ -103,7 +103,7 @@ export interface PerformanceMetrics {
     start: Date;
     end: Date;
   };
-  
+
   // Application performance
   application: {
     averageResponseTime: number; // ms
@@ -114,7 +114,7 @@ export interface PerformanceMetrics {
     errorsPerSecond: number;
     errorRate: number; // percentage
   };
-  
+
   // Database performance
   database: {
     queryTime: {
@@ -133,7 +133,7 @@ export interface PerformanceMetrics {
     deadlocks: number;
     cacheHitRatio: number; // percentage
   };
-  
+
   // Cache performance
   cache: {
     hitRate: number; // percentage
@@ -142,7 +142,7 @@ export interface PerformanceMetrics {
     memoryUsage: number; // MB
     keyCount: number;
   };
-  
+
   // Queue performance
   queue: {
     jobsProcessed: number;
@@ -156,7 +156,7 @@ export interface PerformanceMetrics {
 export interface APIEndpointMetrics {
   endpoint: string;
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-  
+
   // Performance
   performance: {
     totalRequests: number;
@@ -167,7 +167,7 @@ export interface APIEndpointMetrics {
     slowestRequest: number;
     fastestRequest: number;
   };
-  
+
   // Status codes
   statusCodes: {
     '2xx': number;
@@ -175,7 +175,7 @@ export interface APIEndpointMetrics {
     '4xx': number;
     '5xx': number;
   };
-  
+
   // Errors
   errorRate: number; // percentage
   errors: {
@@ -183,14 +183,14 @@ export interface APIEndpointMetrics {
     count: number;
     lastOccurrence: Date;
   }[];
-  
+
   // Traffic patterns
   traffic: {
     peakRequestsPerSecond: number;
     averageRequestsPerSecond: number;
     totalBandwidth: number; // bytes
   };
-  
+
   period: {
     start: Date;
     end: Date;
@@ -200,16 +200,23 @@ export interface APIEndpointMetrics {
 export interface ErrorLog {
   id: string;
   timestamp: Date;
-  
+
   // Error details
-  type: 'application' | 'database' | 'network' | 'validation' | 'authorization' | 'external_api' | 'unknown';
+  type:
+    | 'application'
+    | 'database'
+    | 'network'
+    | 'validation'
+    | 'authorization'
+    | 'external_api'
+    | 'unknown';
   severity: 'debug' | 'info' | 'warning' | 'error' | 'critical';
-  
+
   // Message
   message: string;
   stackTrace?: string;
   errorCode?: string;
-  
+
   // Context
   context: {
     endpoint?: string;
@@ -218,7 +225,7 @@ export interface ErrorLog {
     requestId?: string;
     environment: 'development' | 'staging' | 'production';
   };
-  
+
   // Request details
   request?: {
     url: string;
@@ -227,20 +234,20 @@ export interface ErrorLog {
     body?: any;
     query?: Record<string, string>;
   };
-  
+
   // System state
   systemState?: {
     cpuUsage: number;
     memoryUsage: number;
     activeConnections: number;
   };
-  
+
   // Resolution
   resolved: boolean;
   resolvedAt?: Date;
   resolvedBy?: string;
   resolution?: string;
-  
+
   // Grouping
   fingerprint: string; // for grouping similar errors
   occurrences: number;
@@ -253,30 +260,30 @@ export interface AlertRule {
   name: string;
   description: string;
   enabled: boolean;
-  
+
   // Condition
   metric: string;
   operator: 'greater_than' | 'less_than' | 'equals' | 'not_equals';
   threshold: number;
   duration: number; // seconds - how long condition must be true
-  
+
   // Severity
   severity: 'low' | 'medium' | 'high' | 'critical';
-  
+
   // Actions
   actions: {
     type: 'email' | 'sms' | 'slack' | 'webhook' | 'pagerduty';
     recipients: string[];
     config?: Record<string, any>;
   }[];
-  
+
   // Cooldown
   cooldownPeriod: number; // minutes - prevent alert spam
   lastTriggered?: Date;
-  
+
   // Status
   status: 'active' | 'inactive' | 'suppressed';
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -284,16 +291,16 @@ export interface AlertRule {
 export interface UptimeRecord {
   timestamp: Date;
   service: string;
-  
+
   // Status
   isUp: boolean;
   responseTime?: number; // ms
   statusCode?: number;
-  
+
   // Check details
   checkType: 'http' | 'tcp' | 'ping' | 'dns';
   checkLocation: string;
-  
+
   // Failure details
   failureReason?: string;
   errorMessage?: string;
@@ -303,11 +310,11 @@ export interface ServiceDependency {
   id: string;
   name: string;
   type: 'database' | 'cache' | 'queue' | 'external_api' | 'microservice' | 'cdn' | 'storage';
-  
+
   // Connection
   host: string;
   port?: number;
-  
+
   // Health check
   healthCheck: {
     enabled: boolean;
@@ -316,22 +323,22 @@ export interface ServiceDependency {
     timeout: number; // seconds
     retries: number;
   };
-  
+
   // Status
   status: 'healthy' | 'unhealthy' | 'unknown';
   lastChecked?: Date;
   lastHealthy?: Date;
-  
+
   // Metrics
   metrics?: {
     responseTime: number;
     uptime: number; // percentage
     errorRate: number;
   };
-  
+
   // Criticality
   critical: boolean;
-  
+
   // Fallback
   fallback?: {
     enabled: boolean;
@@ -342,59 +349,66 @@ export interface ServiceDependency {
 
 export interface ResourceQuota {
   resource: 'cpu' | 'memory' | 'disk' | 'bandwidth' | 'database_connections' | 'api_requests';
-  
+
   // Limits
   limit: number;
   used: number;
   available: number;
-  
+
   // Usage
   usagePercentage: number;
-  
+
   // Warnings
   warningThreshold: number; // percentage
   criticalThreshold: number; // percentage
-  
+
   // Status
   status: 'normal' | 'warning' | 'critical';
-  
+
   // Period
   period: 'per_second' | 'per_minute' | 'per_hour' | 'per_day' | 'total';
-  
+
   lastUpdated: Date;
 }
 
 export interface SystemEvent {
   id: string;
   timestamp: Date;
-  
+
   // Event details
-  type: 'deployment' | 'scaling' | 'configuration_change' | 'maintenance' | 'incident' | 'alert' | 'recovery';
+  type:
+    | 'deployment'
+    | 'scaling'
+    | 'configuration_change'
+    | 'maintenance'
+    | 'incident'
+    | 'alert'
+    | 'recovery';
   category: 'system' | 'application' | 'infrastructure' | 'security';
-  
+
   // Description
   title: string;
   description: string;
-  
+
   // Impact
   impact: 'none' | 'low' | 'medium' | 'high';
   affectedComponents: string[];
-  
+
   // Status
   status: 'scheduled' | 'in_progress' | 'completed' | 'failed' | 'cancelled';
-  
+
   // Timeline
   scheduledFor?: Date;
   startedAt?: Date;
   completedAt?: Date;
   duration?: number; // minutes
-  
+
   // User
   initiatedBy: {
     id: string;
     name: string;
   };
-  
+
   // Metadata
   metadata?: Record<string, any>;
 }
@@ -403,10 +417,10 @@ export interface PerformanceBenchmark {
   id: string;
   name: string;
   category: 'api' | 'database' | 'cache' | 'computation' | 'rendering';
-  
+
   // Benchmark details
   description: string;
-  
+
   // Results
   results: {
     timestamp: Date;
@@ -417,14 +431,14 @@ export interface PerformanceBenchmark {
     maxTime: number;
     standardDeviation: number;
   }[];
-  
+
   // Thresholds
   targetTime: number; // ms
   acceptableTime: number; // ms
-  
+
   // Status
   status: 'passing' | 'warning' | 'failing';
-  
+
   lastRun?: Date;
 }
 
@@ -453,7 +467,7 @@ export class SystemMonitoringHealth {
     this.systemEvents = new Map();
     this.benchmarks = new Map();
     this.activeIssues = new Map();
-    
+
     // Initialize defaults
     this.initializeDefaults();
   }
@@ -935,10 +949,11 @@ export class SystemMonitoringHealth {
 
     // Update metrics
     metrics.performance.totalRequests++;
-    metrics.performance.averageResponseTime = 
-      (metrics.performance.averageResponseTime * (metrics.performance.totalRequests - 1) + params.responseTime) / 
+    metrics.performance.averageResponseTime =
+      (metrics.performance.averageResponseTime * (metrics.performance.totalRequests - 1) +
+        params.responseTime) /
       metrics.performance.totalRequests;
-    
+
     if (params.responseTime > metrics.performance.slowestRequest) {
       metrics.performance.slowestRequest = params.responseTime;
     }
@@ -947,14 +962,15 @@ export class SystemMonitoringHealth {
     }
 
     // Update status codes
-    const statusCategory = `${Math.floor(params.statusCode / 100)}xx` as keyof typeof metrics.statusCodes;
+    const statusCategory =
+      `${Math.floor(params.statusCode / 100)}xx` as keyof typeof metrics.statusCodes;
     if (statusCategory in metrics.statusCodes) {
       metrics.statusCodes[statusCategory]++;
     }
 
     // Track errors
     if (params.error) {
-      const existingError = metrics.errors.find(e => e.type === params.error!.type);
+      const existingError = metrics.errors.find((e) => e.type === params.error!.type);
       if (existingError) {
         existingError.count++;
         existingError.lastOccurrence = new Date();
@@ -984,10 +1000,10 @@ export class SystemMonitoringHealth {
   }): Promise<ErrorLog> {
     // Generate fingerprint for grouping
     const fingerprint = this.generateErrorFingerprint(params.message, params.stackTrace);
-    
+
     // Check if error already exists
     const existingError = Array.from(this.errorLogs.values()).find(
-      e => e.fingerprint === fingerprint && !e.resolved
+      (e) => e.fingerprint === fingerprint && !e.resolved
     );
 
     if (existingError) {
@@ -1027,7 +1043,7 @@ export class SystemMonitoringHealth {
     let hash = 0;
     for (let i = 0; i < content.length; i++) {
       const char = content.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash;
     }
     return hash.toString(16);
@@ -1085,7 +1101,9 @@ export class SystemMonitoringHealth {
 
     if (params.status === 'resolved') {
       issue.resolvedAt = new Date();
-      issue.duration = Math.floor((issue.resolvedAt.getTime() - issue.detectedAt.getTime()) / 60000);
+      issue.duration = Math.floor(
+        (issue.resolvedAt.getTime() - issue.detectedAt.getTime()) / 60000
+      );
       this.activeIssues.delete(params.issueId);
     }
   }
@@ -1133,10 +1151,10 @@ export class SystemMonitoringHealth {
     try {
       // Simulate health check (in production, make actual HTTP/TCP check)
       const isHealthy = Math.random() > 0.05; // 95% success rate
-      
+
       dependency.status = isHealthy ? 'healthy' : 'unhealthy';
       dependency.lastChecked = new Date();
-      
+
       if (isHealthy) {
         dependency.lastHealthy = new Date();
         dependency.metrics = {
@@ -1153,7 +1171,9 @@ export class SystemMonitoringHealth {
   /**
    * Create alert rule
    */
-  async createAlertRule(params: Omit<AlertRule, 'id' | 'createdAt' | 'updatedAt'>): Promise<AlertRule> {
+  async createAlertRule(
+    params: Omit<AlertRule, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<AlertRule> {
     const rule: AlertRule = {
       ...params,
       id: `alert-${Date.now()}`,
@@ -1182,7 +1202,9 @@ export class SystemMonitoringHealth {
 
     // Execute actions (in production, send actual notifications)
     for (const action of rule.actions) {
-      console.log(`Alert triggered: ${rule.name} via ${action.type} to ${action.recipients.join(', ')}`);
+      console.log(
+        `Alert triggered: ${rule.name} via ${action.type} to ${action.recipients.join(', ')}`
+      );
     }
 
     rule.lastTriggered = new Date();
@@ -1239,15 +1261,15 @@ export class SystemMonitoringHealth {
     let errors = Array.from(this.errorLogs.values());
 
     if (params.severity) {
-      errors = errors.filter(e => e.severity === params.severity);
+      errors = errors.filter((e) => e.severity === params.severity);
     }
 
     if (params.type) {
-      errors = errors.filter(e => e.type === params.type);
+      errors = errors.filter((e) => e.type === params.type);
     }
 
     if (params.resolved !== undefined) {
-      errors = errors.filter(e => e.resolved === params.resolved);
+      errors = errors.filter((e) => e.resolved === params.resolved);
     }
 
     // Sort by last occurrence
@@ -1276,7 +1298,7 @@ export class SystemMonitoringHealth {
     let rules = Array.from(this.alertRules.values());
 
     if (enabled !== undefined) {
-      rules = rules.filter(r => r.enabled === enabled);
+      rules = rules.filter((r) => r.enabled === enabled);
     }
 
     return rules;
@@ -1307,11 +1329,11 @@ export class SystemMonitoringHealth {
     let events = Array.from(this.systemEvents.values());
 
     if (params.type) {
-      events = events.filter(e => e.type === params.type);
+      events = events.filter((e) => e.type === params.type);
     }
 
     if (params.category) {
-      events = events.filter(e => e.category === params.category);
+      events = events.filter((e) => e.category === params.category);
     }
 
     // Sort by timestamp descending
@@ -1327,10 +1349,7 @@ export class SystemMonitoringHealth {
   /**
    * Get uptime statistics
    */
-  async getUptimeStats(params: {
-    service: string;
-    period: { start: Date; end: Date };
-  }): Promise<{
+  async getUptimeStats(params: { service: string; period: { start: Date; end: Date } }): Promise<{
     uptime: number;
     downtime: number;
     totalChecks: number;
@@ -1339,22 +1358,23 @@ export class SystemMonitoringHealth {
   }> {
     const records = this.uptimeRecords.get(params.service) || [];
     const periodRecords = records.filter(
-      r => r.timestamp >= params.period.start && r.timestamp <= params.period.end
+      (r) => r.timestamp >= params.period.start && r.timestamp <= params.period.end
     );
 
     const totalChecks = periodRecords.length;
-    const failedChecks = periodRecords.filter(r => !r.isUp).length;
+    const failedChecks = periodRecords.filter((r) => !r.isUp).length;
     const successfulChecks = totalChecks - failedChecks;
-    
+
     const uptime = totalChecks > 0 ? (successfulChecks / totalChecks) * 100 : 100;
     const downtime = 100 - uptime;
 
     const responseTimes = periodRecords
-      .filter(r => r.responseTime !== undefined)
-      .map(r => r.responseTime!);
-    const averageResponseTime = responseTimes.length > 0
-      ? responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length
-      : 0;
+      .filter((r) => r.responseTime !== undefined)
+      .map((r) => r.responseTime!);
+    const averageResponseTime =
+      responseTimes.length > 0
+        ? responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length
+        : 0;
 
     return {
       uptime,

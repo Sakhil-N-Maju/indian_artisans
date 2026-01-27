@@ -1,6 +1,6 @@
 /**
  * Email & Communication Services System
- * 
+ *
  * Multi-channel communication system supporting email, SMS, push notifications,
  * in-app messaging, and WhatsApp. Includes templates, campaigns, and analytics.
  */
@@ -9,15 +9,9 @@
 // Types & Interfaces
 // ============================================================================
 
-export type CommunicationChannel = 
-  | 'email'
-  | 'sms'
-  | 'push'
-  | 'in-app'
-  | 'whatsapp'
-  | 'webhook';
+export type CommunicationChannel = 'email' | 'sms' | 'push' | 'in-app' | 'whatsapp' | 'webhook';
 
-export type EmailProvider = 
+export type EmailProvider =
   | 'sendgrid'
   | 'mailgun'
   | 'ses'
@@ -25,20 +19,11 @@ export type EmailProvider =
   | 'mailchimp'
   | 'sendinblue';
 
-export type SmsProvider = 
-  | 'twilio'
-  | 'vonage'
-  | 'plivo'
-  | 'aws-sns';
+export type SmsProvider = 'twilio' | 'vonage' | 'plivo' | 'aws-sns';
 
-export type PushProvider = 
-  | 'firebase'
-  | 'onesignal'
-  | 'pusher'
-  | 'apns'
-  | 'fcm';
+export type PushProvider = 'firebase' | 'onesignal' | 'pusher' | 'apns' | 'fcm';
 
-export type MessageStatus = 
+export type MessageStatus =
   | 'pending'
   | 'queued'
   | 'sending'
@@ -50,7 +35,7 @@ export type MessageStatus =
   | 'rejected'
   | 'spam';
 
-export type CampaignStatus = 
+export type CampaignStatus =
   | 'draft'
   | 'scheduled'
   | 'sending'
@@ -59,7 +44,7 @@ export type CampaignStatus =
   | 'cancelled'
   | 'completed';
 
-export type TemplateCategory = 
+export type TemplateCategory =
   | 'transactional'
   | 'marketing'
   | 'notification'
@@ -71,7 +56,7 @@ export type TemplateCategory =
   | 'reminder'
   | 'confirmation';
 
-export type TriggerType = 
+export type TriggerType =
   | 'user-signup'
   | 'order-placed'
   | 'order-shipped'
@@ -89,7 +74,7 @@ export interface ProviderConfiguration {
   provider: EmailProvider | SmsProvider | PushProvider | string;
   name: string;
   enabled: boolean;
-  
+
   credentials: {
     apiKey: string;
     apiSecret?: string;
@@ -99,7 +84,7 @@ export interface ProviderConfiguration {
     replyTo?: string;
     environment: 'sandbox' | 'production';
   };
-  
+
   settings: {
     rateLimit: {
       maxPerSecond: number;
@@ -107,31 +92,31 @@ export interface ProviderConfiguration {
       maxPerHour: number;
       maxPerDay: number;
     };
-    
+
     retry: {
       enabled: boolean;
       maxAttempts: number;
       backoffMultiplier: number;
     };
-    
+
     tracking: {
       opens: boolean;
       clicks: boolean;
       unsubscribes: boolean;
     };
-    
+
     validation: {
       emailVerification: boolean;
       phoneVerification: boolean;
     };
   };
-  
+
   templates: {
     defaultTemplate?: string;
     headerTemplate?: string;
     footerTemplate?: string;
   };
-  
+
   metadata: {
     createdAt: Date;
     updatedAt: Date;
@@ -145,15 +130,15 @@ export interface MessageTemplate {
   slug: string;
   category: TemplateCategory;
   channel: CommunicationChannel;
-  
+
   subject?: string; // For email
-  
+
   content: {
     html?: string;
     text?: string;
     json?: any; // For structured messages
   };
-  
+
   variables: Array<{
     name: string;
     type: 'string' | 'number' | 'date' | 'boolean' | 'array' | 'object';
@@ -161,22 +146,25 @@ export interface MessageTemplate {
     defaultValue?: any;
     description?: string;
   }>;
-  
+
   design?: {
     layout: string;
     theme: string;
     customCss?: string;
   };
-  
+
   localization?: {
     defaultLocale: string;
-    translations: Record<string, {
-      subject?: string;
-      html?: string;
-      text?: string;
-    }>;
+    translations: Record<
+      string,
+      {
+        subject?: string;
+        html?: string;
+        text?: string;
+      }
+    >;
   };
-  
+
   metadata: {
     version: number;
     createdBy: string;
@@ -185,7 +173,7 @@ export interface MessageTemplate {
     updatedAt: Date;
     publishedAt?: Date;
   };
-  
+
   stats: {
     sent: number;
     delivered: number;
@@ -193,7 +181,7 @@ export interface MessageTemplate {
     clicked: number;
     unsubscribed: number;
   };
-  
+
   active: boolean;
 }
 
@@ -201,55 +189,55 @@ export interface Message {
   id: string;
   channel: CommunicationChannel;
   provider: string;
-  
+
   recipient: {
     userId?: string;
     email?: string;
     phone?: string;
     deviceToken?: string;
     name?: string;
-    
+
     preferences?: {
       language?: string;
       timezone?: string;
       optedIn: boolean;
     };
   };
-  
+
   sender?: {
     email?: string;
     phone?: string;
     name?: string;
   };
-  
+
   template?: {
     id: string;
     name: string;
     variables: Record<string, any>;
   };
-  
+
   content: {
     subject?: string;
     html?: string;
     text?: string;
     body?: string;
     title?: string;
-    
+
     attachments?: Array<{
       filename: string;
       contentType: string;
       url: string;
       size: number;
     }>;
-    
+
     media?: Array<{
       type: 'image' | 'video' | 'audio';
       url: string;
     }>;
   };
-  
+
   status: MessageStatus;
-  
+
   timeline: {
     created: Date;
     queued?: Date;
@@ -259,55 +247,55 @@ export interface Message {
     clicked?: Date;
     failed?: Date;
   };
-  
+
   tracking: {
     opens: number;
     clicks: number;
     lastOpened?: Date;
     lastClicked?: Date;
-    
+
     links?: Array<{
       url: string;
       clicks: number;
     }>;
-    
+
     location?: {
       ip?: string;
       country?: string;
       city?: string;
     };
-    
+
     device?: {
       type: 'desktop' | 'mobile' | 'tablet';
       os?: string;
       browser?: string;
     };
   };
-  
+
   delivery: {
     attempts: number;
     lastAttempt?: Date;
-    
+
     response?: {
       code: string;
       message: string;
       providerId?: string;
     };
-    
+
     error?: {
       code: string;
       message: string;
       retryable: boolean;
     };
   };
-  
+
   metadata: {
     campaignId?: string;
     triggerId?: string;
     tags?: string[];
     customData?: Record<string, any>;
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -317,37 +305,37 @@ export interface Campaign {
   name: string;
   type: 'one-time' | 'recurring' | 'automated';
   channel: CommunicationChannel;
-  
+
   status: CampaignStatus;
-  
+
   template: {
     id: string;
     name: string;
     preview?: string;
   };
-  
+
   audience: {
     type: 'all' | 'segment' | 'list' | 'custom';
-    
+
     segments?: string[];
     listIds?: string[];
-    
+
     filters?: Array<{
       field: string;
       operator: string;
       value: any;
     }>;
-    
+
     totalRecipients: number;
     estimatedReach: number;
   };
-  
+
   schedule: {
     type: 'immediate' | 'scheduled' | 'recurring';
-    
+
     sendAt?: Date;
     timezone?: string;
-    
+
     recurring?: {
       frequency: 'daily' | 'weekly' | 'monthly';
       dayOfWeek?: number;
@@ -356,22 +344,22 @@ export interface Campaign {
       endDate?: Date;
     };
   };
-  
+
   settings: {
     sendFrom: {
       name: string;
       email?: string;
       phone?: string;
     };
-    
+
     replyTo?: string;
-    
+
     tracking: {
       opens: boolean;
       clicks: boolean;
       conversions: boolean;
     };
-    
+
     abTest?: {
       enabled: boolean;
       variants: Array<{
@@ -383,23 +371,23 @@ export interface Campaign {
       winnerCriteria: 'opens' | 'clicks' | 'conversions';
       testDuration: number; // hours
     };
-    
+
     throttling?: {
       enabled: boolean;
       messagesPerHour: number;
     };
   };
-  
+
   progress: {
     sent: number;
     delivered: number;
     failed: number;
     pending: number;
-    
+
     startedAt?: Date;
     completedAt?: Date;
   };
-  
+
   stats: {
     sent: number;
     delivered: number;
@@ -408,17 +396,17 @@ export interface Campaign {
     bounced: number;
     unsubscribed: number;
     complained: number;
-    
+
     openRate: number;
     clickRate: number;
     bounceRate: number;
     unsubscribeRate: number;
-    
+
     revenue?: number;
     conversions?: number;
     conversionRate?: number;
   };
-  
+
   metadata: {
     createdBy: string;
     updatedBy: string;
@@ -432,37 +420,37 @@ export interface AutomationTrigger {
   name: string;
   type: TriggerType;
   enabled: boolean;
-  
+
   conditions: Array<{
     field: string;
     operator: 'equals' | 'not-equals' | 'greater-than' | 'less-than' | 'contains' | 'exists';
     value: any;
   }>;
-  
+
   delay?: {
     amount: number;
     unit: 'minutes' | 'hours' | 'days';
   };
-  
+
   actions: Array<{
     type: 'send-message' | 'add-to-segment' | 'update-profile' | 'webhook';
     channel?: CommunicationChannel;
     templateId?: string;
-    
+
     config?: Record<string, any>;
   }>;
-  
+
   frequency: {
     limit?: number; // Max times per user
     cooldown?: number; // Hours between triggers
   };
-  
+
   stats: {
     triggered: number;
     executed: number;
     failed: number;
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -471,28 +459,28 @@ export interface ContactList {
   id: string;
   name: string;
   description?: string;
-  
+
   type: 'static' | 'dynamic';
-  
+
   contacts: Array<{
     userId?: string;
     email?: string;
     phone?: string;
     name?: string;
-    
+
     customFields?: Record<string, any>;
-    
+
     status: 'active' | 'unsubscribed' | 'bounced' | 'complained';
-    
+
     addedAt: Date;
   }>;
-  
+
   criteria?: Array<{
     field: string;
     operator: string;
     value: any;
   }>;
-  
+
   metadata: {
     totalContacts: number;
     activeContacts: number;
@@ -505,24 +493,24 @@ export interface ContactList {
 
 export interface UserPreferences {
   userId: string;
-  
+
   channels: {
     email: {
       enabled: boolean;
       address: string;
       verified: boolean;
-      
+
       categories: Record<TemplateCategory, boolean>;
     };
-    
+
     sms: {
       enabled: boolean;
       phone?: string;
       verified: boolean;
-      
+
       categories: Record<TemplateCategory, boolean>;
     };
-    
+
     push: {
       enabled: boolean;
       devices: Array<{
@@ -530,65 +518,65 @@ export interface UserPreferences {
         platform: 'ios' | 'android' | 'web';
         enabled: boolean;
       }>;
-      
+
       categories: Record<TemplateCategory, boolean>;
     };
-    
+
     inApp: {
       enabled: boolean;
       categories: Record<TemplateCategory, boolean>;
     };
   };
-  
+
   language: string;
   timezone: string;
-  
+
   doNotDisturb?: {
     enabled: boolean;
     startTime: string; // HH:MM
     endTime: string; // HH:MM
   };
-  
+
   frequency: {
     maxPerDay?: number;
     maxPerWeek?: number;
   };
-  
+
   updatedAt: Date;
 }
 
 export interface InAppNotification {
   id: string;
   userId: string;
-  
+
   type: 'info' | 'success' | 'warning' | 'error' | 'promotional';
-  
+
   title: string;
   message: string;
-  
+
   icon?: string;
   image?: string;
-  
+
   action?: {
     type: 'url' | 'deep-link' | 'custom';
     url?: string;
     data?: Record<string, any>;
   };
-  
+
   priority: 'low' | 'normal' | 'high' | 'urgent';
-  
+
   status: 'unread' | 'read' | 'dismissed' | 'archived';
-  
+
   expiresAt?: Date;
-  
+
   metadata?: {
     campaignId?: string;
     tags?: string[];
   };
-  
+
   readAt?: Date;
   dismissedAt?: Date;
-  
+
   createdAt: Date;
 }
 
@@ -597,38 +585,41 @@ export interface CommunicationAnalytics {
     start: Date;
     end: Date;
   };
-  
+
   overview: {
     totalSent: number;
     delivered: number;
     failed: number;
-    
+
     deliveryRate: number;
-    
-    byChannel: Record<CommunicationChannel, {
-      sent: number;
-      delivered: number;
-      deliveryRate: number;
-    }>;
+
+    byChannel: Record<
+      CommunicationChannel,
+      {
+        sent: number;
+        delivered: number;
+        deliveryRate: number;
+      }
+    >;
   };
-  
+
   engagement: {
     opens: number;
     clicks: number;
-    
+
     openRate: number;
     clickRate: number;
     clickToOpenRate: number;
-    
+
     averageTimeToOpen: number; // minutes
     averageTimeToClick: number; // minutes
   };
-  
+
   campaigns: {
     total: number;
     active: number;
     completed: number;
-    
+
     topPerforming: Array<{
       campaignId: string;
       name: string;
@@ -637,7 +628,7 @@ export interface CommunicationAnalytics {
       conversions: number;
     }>;
   };
-  
+
   templates: {
     mostUsed: Array<{
       templateId: string;
@@ -647,26 +638,26 @@ export interface CommunicationAnalytics {
       clickRate: number;
     }>;
   };
-  
+
   issues: {
     bounces: number;
     bounceRate: number;
-    
+
     unsubscribes: number;
     unsubscribeRate: number;
-    
+
     complaints: number;
     complaintRate: number;
-    
+
     errors: number;
   };
-  
+
   costs: {
     total: number;
     byChannel: Record<CommunicationChannel, number>;
     byProvider: Record<string, number>;
   };
-  
+
   trends: {
     daily: Array<{
       date: Date;
@@ -675,7 +666,7 @@ export interface CommunicationAnalytics {
       opened: number;
       clicked: number;
     }>;
-    
+
     hourly: Array<{
       hour: number;
       sent: number;
@@ -687,7 +678,7 @@ export interface CommunicationAnalytics {
 export interface WebhookSubscription {
   id: string;
   url: string;
-  
+
   events: Array<
     | 'message.sent'
     | 'message.delivered'
@@ -699,23 +690,23 @@ export interface WebhookSubscription {
     | 'campaign.completed'
     | 'unsubscribe'
   >;
-  
+
   secret: string;
-  
+
   active: boolean;
-  
+
   retryPolicy: {
     maxAttempts: number;
     backoffMultiplier: number;
   };
-  
+
   stats: {
     deliveries: number;
     failures: number;
     lastDelivery?: Date;
     lastFailure?: Date;
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -734,7 +725,7 @@ export class EmailCommunicationServicesSystem {
   private userPreferences: Map<string, UserPreferences> = new Map();
   private inAppNotifications: Map<string, InAppNotification> = new Map();
   private webhookSubscriptions: Map<string, WebhookSubscription> = new Map();
-  
+
   private messageQueue: Message[] = [];
   private processingInterval?: NodeJS.Timeout;
 
@@ -862,7 +853,10 @@ export class EmailCommunicationServicesSystem {
     return template;
   }
 
-  renderTemplate(templateId: string, variables: Record<string, any>): { subject?: string; html?: string; text?: string } {
+  renderTemplate(
+    templateId: string,
+    variables: Record<string, any>
+  ): { subject?: string; html?: string; text?: string } {
     const template = this.templates.get(templateId);
     if (!template) throw new Error('Template not found');
 
@@ -877,7 +871,7 @@ export class EmailCommunicationServicesSystem {
 
   private replaceVariables(content: string, variables: Record<string, any>): string {
     let result = content;
-    
+
     Object.entries(variables).forEach(([key, value]) => {
       const regex = new RegExp(`{{\\s*${key}\\s*}}`, 'g');
       result = result.replace(regex, String(value));
@@ -900,7 +894,11 @@ export class EmailCommunicationServicesSystem {
   }): Promise<Message> {
     // Check user preferences
     if (params.recipient.userId) {
-      const canSend = this.checkUserPreferences(params.recipient.userId, params.channel, params.metadata?.tags?.[0] as TemplateCategory);
+      const canSend = this.checkUserPreferences(
+        params.recipient.userId,
+        params.channel,
+        params.metadata?.tags?.[0] as TemplateCategory
+      );
       if (!canSend) {
         throw new Error('User has opted out of this channel or category');
       }
@@ -1013,7 +1011,7 @@ export class EmailCommunicationServicesSystem {
     if (success) {
       message.status = 'sent';
       message.timeline.sent = new Date();
-      
+
       message.delivery.response = {
         code: '200',
         message: 'Message sent successfully',
@@ -1024,7 +1022,7 @@ export class EmailCommunicationServicesSystem {
       setTimeout(() => {
         message.status = 'delivered';
         message.timeline.delivered = new Date();
-        
+
         // Update template stats
         if (message.template) {
           const template = this.templates.get(message.template.id);
@@ -1041,7 +1039,7 @@ export class EmailCommunicationServicesSystem {
     } else {
       message.status = 'failed';
       message.timeline.failed = new Date();
-      
+
       message.delivery.error = {
         code: 'DELIVERY_FAILED',
         message: 'Failed to deliver message',
@@ -1050,7 +1048,8 @@ export class EmailCommunicationServicesSystem {
 
       // Retry if retryable
       if (message.delivery.error.retryable && provider.settings.retry.enabled) {
-        const delay = 1000 * Math.pow(provider.settings.retry.backoffMultiplier, message.delivery.attempts);
+        const delay =
+          1000 * Math.pow(provider.settings.retry.backoffMultiplier, message.delivery.attempts);
         setTimeout(() => this.queueMessage(message), delay);
       }
     }
@@ -1061,15 +1060,21 @@ export class EmailCommunicationServicesSystem {
   private simulateEngagement(message: Message): void {
     // 30% open rate
     if (Math.random() < 0.3) {
-      setTimeout(() => {
-        this.trackOpen(message.id);
-      }, 5000 + Math.random() * 60000);
+      setTimeout(
+        () => {
+          this.trackOpen(message.id);
+        },
+        5000 + Math.random() * 60000
+      );
 
       // 15% click rate (of opens)
       if (Math.random() < 0.5) {
-        setTimeout(() => {
-          this.trackClick(message.id, 'https://example.com/product');
-        }, 10000 + Math.random() * 120000);
+        setTimeout(
+          () => {
+            this.trackClick(message.id, 'https://example.com/product');
+          },
+          10000 + Math.random() * 120000
+        );
       }
     }
   }
@@ -1082,7 +1087,7 @@ export class EmailCommunicationServicesSystem {
     if (!message.timeline.opened) {
       message.timeline.opened = new Date();
       message.status = 'read';
-      
+
       // Update template stats
       if (message.template) {
         const template = this.templates.get(message.template.id);
@@ -1109,8 +1114,8 @@ export class EmailCommunicationServicesSystem {
     if (!message.tracking.links) {
       message.tracking.links = [];
     }
-    
-    const existingLink = message.tracking.links.find(l => l.url === url);
+
+    const existingLink = message.tracking.links.find((l) => l.url === url);
     if (existingLink) {
       existingLink.clicks++;
     } else {
@@ -1235,10 +1240,10 @@ export class EmailCommunicationServicesSystem {
     const recipients: Message['recipient'][] = [];
 
     if (campaign.audience.type === 'list' && campaign.audience.listIds) {
-      campaign.audience.listIds.forEach(listId => {
+      campaign.audience.listIds.forEach((listId) => {
         const list = this.contactLists.get(listId);
         if (list) {
-          list.contacts.forEach(contact => {
+          list.contacts.forEach((contact) => {
             if (contact.status === 'active') {
               recipients.push({
                 userId: contact.userId,
@@ -1301,9 +1306,7 @@ export class EmailCommunicationServicesSystem {
     }
 
     // Apply delay if configured
-    const delay = trigger.delay 
-      ? this.convertDelayToMilliseconds(trigger.delay)
-      : 0;
+    const delay = trigger.delay ? this.convertDelayToMilliseconds(trigger.delay) : 0;
 
     setTimeout(async () => {
       try {
@@ -1330,8 +1333,11 @@ export class EmailCommunicationServicesSystem {
     }, delay);
   }
 
-  private evaluateConditions(conditions: AutomationTrigger['conditions'], context: Record<string, any>): boolean {
-    return conditions.every(condition => {
+  private evaluateConditions(
+    conditions: AutomationTrigger['conditions'],
+    context: Record<string, any>
+  ): boolean {
+    return conditions.every((condition) => {
       const value = this.getNestedValue(context, condition.field);
 
       switch (condition.operator) {
@@ -1387,7 +1393,7 @@ export class EmailCommunicationServicesSystem {
       contacts: params.contacts || [],
       metadata: {
         totalContacts: params.contacts?.length || 0,
-        activeContacts: params.contacts?.filter(c => c.status === 'active').length || 0,
+        activeContacts: params.contacts?.filter((c) => c.status === 'active').length || 0,
         createdBy: 'system',
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -1422,7 +1428,7 @@ export class EmailCommunicationServicesSystem {
 
   getUserPreferences(userId: string): UserPreferences {
     let prefs = this.userPreferences.get(userId);
-    
+
     if (!prefs) {
       prefs = this.createDefaultPreferences(userId);
       this.userPreferences.set(userId, prefs);
@@ -1433,7 +1439,7 @@ export class EmailCommunicationServicesSystem {
 
   updateUserPreferences(userId: string, updates: Partial<UserPreferences>): UserPreferences {
     const prefs = this.getUserPreferences(userId);
-    
+
     Object.assign(prefs, updates);
     prefs.updatedAt = new Date();
 
@@ -1442,8 +1448,20 @@ export class EmailCommunicationServicesSystem {
 
   private createDefaultPreferences(userId: string): UserPreferences {
     const allCategories = Object.fromEntries(
-      (['transactional', 'marketing', 'notification', 'welcome', 'order', 'shipping', 'newsletter', 'promotional', 'reminder', 'confirmation'] as TemplateCategory[])
-        .map(cat => [cat, true])
+      (
+        [
+          'transactional',
+          'marketing',
+          'notification',
+          'welcome',
+          'order',
+          'shipping',
+          'newsletter',
+          'promotional',
+          'reminder',
+          'confirmation',
+        ] as TemplateCategory[]
+      ).map((cat) => [cat, true])
     ) as Record<TemplateCategory, boolean>;
 
     return {
@@ -1476,9 +1494,13 @@ export class EmailCommunicationServicesSystem {
     };
   }
 
-  private checkUserPreferences(userId: string, channel: CommunicationChannel, category?: TemplateCategory): boolean {
+  private checkUserPreferences(
+    userId: string,
+    channel: CommunicationChannel,
+    category?: TemplateCategory
+  ): boolean {
     const prefs = this.getUserPreferences(userId);
-    
+
     const channelPrefs = prefs.channels[channel as keyof typeof prefs.channels];
     if (!channelPrefs || !channelPrefs.enabled) return false;
 
@@ -1529,7 +1551,7 @@ export class EmailCommunicationServicesSystem {
 
   getUserNotifications(userId: string, status?: InAppNotification['status']): InAppNotification[] {
     return Array.from(this.inAppNotifications.values())
-      .filter(n => n.userId === userId && (!status || n.status === status))
+      .filter((n) => n.userId === userId && (!status || n.status === status))
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 
@@ -1538,20 +1560,25 @@ export class EmailCommunicationServicesSystem {
   // ============================================================================
 
   getCommunicationAnalytics(period: { start: Date; end: Date }): CommunicationAnalytics {
-    const messagesInPeriod = Array.from(this.messages.values())
-      .filter(m => m.createdAt >= period.start && m.createdAt <= period.end);
+    const messagesInPeriod = Array.from(this.messages.values()).filter(
+      (m) => m.createdAt >= period.start && m.createdAt <= period.end
+    );
 
-    const sent = messagesInPeriod.filter(m => m.status === 'sent' || m.status === 'delivered' || m.status === 'read');
-    const delivered = messagesInPeriod.filter(m => m.status === 'delivered' || m.status === 'read');
-    const opened = messagesInPeriod.filter(m => m.timeline.opened);
-    const clicked = messagesInPeriod.filter(m => m.timeline.clicked);
+    const sent = messagesInPeriod.filter(
+      (m) => m.status === 'sent' || m.status === 'delivered' || m.status === 'read'
+    );
+    const delivered = messagesInPeriod.filter(
+      (m) => m.status === 'delivered' || m.status === 'read'
+    );
+    const opened = messagesInPeriod.filter((m) => m.timeline.opened);
+    const clicked = messagesInPeriod.filter((m) => m.timeline.clicked);
 
     const analytics: CommunicationAnalytics = {
       period,
       overview: {
         totalSent: sent.length,
         delivered: delivered.length,
-        failed: messagesInPeriod.filter(m => m.status === 'failed').length,
+        failed: messagesInPeriod.filter((m) => m.status === 'failed').length,
         deliveryRate: (delivered.length / sent.length) * 100 || 0,
         byChannel: this.getChannelBreakdown(messagesInPeriod),
       },
@@ -1566,21 +1593,25 @@ export class EmailCommunicationServicesSystem {
       },
       campaigns: {
         total: this.campaigns.size,
-        active: Array.from(this.campaigns.values()).filter(c => c.status === 'sending' || c.status === 'scheduled').length,
-        completed: Array.from(this.campaigns.values()).filter(c => c.status === 'completed').length,
+        active: Array.from(this.campaigns.values()).filter(
+          (c) => c.status === 'sending' || c.status === 'scheduled'
+        ).length,
+        completed: Array.from(this.campaigns.values()).filter((c) => c.status === 'completed')
+          .length,
         topPerforming: this.getTopCampaigns(5),
       },
       templates: {
         mostUsed: this.getMostUsedTemplates(5),
       },
       issues: {
-        bounces: messagesInPeriod.filter(m => m.status === 'bounced').length,
-        bounceRate: (messagesInPeriod.filter(m => m.status === 'bounced').length / sent.length) * 100 || 0,
+        bounces: messagesInPeriod.filter((m) => m.status === 'bounced').length,
+        bounceRate:
+          (messagesInPeriod.filter((m) => m.status === 'bounced').length / sent.length) * 100 || 0,
         unsubscribes: 0,
         unsubscribeRate: 0,
         complaints: 0,
         complaintRate: 0,
-        errors: messagesInPeriod.filter(m => m.status === 'failed').length,
+        errors: messagesInPeriod.filter((m) => m.status === 'failed').length,
       },
       costs: {
         total: sent.length * 0.01, // $0.01 per message
@@ -1596,14 +1627,27 @@ export class EmailCommunicationServicesSystem {
     return analytics;
   }
 
-  private getChannelBreakdown(messages: Message[]): CommunicationAnalytics['overview']['byChannel'] {
-    const channels: CommunicationChannel[] = ['email', 'sms', 'push', 'in-app', 'whatsapp', 'webhook'];
+  private getChannelBreakdown(
+    messages: Message[]
+  ): CommunicationAnalytics['overview']['byChannel'] {
+    const channels: CommunicationChannel[] = [
+      'email',
+      'sms',
+      'push',
+      'in-app',
+      'whatsapp',
+      'webhook',
+    ];
     const breakdown = {} as Record<CommunicationChannel, any>;
 
-    channels.forEach(channel => {
-      const channelMessages = messages.filter(m => m.channel === channel);
-      const sent = channelMessages.filter(m => m.status === 'sent' || m.status === 'delivered' || m.status === 'read');
-      const delivered = channelMessages.filter(m => m.status === 'delivered' || m.status === 'read');
+    channels.forEach((channel) => {
+      const channelMessages = messages.filter((m) => m.channel === channel);
+      const sent = channelMessages.filter(
+        (m) => m.status === 'sent' || m.status === 'delivered' || m.status === 'read'
+      );
+      const delivered = channelMessages.filter(
+        (m) => m.status === 'delivered' || m.status === 'read'
+      );
 
       breakdown[channel] = {
         sent: sent.length,
@@ -1617,8 +1661,8 @@ export class EmailCommunicationServicesSystem {
 
   private calculateAverageTimeToOpen(messages: Message[]): number {
     const times = messages
-      .filter(m => m.timeline.sent && m.timeline.opened)
-      .map(m => {
+      .filter((m) => m.timeline.sent && m.timeline.opened)
+      .map((m) => {
         const sent = m.timeline.sent!.getTime();
         const opened = m.timeline.opened!.getTime();
         return (opened - sent) / (1000 * 60); // minutes
@@ -1629,8 +1673,8 @@ export class EmailCommunicationServicesSystem {
 
   private calculateAverageTimeToClick(messages: Message[]): number {
     const times = messages
-      .filter(m => m.timeline.sent && m.timeline.clicked)
-      .map(m => {
+      .filter((m) => m.timeline.sent && m.timeline.clicked)
+      .map((m) => {
         const sent = m.timeline.sent!.getTime();
         const clicked = m.timeline.clicked!.getTime();
         return (clicked - sent) / (1000 * 60); // minutes
@@ -1641,10 +1685,10 @@ export class EmailCommunicationServicesSystem {
 
   private getTopCampaigns(limit: number): CommunicationAnalytics['campaigns']['topPerforming'] {
     return Array.from(this.campaigns.values())
-      .filter(c => c.status === 'completed')
+      .filter((c) => c.status === 'completed')
       .sort((a, b) => b.stats.openRate - a.stats.openRate)
       .slice(0, limit)
-      .map(c => ({
+      .map((c) => ({
         campaignId: c.id,
         name: c.name,
         openRate: c.stats.openRate,
@@ -1657,7 +1701,7 @@ export class EmailCommunicationServicesSystem {
     return Array.from(this.templates.values())
       .sort((a, b) => b.stats.sent - a.stats.sent)
       .slice(0, limit)
-      .map(t => ({
+      .map((t) => ({
         templateId: t.id,
         name: t.name,
         useCount: t.stats.sent,
@@ -1671,8 +1715,7 @@ export class EmailCommunicationServicesSystem {
   // ============================================================================
 
   private getProviderForChannel(channel: CommunicationChannel): ProviderConfiguration | undefined {
-    return Array.from(this.providers.values())
-      .find(p => p.channel === channel && p.enabled);
+    return Array.from(this.providers.values()).find((p) => p.channel === channel && p.enabled);
   }
 
   private startMessageProcessor(): void {
@@ -1682,7 +1725,7 @@ export class EmailCommunicationServicesSystem {
   }
 
   private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   // ============================================================================
@@ -1744,7 +1787,7 @@ export class EmailCommunicationServicesSystem {
         <p>Discover unique handcrafted products from talented artisans around the world.</p>
         <a href="{{shopUrl}}">Start Shopping</a>
       `,
-      text: 'Welcome, {{firstName}}! We\'re thrilled to have you join our community.',
+      text: "Welcome, {{firstName}}! We're thrilled to have you join our community.",
       variables: [
         { name: 'firstName', type: 'string', required: true },
         { name: 'shopUrl', type: 'string', required: true },
@@ -1823,18 +1866,16 @@ export class EmailCommunicationServicesSystem {
 
   getMessagesByRecipient(email: string): Message[] {
     return Array.from(this.messages.values())
-      .filter(m => m.recipient.email === email)
+      .filter((m) => m.recipient.email === email)
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 
   getCampaignsByStatus(status: CampaignStatus): Campaign[] {
-    return Array.from(this.campaigns.values())
-      .filter(c => c.status === status);
+    return Array.from(this.campaigns.values()).filter((c) => c.status === status);
   }
 
   getTemplatesByCategory(category: TemplateCategory): MessageTemplate[] {
-    return Array.from(this.templates.values())
-      .filter(t => t.category === category);
+    return Array.from(this.templates.values()).filter((t) => t.category === category);
   }
 }
 

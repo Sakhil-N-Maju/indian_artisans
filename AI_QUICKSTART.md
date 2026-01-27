@@ -5,6 +5,7 @@ Get your AI-powered product creation system running in 5 minutes!
 ## Prerequisites
 
 ✅ You already have:
+
 - Indian Artisans platform running
 - WhatsApp Cloud API configured
 - Database setup complete
@@ -56,6 +57,7 @@ curl "http://localhost:3000/api/ai/products?mediaId=YOUR_MEDIA_ID"
 ```
 
 **Expected Response:**
+
 ```json
 {
   "success": true,
@@ -66,29 +68,31 @@ curl "http://localhost:3000/api/ai/products?mediaId=YOUR_MEDIA_ID"
 ### Option B: Full WhatsApp Test
 
 1. **Send a product image** to your WhatsApp test number
-   
 2. **Receive response:**
+
    ```
    📸 Image received! Now send a voice message describing your product.
-   
+
    I can see: "Handwoven basket". Please describe it in your own words.
    ```
 
 3. **Send voice description** (any language):
+
    ```
    "This is a handwoven bamboo basket made using traditional techniques..."
    ```
 
 4. **Receive confirmation:**
+
    ```
    🤖 Processing with AI... (30 seconds)
-   
+
    ✅ Product created successfully!
-   
+
    📦 Traditional Handwoven Bamboo Basket
    💰 Suggested Price: ₹1,500
    📁 Category: Home Decor
-   
+
    Confidence Score: 93%
    ```
 
@@ -150,20 +154,24 @@ const storyPrompt = `...your custom story template...`;
 ## Troubleshooting
 
 ### "Invalid API Key"
+
 - Check `.env` has correct `OPENAI_API_KEY`
 - Verify no extra spaces or quotes
 - Restart server after changing `.env`
 
 ### "Insufficient Credits"
+
 - Add payment method at https://platform.openai.com/settings/organization/billing
 - Minimum $5 recommended for testing
 
 ### "Processing Failed"
+
 - Check voice message is clear (not too short)
 - Ensure image is high quality
 - View terminal logs for detailed error
 
 ### "No Response from WhatsApp"
+
 - Verify webhook is configured in Meta dashboard
 - Check ngrok is running and URL is correct
 - Ensure WhatsApp access token is valid
@@ -173,6 +181,7 @@ const storyPrompt = `...your custom story template...`;
 ## Cost Estimation
 
 ### Per Product:
+
 - Voice Transcription: ~$0.01
 - Image Analysis: ~$0.01
 - Product Extraction: ~$0.02
@@ -180,11 +189,13 @@ const storyPrompt = `...your custom story template...`;
 - **Total: ~$0.04 (₹3.50)**
 
 ### Monthly Estimates:
+
 - 10 products/day: ~$12/month (₹1,000)
 - 50 products/day: ~$60/month (₹5,000)
 - 100 products/day: ~$120/month (₹10,000)
 
 Compare to manual listing creation:
+
 - Manual time: 15-20 minutes per product
 - AI time: 30 seconds
 - **Time saved: 97%**
@@ -195,9 +206,10 @@ Compare to manual listing creation:
 
 📖 **Full Documentation**: [AI_PIPELINE.md](AI_PIPELINE.md)  
 🧪 **Testing Guide**: [AI_TESTING.md](AI_TESTING.md)  
-🏗️ **Architecture**: [ARCHITECTURE.md](ARCHITECTURE.md)  
+🏗️ **Architecture**: [ARCHITECTURE.md](ARCHITECTURE.md)
 
 **OpenAI Help**:
+
 - API Docs: https://platform.openai.com/docs
 - Community: https://community.openai.com
 - Status: https://status.openai.com

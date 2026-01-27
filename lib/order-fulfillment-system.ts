@@ -1,6 +1,6 @@
 /**
  * Order Fulfillment System
- * 
+ *
  * Comprehensive order processing and fulfillment:
  * - Order processing workflow
  * - Pick, pack, and ship operations
@@ -14,7 +14,7 @@
 export interface FulfillmentOrder {
   id: string;
   orderId: string;
-  
+
   // Customer info
   customer: {
     id: string;
@@ -22,7 +22,7 @@ export interface FulfillmentOrder {
     email: string;
     phone: string;
   };
-  
+
   // Shipping address
   shippingAddress: {
     street: string;
@@ -32,7 +32,7 @@ export interface FulfillmentOrder {
     country: string;
     addressType?: 'residential' | 'commercial';
   };
-  
+
   // Items
   items: {
     id: string;
@@ -52,7 +52,7 @@ export interface FulfillmentOrder {
     pickedQuantity?: number;
     packedQuantity?: number;
   }[];
-  
+
   // Fulfillment details
   fulfillment: {
     method: 'standard' | 'express' | 'same_day' | 'pickup';
@@ -61,10 +61,19 @@ export interface FulfillmentOrder {
     requestedShipDate?: Date;
     promisedDeliveryDate?: Date;
   };
-  
+
   // Status
-  status: 'pending' | 'picking' | 'picked' | 'packing' | 'packed' | 'shipped' | 'delivered' | 'cancelled' | 'on_hold';
-  
+  status:
+    | 'pending'
+    | 'picking'
+    | 'picked'
+    | 'packing'
+    | 'packed'
+    | 'shipped'
+    | 'delivered'
+    | 'cancelled'
+    | 'on_hold';
+
   // Workflow tracking
   workflow: {
     createdAt: Date;
@@ -78,11 +87,11 @@ export interface FulfillmentOrder {
     deliveredAt?: Date;
     cancelledAt?: Date;
   };
-  
+
   // Notes and special instructions
   notes?: string;
   specialInstructions?: string;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -90,11 +99,11 @@ export interface FulfillmentOrder {
 export interface PickingTask {
   id: string;
   fulfillmentOrderId: string;
-  
+
   // Assignment
   assignedTo?: string;
   assignedAt?: Date;
-  
+
   // Items to pick
   items: {
     productId: string;
@@ -108,21 +117,21 @@ export interface PickingTask {
     pickedQuantity: number;
     status: 'pending' | 'picking' | 'picked' | 'short_picked';
   }[];
-  
+
   // Status
   status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
-  
+
   // Picking route
   route?: {
     sequence: number;
     locationId: string;
     productId: string;
   }[];
-  
+
   // Timing
   startedAt?: Date;
   completedAt?: Date;
-  
+
   createdAt: Date;
 }
 
@@ -130,11 +139,11 @@ export interface PackingTask {
   id: string;
   fulfillmentOrderId: string;
   pickingTaskId: string;
-  
+
   // Assignment
   assignedTo?: string;
   assignedAt?: Date;
-  
+
   // Items to pack
   items: {
     productId: string;
@@ -142,7 +151,7 @@ export interface PackingTask {
     quantity: number;
     packed: boolean;
   }[];
-  
+
   // Packaging
   packages: {
     id: string;
@@ -160,20 +169,20 @@ export interface PackingTask {
     }[];
     trackingNumber?: string;
   }[];
-  
+
   // Materials used
   materials: {
     type: 'box' | 'bubble_wrap' | 'tape' | 'filler' | 'label';
     quantity: number;
   }[];
-  
+
   // Status
   status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
-  
+
   // Timing
   startedAt?: Date;
   completedAt?: Date;
-  
+
   createdAt: Date;
 }
 
@@ -181,7 +190,7 @@ export interface Shipment {
   id: string;
   fulfillmentOrderId: string;
   packingTaskId: string;
-  
+
   // Carrier
   carrier: {
     name: string;
@@ -189,10 +198,10 @@ export interface Shipment {
     trackingNumber: string;
     trackingUrl: string;
   };
-  
+
   // Packages
   packages: PackingTask['packages'];
-  
+
   // Shipping details
   shipping: {
     from: {
@@ -215,15 +224,22 @@ export interface Shipment {
     cost: number;
     currency: string;
   };
-  
+
   // Dates
   shipDate: Date;
   estimatedDeliveryDate: Date;
   actualDeliveryDate?: Date;
-  
+
   // Status
-  status: 'label_created' | 'picked_up' | 'in_transit' | 'out_for_delivery' | 'delivered' | 'failed' | 'returned';
-  
+  status:
+    | 'label_created'
+    | 'picked_up'
+    | 'in_transit'
+    | 'out_for_delivery'
+    | 'delivered'
+    | 'failed'
+    | 'returned';
+
   // Tracking events
   trackingEvents: {
     timestamp: Date;
@@ -231,13 +247,13 @@ export interface Shipment {
     status: string;
     description: string;
   }[];
-  
+
   // Documents
   documents: {
     type: 'label' | 'invoice' | 'packing_slip' | 'customs';
     url: string;
   }[];
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -245,10 +261,10 @@ export interface Shipment {
 export interface BatchFulfillment {
   id: string;
   name: string;
-  
+
   // Orders in batch
   orders: string[]; // Fulfillment order IDs
-  
+
   // Batch details
   batch: {
     totalOrders: number;
@@ -256,24 +272,24 @@ export interface BatchFulfillment {
     warehouse: string;
     priority: FulfillmentOrder['fulfillment']['priority'];
   };
-  
+
   // Status
   status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
-  
+
   // Progress
   progress: {
     picked: number;
     packed: number;
     shipped: number;
   };
-  
+
   // Assignment
   assignedTo?: string[];
-  
+
   // Timing
   startedAt?: Date;
   completedAt?: Date;
-  
+
   createdAt: Date;
 }
 
@@ -282,7 +298,7 @@ export interface FulfillmentMetrics {
     start: Date;
     end: Date;
   };
-  
+
   overview: {
     totalOrders: number;
     fulfilledOrders: number;
@@ -290,33 +306,33 @@ export interface FulfillmentMetrics {
     averageFulfillmentTime: number; // hours
     onTimeDeliveryRate: number; // percentage
   };
-  
+
   productivity: {
     averagePickTime: number; // minutes per order
     averagePackTime: number; // minutes per order
     averageItemsPerHour: number;
     ordersPer8Hours: number;
   };
-  
+
   accuracy: {
     pickAccuracy: number; // percentage
     packAccuracy: number; // percentage
     shippingAccuracy: number; // percentage
   };
-  
+
   byStatus: {
     status: FulfillmentOrder['status'];
     count: number;
     percentage: number;
   }[];
-  
+
   byCarrier: {
     carrier: string;
     shipments: number;
     onTimeRate: number;
     averageCost: number;
   }[];
-  
+
   topPerformers: {
     userId: string;
     userName: string;
@@ -358,7 +374,7 @@ export class OrderFulfillmentSystem {
       orderId: params.orderId,
       customer: params.customer,
       shippingAddress: params.shippingAddress,
-      items: params.items.map(item => ({
+      items: params.items.map((item) => ({
         ...item,
         pickedQuantity: 0,
         packedQuantity: 0,
@@ -403,7 +419,7 @@ export class OrderFulfillmentSystem {
     const task: PickingTask = {
       id: `pick-${Date.now()}`,
       fulfillmentOrderId: order.id,
-      items: order.items.map(item => ({
+      items: order.items.map((item) => ({
         productId: item.productId,
         productName: item.productName,
         sku: item.sku,
@@ -421,7 +437,7 @@ export class OrderFulfillmentSystem {
     };
 
     this.pickingTasks.set(task.id, task);
-    
+
     order.status = 'picking';
     order.workflow.pickingStartedAt = new Date();
     order.updatedAt = new Date();
@@ -445,19 +461,15 @@ export class OrderFulfillmentSystem {
   /**
    * Pick item
    */
-  async pickItem(params: {
-    taskId: string;
-    productId: string;
-    quantity: number;
-  }): Promise<void> {
+  async pickItem(params: { taskId: string; productId: string; quantity: number }): Promise<void> {
     const task = this.pickingTasks.get(params.taskId);
     if (!task) return;
 
-    const item = task.items.find(i => i.productId === params.productId);
+    const item = task.items.find((i) => i.productId === params.productId);
     if (!item) return;
 
     item.pickedQuantity += params.quantity;
-    
+
     if (item.pickedQuantity >= item.quantity) {
       item.status = 'picked';
     } else if (item.pickedQuantity > 0) {
@@ -465,7 +477,7 @@ export class OrderFulfillmentSystem {
     }
 
     // Check if all items picked
-    const allPicked = task.items.every(i => i.status === 'picked' || i.status === 'short_picked');
+    const allPicked = task.items.every((i) => i.status === 'picked' || i.status === 'short_picked');
     if (allPicked) {
       task.status = 'completed';
       task.completedAt = new Date();
@@ -475,10 +487,10 @@ export class OrderFulfillmentSystem {
       if (order) {
         order.status = 'picked';
         order.workflow.pickingCompletedAt = new Date();
-        
+
         // Update picked quantities
-        task.items.forEach(taskItem => {
-          const orderItem = order.items.find(i => i.productId === taskItem.productId);
+        task.items.forEach((taskItem) => {
+          const orderItem = order.items.find((i) => i.productId === taskItem.productId);
           if (orderItem) {
             orderItem.pickedQuantity = taskItem.pickedQuantity;
           }
@@ -503,7 +515,7 @@ export class OrderFulfillmentSystem {
       id: `pack-${Date.now()}`,
       fulfillmentOrderId: order.id,
       pickingTaskId,
-      items: order.items.map(item => ({
+      items: order.items.map((item) => ({
         productId: item.productId,
         productName: item.productName,
         quantity: item.pickedQuantity || 0,
@@ -516,7 +528,7 @@ export class OrderFulfillmentSystem {
     };
 
     this.packingTasks.set(task.id, task);
-    
+
     order.status = 'packing';
     order.workflow.packingStartedAt = new Date();
     order.updatedAt = new Date();
@@ -539,7 +551,7 @@ export class OrderFulfillmentSystem {
     if (!task) return;
 
     const packageId = `pkg-${Date.now()}`;
-    
+
     task.packages.push({
       id: packageId,
       type: params.packageType,
@@ -549,16 +561,16 @@ export class OrderFulfillmentSystem {
     });
 
     // Update packed items
-    params.items.forEach(item => {
-      const taskItem = task.items.find(i => i.productId === item.productId);
+    params.items.forEach((item) => {
+      const taskItem = task.items.find((i) => i.productId === item.productId);
       if (taskItem) {
         taskItem.packed = true;
       }
     });
 
     // Add materials
-    params.materials.forEach(material => {
-      const existing = task.materials.find(m => m.type === material.type);
+    params.materials.forEach((material) => {
+      const existing = task.materials.find((m) => m.type === material.type);
       if (existing) {
         existing.quantity += material.quantity;
       } else {
@@ -567,7 +579,7 @@ export class OrderFulfillmentSystem {
     });
 
     // Check if all items packed
-    const allPacked = task.items.every(i => i.packed);
+    const allPacked = task.items.every((i) => i.packed);
     if (allPacked) {
       task.status = 'completed';
       task.completedAt = new Date();
@@ -594,7 +606,7 @@ export class OrderFulfillmentSystem {
   }): Promise<Shipment> {
     const order = this.fulfillmentOrders.get(params.fulfillmentOrderId);
     const packingTask = this.packingTasks.get(params.packingTaskId);
-    
+
     if (!order || !packingTask) {
       throw new Error('Order or packing task not found');
     }
@@ -612,7 +624,7 @@ export class OrderFulfillmentSystem {
         trackingNumber,
         trackingUrl: `https://tracking.example.com/${trackingNumber}`,
       },
-      packages: packingTask.packages.map(pkg => ({
+      packages: packingTask.packages.map((pkg) => ({
         ...pkg,
         trackingNumber,
       })),
@@ -696,7 +708,7 @@ export class OrderFulfillmentSystem {
 
     if (params.status === 'delivered') {
       shipment.actualDeliveryDate = new Date();
-      
+
       const order = this.fulfillmentOrders.get(shipment.fulfillmentOrderId);
       if (order) {
         order.status = 'delivered';
@@ -717,8 +729,8 @@ export class OrderFulfillmentSystem {
     priority: FulfillmentOrder['fulfillment']['priority'];
   }): Promise<BatchFulfillment> {
     const orders = params.orderIds
-      .map(id => this.fulfillmentOrders.get(id))
-      .filter(o => o !== undefined) as FulfillmentOrder[];
+      .map((id) => this.fulfillmentOrders.get(id))
+      .filter((o) => o !== undefined) as FulfillmentOrder[];
 
     const totalItems = orders.reduce((sum, o) => sum + o.items.length, 0);
 
@@ -750,37 +762,37 @@ export class OrderFulfillmentSystem {
    */
   async getMetrics(period: { start: Date; end: Date }): Promise<FulfillmentMetrics> {
     const orders = Array.from(this.fulfillmentOrders.values()).filter(
-      o => o.createdAt >= period.start && o.createdAt <= period.end
+      (o) => o.createdAt >= period.start && o.createdAt <= period.end
     );
 
-    const fulfilledOrders = orders.filter(o => 
-      o.status === 'delivered' || o.status === 'shipped'
+    const fulfilledOrders = orders.filter(
+      (o) => o.status === 'delivered' || o.status === 'shipped'
     );
 
     const fulfillmentTimes = fulfilledOrders
-      .filter(o => o.workflow.shippedAt)
-      .map(o => {
+      .filter((o) => o.workflow.shippedAt)
+      .map((o) => {
         const created = o.workflow.createdAt.getTime();
         const shipped = o.workflow.shippedAt!.getTime();
         return (shipped - created) / (1000 * 60 * 60); // hours
       });
 
-    const averageFulfillmentTime = fulfillmentTimes.length > 0
-      ? fulfillmentTimes.reduce((sum, t) => sum + t, 0) / fulfillmentTimes.length
-      : 0;
+    const averageFulfillmentTime =
+      fulfillmentTimes.length > 0
+        ? fulfillmentTimes.reduce((sum, t) => sum + t, 0) / fulfillmentTimes.length
+        : 0;
 
-    const deliveredOnTime = fulfilledOrders.filter(o => {
+    const deliveredOnTime = fulfilledOrders.filter((o) => {
       if (!o.fulfillment.promisedDeliveryDate || !o.workflow.deliveredAt) return true;
       return o.workflow.deliveredAt <= o.fulfillment.promisedDeliveryDate;
     }).length;
 
-    const onTimeDeliveryRate = fulfilledOrders.length > 0
-      ? (deliveredOnTime / fulfilledOrders.length) * 100
-      : 0;
+    const onTimeDeliveryRate =
+      fulfilledOrders.length > 0 ? (deliveredOnTime / fulfilledOrders.length) * 100 : 0;
 
     // Status breakdown
     const statusCounts = new Map<FulfillmentOrder['status'], number>();
-    orders.forEach(o => {
+    orders.forEach((o) => {
       statusCounts.set(o.status, (statusCounts.get(o.status) || 0) + 1);
     });
 
@@ -792,15 +804,19 @@ export class OrderFulfillmentSystem {
 
     // Carrier breakdown
     const shipments = Array.from(this.shipments.values()).filter(
-      s => s.createdAt >= period.start && s.createdAt <= period.end
+      (s) => s.createdAt >= period.start && s.createdAt <= period.end
     );
 
     const carrierStats = new Map<string, { shipments: number; cost: number; onTime: number }>();
-    shipments.forEach(s => {
+    shipments.forEach((s) => {
       const stats = carrierStats.get(s.carrier.name) || { shipments: 0, cost: 0, onTime: 0 };
       stats.shipments++;
       stats.cost += s.shipping.cost;
-      if (s.status === 'delivered' && s.actualDeliveryDate && s.actualDeliveryDate <= s.estimatedDeliveryDate) {
+      if (
+        s.status === 'delivered' &&
+        s.actualDeliveryDate &&
+        s.actualDeliveryDate <= s.estimatedDeliveryDate
+      ) {
         stats.onTime++;
       }
       carrierStats.set(s.carrier.name, stats);
@@ -836,8 +852,20 @@ export class OrderFulfillmentSystem {
       byStatus,
       byCarrier,
       topPerformers: [
-        { userId: 'user1', userName: 'John Doe', ordersProcessed: 145, averageTime: 18.5, accuracy: 99.1 },
-        { userId: 'user2', userName: 'Jane Smith', ordersProcessed: 132, averageTime: 19.2, accuracy: 98.7 },
+        {
+          userId: 'user1',
+          userName: 'John Doe',
+          ordersProcessed: 145,
+          averageTime: 18.5,
+          accuracy: 99.1,
+        },
+        {
+          userId: 'user2',
+          userName: 'Jane Smith',
+          ordersProcessed: 132,
+          averageTime: 19.2,
+          accuracy: 98.7,
+        },
       ],
     };
   }
@@ -853,7 +881,7 @@ export class OrderFulfillmentSystem {
    * Get orders by status
    */
   async getOrdersByStatus(status: FulfillmentOrder['status']): Promise<FulfillmentOrder[]> {
-    return Array.from(this.fulfillmentOrders.values()).filter(o => o.status === status);
+    return Array.from(this.fulfillmentOrders.values()).filter((o) => o.status === status);
   }
 }
 

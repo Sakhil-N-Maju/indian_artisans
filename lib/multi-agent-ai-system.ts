@@ -1,6 +1,6 @@
 /**
  * Multi-Agent AI System
- * 
+ *
  * Coordinates multiple specialized AI agents for different tasks:
  * - Product Discovery Agent
  * - Customer Support Agent
@@ -52,14 +52,14 @@ export class MultiAgentAISystem {
     conversationHistory?: any[];
   }): Promise<AgentResponse> {
     const taskId = this.createTask('discovery', input, 'medium');
-    
+
     try {
       // Analyze user query
       const intent = this.analyzeIntent(input.query);
-      
+
       // Extract product requirements
       const requirements = this.extractRequirements(input.query);
-      
+
       // Generate search parameters
       const searchParams = {
         craftType: requirements.craftType,
@@ -68,17 +68,17 @@ export class MultiAgentAISystem {
         style: requirements.style,
         occasion: requirements.occasion,
       };
-      
+
       // Generate conversational response
       const response = this.generateDiscoveryResponse(intent, requirements, input.query);
-      
+
       this.completeTask(taskId, {
         intent,
         requirements,
         searchParams,
         response,
       });
-      
+
       return {
         success: true,
         data: {
@@ -109,15 +109,15 @@ export class MultiAgentAISystem {
     context?: any;
   }): Promise<AgentResponse> {
     const taskId = this.createTask('support', input, 'high');
-    
+
     try {
       // Classify support request
       const category = this.classifySupportRequest(input.query);
-      
+
       // Generate response based on category
       let response: string;
       let actions: any[] = [];
-      
+
       switch (category) {
         case 'order_status':
           response = await this.handleOrderInquiry(input);
@@ -138,9 +138,9 @@ export class MultiAgentAISystem {
         default:
           response = await this.handleGeneralInquiry(input);
       }
-      
+
       this.completeTask(taskId, { category, response, actions });
-      
+
       return {
         success: true,
         data: {
@@ -172,11 +172,11 @@ export class MultiAgentAISystem {
     context?: 'product' | 'support' | 'content' | 'ui';
   }): Promise<AgentResponse> {
     const taskId = this.createTask('translation', input, 'medium');
-    
+
     try {
       // Detect if cultural adaptation is needed
       const needsCulturalAdaptation = this.needsCulturalAdaptation(input.text, input.context);
-      
+
       // Perform translation
       const translation = await this.translateWithContext(
         input.text,
@@ -184,14 +184,14 @@ export class MultiAgentAISystem {
         input.targetLang,
         input.context
       );
-      
+
       // Apply cultural adaptations if needed
       const finalTranslation = needsCulturalAdaptation
         ? this.applyCulturalAdaptation(translation, input.targetLang)
         : translation;
-      
+
       this.completeTask(taskId, { translation: finalTranslation });
-      
+
       return {
         success: true,
         data: {
@@ -223,13 +223,13 @@ export class MultiAgentAISystem {
     keywords?: string[];
   }): Promise<AgentResponse> {
     const taskId = this.createTask('content', input, 'low');
-    
+
     try {
       const tone = input.tone || 'professional';
       const length = input.length || 'medium';
-      
+
       let content: string;
-      
+
       switch (input.type) {
         case 'product_description':
           content = this.generateProductDescription(input.subject, tone, length, input.keywords);
@@ -246,9 +246,9 @@ export class MultiAgentAISystem {
         default:
           content = this.generateGenericContent(input.subject, tone, length);
       }
-      
+
       this.completeTask(taskId, { content });
-      
+
       return {
         success: true,
         data: {
@@ -256,7 +256,7 @@ export class MultiAgentAISystem {
           wordCount: content.split(' ').length,
           readingTime: Math.ceil(content.split(' ').length / 200), // minutes
         },
-        confidence: 0.80,
+        confidence: 0.8,
         model: 'multi-agent-content',
       };
     } catch (error) {
@@ -278,12 +278,12 @@ export class MultiAgentAISystem {
     criteria?: any;
   }): Promise<AgentResponse> {
     const taskId = this.createTask('qa', input, 'medium');
-    
+
     try {
       let qualityScore = 0;
       const issues: any[] = [];
       const suggestions: any[] = [];
-      
+
       switch (input.type) {
         case 'content':
           const contentQA = this.validateContent(input.data);
@@ -304,11 +304,11 @@ export class MultiAgentAISystem {
           suggestions.push(...dataQA.suggestions);
           break;
       }
-      
+
       const passed = qualityScore >= 70; // 70% threshold
-      
+
       this.completeTask(taskId, { qualityScore, passed, issues, suggestions });
-      
+
       return {
         success: true,
         data: {
@@ -317,7 +317,7 @@ export class MultiAgentAISystem {
           issues,
           suggestions,
         },
-        confidence: 0.90,
+        confidence: 0.9,
         model: 'multi-agent-qa',
       };
     } catch (error) {
@@ -332,12 +332,14 @@ export class MultiAgentAISystem {
   /**
    * Coordinate multiple agents for complex tasks
    */
-  async coordinateAgents(tasks: {
-    agent: 'discovery' | 'support' | 'translation' | 'content' | 'qa';
-    input: any;
-  }[]): Promise<AgentResponse[]> {
+  async coordinateAgents(
+    tasks: {
+      agent: 'discovery' | 'support' | 'translation' | 'content' | 'qa';
+      input: any;
+    }[]
+  ): Promise<AgentResponse[]> {
     const results = await Promise.all(
-      tasks.map(task => {
+      tasks.map((task) => {
         switch (task.agent) {
           case 'discovery':
             return this.productDiscoveryAgent(task.input);
@@ -352,7 +354,7 @@ export class MultiAgentAISystem {
         }
       })
     );
-    
+
     return results;
   }
 
@@ -367,7 +369,7 @@ export class MultiAgentAISystem {
       status: 'processing',
       createdAt: new Date(),
     };
-    
+
     this.tasks.set(task.id, task);
     return task.id;
   }
@@ -393,11 +395,19 @@ export class MultiAgentAISystem {
 
   private analyzeIntent(query: string): string {
     const lowerQuery = query.toLowerCase();
-    
-    if (lowerQuery.includes('buy') || lowerQuery.includes('purchase') || lowerQuery.includes('shop')) {
+
+    if (
+      lowerQuery.includes('buy') ||
+      lowerQuery.includes('purchase') ||
+      lowerQuery.includes('shop')
+    ) {
       return 'purchase_intent';
     }
-    if (lowerQuery.includes('find') || lowerQuery.includes('looking for') || lowerQuery.includes('search')) {
+    if (
+      lowerQuery.includes('find') ||
+      lowerQuery.includes('looking for') ||
+      lowerQuery.includes('search')
+    ) {
       return 'search_intent';
     }
     if (lowerQuery.includes('compare') || lowerQuery.includes('difference')) {
@@ -406,7 +416,7 @@ export class MultiAgentAISystem {
     if (lowerQuery.includes('recommend') || lowerQuery.includes('suggest')) {
       return 'recommendation_intent';
     }
-    
+
     return 'general_inquiry';
   }
 
@@ -424,13 +434,13 @@ export class MultiAgentAISystem {
   private extractCraftType(query: string): string | null {
     const crafts = ['pottery', 'silk', 'painting', 'carpet', 'jewelry', 'textile', 'wood', 'metal'];
     const lowerQuery = query.toLowerCase();
-    
+
     for (const craft of crafts) {
       if (lowerQuery.includes(craft)) {
         return craft;
       }
     }
-    
+
     return null;
   }
 
@@ -442,53 +452,55 @@ export class MultiAgentAISystem {
         return { max: parseInt(match[0]) };
       }
     }
-    
+
     return null;
   }
 
   private extractRegion(query: string): string | null {
     const regions = ['rajasthan', 'kashmir', 'bengal', 'varanasi', 'jaipur', 'bihar', 'odisha'];
     const lowerQuery = query.toLowerCase();
-    
+
     for (const region of regions) {
       if (lowerQuery.includes(region)) {
         return region;
       }
     }
-    
+
     return null;
   }
 
   private extractStyle(query: string): string | null {
     const styles = ['traditional', 'modern', 'contemporary', 'vintage', 'ethnic'];
     const lowerQuery = query.toLowerCase();
-    
+
     for (const style of styles) {
       if (lowerQuery.includes(style)) {
         return style;
       }
     }
-    
+
     return null;
   }
 
   private extractOccasion(query: string): string | null {
     const occasions = ['wedding', 'festival', 'gift', 'home decor', 'daily use'];
     const lowerQuery = query.toLowerCase();
-    
+
     for (const occasion of occasions) {
       if (lowerQuery.includes(occasion)) {
         return occasion;
       }
     }
-    
+
     return null;
   }
 
   private generateDiscoveryResponse(intent: string, requirements: any, query: string): string {
-    return `I understand you're looking for ${requirements.craftType || 'handcrafted products'}. ` +
+    return (
+      `I understand you're looking for ${requirements.craftType || 'handcrafted products'}. ` +
       `Let me help you find the perfect piece. ${requirements.region ? `I'll focus on items from ${requirements.region}. ` : ''}` +
-      `Based on your preferences, I have some great suggestions for you.`;
+      `Based on your preferences, I have some great suggestions for you.`
+    );
   }
 
   private generateProductSuggestions(requirements: any): string[] {
@@ -501,7 +513,7 @@ export class MultiAgentAISystem {
 
   private classifySupportRequest(query: string): string {
     const lowerQuery = query.toLowerCase();
-    
+
     if (lowerQuery.includes('order') || lowerQuery.includes('track')) {
       return 'order_status';
     }
@@ -514,10 +526,14 @@ export class MultiAgentAISystem {
     if (lowerQuery.includes('product') || lowerQuery.includes('item')) {
       return 'product_info';
     }
-    if (lowerQuery.includes('technical') || lowerQuery.includes('website') || lowerQuery.includes('app')) {
+    if (
+      lowerQuery.includes('technical') ||
+      lowerQuery.includes('website') ||
+      lowerQuery.includes('app')
+    ) {
       return 'technical';
     }
-    
+
     return 'general';
   }
 
@@ -526,15 +542,15 @@ export class MultiAgentAISystem {
   }
 
   private async handleProductInquiry(input: any): Promise<string> {
-    return "I can help you learn more about our products. What specific information are you looking for?";
+    return 'I can help you learn more about our products. What specific information are you looking for?';
   }
 
   private async handleShippingInquiry(input: any): Promise<string> {
-    return "We offer shipping across India and internationally. Standard delivery takes 5-7 business days. Would you like to know about expedited shipping options?";
+    return 'We offer shipping across India and internationally. Standard delivery takes 5-7 business days. Would you like to know about expedited shipping options?';
   }
 
   private async handleReturnInquiry(input: any): Promise<string> {
-    return "We have a 30-day return policy for most products. Please note that handcrafted items have specific return conditions. Can you tell me more about your situation?";
+    return 'We have a 30-day return policy for most products. Please note that handcrafted items have specific return conditions. Can you tell me more about your situation?';
   }
 
   private async handleTechnicalInquiry(input: any): Promise<string> {
@@ -556,7 +572,12 @@ export class MultiAgentAISystem {
     return context === 'product' || context === 'content';
   }
 
-  private async translateWithContext(text: string, source: string, target: string, context?: string): Promise<string> {
+  private async translateWithContext(
+    text: string,
+    source: string,
+    target: string,
+    context?: string
+  ): Promise<string> {
     // In production, this would use actual translation API
     return `[${target.toUpperCase()}] ${text}`;
   }
@@ -566,23 +587,37 @@ export class MultiAgentAISystem {
     return text;
   }
 
-  private generateProductDescription(subject: string, tone: string, length: string, keywords?: string[]): string {
-    return `Discover the exquisite beauty of ${subject}, a masterpiece of traditional Indian craftsmanship. ` +
+  private generateProductDescription(
+    subject: string,
+    tone: string,
+    length: string,
+    keywords?: string[]
+  ): string {
+    return (
+      `Discover the exquisite beauty of ${subject}, a masterpiece of traditional Indian craftsmanship. ` +
       `Each piece is carefully handcrafted by skilled artisans, preserving centuries-old techniques. ` +
-      `${keywords ? `Features: ${keywords.join(', ')}.` : ''} Perfect for those who appreciate authentic artistry.`;
+      `${keywords ? `Features: ${keywords.join(', ')}.` : ''} Perfect for those who appreciate authentic artistry.`
+    );
   }
 
   private generateSocialMediaPost(subject: string, tone: string, keywords?: string[]): string {
-    return `✨ ${subject} ✨\n\nHandcrafted with love by master artisans 🎨\n` +
-      `${keywords ? keywords.map(k => `#${k.replace(/\s/g, '')}`).join(' ') : '#Handmade #IndianCrafts'}\n\n` +
-      `Shop now! 🛍️`;
+    return (
+      `✨ ${subject} ✨\n\nHandcrafted with love by master artisans 🎨\n` +
+      `${keywords ? keywords.map((k) => `#${k.replace(/\s/g, '')}`).join(' ') : '#Handmade #IndianCrafts'}\n\n` +
+      `Shop now! 🛍️`
+    );
   }
 
   private generateEmailContent(subject: string, tone: string, length: string): string {
     return `Dear Valued Customer,\n\n${subject}\n\nThank you for your continued support.\n\nBest regards,\nArtisans of India Team`;
   }
 
-  private generateBlogPost(subject: string, tone: string, length: string, keywords?: string[]): string {
+  private generateBlogPost(
+    subject: string,
+    tone: string,
+    length: string,
+    keywords?: string[]
+  ): string {
     return `# ${subject}\n\nDiscover the rich heritage and timeless beauty of Indian craftsmanship...`;
   }
 
@@ -594,17 +629,17 @@ export class MultiAgentAISystem {
     const issues = [];
     const suggestions = [];
     let score = 100;
-    
+
     if (content.length < 50) {
       issues.push({ type: 'length', message: 'Content is too short' });
       score -= 20;
     }
-    
+
     if (!/[.!?]$/.test(content.trim())) {
       suggestions.push({ type: 'punctuation', message: 'Add proper ending punctuation' });
       score -= 5;
     }
-    
+
     return { score, issues, suggestions };
   }
 
@@ -612,22 +647,25 @@ export class MultiAgentAISystem {
     const issues = [];
     const suggestions = [];
     let score = 100;
-    
+
     // Simplified image validation
     return { score, issues, suggestions };
   }
 
-  private validateData(data: any, criteria?: any): { score: number; issues: any[]; suggestions: any[] } {
+  private validateData(
+    data: any,
+    criteria?: any
+  ): { score: number; issues: any[]; suggestions: any[] } {
     const issues = [];
     const suggestions = [];
     let score = 100;
-    
+
     // Simplified data validation
     if (!data) {
       issues.push({ type: 'missing', message: 'Data is missing' });
       score = 0;
     }
-    
+
     return { score, issues, suggestions };
   }
 
@@ -636,19 +674,22 @@ export class MultiAgentAISystem {
    */
   getSystemStats() {
     const tasks = Array.from(this.tasks.values());
-    
+
     return {
       totalTasks: tasks.length,
-      completed: tasks.filter(t => t.status === 'completed').length,
-      failed: tasks.filter(t => t.status === 'failed').length,
-      processing: tasks.filter(t => t.status === 'processing').length,
-      averageProcessingTime: tasks
-        .filter(t => t.processingTime)
-        .reduce((sum, t) => sum + (t.processingTime || 0), 0) / Math.max(tasks.filter(t => t.processingTime).length, 1),
-      tasksByType: tasks.reduce((acc, t) => {
-        acc[t.type] = (acc[t.type] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>),
+      completed: tasks.filter((t) => t.status === 'completed').length,
+      failed: tasks.filter((t) => t.status === 'failed').length,
+      processing: tasks.filter((t) => t.status === 'processing').length,
+      averageProcessingTime:
+        tasks.filter((t) => t.processingTime).reduce((sum, t) => sum + (t.processingTime || 0), 0) /
+        Math.max(tasks.filter((t) => t.processingTime).length, 1),
+      tasksByType: tasks.reduce(
+        (acc, t) => {
+          acc[t.type] = (acc[t.type] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>
+      ),
     };
   }
 }

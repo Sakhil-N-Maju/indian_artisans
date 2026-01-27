@@ -1,6 +1,6 @@
 /**
  * Caching System
- * 
+ *
  * Multi-layer caching for performance optimization
  */
 
@@ -108,7 +108,7 @@ export class CachingSystem {
     const topKeys = entries
       .sort((a, b) => b.hits - a.hits)
       .slice(0, 10)
-      .map(e => ({ key: e.key, hits: e.hits }));
+      .map((e) => ({ key: e.key, hits: e.hits }));
 
     return {
       totalEntries: entries.length,

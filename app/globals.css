@@ -1,18 +1,18 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Warm Earthy Palette */
+  /* Warm Earthy Palette with Black Primary & Gold Accents */
   --warm-cream: #fdf9f4;
   --warm-sand: #f4ede4;
-  --warm-terracotta: #c85a3a;
+  --warm-terracotta: #b8860b; /* Dark goldenrod for accents */
   --warm-saffron: #d4a574;
-  --warm-gold: #d4a574;
+  --warm-gold: #d4af37; /* Metallic gold for CTAs */
   --warm-sage: #6b8e7f;
   --warm-charcoal: #2c2c2c;
-  --warm-rust: #8b4513;
+  --warm-rust: #cd7f32; /* Bronze/copper for accents */
   --warm-olive: #556b2f;
 
   /* Background & Text */
@@ -21,17 +21,17 @@
   --card: #ffffff;
   --card-foreground: #2c2c2c;
 
-  /* Primary & Secondary */
-  --primary: #c85a3a;
-  --primary-foreground: #fdf9f4;
-  --secondary: #d4a574;
-  --secondary-foreground: #2c2c2c;
+  /* Primary & Secondary - Black Primary, Deep Gray for CTAs */
+  --primary: #2c2c2c; /* Black/Charcoal */
+  --primary-foreground: #ffffff;
+  --secondary: #3d3d3d; /* Deep gray for secondary/CTA */
+  --secondary-foreground: #ffffff;
 
   /* Muted & Accent */
   --muted: #f4ede4;
   --muted-foreground: #6b6b6b;
-  --accent: #c85a3a;
-  --accent-foreground: #fdf9f4;
+  --accent: #3d3d3d; /* Deep gray for important CTAs */
+  --accent-foreground: #ffffff;
 
   /* Borders & Inputs */
   --border: #e8dcd1;
@@ -45,18 +45,18 @@
   /* Sidebar & Chart */
   --sidebar: #ffffff;
   --sidebar-foreground: #2c2c2c;
-  --sidebar-primary: #c85a3a;
-  --sidebar-primary-foreground: #fdf9f4;
-  --sidebar-accent: #d4a574;
-  --sidebar-accent-foreground: #2c2c2c;
+  --sidebar-primary: #2c2c2c; /* Black */
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #3d3d3d; /* Deep gray for accents */
+  --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #e8dcd1;
-  --sidebar-ring: #d4a574;
+  --sidebar-ring: #3d3d3d;
 
-  --chart-1: #c85a3a;
-  --chart-2: #d4a574;
-  --chart-3: #6b8e7f;
-  --chart-4: #556b2f;
-  --chart-5: #8b4513;
+  --chart-1: #2c2c2c; /* Black */
+  --chart-2: #3d3d3d; /* Deep gray */
+  --chart-3: #cd7f32; /* Bronze */
+  --chart-4: #6b8e7f;
+  --chart-5: #556b2f;
 
   --radius: 0.625rem;
 }
@@ -66,23 +66,23 @@
   --foreground: #f5f5f5;
   --card: #2c2c2c;
   --card-foreground: #f5f5f5;
-  --primary: #e8906f;
+  --primary: #ffffff; /* White for dark mode */
   --primary-foreground: #1a1a1a;
-  --secondary: #d4a574;
-  --secondary-foreground: #1a1a1a;
+  --secondary: #3d3d3d; /* Deep gray for CTAs */
+  --secondary-foreground: #ffffff;
   --muted: #404040;
   --muted-foreground: #b0b0b0;
-  --accent: #e8906f;
-  --accent-foreground: #1a1a1a;
+  --accent: #3d3d3d; /* Deep gray for CTAs */
+  --accent-foreground: #ffffff;
   --border: #404040;
   --input: #2c2c2c;
-  --ring: #d4a574;
+  --ring: #3d3d3d;
 }
 
 @theme inline {
-  --font-serif: "Lora", "Lora Fallback";
-  --font-sans: "Inter", "Inter Fallback";
-  --font-mono: "Geist Mono", "Geist Mono Fallback";
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-sans);
+  --font-mono: 'Geist Mono', 'Geist Mono Fallback';
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -138,15 +138,15 @@
   }
 
   .hero-gradient {
-    background: linear-gradient(135deg, rgba(200, 90, 58, 0.05) 0%, rgba(212, 165, 116, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(44, 44, 44, 0.02) 0%, rgba(212, 175, 55, 0.03) 100%);
   }
 
   .section-divider {
-    @apply border-t border-border;
+    @apply border-border border-t;
   }
 
   .card-hover {
-    @apply transition-all duration-300 hover:shadow-lg hover:scale-105;
+    @apply transition-all duration-300 hover:scale-105 hover:shadow-lg;
   }
 
   .card-light {
@@ -154,7 +154,7 @@
   }
 
   .accent-underline {
-    @apply border-b-2 border-primary;
+    @apply border-primary border-b-2;
   }
 
   /* Added floral background classes */
@@ -162,14 +162,29 @@
     background-color: #f5ebe0;
     background-image: linear-gradient(
       135deg,
-      rgba(200, 90, 58, 0.03) 0%,
-      rgba(212, 165, 116, 0.03) 50%,
+      rgba(44, 44, 44, 0.02) 0%,
+      rgba(212, 175, 55, 0.02) 50%,
       rgba(107, 142, 127, 0.02) 100%
     );
   }
 
   .bg-floral-full {
-    background-image: url("/images/background_down.PNG");
+    background-image: url('/images/background_down.PNG');
     background-position: top center;
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.3s ease-out;
   }
 }

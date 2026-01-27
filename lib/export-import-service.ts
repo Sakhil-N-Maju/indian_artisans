@@ -1,6 +1,6 @@
 /**
  * Export/Import Service
- * 
+ *
  * Data export and import capabilities
  */
 
@@ -76,7 +76,7 @@ export class ExportImportService {
     for (let i = 0; i <= 100; i += 20) {
       job.progress = i;
       this.exportJobs.set(jobId, job);
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
     job.status = 'completed';
@@ -121,14 +121,14 @@ export class ExportImportService {
     job.status = 'validating';
     job.progress = 25;
     this.importJobs.set(jobId, job);
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     // Import phase
     job.status = 'importing';
     for (let i = 50; i <= 100; i += 25) {
       job.progress = i;
       this.importJobs.set(jobId, job);
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
     const totalRecords = Math.floor(Math.random() * 1000);
@@ -158,7 +158,7 @@ export class ExportImportService {
   async listExports(createdBy?: string, limit: number = 50): Promise<ExportJob[]> {
     let jobs = Array.from(this.exportJobs.values());
     if (createdBy) {
-      jobs = jobs.filter(j => j.createdBy === createdBy);
+      jobs = jobs.filter((j) => j.createdBy === createdBy);
     }
     return jobs.sort((a, b) => b.startedAt.getTime() - a.startedAt.getTime()).slice(0, limit);
   }
@@ -166,7 +166,7 @@ export class ExportImportService {
   async listImports(createdBy?: string, limit: number = 50): Promise<ImportJob[]> {
     let jobs = Array.from(this.importJobs.values());
     if (createdBy) {
-      jobs = jobs.filter(j => j.createdBy === createdBy);
+      jobs = jobs.filter((j) => j.createdBy === createdBy);
     }
     return jobs.sort((a, b) => b.startedAt.getTime() - a.startedAt.getTime()).slice(0, limit);
   }
@@ -190,37 +190,46 @@ export class ExportImportService {
     const exports = Array.from(this.exportJobs.values());
     const imports = Array.from(this.importJobs.values());
 
-    const exportsByType = exports.reduce((acc, e) => {
-      acc[e.type] = (acc[e.type] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const exportsByType = exports.reduce(
+      (acc, e) => {
+        acc[e.type] = (acc[e.type] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const exportsByFormat = exports.reduce((acc, e) => {
-      acc[e.format] = (acc[e.format] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const exportsByFormat = exports.reduce(
+      (acc, e) => {
+        acc[e.format] = (acc[e.format] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const importsByType = imports.reduce((acc, i) => {
-      acc[i.type] = (acc[i.type] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const importsByType = imports.reduce(
+      (acc, i) => {
+        acc[i.type] = (acc[i.type] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     const totalRecordsImported = imports
-      .filter(i => i.results)
+      .filter((i) => i.results)
       .reduce((sum, i) => sum + (i.results?.imported || 0), 0);
 
     return {
       exports: {
         total: exports.length,
-        completed: exports.filter(e => e.status === 'completed').length,
-        failed: exports.filter(e => e.status === 'failed').length,
+        completed: exports.filter((e) => e.status === 'completed').length,
+        failed: exports.filter((e) => e.status === 'failed').length,
         byType: exportsByType,
         byFormat: exportsByFormat,
       },
       imports: {
         total: imports.length,
-        completed: imports.filter(i => i.status === 'completed').length,
-        failed: imports.filter(i => i.status === 'failed').length,
+        completed: imports.filter((i) => i.status === 'completed').length,
+        failed: imports.filter((i) => i.status === 'failed').length,
         totalRecordsImported,
         byType: importsByType,
       },

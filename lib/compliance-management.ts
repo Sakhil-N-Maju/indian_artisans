@@ -1,6 +1,6 @@
 /**
  * Compliance Management System
- * 
+ *
  * Regulatory compliance and data protection
  */
 
@@ -106,7 +106,10 @@ export class ComplianceManagementSystem {
     return request;
   }
 
-  async processDataSubjectRequest(requestId: string, responseData?: any): Promise<DataSubjectRequest> {
+  async processDataSubjectRequest(
+    requestId: string,
+    responseData?: any
+  ): Promise<DataSubjectRequest> {
     const request = this.dsrRequests.get(requestId);
     if (!request) throw new Error('Request not found');
 
@@ -149,17 +152,17 @@ export class ComplianceManagementSystem {
     return {
       regulations: {
         total: regs.length,
-        compliant: regs.filter(r => r.implementationStatus === 'compliant').length,
-        nonCompliant: regs.filter(r => r.implementationStatus === 'non_compliant').length,
+        compliant: regs.filter((r) => r.implementationStatus === 'compliant').length,
+        nonCompliant: regs.filter((r) => r.implementationStatus === 'non_compliant').length,
       },
       consents: {
         total: consents.length,
-        granted: consents.filter(c => c.granted).length,
-        revoked: consents.filter(c => !c.granted).length,
+        granted: consents.filter((c) => c.granted).length,
+        revoked: consents.filter((c) => !c.granted).length,
       },
       dsrRequests: {
-        pending: requests.filter(r => r.status === 'pending').length,
-        completed: requests.filter(r => r.status === 'completed').length,
+        pending: requests.filter((r) => r.status === 'pending').length,
+        completed: requests.filter((r) => r.status === 'completed').length,
       },
       retentionPolicies: this.retentionPolicies.size,
     };
@@ -170,7 +173,12 @@ export class ComplianceManagementSystem {
       name: 'GDPR',
       jurisdiction: 'EU',
       type: 'privacy',
-      requirements: ['Data minimization', 'Right to erasure', 'Data portability', 'Consent management'],
+      requirements: [
+        'Data minimization',
+        'Right to erasure',
+        'Data portability',
+        'Consent management',
+      ],
     });
 
     this.createRegulation({

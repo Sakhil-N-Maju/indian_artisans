@@ -4,11 +4,14 @@ import { aiService } from '@/lib/services/ai';
 import prisma from '@/lib/prisma';
 
 // Store for tracking artisan media uploads
-const artisanUploads = new Map<string, {
-  imageMediaId?: string;
-  voiceMediaId?: string;
-  timestamp: number;
-}>();
+const artisanUploads = new Map<
+  string,
+  {
+    imageMediaId?: string;
+    voiceMediaId?: string;
+    timestamp: number;
+  }
+>();
 
 export async function GET(request: NextRequest) {
   try {
@@ -30,10 +33,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Verification failed' }, { status: 403 });
   } catch (error: any) {
     console.error('WhatsApp webhook verification error:', error);
-    return NextResponse.json(
-      { error: error.message || 'Verification failed' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message || 'Verification failed' }, { status: 500 });
   }
 }
 
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     const result = await whatsappService.handleWebhook(body);
 
     // Process AI pipeline for artisan media
-    processArtisanMedia(body).catch(err => {
+    processArtisanMedia(body).catch((err) => {
       console.error('Error in AI pipeline:', err);
     });
 
@@ -109,7 +109,7 @@ async function processArtisanMedia(webhookData: any) {
         // Send acknowledgment
         await whatsappService.sendTextMessage(
           from,
-          '📸 Image received! Now send a voice message describing your product (language doesn\'t matter - Hindi, English, or any regional language).',
+          "📸 Image received! Now send a voice message describing your product (language doesn't matter - Hindi, English, or any regional language).",
           user.id
         );
 
@@ -152,7 +152,7 @@ async function processArtisanMedia(webhookData: any) {
 
             // Create product in database
             const slug = `${productData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${Date.now()}`;
-            
+
             const product = await prisma.product.create({
               data: {
                 artisanId: artisan.id,
@@ -199,7 +199,7 @@ async function processArtisanMedia(webhookData: any) {
       }
     } else if (type === 'text') {
       const text = message.text?.body?.toLowerCase() || '';
-      
+
       // Handle commands
       if (text.includes('help') || text.includes('start')) {
         await whatsappService.sendTextMessage(

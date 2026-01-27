@@ -1,6 +1,6 @@
 /**
  * Content Management System
- * 
+ *
  * Comprehensive CMS for managing all platform content:
  * - Page management (static pages, landing pages)
  * - Blog/article management
@@ -17,14 +17,14 @@ export interface ContentPage {
   title: string;
   slug: string;
   type: 'static' | 'landing' | 'category' | 'custom';
-  
+
   // Content
   content: {
     blocks: ContentBlock[];
     rawHtml?: string;
     metadata?: Record<string, any>;
   };
-  
+
   // Layout
   layout: {
     template: string;
@@ -33,7 +33,7 @@ export interface ContentPage {
     customCss?: string;
     customJs?: string;
   };
-  
+
   // SEO
   seo: {
     metaTitle?: string;
@@ -46,45 +46,45 @@ export interface ContentPage {
     noindex: boolean;
     nofollow: boolean;
   };
-  
+
   // Publishing
   status: 'draft' | 'published' | 'scheduled' | 'archived';
   publishedAt?: Date;
   scheduledFor?: Date;
   expiresAt?: Date;
-  
+
   // Access control
   visibility: 'public' | 'private' | 'password_protected' | 'members_only';
   password?: string;
   allowedRoles?: string[];
-  
+
   // Localization
   language: string;
   translations?: {
     language: string;
     pageId: string;
   }[];
-  
+
   // Versioning
   version: number;
   previousVersions?: string[];
-  
+
   // Author
   author: {
     id: string;
     name: string;
   };
-  
+
   // Metadata
   featured: boolean;
   featuredImage?: string;
   tags: string[];
   categories: string[];
-  
+
   // Analytics
   viewCount: number;
   lastViewedAt?: Date;
-  
+
   createdAt: Date;
   updatedAt: Date;
   publishedBy?: string;
@@ -92,11 +92,32 @@ export interface ContentPage {
 
 export interface ContentBlock {
   id: string;
-  type: 'heading' | 'paragraph' | 'image' | 'gallery' | 'video' | 'quote' | 'list' | 'code' | 'embed' | 'button' | 'divider' | 'spacer' | 'columns' | 'accordion' | 'tabs' | 'card' | 'testimonial' | 'cta' | 'form' | 'products' | 'custom';
-  
+  type:
+    | 'heading'
+    | 'paragraph'
+    | 'image'
+    | 'gallery'
+    | 'video'
+    | 'quote'
+    | 'list'
+    | 'code'
+    | 'embed'
+    | 'button'
+    | 'divider'
+    | 'spacer'
+    | 'columns'
+    | 'accordion'
+    | 'tabs'
+    | 'card'
+    | 'testimonial'
+    | 'cta'
+    | 'form'
+    | 'products'
+    | 'custom';
+
   // Content
   content?: any;
-  
+
   // Configuration
   config?: {
     alignment?: 'left' | 'center' | 'right' | 'justify';
@@ -107,7 +128,7 @@ export interface ContentBlock {
     margin?: string;
     customClass?: string;
   };
-  
+
   // Order
   order: number;
   parentId?: string; // for nested blocks
@@ -117,7 +138,7 @@ export interface BlogPost {
   id: string;
   title: string;
   slug: string;
-  
+
   // Content
   excerpt: string;
   content: {
@@ -125,11 +146,11 @@ export interface BlogPost {
     rawHtml?: string;
     readingTime: number; // minutes
   };
-  
+
   // Media
   featuredImage?: string;
   gallery?: string[];
-  
+
   // SEO
   seo: {
     metaTitle?: string;
@@ -137,16 +158,16 @@ export interface BlogPost {
     metaKeywords?: string[];
     ogImage?: string;
   };
-  
+
   // Publishing
   status: 'draft' | 'published' | 'scheduled' | 'archived';
   publishedAt?: Date;
   scheduledFor?: Date;
-  
+
   // Categorization
   categories: string[];
   tags: string[];
-  
+
   // Author
   author: {
     id: string;
@@ -154,7 +175,7 @@ export interface BlogPost {
     avatar?: string;
     bio?: string;
   };
-  
+
   // Engagement
   featured: boolean;
   allowComments: boolean;
@@ -162,17 +183,17 @@ export interface BlogPost {
   likeCount: number;
   shareCount: number;
   viewCount: number;
-  
+
   // Related
   relatedPosts?: string[];
-  
+
   // Localization
   language: string;
   translations?: {
     language: string;
     postId: string;
   }[];
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -181,35 +202,35 @@ export interface MediaAsset {
   id: string;
   fileName: string;
   originalFileName: string;
-  
+
   // File details
   fileType: 'image' | 'video' | 'audio' | 'document' | 'archive' | 'other';
   mimeType: string;
   fileSize: number; // bytes
-  
+
   // URLs
   url: string;
   thumbnailUrl?: string;
-  
+
   // Dimensions (for images/videos)
   dimensions?: {
     width: number;
     height: number;
   };
-  
+
   // Video specific
   duration?: number; // seconds
-  
+
   // Metadata
   title?: string;
   description?: string;
   altText?: string;
   caption?: string;
-  
+
   // Organization
   folder?: string;
   tags: string[];
-  
+
   // Usage
   usageCount: number;
   usedIn?: {
@@ -217,19 +238,19 @@ export interface MediaAsset {
     id: string;
     title: string;
   }[];
-  
+
   // SEO
   seo: {
     title?: string;
     description?: string;
   };
-  
+
   // Upload info
   uploadedBy: {
     id: string;
     name: string;
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -238,10 +259,10 @@ export interface NavigationMenu {
   id: string;
   name: string;
   location: 'header' | 'footer' | 'sidebar' | 'mobile' | 'custom';
-  
+
   // Menu items
   items: NavigationMenuItem[];
-  
+
   // Configuration
   config: {
     maxDepth: number;
@@ -249,10 +270,10 @@ export interface NavigationMenu {
     openInNewTab: boolean;
     mobileCollapsible: boolean;
   };
-  
+
   // Status
   status: 'active' | 'inactive';
-  
+
   // Metadata
   createdAt: Date;
   updatedAt: Date;
@@ -262,29 +283,29 @@ export interface NavigationMenu {
 export interface NavigationMenuItem {
   id: string;
   label: string;
-  
+
   // Link
   linkType: 'page' | 'post' | 'category' | 'product' | 'external' | 'custom';
   linkTarget?: string;
   url?: string;
-  
+
   // Display
   icon?: string;
   badge?: {
     text: string;
     color: string;
   };
-  
+
   // Behavior
   openInNewTab: boolean;
-  
+
   // Access control
   visibility: 'all' | 'authenticated' | 'guest' | 'role_based';
   allowedRoles?: string[];
-  
+
   // Children
   children?: NavigationMenuItem[];
-  
+
   // Order
   order: number;
   parentId?: string;
@@ -293,17 +314,17 @@ export interface NavigationMenuItem {
 export interface Banner {
   id: string;
   name: string;
-  
+
   // Content
   title: string;
   subtitle?: string;
   description?: string;
-  
+
   // Media
   image?: string;
   mobileImage?: string;
   video?: string;
-  
+
   // CTA
   cta?: {
     text: string;
@@ -311,14 +332,21 @@ export interface Banner {
     openInNewTab: boolean;
     style: 'primary' | 'secondary' | 'outline' | 'text';
   };
-  
+
   // Placement
-  location: 'homepage_hero' | 'homepage_middle' | 'homepage_bottom' | 'category_top' | 'product_sidebar' | 'checkout' | 'custom';
+  location:
+    | 'homepage_hero'
+    | 'homepage_middle'
+    | 'homepage_bottom'
+    | 'category_top'
+    | 'product_sidebar'
+    | 'checkout'
+    | 'custom';
   position?: string;
-  
+
   // Display
   displayType: 'slider' | 'static' | 'popup' | 'sticky';
-  
+
   // Styling
   style: {
     textColor?: string;
@@ -329,12 +357,12 @@ export interface Banner {
     height?: string;
     customCss?: string;
   };
-  
+
   // Scheduling
   status: 'active' | 'inactive' | 'scheduled';
   startDate?: Date;
   endDate?: Date;
-  
+
   // Targeting
   targeting?: {
     devices?: ('desktop' | 'tablet' | 'mobile')[];
@@ -346,15 +374,15 @@ export interface Banner {
       value: any;
     }[];
   };
-  
+
   // Analytics
   impressions: number;
   clicks: number;
   ctr: number;
-  
+
   // Order
   order: number;
-  
+
   createdAt: Date;
   updatedAt: Date;
   createdBy: string;
@@ -365,34 +393,34 @@ export interface ContentCategory {
   name: string;
   slug: string;
   description?: string;
-  
+
   // Type
   type: 'blog' | 'product' | 'page' | 'custom';
-  
+
   // Hierarchy
   parentId?: string;
   children?: string[];
-  
+
   // Display
   icon?: string;
   color?: string;
   image?: string;
-  
+
   // SEO
   seo: {
     metaTitle?: string;
     metaDescription?: string;
   };
-  
+
   // Status
   status: 'active' | 'inactive';
-  
+
   // Counts
   itemCount: number;
-  
+
   // Order
   order: number;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -401,27 +429,27 @@ export interface ContentVersion {
   id: string;
   contentId: string;
   contentType: 'page' | 'post' | 'banner' | 'menu';
-  
+
   // Version info
   version: number;
-  
+
   // Content snapshot
   content: any;
-  
+
   // Changes
   changes?: {
     field: string;
     oldValue: any;
     newValue: any;
   }[];
-  
+
   // Metadata
   createdBy: {
     id: string;
     name: string;
   };
   createdAt: Date;
-  
+
   // Restoration
   restoredAt?: Date;
   restoredBy?: string;
@@ -431,7 +459,7 @@ export interface ContentWorkflow {
   id: string;
   contentId: string;
   contentType: 'page' | 'post';
-  
+
   // Workflow
   currentStep: number;
   steps: {
@@ -444,10 +472,10 @@ export interface ContentWorkflow {
     reviewedAt?: Date;
     comments?: string;
   }[];
-  
+
   // Status
   overallStatus: 'in_review' | 'approved' | 'rejected' | 'completed';
-  
+
   // Metadata
   createdAt: Date;
   completedAt?: Date;
@@ -457,31 +485,31 @@ export interface SEOTemplate {
   id: string;
   name: string;
   description: string;
-  
+
   // Template
   contentType: 'product' | 'category' | 'blog' | 'page' | 'artisan';
-  
+
   // Templates
   titleTemplate: string; // e.g., "{product_name} - Buy Online | {site_name}"
   descriptionTemplate: string;
   keywordsTemplate?: string;
   ogTitleTemplate?: string;
   ogDescriptionTemplate?: string;
-  
+
   // Variables available
   availableVariables: {
     name: string;
     description: string;
     example: string;
   }[];
-  
+
   // Priority
   priority: number;
-  
+
   // Status
   isDefault: boolean;
   status: 'active' | 'inactive';
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -493,7 +521,7 @@ export interface ContentAnalytics {
     start: Date;
     end: Date;
   };
-  
+
   // Traffic
   traffic: {
     pageViews: number;
@@ -502,7 +530,7 @@ export interface ContentAnalytics {
     bounceRate: number;
     exitRate: number;
   };
-  
+
   // Engagement
   engagement: {
     likes: number;
@@ -510,27 +538,27 @@ export interface ContentAnalytics {
     comments: number;
     downloads?: number;
   };
-  
+
   // Sources
   sources: {
     source: string;
     sessions: number;
     percentage: number;
   }[];
-  
+
   // Devices
   devices: {
     desktop: number;
     mobile: number;
     tablet: number;
   };
-  
+
   // Geography
   topCountries: {
     country: string;
     sessions: number;
   }[];
-  
+
   // SEO
   seo: {
     organicSearches: number;
@@ -564,7 +592,7 @@ export class ContentManagementSystem {
     this.versions = new Map();
     this.workflows = new Map();
     this.seoTemplates = new Map();
-    
+
     // Initialize default data
     this.initializeDefaults();
   }
@@ -580,10 +608,12 @@ export class ContentManagementSystem {
         description: 'Default SEO template for product pages',
         contentType: 'product',
         titleTemplate: '{product_name} - Handcrafted by {artisan_name} | {site_name}',
-        descriptionTemplate: 'Buy authentic {product_name} handcrafted by {artisan_name}. {product_description}. Free shipping on orders over ₹999.',
+        descriptionTemplate:
+          'Buy authentic {product_name} handcrafted by {artisan_name}. {product_description}. Free shipping on orders over ₹999.',
         keywordsTemplate: '{product_name}, handcrafted, artisan, {category}, {materials}',
         ogTitleTemplate: '{product_name} - Authentic Handcrafted Art',
-        ogDescriptionTemplate: 'Discover {product_name} by {artisan_name}. Each piece tells a unique story.',
+        ogDescriptionTemplate:
+          'Discover {product_name} by {artisan_name}. Each piece tells a unique story.',
         availableVariables: [
           { name: '{product_name}', description: 'Product name', example: 'Handwoven Silk Saree' },
           { name: '{artisan_name}', description: 'Artisan name', example: 'Priya Sharma' },
@@ -605,8 +635,16 @@ export class ContentManagementSystem {
         ogTitleTemplate: '{post_title}',
         ogDescriptionTemplate: '{post_excerpt}',
         availableVariables: [
-          { name: '{post_title}', description: 'Post title', example: 'The Art of Handloom Weaving' },
-          { name: '{post_excerpt}', description: 'Post excerpt', example: 'Discover the centuries-old tradition...' },
+          {
+            name: '{post_title}',
+            description: 'Post title',
+            example: 'The Art of Handloom Weaving',
+          },
+          {
+            name: '{post_excerpt}',
+            description: 'Post excerpt',
+            example: 'Discover the centuries-old tradition...',
+          },
           { name: '{author_name}', description: 'Author name', example: 'Editorial Team' },
           { name: '{category}', description: 'Post category', example: 'Crafts & Techniques' },
           { name: '{site_name}', description: 'Site name', example: 'Artisan Marketplace' },
@@ -620,7 +658,8 @@ export class ContentManagementSystem {
         description: 'Default SEO template for category pages',
         contentType: 'category',
         titleTemplate: '{category_name} - Handcrafted Products | {site_name}',
-        descriptionTemplate: 'Explore our collection of handcrafted {category_name}. Authentic artisan products made with traditional techniques. Shop now!',
+        descriptionTemplate:
+          'Explore our collection of handcrafted {category_name}. Authentic artisan products made with traditional techniques. Shop now!',
         availableVariables: [
           { name: '{category_name}', description: 'Category name', example: 'Pottery' },
           { name: '{product_count}', description: 'Number of products', example: '245' },
@@ -674,7 +713,7 @@ export class ContentManagementSystem {
       {
         name: 'Cultural Heritage',
         slug: 'cultural-heritage',
-        description: 'Exploring India\'s rich cultural heritage',
+        description: "Exploring India's rich cultural heritage",
         type: 'blog',
         status: 'active',
         itemCount: 32,
@@ -850,7 +889,7 @@ export class ContentManagementSystem {
     };
 
     this.pages.set(page.id, page);
-    
+
     // Create initial version
     await this.createVersion({
       contentId: page.id,
@@ -962,10 +1001,7 @@ export class ContentManagementSystem {
   /**
    * Publish blog post
    */
-  async publishPost(params: {
-    postId: string;
-    scheduledFor?: Date;
-  }): Promise<void> {
+  async publishPost(params: { postId: string; scheduledFor?: Date }): Promise<void> {
     const post = this.posts.get(params.postId);
     if (!post) return;
 
@@ -1114,7 +1150,7 @@ export class ContentManagementSystem {
     createdBy: { id: string; name: string };
   }): Promise<ContentVersion> {
     const versions = this.versions.get(params.contentId) || [];
-    
+
     const version: ContentVersion = {
       id: `version-${Date.now()}`,
       contentId: params.contentId,
@@ -1134,14 +1170,11 @@ export class ContentManagementSystem {
   /**
    * Restore version
    */
-  async restoreVersion(params: {
-    versionId: string;
-    restoredBy: string;
-  }): Promise<void> {
+  async restoreVersion(params: { versionId: string; restoredBy: string }): Promise<void> {
     // Find version
     let targetVersion: ContentVersion | undefined;
     for (const versions of this.versions.values()) {
-      targetVersion = versions.find(v => v.id === params.versionId);
+      targetVersion = versions.find((v) => v.id === params.versionId);
       if (targetVersion) break;
     }
 
@@ -1184,15 +1217,15 @@ export class ContentManagementSystem {
     let pages = Array.from(this.pages.values());
 
     if (filters?.status) {
-      pages = pages.filter(p => p.status === filters.status);
+      pages = pages.filter((p) => p.status === filters.status);
     }
 
     if (filters?.type) {
-      pages = pages.filter(p => p.type === filters.type);
+      pages = pages.filter((p) => p.type === filters.type);
     }
 
     if (filters?.language) {
-      pages = pages.filter(p => p.language === filters.language);
+      pages = pages.filter((p) => p.language === filters.language);
     }
 
     // Sort by updated date
@@ -1218,19 +1251,19 @@ export class ContentManagementSystem {
     let posts = Array.from(this.posts.values());
 
     if (filters?.status) {
-      posts = posts.filter(p => p.status === filters.status);
+      posts = posts.filter((p) => p.status === filters.status);
     }
 
     if (filters?.category) {
-      posts = posts.filter(p => p.categories.includes(filters.category!));
+      posts = posts.filter((p) => p.categories.includes(filters.category!));
     }
 
     if (filters?.tag) {
-      posts = posts.filter(p => p.tags.includes(filters.tag!));
+      posts = posts.filter((p) => p.tags.includes(filters.tag!));
     }
 
     if (filters?.author) {
-      posts = posts.filter(p => p.author.id === filters.author);
+      posts = posts.filter((p) => p.author.id === filters.author);
     }
 
     // Sort by published date
@@ -1255,15 +1288,15 @@ export class ContentManagementSystem {
     let assets = Array.from(this.media.values());
 
     if (filters?.fileType) {
-      assets = assets.filter(a => a.fileType === filters.fileType);
+      assets = assets.filter((a) => a.fileType === filters.fileType);
     }
 
     if (filters?.folder) {
-      assets = assets.filter(a => a.folder === filters.folder);
+      assets = assets.filter((a) => a.folder === filters.folder);
     }
 
     if (filters?.tag) {
-      assets = assets.filter(a => a.tags.includes(filters.tag!));
+      assets = assets.filter((a) => a.tags.includes(filters.tag!));
     }
 
     // Sort by created date
@@ -1280,18 +1313,18 @@ export class ContentManagementSystem {
    * Get active banners
    */
   async getActiveBanners(location?: Banner['location']): Promise<Banner[]> {
-    let banners = Array.from(this.banners.values()).filter(b => {
+    let banners = Array.from(this.banners.values()).filter((b) => {
       if (b.status !== 'active') return false;
-      
+
       const now = new Date();
       if (b.startDate && b.startDate > now) return false;
       if (b.endDate && b.endDate < now) return false;
-      
+
       return true;
     });
 
     if (location) {
-      banners = banners.filter(b => b.location === location);
+      banners = banners.filter((b) => b.location === location);
     }
 
     // Sort by order
@@ -1305,7 +1338,7 @@ export class ContentManagementSystem {
    */
   async getMenu(location: NavigationMenu['location']): Promise<NavigationMenu | null> {
     const menus = Array.from(this.menus.values());
-    return menus.find(m => m.location === location && m.status === 'active') || null;
+    return menus.find((m) => m.location === location && m.status === 'active') || null;
   }
 
   /**
@@ -1315,7 +1348,7 @@ export class ContentManagementSystem {
     let categories = Array.from(this.categories.values());
 
     if (type) {
-      categories = categories.filter(c => c.type === type);
+      categories = categories.filter((c) => c.type === type);
     }
 
     // Sort by order
@@ -1382,7 +1415,7 @@ export class ContentManagementSystem {
     let templates = Array.from(this.seoTemplates.values());
 
     if (contentType) {
-      templates = templates.filter(t => t.contentType === contentType);
+      templates = templates.filter((t) => t.contentType === contentType);
     }
 
     // Sort by priority

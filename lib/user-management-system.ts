@@ -1,6 +1,6 @@
 /**
  * User Management System
- * 
+ *
  * Comprehensive user management for customers and artisans:
  * - User account management
  * - Role and permission management
@@ -15,7 +15,7 @@
 export interface User {
   id: string;
   type: 'customer' | 'artisan' | 'vendor' | 'affiliate';
-  
+
   // Personal information
   personalInfo: {
     firstName: string;
@@ -27,10 +27,10 @@ export interface User {
     gender?: 'male' | 'female' | 'other' | 'prefer_not_to_say';
     avatar?: string;
   };
-  
+
   // Account status
   status: 'active' | 'inactive' | 'suspended' | 'banned' | 'pending_verification' | 'deleted';
-  
+
   // Verification
   verification: {
     emailVerified: boolean;
@@ -42,7 +42,7 @@ export interface User {
     businessVerified?: boolean;
     businessVerifiedAt?: Date;
   };
-  
+
   // Authentication
   authentication: {
     passwordLastChanged?: Date;
@@ -54,14 +54,14 @@ export interface User {
     failedLoginAttempts: number;
     lockedUntil?: Date;
   };
-  
+
   // Roles and permissions
   roles: string[];
   customPermissions?: {
     resource: string;
     actions: string[];
   }[];
-  
+
   // Address
   addresses?: {
     id: string;
@@ -76,7 +76,7 @@ export interface User {
     postalCode: string;
     phone?: string;
   }[];
-  
+
   // Preferences
   preferences: {
     language: string;
@@ -88,7 +88,7 @@ export interface User {
     marketingEmails: boolean;
     newsletterSubscribed: boolean;
   };
-  
+
   // Artisan-specific fields
   artisanProfile?: {
     businessName: string;
@@ -117,7 +117,7 @@ export interface User {
       panNumber?: string;
     };
   };
-  
+
   // Metadata
   metadata?: Record<string, any>;
   tags: string[];
@@ -128,7 +128,7 @@ export interface User {
     createdAt: Date;
     private: boolean;
   }[];
-  
+
   // Lifecycle
   createdAt: Date;
   updatedAt: Date;
@@ -143,7 +143,7 @@ export interface UserGroup {
   name: string;
   description: string;
   type: 'static' | 'dynamic';
-  
+
   // Membership
   userIds?: string[]; // for static groups
   criteria?: {
@@ -151,17 +151,17 @@ export interface UserGroup {
     operator: 'equals' | 'not_equals' | 'contains' | 'greater_than' | 'less_than' | 'in' | 'not_in';
     value: any;
   }[]; // for dynamic groups
-  
+
   // Permissions
   permissions?: {
     resource: string;
     actions: string[];
   }[];
-  
+
   // Communication
   allowBulkEmail: boolean;
   allowBulkSMS: boolean;
-  
+
   // Metadata
   memberCount: number;
   createdAt: Date;
@@ -173,7 +173,7 @@ export interface UserRole {
   id: string;
   name: string;
   description: string;
-  
+
   // Permissions
   permissions: {
     resource: string;
@@ -184,15 +184,15 @@ export interface UserRole {
       conditions?: Record<string, any>;
     }[];
   }[];
-  
+
   // Hierarchy
   priority: number; // lower number = higher priority
   inheritsFrom?: string[]; // inherit from other roles
-  
+
   // Assignment
   assignableBy: string[]; // which roles can assign this role
   assignableTo: ('customer' | 'artisan' | 'vendor' | 'affiliate')[];
-  
+
   // Metadata
   isSystem: boolean;
   isDefault: boolean;
@@ -205,11 +205,11 @@ export interface UserVerification {
   id: string;
   userId: string;
   type: 'email' | 'phone' | 'identity' | 'business' | 'artisan';
-  
+
   // Request
   requestedAt: Date;
   requestedBy?: string;
-  
+
   // Documents
   documents?: {
     id: string;
@@ -218,22 +218,22 @@ export interface UserVerification {
     fileUrl: string;
     uploadedAt: Date;
   }[];
-  
+
   // Status
   status: 'pending' | 'in_review' | 'approved' | 'rejected' | 'expired';
-  
+
   // Review
   reviewedAt?: Date;
   reviewedBy?: string;
   reviewNotes?: string;
-  
+
   // Rejection
   rejectionReason?: string;
   rejectionDetails?: string;
-  
+
   // Expiry
   expiresAt?: Date;
-  
+
   // Resubmission
   resubmittedFrom?: string; // previous verification ID
   resubmissionCount: number;
@@ -242,25 +242,35 @@ export interface UserVerification {
 export interface UserAction {
   id: string;
   userId: string;
-  actionType: 'suspend' | 'unsuspend' | 'ban' | 'unban' | 'verify' | 'warn' | 'note_added' | 'role_changed' | 'group_added' | 'group_removed';
-  
+  actionType:
+    | 'suspend'
+    | 'unsuspend'
+    | 'ban'
+    | 'unban'
+    | 'verify'
+    | 'warn'
+    | 'note_added'
+    | 'role_changed'
+    | 'group_added'
+    | 'group_removed';
+
   // Details
   reason: string;
   details?: string;
   duration?: number; // for suspensions in days
-  
+
   // Execution
   performedBy: string;
   performedAt: Date;
-  
+
   // Notification
   notifyUser: boolean;
   notificationSent: boolean;
-  
+
   // Expiry
   expiresAt?: Date;
   expired: boolean;
-  
+
   // Reversal
   reversedAt?: Date;
   reversedBy?: string;
@@ -269,8 +279,17 @@ export interface UserAction {
 
 export interface BulkUserOperation {
   id: string;
-  operationType: 'import' | 'export' | 'update' | 'delete' | 'suspend' | 'activate' | 'send_email' | 'assign_role' | 'add_to_group';
-  
+  operationType:
+    | 'import'
+    | 'export'
+    | 'update'
+    | 'delete'
+    | 'suspend'
+    | 'activate'
+    | 'send_email'
+    | 'assign_role'
+    | 'add_to_group';
+
   // Target
   targetUserIds?: string[];
   targetGroupId?: string;
@@ -279,30 +298,30 @@ export interface BulkUserOperation {
     operator: string;
     value: any;
   }[];
-  
+
   // Operation data
   data?: Record<string, any>;
-  
+
   // File operations
   fileUrl?: string;
   fileName?: string;
-  
+
   // Status
   status: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
-  
+
   // Progress
   totalRecords: number;
   processedRecords: number;
   successfulRecords: number;
   failedRecords: number;
-  
+
   // Results
   errors?: {
     recordId: string;
     error: string;
   }[];
   resultFileUrl?: string;
-  
+
   // Execution
   startedAt?: Date;
   completedAt?: Date;
@@ -314,7 +333,7 @@ export interface UserSegment {
   id: string;
   name: string;
   description: string;
-  
+
   // Criteria
   criteria: {
     type: 'demographic' | 'behavioral' | 'transactional' | 'engagement';
@@ -324,7 +343,7 @@ export interface UserSegment {
       value: any;
     }[];
   }[];
-  
+
   // Analytics
   analytics: {
     totalUsers: number;
@@ -335,11 +354,11 @@ export interface UserSegment {
     topProducts: string[];
     topCategories: string[];
   };
-  
+
   // Auto-update
   autoUpdate: boolean;
   lastUpdated?: Date;
-  
+
   // Metadata
   createdAt: Date;
   createdBy: string;
@@ -347,7 +366,7 @@ export interface UserSegment {
 
 export interface CommunicationPreference {
   userId: string;
-  
+
   // Channels
   channels: {
     email: {
@@ -371,7 +390,7 @@ export interface CommunicationPreference {
       optedIn: boolean;
     };
   };
-  
+
   // Categories
   categories: {
     transactional: boolean; // order confirmations, shipping updates
@@ -382,7 +401,7 @@ export interface CommunicationPreference {
     social: boolean; // comments, likes, follows
     system: boolean; // account updates, security alerts
   };
-  
+
   // Preferences
   unsubscribeAll: boolean;
   doNotDisturb: {
@@ -390,7 +409,7 @@ export interface CommunicationPreference {
     startTime?: string; // HH:mm
     endTime?: string; // HH:mm
   };
-  
+
   updatedAt: Date;
 }
 
@@ -400,7 +419,7 @@ export interface UserStatistics {
     start: Date;
     end: Date;
   };
-  
+
   // Account stats
   account: {
     status: User['status'];
@@ -409,7 +428,7 @@ export interface UserStatistics {
     loginFrequency: number;
     sessionDuration: number; // minutes average
   };
-  
+
   // Activity stats
   activity: {
     pageViews: number;
@@ -419,7 +438,7 @@ export interface UserStatistics {
     cartAdds: number;
     engagementScore: number;
   };
-  
+
   // Transaction stats
   transactions: {
     totalOrders: number;
@@ -429,7 +448,7 @@ export interface UserStatistics {
     returnRate: number;
     cancelationRate: number;
   };
-  
+
   // Communication stats
   communication: {
     emailsSent: number;
@@ -438,7 +457,7 @@ export interface UserStatistics {
     smsSent: number;
     pushSent: number;
   };
-  
+
   // Artisan-specific stats
   artisan?: {
     totalProducts: number;
@@ -471,7 +490,7 @@ export class UserManagementSystem {
     this.bulkOperations = new Map();
     this.segments = new Map();
     this.communicationPreferences = new Map();
-    
+
     // Initialize default roles and groups
     this.initializeDefaults();
   }
@@ -552,9 +571,7 @@ export class UserManagementSystem {
           {
             resource: 'analytics',
             resourceName: 'Analytics',
-            actions: [
-              { action: 'view', allowed: true, conditions: { own: true } },
-            ],
+            actions: [{ action: 'view', allowed: true, conditions: { own: true } }],
           },
         ],
         priority: 80,
@@ -587,9 +604,7 @@ export class UserManagementSystem {
           {
             resource: 'discounts',
             resourceName: 'Discounts',
-            actions: [
-              { action: 'access_vip_deals', allowed: true },
-            ],
+            actions: [{ action: 'access_vip_deals', allowed: true }],
           },
         ],
         priority: 90,
@@ -620,9 +635,7 @@ export class UserManagementSystem {
         criteria: [
           {
             type: 'transactional',
-            conditions: [
-              { field: 'lifetimeValue', operator: 'greater_than', value: 50000 },
-            ],
+            conditions: [{ field: 'lifetimeValue', operator: 'greater_than', value: 50000 }],
           },
         ],
         analytics: {
@@ -639,7 +652,7 @@ export class UserManagementSystem {
       },
       {
         name: 'At-Risk Customers',
-        description: 'Active customers who haven\'t purchased in 90+ days',
+        description: "Active customers who haven't purchased in 90+ days",
         criteria: [
           {
             type: 'behavioral',
@@ -667,9 +680,7 @@ export class UserManagementSystem {
         criteria: [
           {
             type: 'demographic',
-            conditions: [
-              { field: 'createdAt', operator: 'greater_than', value: 30 },
-            ],
+            conditions: [{ field: 'createdAt', operator: 'greater_than', value: 30 }],
           },
         ],
         analytics: {
@@ -820,37 +831,39 @@ export class UserManagementSystem {
 
     // Apply filters
     if (params.type) {
-      users = users.filter(u => u.type === params.type);
+      users = users.filter((u) => u.type === params.type);
     }
 
     if (params.status) {
-      users = users.filter(u => u.status === params.status);
+      users = users.filter((u) => u.status === params.status);
     }
 
     if (params.roles && params.roles.length > 0) {
-      users = users.filter(u => params.roles!.some(r => u.roles.includes(r)));
+      users = users.filter((u) => params.roles!.some((r) => u.roles.includes(r)));
     }
 
     if (params.tags && params.tags.length > 0) {
-      users = users.filter(u => params.tags!.some(t => u.tags.includes(t)));
+      users = users.filter((u) => params.tags!.some((t) => u.tags.includes(t)));
     }
 
     if (params.createdAfter) {
-      users = users.filter(u => u.createdAt >= params.createdAfter!);
+      users = users.filter((u) => u.createdAt >= params.createdAfter!);
     }
 
     if (params.createdBefore) {
-      users = users.filter(u => u.createdAt <= params.createdBefore!);
+      users = users.filter((u) => u.createdAt <= params.createdBefore!);
     }
 
     if (params.query) {
       const query = params.query.toLowerCase();
-      users = users.filter(u =>
-        u.personalInfo.firstName.toLowerCase().includes(query) ||
-        u.personalInfo.lastName.toLowerCase().includes(query) ||
-        u.personalInfo.email.toLowerCase().includes(query) ||
-        (u.personalInfo.phone && u.personalInfo.phone.includes(query)) ||
-        (u.artisanProfile?.businessName && u.artisanProfile.businessName.toLowerCase().includes(query))
+      users = users.filter(
+        (u) =>
+          u.personalInfo.firstName.toLowerCase().includes(query) ||
+          u.personalInfo.lastName.toLowerCase().includes(query) ||
+          u.personalInfo.email.toLowerCase().includes(query) ||
+          (u.personalInfo.phone && u.personalInfo.phone.includes(query)) ||
+          (u.artisanProfile?.businessName &&
+            u.artisanProfile.businessName.toLowerCase().includes(query))
       );
     }
 
@@ -910,7 +923,9 @@ export class UserManagementSystem {
       performedAt: new Date(),
       notifyUser: params.notifyUser || false,
       notificationSent: false,
-      expiresAt: params.duration ? new Date(Date.now() + params.duration * 24 * 60 * 60 * 1000) : undefined,
+      expiresAt: params.duration
+        ? new Date(Date.now() + params.duration * 24 * 60 * 60 * 1000)
+        : undefined,
       expired: false,
     };
 
@@ -952,10 +967,7 @@ export class UserManagementSystem {
   /**
    * Activate user account
    */
-  async activateUser(params: {
-    userId: string;
-    performedBy: string;
-  }): Promise<void> {
+  async activateUser(params: { userId: string; performedBy: string }): Promise<void> {
     const user = this.users.get(params.userId);
     if (!user) return;
 
@@ -1050,14 +1062,10 @@ export class UserManagementSystem {
   /**
    * Assign role to user
    */
-  async assignRole(params: {
-    userId: string;
-    roleId: string;
-    assignedBy: string;
-  }): Promise<void> {
+  async assignRole(params: { userId: string; roleId: string; assignedBy: string }): Promise<void> {
     const user = this.users.get(params.userId);
     const role = this.roles.get(params.roleId);
-    
+
     if (!user || !role) return;
 
     if (!user.roles.includes(params.roleId)) {
@@ -1227,7 +1235,7 @@ export class UserManagementSystem {
    */
   async getUserActions(userId: string, limit: number = 50): Promise<UserAction[]> {
     const actions = Array.from(this.actions.values())
-      .filter(a => a.userId === userId)
+      .filter((a) => a.userId === userId)
       .sort((a, b) => b.performedAt.getTime() - a.performedAt.getTime())
       .slice(0, limit);
 
@@ -1259,11 +1267,7 @@ export class UserManagementSystem {
   /**
    * Delete user (soft delete)
    */
-  async deleteUser(params: {
-    userId: string;
-    deletedBy: string;
-    reason: string;
-  }): Promise<void> {
+  async deleteUser(params: { userId: string; deletedBy: string; reason: string }): Promise<void> {
     const user = this.users.get(params.userId);
     if (!user) return;
 

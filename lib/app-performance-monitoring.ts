@@ -1,6 +1,6 @@
 /**
  * App Performance Monitoring Service
- * 
+ *
  * Comprehensive mobile app performance monitoring:
  * - Crash reporting and error tracking
  * - Performance metrics (load times, FPS, memory)
@@ -184,13 +184,13 @@ export class AppPerformanceMonitoringService {
 
     if (filters) {
       if (filters.resolved !== undefined) {
-        reports = reports.filter(r => r.resolved === filters.resolved);
+        reports = reports.filter((r) => r.resolved === filters.resolved);
       }
       if (filters.severity) {
-        reports = reports.filter(r => r.severity === filters.severity);
+        reports = reports.filter((r) => r.severity === filters.severity);
       }
       if (filters.appVersion) {
-        reports = reports.filter(r => r.appVersion === filters.appVersion);
+        reports = reports.filter((r) => r.appVersion === filters.appVersion);
       }
     }
 
@@ -332,48 +332,60 @@ export class AppPerformanceMonitoringService {
     const cutoff = new Date(now.getTime() - periodMs);
 
     // Crash-free rate
-    const recentCrashes = Array.from(this.crashReports.values())
-      .filter(c => c.timestamp >= cutoff);
+    const recentCrashes = Array.from(this.crashReports.values()).filter(
+      (c) => c.timestamp >= cutoff
+    );
     const totalSessions = 1000; // Would come from session tracking
     const crashFreeRate = ((totalSessions - recentCrashes.length) / totalSessions) * 100;
 
     // Average start time
-    const startMetrics = Array.from(this.performanceMetrics.values())
-      .filter(m => m.metricType === 'app_start' && m.timestamp >= cutoff);
-    const averageStartTime = startMetrics.length > 0
-      ? startMetrics.reduce((sum, m) => sum + m.duration, 0) / startMetrics.length
-      : 0;
+    const startMetrics = Array.from(this.performanceMetrics.values()).filter(
+      (m) => m.metricType === 'app_start' && m.timestamp >= cutoff
+    );
+    const averageStartTime =
+      startMetrics.length > 0
+        ? startMetrics.reduce((sum, m) => sum + m.duration, 0) / startMetrics.length
+        : 0;
 
     // Average screen load
-    const screenMetrics = Array.from(this.performanceMetrics.values())
-      .filter(m => m.metricType === 'screen_load' && m.timestamp >= cutoff);
-    const averageScreenLoad = screenMetrics.length > 0
-      ? screenMetrics.reduce((sum, m) => sum + m.duration, 0) / screenMetrics.length
-      : 0;
+    const screenMetrics = Array.from(this.performanceMetrics.values()).filter(
+      (m) => m.metricType === 'screen_load' && m.timestamp >= cutoff
+    );
+    const averageScreenLoad =
+      screenMetrics.length > 0
+        ? screenMetrics.reduce((sum, m) => sum + m.duration, 0) / screenMetrics.length
+        : 0;
 
     // Network metrics
-    const networkRequests = Array.from(this.networkMetrics.values())
-      .filter(n => n.timestamp >= cutoff);
-    const averageNetworkLatency = networkRequests.length > 0
-      ? networkRequests.reduce((sum, n) => sum + n.duration, 0) / networkRequests.length
-      : 0;
-    const networkFailureRate = networkRequests.length > 0
-      ? (networkRequests.filter(n => !n.success).length / networkRequests.length) * 100
-      : 0;
+    const networkRequests = Array.from(this.networkMetrics.values()).filter(
+      (n) => n.timestamp >= cutoff
+    );
+    const averageNetworkLatency =
+      networkRequests.length > 0
+        ? networkRequests.reduce((sum, n) => sum + n.duration, 0) / networkRequests.length
+        : 0;
+    const networkFailureRate =
+      networkRequests.length > 0
+        ? (networkRequests.filter((n) => !n.success).length / networkRequests.length) * 100
+        : 0;
 
     // Memory utilization
-    const recentMemory = Array.from(this.memoryMetrics.values())
-      .filter(m => m.timestamp >= cutoff);
-    const memoryUtilization = recentMemory.length > 0
-      ? (recentMemory.reduce((sum, m) => sum + (m.used / m.total) * 100, 0) / recentMemory.length)
-      : 0;
+    const recentMemory = Array.from(this.memoryMetrics.values()).filter(
+      (m) => m.timestamp >= cutoff
+    );
+    const memoryUtilization =
+      recentMemory.length > 0
+        ? recentMemory.reduce((sum, m) => sum + (m.used / m.total) * 100, 0) / recentMemory.length
+        : 0;
 
     // Battery impact
-    const recentBattery = Array.from(this.batteryMetrics.values())
-      .filter(b => b.timestamp >= cutoff);
-    const avgCpuUsage = recentBattery.length > 0
-      ? recentBattery.reduce((sum, b) => sum + b.appUsage.cpuUsage, 0) / recentBattery.length
-      : 0;
+    const recentBattery = Array.from(this.batteryMetrics.values()).filter(
+      (b) => b.timestamp >= cutoff
+    );
+    const avgCpuUsage =
+      recentBattery.length > 0
+        ? recentBattery.reduce((sum, b) => sum + b.appUsage.cpuUsage, 0) / recentBattery.length
+        : 0;
     const batteryImpact: 'low' | 'medium' | 'high' =
       avgCpuUsage < 10 ? 'low' : avgCpuUsage < 30 ? 'medium' : 'high';
 
@@ -450,21 +462,28 @@ export class AppPerformanceMonitoringService {
     const cutoff = new Date(now.getTime() - periodMs);
 
     // Crash analytics
-    const recentCrashes = Array.from(this.crashReports.values())
-      .filter(c => c.timestamp >= cutoff);
+    const recentCrashes = Array.from(this.crashReports.values()).filter(
+      (c) => c.timestamp >= cutoff
+    );
 
-    const crashesByType = recentCrashes.reduce((acc, c) => {
-      acc[c.type] = (acc[c.type] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const crashesByType = recentCrashes.reduce(
+      (acc, c) => {
+        acc[c.type] = (acc[c.type] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const crashesBySeverity = recentCrashes.reduce((acc, c) => {
-      acc[c.severity] = (acc[c.severity] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const crashesBySeverity = recentCrashes.reduce(
+      (acc, c) => {
+        acc[c.severity] = (acc[c.severity] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     const crashCounts = new Map<string, number>();
-    recentCrashes.forEach(c => {
+    recentCrashes.forEach((c) => {
       crashCounts.set(c.message, (crashCounts.get(c.message) || 0) + 1);
     });
     const topCrashes = Array.from(crashCounts.entries())
@@ -474,19 +493,19 @@ export class AppPerformanceMonitoringService {
 
     // Performance analytics
     const startTimes = Array.from(this.performanceMetrics.values())
-      .filter(m => m.metricType === 'app_start' && m.timestamp >= cutoff)
-      .map(m => m.duration)
+      .filter((m) => m.metricType === 'app_start' && m.timestamp >= cutoff)
+      .map((m) => m.duration)
       .sort((a, b) => a - b);
 
     const screenLoadTimes = Array.from(this.performanceMetrics.values())
-      .filter(m => m.metricType === 'screen_load' && m.timestamp >= cutoff)
-      .map(m => m.duration)
+      .filter((m) => m.metricType === 'screen_load' && m.timestamp >= cutoff)
+      .map((m) => m.duration)
       .sort((a, b) => a - b);
 
     const screenDurations = new Map<string, number[]>();
     Array.from(this.performanceMetrics.values())
-      .filter(m => m.metricType === 'screen_load' && m.timestamp >= cutoff && m.details?.screen)
-      .forEach(m => {
+      .filter((m) => m.metricType === 'screen_load' && m.timestamp >= cutoff && m.details?.screen)
+      .forEach((m) => {
         const screen = m.details!.screen!;
         if (!screenDurations.has(screen)) {
           screenDurations.set(screen, []);
@@ -503,20 +522,21 @@ export class AppPerformanceMonitoringService {
       .slice(0, 5);
 
     // Network analytics
-    const networkRequests = Array.from(this.networkMetrics.values())
-      .filter(n => n.timestamp >= cutoff);
+    const networkRequests = Array.from(this.networkMetrics.values()).filter(
+      (n) => n.timestamp >= cutoff
+    );
 
-    const successfulRequests = networkRequests.filter(n => n.success);
-    const successRate = networkRequests.length > 0
-      ? (successfulRequests.length / networkRequests.length) * 100
-      : 0;
+    const successfulRequests = networkRequests.filter((n) => n.success);
+    const successRate =
+      networkRequests.length > 0 ? (successfulRequests.length / networkRequests.length) * 100 : 0;
 
-    const averageLatency = networkRequests.length > 0
-      ? networkRequests.reduce((sum, n) => sum + n.duration, 0) / networkRequests.length
-      : 0;
+    const averageLatency =
+      networkRequests.length > 0
+        ? networkRequests.reduce((sum, n) => sum + n.duration, 0) / networkRequests.length
+        : 0;
 
     const endpointDurations = new Map<string, number[]>();
-    networkRequests.forEach(n => {
+    networkRequests.forEach((n) => {
       const endpoint = new URL(n.url).pathname;
       if (!endpointDurations.has(endpoint)) {
         endpointDurations.set(endpoint, []);
@@ -533,25 +553,28 @@ export class AppPerformanceMonitoringService {
       .slice(0, 5);
 
     // Resource analytics
-    const memoryMetrics = Array.from(this.memoryMetrics.values())
-      .filter(m => m.timestamp >= cutoff);
+    const memoryMetrics = Array.from(this.memoryMetrics.values()).filter(
+      (m) => m.timestamp >= cutoff
+    );
 
-    const averageMemoryUsage = memoryMetrics.length > 0
-      ? memoryMetrics.reduce((sum, m) => sum + m.used, 0) / memoryMetrics.length
-      : 0;
+    const averageMemoryUsage =
+      memoryMetrics.length > 0
+        ? memoryMetrics.reduce((sum, m) => sum + m.used, 0) / memoryMetrics.length
+        : 0;
 
-    const peakMemoryUsage = memoryMetrics.length > 0
-      ? Math.max(...memoryMetrics.map(m => m.used))
-      : 0;
+    const peakMemoryUsage =
+      memoryMetrics.length > 0 ? Math.max(...memoryMetrics.map((m) => m.used)) : 0;
 
-    const batteryMetrics = Array.from(this.batteryMetrics.values())
-      .filter(b => b.timestamp >= cutoff);
+    const batteryMetrics = Array.from(this.batteryMetrics.values()).filter(
+      (b) => b.timestamp >= cutoff
+    );
 
-    const averageBatteryImpact = batteryMetrics.length > 0
-      ? batteryMetrics.reduce((sum, b) => sum + b.appUsage.cpuUsage, 0) / batteryMetrics.length
-      : 0;
+    const averageBatteryImpact =
+      batteryMetrics.length > 0
+        ? batteryMetrics.reduce((sum, b) => sum + b.appUsage.cpuUsage, 0) / batteryMetrics.length
+        : 0;
 
-    const memoryWarnings = memoryMetrics.filter(m => m.warningTriggered).length;
+    const memoryWarnings = memoryMetrics.filter((m) => m.warningTriggered).length;
 
     return {
       crashes: {
@@ -643,23 +666,24 @@ export class AppPerformanceMonitoringService {
     score += (metrics.crashFreeRate / 100) * 100 * weights.crashFreeRate;
 
     // Start time (lower is better, target < 2s)
-    score += Math.max(0, (1 - metrics.averageStartTime / 5000)) * 100 * weights.startTime;
+    score += Math.max(0, 1 - metrics.averageStartTime / 5000) * 100 * weights.startTime;
 
     // Screen load (lower is better, target < 1s)
-    score += Math.max(0, (1 - metrics.averageScreenLoad / 3000)) * 100 * weights.screenLoad;
+    score += Math.max(0, 1 - metrics.averageScreenLoad / 3000) * 100 * weights.screenLoad;
 
     // Network latency (lower is better, target < 500ms)
-    score += Math.max(0, (1 - metrics.averageNetworkLatency / 2000)) * 100 * weights.networkLatency;
+    score += Math.max(0, 1 - metrics.averageNetworkLatency / 2000) * 100 * weights.networkLatency;
 
     // Memory utilization (lower is better, target < 70%)
-    score += Math.max(0, (1 - metrics.memoryUtilization / 100)) * 100 * weights.memoryUtilization;
+    score += Math.max(0, 1 - metrics.memoryUtilization / 100) * 100 * weights.memoryUtilization;
 
     // Battery impact
-    const batteryScore = metrics.batteryImpact === 'low' ? 100 : metrics.batteryImpact === 'medium' ? 60 : 30;
+    const batteryScore =
+      metrics.batteryImpact === 'low' ? 100 : metrics.batteryImpact === 'medium' ? 60 : 30;
     score += batteryScore * weights.batteryImpact;
 
     // Network failure rate (lower is better)
-    score += Math.max(0, (1 - metrics.networkFailureRate / 100)) * 100 * weights.networkFailureRate;
+    score += Math.max(0, 1 - metrics.networkFailureRate / 100) * 100 * weights.networkFailureRate;
 
     return Math.round(Math.max(0, Math.min(100, score)));
   }

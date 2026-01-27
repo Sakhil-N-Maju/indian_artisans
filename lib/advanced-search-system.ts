@@ -1,6 +1,6 @@
 /**
  * Advanced Search & Discovery System
- * 
+ *
  * Comprehensive search and discovery features:
  * - Multi-criteria search
  * - Faceted filtering
@@ -15,11 +15,11 @@
 export interface SearchQuery {
   id: string;
   userId?: string;
-  
+
   // Query text
   query: string;
   queryType: 'text' | 'voice' | 'visual' | 'semantic';
-  
+
   // Filters
   filters: {
     category?: string[];
@@ -35,18 +35,18 @@ export interface SearchQuery {
     availability?: 'in_stock' | 'made_to_order' | 'all';
     sortBy?: 'relevance' | 'price_low' | 'price_high' | 'newest' | 'popular' | 'rating';
   };
-  
+
   // Pagination
   page: number;
   pageSize: number;
-  
+
   // Context
   context?: {
     location?: string;
     previousSearches?: string[];
     viewingHistory?: string[];
   };
-  
+
   // Metadata
   timestamp: Date;
   resultCount?: number;
@@ -56,15 +56,15 @@ export interface SearchQuery {
 export interface SearchResult {
   id: string;
   type: 'product' | 'artisan' | 'workshop' | 'story' | 'category';
-  
+
   // Basic info
   title: string;
   description: string;
   imageUrl: string;
-  
+
   // Score
   relevanceScore: number; // 0-1
-  
+
   // Type-specific data
   productData?: {
     price: number;
@@ -75,33 +75,33 @@ export interface SearchResult {
     reviewCount: number;
     inStock: boolean;
   };
-  
+
   artisanData?: {
     specialization: string;
     location: string;
     productsCount: number;
     rating: number;
   };
-  
+
   workshopData?: {
     date: Date;
     duration: number;
     price: number;
     spotsAvailable: number;
   };
-  
+
   storyData?: {
     author: string;
     publishDate: Date;
     readTime: number;
   };
-  
+
   // Highlighting
   highlights?: {
     field: string;
     snippet: string;
   }[];
-  
+
   // Related items
   relatedItems?: string[];
 }
@@ -141,14 +141,14 @@ export interface SearchFacets {
 export interface VisualSearchQuery {
   id: string;
   userId?: string;
-  
+
   // Image
   image: {
     url: string;
     width: number;
     height: number;
   };
-  
+
   // Detection
   detectedObjects?: {
     type: string;
@@ -160,26 +160,26 @@ export interface VisualSearchQuery {
       height: number;
     };
   }[];
-  
+
   // Colors
   dominantColors?: {
     color: string;
     percentage: number;
   }[];
-  
+
   // Features
   features?: {
     pattern?: string;
     style?: string;
     material?: string;
   };
-  
+
   timestamp: Date;
 }
 
 export interface SearchPersonalization {
   userId: string;
-  
+
   // Preferences
   preferences: {
     favoriteCategories: string[];
@@ -191,7 +191,7 @@ export interface SearchPersonalization {
     preferredMaterials: string[];
     preferredRegions: string[];
   };
-  
+
   // Behavior
   behavior: {
     searchHistory: {
@@ -206,7 +206,7 @@ export interface SearchPersonalization {
     }[];
     purchasedItems: string[];
   };
-  
+
   // Boost factors
   boostFactors: {
     category: Map<string, number>;
@@ -220,7 +220,7 @@ export interface SearchAnalytics {
     start: Date;
     end: Date;
   };
-  
+
   overview: {
     totalSearches: number;
     uniqueUsers: number;
@@ -228,31 +228,31 @@ export interface SearchAnalytics {
     averageClickThroughRate: number;
     averageConversionRate: number;
   };
-  
+
   topQueries: {
     query: string;
     count: number;
     clickThroughRate: number;
     conversionRate: number;
   }[];
-  
+
   zeroResultQueries: {
     query: string;
     count: number;
   }[];
-  
+
   popularFilters: {
     filter: string;
     value: string;
     usage: number;
   }[];
-  
+
   searchTypes: {
     type: SearchQuery['queryType'];
     count: number;
     percentage: number;
   }[];
-  
+
   performance: {
     averageResponseTime: number;
     p95ResponseTime: number;
@@ -264,7 +264,7 @@ export class AdvancedSearchSystem {
   private queries: Map<string, SearchQuery>;
   private visualQueries: Map<string, VisualSearchQuery>;
   private personalizations: Map<string, SearchPersonalization>;
-  
+
   // Mock data stores
   private products: any[];
   private artisans: any[];
@@ -275,12 +275,12 @@ export class AdvancedSearchSystem {
     this.queries = new Map();
     this.visualQueries = new Map();
     this.personalizations = new Map();
-    
+
     this.products = [];
     this.artisans = [];
     this.workshops = [];
     this.stories = [];
-    
+
     this.initializeMockData();
   }
 
@@ -386,7 +386,7 @@ export class AdvancedSearchSystem {
     query: SearchQuery;
   }> {
     const startTime = Date.now();
-    
+
     const query: SearchQuery = {
       id: `search-${Date.now()}`,
       userId: params.userId,
@@ -412,17 +412,17 @@ export class AdvancedSearchSystem {
 
     // Perform search
     const results = await this.executeSearch(query, personalization);
-    
+
     // Generate facets
     const facets = await this.generateFacets(results, query.filters);
-    
+
     // Apply pagination
     const startIndex = (query.page - 1) * query.pageSize;
     const paginatedResults = results.slice(startIndex, startIndex + query.pageSize);
 
     query.resultCount = results.length;
     query.processingTime = Date.now() - startTime;
-    
+
     this.queries.set(query.id, query);
 
     return {
@@ -445,12 +445,13 @@ export class AdvancedSearchSystem {
     const queryWords = queryLower.split(/\s+/);
 
     // Search products
-    this.products.forEach(product => {
+    this.products.forEach((product) => {
       let score = 0;
-      
+
       // Text matching
-      const text = `${product.title} ${product.description} ${product.keywords.join(' ')}`.toLowerCase();
-      queryWords.forEach(word => {
+      const text =
+        `${product.title} ${product.description} ${product.keywords.join(' ')}`.toLowerCase();
+      queryWords.forEach((word) => {
         if (text.includes(word)) score += 0.2;
         if (product.title.toLowerCase().includes(word)) score += 0.3;
       });
@@ -458,7 +459,11 @@ export class AdvancedSearchSystem {
       // Apply filters
       if (query.filters.category && !query.filters.category.includes(product.category)) return;
       if (query.filters.priceRange) {
-        if (product.price < query.filters.priceRange.min || product.price > query.filters.priceRange.max) return;
+        if (
+          product.price < query.filters.priceRange.min ||
+          product.price > query.filters.priceRange.max
+        )
+          return;
       }
       if (query.filters.artisan && !query.filters.artisan.includes(product.artisanId)) return;
       if (query.filters.region && !query.filters.region.includes(product.region)) return;
@@ -496,11 +501,11 @@ export class AdvancedSearchSystem {
     });
 
     // Search artisans
-    this.artisans.forEach(artisan => {
+    this.artisans.forEach((artisan) => {
       let score = 0;
       const text = `${artisan.name} ${artisan.specialization} ${artisan.location}`.toLowerCase();
-      
-      queryWords.forEach(word => {
+
+      queryWords.forEach((word) => {
         if (text.includes(word)) score += 0.3;
       });
 
@@ -543,7 +548,9 @@ export class AdvancedSearchSystem {
         results.sort((a, b) => (b.productData?.rating || 0) - (a.productData?.rating || 0));
         break;
       case 'popular':
-        results.sort((a, b) => (b.productData?.reviewCount || 0) - (a.productData?.reviewCount || 0));
+        results.sort(
+          (a, b) => (b.productData?.reviewCount || 0) - (a.productData?.reviewCount || 0)
+        );
         break;
       case 'relevance':
       default:
@@ -554,9 +561,12 @@ export class AdvancedSearchSystem {
   /**
    * Generate facets
    */
-  private async generateFacets(results: SearchResult[], appliedFilters: SearchQuery['filters']): Promise<SearchFacets> {
-    const productResults = results.filter(r => r.type === 'product');
-    
+  private async generateFacets(
+    results: SearchResult[],
+    appliedFilters: SearchQuery['filters']
+  ): Promise<SearchFacets> {
+    const productResults = results.filter((r) => r.type === 'product');
+
     // Categories
     const categoryCounts = new Map<string, number>();
     const artisanCounts = new Map<string, number>();
@@ -564,14 +574,14 @@ export class AdvancedSearchSystem {
     const materialCounts = new Map<string, number>();
     const techniqueCounts = new Map<string, number>();
     const ratingCounts = new Map<number, number>();
-    
-    this.products.forEach(p => {
+
+    this.products.forEach((p) => {
       categoryCounts.set(p.category, (categoryCounts.get(p.category) || 0) + 1);
       artisanCounts.set(p.artisanId, (artisanCounts.get(p.artisanId) || 0) + 1);
       regionCounts.set(p.region, (regionCounts.get(p.region) || 0) + 1);
       materialCounts.set(p.material, (materialCounts.get(p.material) || 0) + 1);
       techniqueCounts.set(p.technique, (techniqueCounts.get(p.technique) || 0) + 1);
-      
+
       const ratingBucket = Math.floor(p.rating);
       ratingCounts.set(ratingBucket, (ratingCounts.get(ratingBucket) || 0) + 1);
     });
@@ -579,25 +589,35 @@ export class AdvancedSearchSystem {
     return {
       categories: Array.from(categoryCounts.entries()).map(([value, count]) => ({
         value,
-        label: value.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        label: value.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
         count,
         selected: appliedFilters.category?.includes(value) || false,
       })),
       priceRanges: [
-        { min: 0, max: 1000, count: this.products.filter(p => p.price <= 1000).length },
-        { min: 1000, max: 5000, count: this.products.filter(p => p.price > 1000 && p.price <= 5000).length },
-        { min: 5000, max: 10000, count: this.products.filter(p => p.price > 5000 && p.price <= 10000).length },
-        { min: 10000, max: 999999, count: this.products.filter(p => p.price > 10000).length },
+        { min: 0, max: 1000, count: this.products.filter((p) => p.price <= 1000).length },
+        {
+          min: 1000,
+          max: 5000,
+          count: this.products.filter((p) => p.price > 1000 && p.price <= 5000).length,
+        },
+        {
+          min: 5000,
+          max: 10000,
+          count: this.products.filter((p) => p.price > 5000 && p.price <= 10000).length,
+        },
+        { min: 10000, max: 999999, count: this.products.filter((p) => p.price > 10000).length },
       ],
-      artisans: Array.from(artisanCounts.entries()).slice(0, 10).map(([value, count]) => {
-        const artisan = this.artisans.find(a => a.id === value);
-        return {
-          value,
-          label: artisan?.name || value,
-          count,
-          selected: appliedFilters.artisan?.includes(value) || false,
-        };
-      }),
+      artisans: Array.from(artisanCounts.entries())
+        .slice(0, 10)
+        .map(([value, count]) => {
+          const artisan = this.artisans.find((a) => a.id === value);
+          return {
+            value,
+            label: artisan?.name || value,
+            count,
+            selected: appliedFilters.artisan?.includes(value) || false,
+          };
+        }),
       regions: Array.from(regionCounts.entries()).map(([value, count]) => ({
         value,
         label: value,
@@ -606,13 +626,13 @@ export class AdvancedSearchSystem {
       })),
       materials: Array.from(materialCounts.entries()).map(([value, count]) => ({
         value,
-        label: value.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        label: value.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
         count,
         selected: appliedFilters.material?.includes(value) || false,
       })),
       techniques: Array.from(techniqueCounts.entries()).map(([value, count]) => ({
         value,
-        label: value.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        label: value.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
         count,
         selected: appliedFilters.technique?.includes(value) || false,
       })),
@@ -620,8 +640,18 @@ export class AdvancedSearchSystem {
         .sort(([a], [b]) => b - a)
         .map(([rating, count]) => ({ rating, count })),
       availability: [
-        { value: 'in_stock', label: 'In Stock', count: this.products.filter(p => p.inStock).length, selected: appliedFilters.availability === 'in_stock' },
-        { value: 'all', label: 'All', count: this.products.length, selected: appliedFilters.availability === 'all' },
+        {
+          value: 'in_stock',
+          label: 'In Stock',
+          count: this.products.filter((p) => p.inStock).length,
+          selected: appliedFilters.availability === 'in_stock',
+        },
+        {
+          value: 'all',
+          label: 'All',
+          count: this.products.length,
+          selected: appliedFilters.availability === 'all',
+        },
       ],
     };
   }
@@ -634,7 +664,7 @@ export class AdvancedSearchSystem {
     const queryLower = query.toLowerCase();
 
     // Product suggestions
-    this.products.forEach(product => {
+    this.products.forEach((product) => {
       if (product.title.toLowerCase().includes(queryLower)) {
         suggestions.push({
           text: product.title,
@@ -647,10 +677,10 @@ export class AdvancedSearchSystem {
 
     // Category suggestions
     const categories = ['sarees', 'jewelry', 'home_decor', 'accessories', 'pottery', 'textiles'];
-    categories.forEach(cat => {
+    categories.forEach((cat) => {
       if (cat.includes(queryLower)) {
         suggestions.push({
-          text: cat.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+          text: cat.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
           type: 'category',
           score: 0.8,
         });
@@ -658,7 +688,7 @@ export class AdvancedSearchSystem {
     });
 
     // Artisan suggestions
-    this.artisans.forEach(artisan => {
+    this.artisans.forEach((artisan) => {
       if (artisan.name.toLowerCase().includes(queryLower)) {
         suggestions.push({
           text: artisan.name,
@@ -670,18 +700,13 @@ export class AdvancedSearchSystem {
     });
 
     // Sort by score and limit
-    return suggestions
-      .sort((a, b) => b.score - a.score)
-      .slice(0, limit);
+    return suggestions.sort((a, b) => b.score - a.score).slice(0, limit);
   }
 
   /**
    * Visual search
    */
-  async visualSearch(params: {
-    imageUrl: string;
-    userId?: string;
-  }): Promise<SearchResult[]> {
+  async visualSearch(params: { imageUrl: string; userId?: string }): Promise<SearchResult[]> {
     const visualQuery: VisualSearchQuery = {
       id: `visual-${Date.now()}`,
       userId: params.userId,
@@ -701,7 +726,7 @@ export class AdvancedSearchSystem {
       title: product.title,
       description: product.description,
       imageUrl: product.imageUrl,
-      relevanceScore: 0.9 - (index * 0.1),
+      relevanceScore: 0.9 - index * 0.1,
       productData: {
         price: product.price,
         currency: product.currency,
@@ -773,17 +798,18 @@ export class AdvancedSearchSystem {
    */
   async getAnalytics(period: { start: Date; end: Date }): Promise<SearchAnalytics> {
     const queries = Array.from(this.queries.values()).filter(
-      q => q.timestamp >= period.start && q.timestamp <= period.end
+      (q) => q.timestamp >= period.start && q.timestamp <= period.end
     );
 
-    const uniqueUsers = new Set(queries.filter(q => q.userId).map(q => q.userId!)).size;
-    const averageResults = queries.length > 0
-      ? queries.reduce((sum, q) => sum + (q.resultCount || 0), 0) / queries.length
-      : 0;
+    const uniqueUsers = new Set(queries.filter((q) => q.userId).map((q) => q.userId!)).size;
+    const averageResults =
+      queries.length > 0
+        ? queries.reduce((sum, q) => sum + (q.resultCount || 0), 0) / queries.length
+        : 0;
 
     // Calculate query frequencies
     const queryCounts = new Map<string, number>();
-    queries.forEach(q => {
+    queries.forEach((q) => {
       const normalized = q.query.toLowerCase();
       queryCounts.set(normalized, (queryCounts.get(normalized) || 0) + 1);
     });
@@ -801,7 +827,7 @@ export class AdvancedSearchSystem {
     // Zero result queries
     const zeroResultQueries = Array.from(
       queries
-        .filter(q => q.resultCount === 0)
+        .filter((q) => q.resultCount === 0)
         .reduce((map, q) => {
           const normalized = q.query.toLowerCase();
           map.set(normalized, (map.get(normalized) || 0) + 1);
@@ -815,7 +841,7 @@ export class AdvancedSearchSystem {
 
     // Search types
     const typeCounts = new Map<SearchQuery['queryType'], number>();
-    queries.forEach(q => {
+    queries.forEach((q) => {
       typeCounts.set(q.queryType, (typeCounts.get(q.queryType) || 0) + 1);
     });
 
@@ -826,10 +852,11 @@ export class AdvancedSearchSystem {
     }));
 
     // Performance
-    const processingTimes = queries.map(q => q.processingTime || 0).filter(t => t > 0);
-    const averageResponseTime = processingTimes.length > 0
-      ? processingTimes.reduce((sum, t) => sum + t, 0) / processingTimes.length
-      : 0;
+    const processingTimes = queries.map((q) => q.processingTime || 0).filter((t) => t > 0);
+    const averageResponseTime =
+      processingTimes.length > 0
+        ? processingTimes.reduce((sum, t) => sum + t, 0) / processingTimes.length
+        : 0;
 
     const sortedTimes = processingTimes.sort((a, b) => a - b);
     const p95Index = Math.floor(sortedTimes.length * 0.95);

@@ -1,6 +1,6 @@
 /**
  * Mobile Engagement Service
- * 
+ *
  * Drives user engagement on mobile devices:
  * - In-app messaging
  * - App rating and review prompts
@@ -204,7 +204,7 @@ export class MobileEngagementService {
   ): Promise<InAppMessage[]> {
     const now = new Date();
     return Array.from(this.inAppMessages.values())
-      .filter(m => {
+      .filter((m) => {
         if (!m.active) return false;
         if (m.expiresAt && m.expiresAt < now) return false;
         if (m.trigger !== trigger) return false;
@@ -332,12 +332,10 @@ export class MobileEngagementService {
   /**
    * Complete referral
    */
-  async completeReferral(
-    referralCode: string,
-    refereeId: string
-  ): Promise<Referral | null> {
-    const referral = Array.from(this.referrals.values())
-      .find(r => r.referralCode === referralCode && r.status === 'pending');
+  async completeReferral(referralCode: string, refereeId: string): Promise<Referral | null> {
+    const referral = Array.from(this.referrals.values()).find(
+      (r) => r.referralCode === referralCode && r.status === 'pending'
+    );
 
     if (!referral) {
       return null;
@@ -358,13 +356,8 @@ export class MobileEngagementService {
   /**
    * Award loyalty points
    */
-  async awardPoints(
-    userId: string,
-    points: number,
-    reason: string
-  ): Promise<LoyaltyPoints> {
-    let loyalty = Array.from(this.loyaltyPoints.values())
-      .find(l => l.userId === userId);
+  async awardPoints(userId: string, points: number, reason: string): Promise<LoyaltyPoints> {
+    let loyalty = Array.from(this.loyaltyPoints.values()).find((l) => l.userId === userId);
 
     if (!loyalty) {
       loyalty = {
@@ -408,8 +401,7 @@ export class MobileEngagementService {
     points: number,
     reason: string
   ): Promise<LoyaltyPoints | null> {
-    const loyalty = Array.from(this.loyaltyPoints.values())
-      .find(l => l.userId === userId);
+    const loyalty = Array.from(this.loyaltyPoints.values()).find((l) => l.userId === userId);
 
     if (!loyalty || loyalty.points < points) {
       return null;
@@ -433,8 +425,7 @@ export class MobileEngagementService {
    * Get user's loyalty points
    */
   async getLoyaltyPoints(userId: string): Promise<LoyaltyPoints | null> {
-    return Array.from(this.loyaltyPoints.values())
-      .find(l => l.userId === userId) || null;
+    return Array.from(this.loyaltyPoints.values()).find((l) => l.userId === userId) || null;
   }
 
   /**
@@ -466,10 +457,7 @@ export class MobileEngagementService {
   /**
    * Unlock achievement
    */
-  async unlockAchievement(
-    userId: string,
-    achievementId: string
-  ): Promise<UserAchievement> {
+  async unlockAchievement(userId: string, achievementId: string): Promise<UserAchievement> {
     const achievement = this.achievements.get(achievementId);
     if (!achievement) {
       throw new Error('Achievement not found');
@@ -504,16 +492,15 @@ export class MobileEngagementService {
     available: Achievement[];
   }> {
     const unlocked = Array.from(this.userAchievements.values())
-      .filter(ua => ua.userId === userId)
-      .map(ua => ({
+      .filter((ua) => ua.userId === userId)
+      .map((ua) => ({
         ...ua,
         achievement: this.achievements.get(ua.achievementId)!,
       }))
-      .filter(ua => ua.achievement);
+      .filter((ua) => ua.achievement);
 
-    const unlockedIds = new Set(unlocked.map(u => u.achievementId));
-    const available = Array.from(this.achievements.values())
-      .filter(a => !unlockedIds.has(a.id));
+    const unlockedIds = new Set(unlocked.map((u) => u.achievementId));
+    const available = Array.from(this.achievements.values()).filter((a) => !unlockedIds.has(a.id));
 
     return { unlocked, available };
   }
@@ -568,7 +555,7 @@ export class MobileEngagementService {
     }
 
     // Update progress
-    const completedSteps = onboarding.steps.filter(s => s.completed || s.skipped).length;
+    const completedSteps = onboarding.steps.filter((s) => s.completed || s.skipped).length;
     onboarding.completionPercentage = (completedSteps / onboarding.totalSteps) * 100;
     onboarding.currentStep = stepIndex + 1;
 
@@ -589,8 +576,7 @@ export class MobileEngagementService {
    * Track daily streak
    */
   async trackDailyStreak(userId: string): Promise<DailyStreak> {
-    let streak = Array.from(this.dailyStreaks.values())
-      .find(s => s.userId === userId);
+    let streak = Array.from(this.dailyStreaks.values()).find((s) => s.userId === userId);
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -640,14 +626,13 @@ export class MobileEngagementService {
     userId: string,
     days: number
   ): Promise<{ claimed: boolean; reward: number }> {
-    const streak = Array.from(this.dailyStreaks.values())
-      .find(s => s.userId === userId);
+    const streak = Array.from(this.dailyStreaks.values()).find((s) => s.userId === userId);
 
     if (!streak) {
       return { claimed: false, reward: 0 };
     }
 
-    const milestone = streak.milestones.find(m => m.days === days);
+    const milestone = streak.milestones.find((m) => m.days === days);
     if (!milestone || milestone.claimed || streak.currentStreak < days) {
       return { claimed: false, reward: 0 };
     }
@@ -706,83 +691,92 @@ export class MobileEngagementService {
     };
   }> {
     // In-app messages
-    const activeMessages = Array.from(this.inAppMessages.values())
-      .filter(m => m.active);
-    const avgCTR = activeMessages.length > 0
-      ? activeMessages.reduce((sum, m) => {
-          const ctr = m.displayedCount > 0 ? (m.clickedCount / m.displayedCount) * 100 : 0;
-          return sum + ctr;
-        }, 0) / activeMessages.length
-      : 0;
-    const avgDismissRate = activeMessages.length > 0
-      ? activeMessages.reduce((sum, m) => {
-          const dr = m.displayedCount > 0 ? (m.dismissedCount / m.displayedCount) * 100 : 0;
-          return sum + dr;
-        }, 0) / activeMessages.length
-      : 0;
+    const activeMessages = Array.from(this.inAppMessages.values()).filter((m) => m.active);
+    const avgCTR =
+      activeMessages.length > 0
+        ? activeMessages.reduce((sum, m) => {
+            const ctr = m.displayedCount > 0 ? (m.clickedCount / m.displayedCount) * 100 : 0;
+            return sum + ctr;
+          }, 0) / activeMessages.length
+        : 0;
+    const avgDismissRate =
+      activeMessages.length > 0
+        ? activeMessages.reduce((sum, m) => {
+            const dr = m.displayedCount > 0 ? (m.dismissedCount / m.displayedCount) * 100 : 0;
+            return sum + dr;
+          }, 0) / activeMessages.length
+        : 0;
 
     // Ratings
     const ratings = Array.from(this.appRatings.values());
-    const avgRating = ratings.length > 0
-      ? ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length
-      : 0;
-    const ratingsByPlatform = ratings.reduce((acc, r) => {
-      acc[r.platform] = (acc[r.platform] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-    const ratingsBySentiment = ratings.reduce((acc, r) => {
-      acc[r.sentiment] = (acc[r.sentiment] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const avgRating =
+      ratings.length > 0 ? ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length : 0;
+    const ratingsByPlatform = ratings.reduce(
+      (acc, r) => {
+        acc[r.platform] = (acc[r.platform] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
+    const ratingsBySentiment = ratings.reduce(
+      (acc, r) => {
+        acc[r.sentiment] = (acc[r.sentiment] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     // Referrals
     const referrals = Array.from(this.referrals.values());
-    const completedReferrals = referrals.filter(r => r.status === 'completed');
-    const referralConversionRate = referrals.length > 0
-      ? (completedReferrals.length / referrals.length) * 100
-      : 0;
+    const completedReferrals = referrals.filter((r) => r.status === 'completed');
+    const referralConversionRate =
+      referrals.length > 0 ? (completedReferrals.length / referrals.length) * 100 : 0;
 
     // Loyalty
     const loyaltyUsers = Array.from(this.loyaltyPoints.values());
-    const loyaltyByTier = loyaltyUsers.reduce((acc, l) => {
-      acc[l.tier] = (acc[l.tier] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const loyaltyByTier = loyaltyUsers.reduce(
+      (acc, l) => {
+        acc[l.tier] = (acc[l.tier] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
     const totalPointsAwarded = loyaltyUsers.reduce((sum, l) => {
-      return sum + l.transactions
-        .filter(t => t.type === 'earn')
-        .reduce((s, t) => s + t.amount, 0);
+      return (
+        sum + l.transactions.filter((t) => t.type === 'earn').reduce((s, t) => s + t.amount, 0)
+      );
     }, 0);
     const totalPointsRedeemed = loyaltyUsers.reduce((sum, l) => {
-      return sum + l.transactions
-        .filter(t => t.type === 'redeem')
-        .reduce((s, t) => s + t.amount, 0);
+      return (
+        sum + l.transactions.filter((t) => t.type === 'redeem').reduce((s, t) => s + t.amount, 0)
+      );
     }, 0);
 
     // Achievements
     const achievements = Array.from(this.achievements.values());
     const userAchievements = Array.from(this.userAchievements.values());
-    const achievementCounts = achievements.map(a => ({
-      name: a.name,
-      unlockedCount: a.unlockedBy.length,
-    })).sort((a, b) => b.unlockedCount - a.unlockedCount).slice(0, 5);
+    const achievementCounts = achievements
+      .map((a) => ({
+        name: a.name,
+        unlockedCount: a.unlockedBy.length,
+      }))
+      .sort((a, b) => b.unlockedCount - a.unlockedCount)
+      .slice(0, 5);
 
     // Onboarding
     const onboardings = Array.from(this.onboardingProgress.values());
-    const completedOnboardings = onboardings.filter(o => o.completed);
-    const onboardingCompletionRate = onboardings.length > 0
-      ? (completedOnboardings.length / onboardings.length) * 100
-      : 0;
+    const completedOnboardings = onboardings.filter((o) => o.completed);
+    const onboardingCompletionRate =
+      onboardings.length > 0 ? (completedOnboardings.length / onboardings.length) * 100 : 0;
 
     // Streaks
     const streaks = Array.from(this.dailyStreaks.values());
-    const activeStreaks = streaks.filter(s => s.currentStreak > 0);
-    const longestStreak = streaks.length > 0
-      ? Math.max(...streaks.map(s => s.longestStreak))
-      : 0;
-    const avgStreak = activeStreaks.length > 0
-      ? activeStreaks.reduce((sum, s) => sum + s.currentStreak, 0) / activeStreaks.length
-      : 0;
+    const activeStreaks = streaks.filter((s) => s.currentStreak > 0);
+    const longestStreak = streaks.length > 0 ? Math.max(...streaks.map((s) => s.longestStreak)) : 0;
+    const avgStreak =
+      activeStreaks.length > 0
+        ? activeStreaks.reduce((sum, s) => sum + s.currentStreak, 0) / activeStreaks.length
+        : 0;
 
     return {
       inAppMessages: {

@@ -114,23 +114,10 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const {
-      artisanId,
-      title,
-      description,
-      price,
-      category,
-      stock,
-      images,
-      tags,
-      ...rest
-    } = body;
+    const { artisanId, title, description, price, category, stock, images, tags, ...rest } = body;
 
     if (!artisanId || !title || !description || !price || !category) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     // Generate slug

@@ -8,10 +8,7 @@ export async function POST(request: NextRequest) {
     const { phone, email, name, password, role } = body;
 
     if (!phone || !name) {
-      return NextResponse.json(
-        { error: 'Phone and name are required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Phone and name are required' }, { status: 400 });
     }
 
     // Check if user exists
@@ -114,9 +111,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Missing parameters' }, { status: 400 });
   } catch (error: any) {
     console.error('User fetch error:', error);
-    return NextResponse.json(
-      { error: error.message || 'Failed to fetch user' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message || 'Failed to fetch user' }, { status: 500 });
   }
 }

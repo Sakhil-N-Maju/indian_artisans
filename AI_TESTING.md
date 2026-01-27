@@ -3,6 +3,7 @@
 ## Quick Test Checklist
 
 ### Prerequisites
+
 - [ ] OpenAI API key configured in `.env`
 - [ ] WhatsApp Cloud API configured
 - [ ] ngrok running (for webhook)
@@ -24,6 +25,7 @@ curl "http://localhost:3000/api/ai/products?mediaId=YOUR_MEDIA_ID"
 ```
 
 **Expected Response:**
+
 ```json
 {
   "success": true,
@@ -38,6 +40,7 @@ curl "http://localhost:3000/api/ai/products?mediaId=YOUR_MEDIA_ID"
 ### Step-by-Step
 
 1. **Register as Artisan**
+
    ```bash
    # Create test artisan via API or database
    POST /api/artisans
@@ -51,53 +54,59 @@ curl "http://localhost:3000/api/ai/products?mediaId=YOUR_MEDIA_ID"
    ```
 
 2. **Send Test Message**
+
    ```
    WhatsApp: "help"
    ```
-   
+
    **Expected:**
+
    ```
    👋 Welcome Test Artisan!
-   
+
    📸 To create a product listing:
    1. Send a clear photo of your product
    2. Send a voice message describing it
-   
+
    I'll use AI to create a professional listing for you!
    ```
 
 3. **Send Product Image**
+
    ```
    WhatsApp: [Send image of craft]
    ```
-   
+
    **Expected:**
+
    ```
-   📸 Image received! Now send a voice message describing 
-   your product (language doesn't matter - Hindi, English, 
+   📸 Image received! Now send a voice message describing
+   your product (language doesn't matter - Hindi, English,
    or any regional language).
-   
-   I can see: "Handwoven basket". Please describe it in 
+
+   I can see: "Handwoven basket". Please describe it in
    your own words via voice message.
    ```
 
 4. **Send Voice Description**
+
    ```
    WhatsApp: [Record voice]
    "This is a handwoven bamboo basket made using traditional techniques..."
    ```
-   
+
    **Expected:**
+
    ```
-   🤖 Perfect! Processing your product with AI... 
+   🤖 Perfect! Processing your product with AI...
    This will take about 30 seconds.
-   
+
    ✅ Product created successfully!
-   
+
    📦 Traditional Handwoven Bamboo Basket
    💰 Suggested Price: ₹1,500
    📁 Category: Home Decor
-   
+
    Confidence Score: 93%
    ```
 
@@ -126,6 +135,7 @@ Content-Type: application/json
 ```
 
 **Expected Response:**
+
 ```json
 {
   "success": true,
@@ -151,11 +161,13 @@ Content-Type: application/json
 ## Test 4: Error Scenarios
 
 ### Test Invalid Media ID
+
 ```bash
 GET http://localhost:3000/api/ai/products?mediaId=invalid-id
 ```
 
 **Expected:**
+
 ```json
 {
   "error": "Failed to download media: ..."
@@ -163,6 +175,7 @@ GET http://localhost:3000/api/ai/products?mediaId=invalid-id
 ```
 
 ### Test Missing OpenAI Key
+
 ```bash
 # Remove OPENAI_API_KEY from .env
 # Restart server
@@ -172,6 +185,7 @@ GET http://localhost:3000/api/ai/products?mediaId=invalid-id
 ```
 
 ### Test WhatsApp Timeout
+
 ```bash
 # Send image
 # Wait 11 minutes (timeout is 10 min)
@@ -185,22 +199,25 @@ GET http://localhost:3000/api/ai/products?mediaId=invalid-id
 ## Test 5: Multi-Language Support
 
 ### Hindi Test
+
 ```
-Voice: "Yeh ek haath se bana bamboo basket hai. Maine isse 
+Voice: "Yeh ek haath se bana bamboo basket hai. Maine isse
         traditional technique se banaya hai..."
 
 Expected: Transcribes correctly, creates product listing
 ```
 
 ### English Test
+
 ```
-Voice: "This is a handcrafted bamboo basket made using 
+Voice: "This is a handcrafted bamboo basket made using
         traditional weaving techniques..."
 
 Expected: Works seamlessly
 ```
 
 ### Regional Language Test
+
 ```
 Voice: [Record in Tamil/Telugu/Bengali]
 
@@ -216,19 +233,19 @@ Expected: Whisper auto-detects and transcribes
 ```typescript
 // Verify product in database
 const product = await prisma.product.findFirst({
-  where: { 
-    aiStory: { not: null }
+  where: {
+    aiStory: { not: null },
   },
-  orderBy: { createdAt: 'desc' }
+  orderBy: { createdAt: 'desc' },
 });
 
 console.log({
-  title: product.title,           // Should be catchy, under 80 chars
+  title: product.title, // Should be catchy, under 80 chars
   description: product.description, // Should be 200-400 words
-  aiStory: product.aiStory,        // Should be 150-250 words
-  category: product.category,      // Should be valid category
-  price: product.price,            // Should be reasonable
-  tags: product.tags,              // Should have 3-5 relevant tags
+  aiStory: product.aiStory, // Should be 150-250 words
+  category: product.category, // Should be valid category
+  price: product.price, // Should be reasonable
+  tags: product.tags, // Should have 3-5 relevant tags
 });
 ```
 
@@ -273,14 +290,14 @@ npm run db:studio
 
 ### Expected Processing Times
 
-| Step | Time | Cost |
-|------|------|------|
-| Download media | 2-5s | Free |
-| Voice transcription | 5-10s | $0.01 |
-| Image analysis | 3-7s | $0.01 |
-| Product extraction | 8-15s | $0.02 |
-| Story generation | 5-10s | $0.01 |
-| **Total** | **25-45s** | **~$0.05** |
+| Step                | Time       | Cost       |
+| ------------------- | ---------- | ---------- |
+| Download media      | 2-5s       | Free       |
+| Voice transcription | 5-10s      | $0.01      |
+| Image analysis      | 3-7s       | $0.01      |
+| Product extraction  | 8-15s      | $0.02      |
+| Story generation    | 5-10s      | $0.01      |
+| **Total**           | **25-45s** | **~$0.05** |
 
 ### Optimization Tips
 
@@ -294,7 +311,9 @@ npm run db:studio
 ## Common Issues & Solutions
 
 ### Issue: "OPENAI_API_KEY not found"
-**Solution:** 
+
+**Solution:**
+
 ```bash
 # Add to .env
 OPENAI_API_KEY="sk-proj-xxxxx"
@@ -302,25 +321,33 @@ OPENAI_API_KEY="sk-proj-xxxxx"
 ```
 
 ### Issue: "Failed to download media"
+
 **Solution:**
+
 - Check WHATSAPP_ACCESS_TOKEN is valid
 - Media IDs expire after 30 days
 - Ensure webhook received the message
 
 ### Issue: "Transcription failed"
+
 **Solution:**
+
 - Voice message might be too short
 - Ensure audio format is supported (ogg, mp3, m4a)
 - Check OpenAI API status
 
 ### Issue: "Low confidence score"
+
 **Solution:**
+
 - Image quality might be poor
 - Voice description might be unclear
 - Manual review and edit recommended
 
 ### Issue: "Product not created"
+
 **Solution:**
+
 - Check artisan exists in database
 - Verify database connection
 - Check API logs for errors
@@ -351,13 +378,15 @@ Track these metrics:
 ```typescript
 // Products created via AI
 const aiProducts = await prisma.product.count({
-  where: { aiStory: { not: null } }
+  where: { aiStory: { not: null } },
 });
 
 // Average confidence score
 const avgConfidence = await prisma.product.aggregate({
   where: { aiStory: { not: null } },
-  _avg: { /* confidence field */ }
+  _avg: {
+    /* confidence field */
+  },
 });
 
 // Processing time
@@ -365,10 +394,10 @@ const avgConfidence = await prisma.product.aggregate({
 
 // Error rate
 const errors = await prisma.whatsAppMessage.count({
-  where: { 
+  where: {
     direction: 'OUTBOUND',
-    content: { contains: '❌' }
-  }
+    content: { contains: '❌' },
+  },
 });
 ```
 
@@ -388,15 +417,18 @@ const errors = await prisma.whatsAppMessage.count({
 ## Support
 
 **Documentation:**
+
 - Main: `AI_PIPELINE.md`
 - WhatsApp: `WHATSAPP_SETUP.md`
 - Architecture: `ARCHITECTURE.md`
 
 **API References:**
+
 - OpenAI: https://platform.openai.com/docs
 - WhatsApp: https://developers.facebook.com/docs/whatsapp
 
 **Debugging:**
+
 - Check terminal logs
 - Use `npm run db:studio`
 - Monitor OpenAI dashboard

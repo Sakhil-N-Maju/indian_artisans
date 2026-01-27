@@ -1,6 +1,6 @@
 /**
  * Global Marketplace Service
- * 
+ *
  * Manages international marketplace operations:
  * - Multi-region support
  * - Cross-border transactions
@@ -16,7 +16,7 @@ export interface MarketplaceRegion {
   currency: string;
   languages: string[];
   timezone: string;
-  
+
   // Business Settings
   settings: {
     operationalHours: {
@@ -29,7 +29,7 @@ export interface MarketplaceRegion {
     maxOrderValue: number;
     taxIncluded: boolean;
   };
-  
+
   // Shipping
   shipping: {
     domesticCarriers: string[];
@@ -37,7 +37,7 @@ export interface MarketplaceRegion {
     averageDeliveryDays: number;
     freeShippingThreshold?: number;
   };
-  
+
   // Regulations
   regulations: {
     requiresImportLicense: boolean;
@@ -46,7 +46,7 @@ export interface MarketplaceRegion {
     requiresProductCertification: boolean;
     dataPrivacyCompliance: string[]; // GDPR, CCPA, etc.
   };
-  
+
   // Status
   isActive: boolean;
   launchDate?: Date;
@@ -55,41 +55,53 @@ export interface MarketplaceRegion {
 export interface GlobalProduct {
   id: string;
   baseProductId: string;
-  
+
   // Regional Availability
   availableInRegions: string[];
-  regionalPricing: Record<string, {
-    price: number;
-    currency: string;
-    includingTax: boolean;
-  }>;
-  
+  regionalPricing: Record<
+    string,
+    {
+      price: number;
+      currency: string;
+      includingTax: boolean;
+    }
+  >;
+
   // Regional Variations
-  regionalContent: Record<string, {
-    title: string;
-    description: string;
-    keywords: string[];
-  }>;
-  
+  regionalContent: Record<
+    string,
+    {
+      title: string;
+      description: string;
+      keywords: string[];
+    }
+  >;
+
   // Compliance
-  compliance: Record<string, {
-    approved: boolean;
-    certifications: string[];
-    restrictions?: string[];
-  }>;
-  
+  compliance: Record<
+    string,
+    {
+      approved: boolean;
+      certifications: string[];
+      restrictions?: string[];
+    }
+  >;
+
   // Inventory by Region
-  regionalInventory: Record<string, {
-    quantity: number;
-    warehouse: string;
-    reorderPoint: number;
-  }>;
+  regionalInventory: Record<
+    string,
+    {
+      quantity: number;
+      warehouse: string;
+      reorderPoint: number;
+    }
+  >;
 }
 
 export interface CrossBorderOrder {
   id: string;
   orderId: string;
-  
+
   // Origin & Destination
   origin: {
     country: string;
@@ -100,7 +112,7 @@ export interface CrossBorderOrder {
     region: string;
     address: any;
   };
-  
+
   // Customs
   customs: {
     declarationNumber?: string;
@@ -110,7 +122,7 @@ export interface CrossBorderOrder {
     category: string;
     description: string;
   };
-  
+
   // Duties & Taxes
   charges: {
     importDuty: number;
@@ -121,7 +133,7 @@ export interface CrossBorderOrder {
     currency: string;
     paidBy: 'sender' | 'recipient';
   };
-  
+
   // Shipping
   shipping: {
     carrier: string;
@@ -129,7 +141,7 @@ export interface CrossBorderOrder {
     estimatedDelivery: Date;
     actualDelivery?: Date;
   };
-  
+
   // Status
   status: 'pending' | 'customs_clearance' | 'in_transit' | 'delivered' | 'held' | 'returned';
   statusHistory: {
@@ -277,7 +289,7 @@ export class GlobalMarketplaceService {
       },
     ];
 
-    regions.forEach(region => {
+    regions.forEach((region) => {
       this.regions.set(region.code, region);
     });
   }
@@ -293,7 +305,7 @@ export class GlobalMarketplaceService {
    * Get all active regions
    */
   async getActiveRegions(): Promise<MarketplaceRegion[]> {
-    return Array.from(this.regions.values()).filter(r => r.isActive);
+    return Array.from(this.regions.values()).filter((r) => r.isActive);
   }
 
   /**
@@ -323,7 +335,10 @@ export class GlobalMarketplaceService {
   /**
    * Get regional price for product
    */
-  async getRegionalPrice(productId: string, regionCode: string): Promise<{
+  async getRegionalPrice(
+    productId: string,
+    regionCode: string
+  ): Promise<{
     price: number;
     currency: string;
     includingTax: boolean;
@@ -345,7 +360,7 @@ export class GlobalMarketplaceService {
     currency: string;
   }): Promise<CrossBorderOrder['charges']> {
     const destination = await this.getRegion(params.destinationCountry);
-    
+
     if (!destination) {
       throw new Error('Invalid destination country');
     }
@@ -404,14 +419,19 @@ export class GlobalMarketplaceService {
       charges,
       shipping: {
         carrier: this.selectInternationalCarrier(params.origin.country, params.destination.country),
-        estimatedDelivery: this.calculateEstimatedDelivery(params.origin.country, params.destination.country),
+        estimatedDelivery: this.calculateEstimatedDelivery(
+          params.origin.country,
+          params.destination.country
+        ),
       },
       status: 'pending',
-      statusHistory: [{
-        status: 'pending',
-        timestamp: new Date(),
-        notes: 'Order created',
-      }],
+      statusHistory: [
+        {
+          status: 'pending',
+          timestamp: new Date(),
+          notes: 'Order created',
+        },
+      ],
     };
 
     this.orders.set(order.id, order);
@@ -421,7 +441,11 @@ export class GlobalMarketplaceService {
   /**
    * Update order status
    */
-  async updateOrderStatus(orderId: string, status: CrossBorderOrder['status'], notes?: string): Promise<void> {
+  async updateOrderStatus(
+    orderId: string,
+    status: CrossBorderOrder['status'],
+    notes?: string
+  ): Promise<void> {
     const order = this.orders.get(orderId);
     if (!order) {
       throw new Error('Order not found');
@@ -438,7 +462,10 @@ export class GlobalMarketplaceService {
   /**
    * Get compliance requirements for region
    */
-  async getComplianceRequirements(regionCode: string, productCategory: string): Promise<{
+  async getComplianceRequirements(
+    regionCode: string,
+    productCategory: string
+  ): Promise<{
     required: string[];
     optional: string[];
     restricted: boolean;
@@ -460,7 +487,7 @@ export class GlobalMarketplaceService {
     }
 
     if (region.regulations.dataPrivacyCompliance.length > 0) {
-      required.push(...region.regulations.dataPrivacyCompliance.map(c => `${c} Compliance`));
+      required.push(...region.regulations.dataPrivacyCompliance.map((c) => `${c} Compliance`));
     }
 
     const restricted = region.regulations.restrictedCategories.includes(productCategory);
@@ -473,21 +500,27 @@ export class GlobalMarketplaceService {
    */
   async getMarketplaceStats() {
     const regions = Array.from(this.regions.values());
-    const activeRegions = regions.filter(r => r.isActive);
+    const activeRegions = regions.filter((r) => r.isActive);
     const products = Array.from(this.products.values());
     const orders = Array.from(this.orders.values());
 
-    const ordersByRegion = orders.reduce((acc, order) => {
-      const region = order.destination.country;
-      acc[region] = (acc[region] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const ordersByRegion = orders.reduce(
+      (acc, order) => {
+        const region = order.destination.country;
+        acc[region] = (acc[region] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const revenueByRegion = orders.reduce((acc, order) => {
-      const region = order.destination.country;
-      acc[region] = (acc[region] || 0) + order.customs.declaredValue;
-      return acc;
-    }, {} as Record<string, number>);
+    const revenueByRegion = orders.reduce(
+      (acc, order) => {
+        const region = order.destination.country;
+        acc[region] = (acc[region] || 0) + order.customs.declaredValue;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     return {
       totalRegions: regions.length,
@@ -496,9 +529,10 @@ export class GlobalMarketplaceService {
       totalOrders: orders.length,
       ordersByRegion,
       revenueByRegion,
-      averageOrderValue: orders.length > 0
-        ? orders.reduce((sum, o) => sum + o.customs.declaredValue, 0) / orders.length
-        : 0,
+      averageOrderValue:
+        orders.length > 0
+          ? orders.reduce((sum, o) => sum + o.customs.declaredValue, 0) / orders.length
+          : 0,
     };
   }
 
@@ -507,20 +541,20 @@ export class GlobalMarketplaceService {
   private getImportDutyRate(country: string, productId: string): number {
     // Simplified - in production, would use actual tariff schedules
     const rates: Record<string, number> = {
-      'US': 0.05,
-      'UK': 0.04,
-      'EU': 0.06,
-      'IN': 0.10,
+      US: 0.05,
+      UK: 0.04,
+      EU: 0.06,
+      IN: 0.1,
     };
     return rates[country] || 0.05;
   }
 
   private getVATRate(country: string): number {
     const rates: Record<string, number> = {
-      'US': 0, // Sales tax varies by state
-      'UK': 0.20,
-      'EU': 0.20,
-      'IN': 0.18, // GST
+      US: 0, // Sales tax varies by state
+      UK: 0.2,
+      EU: 0.2,
+      IN: 0.18, // GST
     };
     return rates[country] || 0;
   }

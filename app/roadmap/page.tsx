@@ -1,13 +1,13 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Navigation } from "@/components/navigation"
-import { Footer } from "@/components/footer"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
+import { useState } from 'react';
+import { Navigation } from '@/components/navigation';
+import { Footer } from '@/components/footer';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 import {
   Target,
   Rocket,
@@ -38,644 +38,632 @@ import {
   FileCheck,
   Landmark,
   ChevronRight,
-} from "lucide-react"
+} from 'lucide-react';
 
 interface Feature {
-  title: string
-  description: string
-  icon: any
-  status?: "planned" | "in-progress" | "completed"
+  title: string;
+  description: string;
+  icon: any;
+  status?: 'planned' | 'in-progress' | 'completed';
 }
 
 interface Phase {
-  id: string
-  name: string
-  tagline: string
-  duration: string
+  id: string;
+  name: string;
+  tagline: string;
+  duration: string;
   goals: {
-    artisans?: string
-    gmv?: string
-    other: string[]
-  }
+    artisans?: string;
+    gmv?: string;
+    other: string[];
+  };
   features: {
-    category: string
-    items: Feature[]
-  }[]
-  outcomes: string[]
+    category: string;
+    items: Feature[];
+  }[];
+  outcomes: string[];
 }
 
 export default function Roadmap() {
-  const [scrolled, setScrolled] = useState(false)
-  const [selectedPhase, setSelectedPhase] = useState("phase1")
+  const [scrolled, setScrolled] = useState(false);
+  const [selectedPhase, setSelectedPhase] = useState('phase1');
 
   const phases: Phase[] = [
     {
-      id: "phase1",
-      name: "Phase 1: Trustworthy MVP",
-      tagline: "Build the Foundation",
-      duration: "0-6 Months",
+      id: 'phase1',
+      name: 'Phase 1: Trustworthy MVP',
+      tagline: 'Build the Foundation',
+      duration: '0-6 Months',
       goals: {
-        artisans: "1,000 Artisans",
-        gmv: "₹50-100 Cr GMV",
-        other: ["Rock-solid Infrastructure", "DPDP-Ready Compliance"],
+        artisans: '1,000 Artisans',
+        gmv: '₹50-100 Cr GMV',
+        other: ['Rock-solid Infrastructure', 'DPDP-Ready Compliance'],
       },
       features: [
         {
-          category: "Voice-First AI Interface",
+          category: 'Voice-First AI Interface',
           items: [
             {
-              title: "WhatsApp-Based Multi-Language Support",
+              title: 'WhatsApp-Based Multi-Language Support',
               description:
-                "Support for 12+ Indian languages with auto-triage for registration, listings, orders, and support",
+                'Support for 12+ Indian languages with auto-triage for registration, listings, orders, and support',
               icon: MessageSquare,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Vernacular Speech-to-Text",
+              title: 'Vernacular Speech-to-Text',
               description:
-                "Context-aware translation (EN ↔ local language) with original text preserved in UI",
+                'Context-aware translation (EN ↔ local language) with original text preserved in UI',
               icon: Mic,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
         {
-          category: "Product Listing via Voice + Image",
+          category: 'Product Listing via Voice + Image',
           items: [
             {
-              title: "AI-Powered Product Creation",
+              title: 'AI-Powered Product Creation',
               description:
-                "Image + voice → complete product listing with category, variants, and inventory pre-filled",
+                'Image + voice → complete product listing with category, variants, and inventory pre-filled',
               icon: Camera,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Multi-Model Pipeline",
-              description:
-                "Gemini multimodal primary, OpenAI fallback with full instrumentation",
+              title: 'Multi-Model Pipeline',
+              description: 'Gemini multimodal primary, OpenAI fallback with full instrumentation',
               icon: Workflow,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
         {
-          category: "AI Cultural Storytelling",
+          category: 'AI Cultural Storytelling',
           items: [
             {
-              title: "Automated Storyteller v2",
+              title: 'Automated Storyteller v2',
               description:
-                "Generate SEO title, description, craft story, artisan profile, and social captions in 2-3 languages",
+                'Generate SEO title, description, craft story, artisan profile, and social captions in 2-3 languages',
               icon: BookOpen,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Cultural Heritage Database",
-              description: "Auto-detect GI/UNESCO crafts and integrate cultural context",
+              title: 'Cultural Heritage Database',
+              description: 'Auto-detect GI/UNESCO crafts and integrate cultural context',
               icon: Landmark,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
         {
-          category: "Consumer Storefront & Discovery",
+          category: 'Consumer Storefront & Discovery',
           items: [
             {
-              title: "No-Login Checkout",
-              description: "Seamless checkout with filters by craft type, region, and price",
+              title: 'No-Login Checkout',
+              description: 'Seamless checkout with filters by craft type, region, and price',
               icon: Package,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "SEO Optimization",
-              description: "Structured data (Schema.org JSON-LD), OG/Twitter tags for rich snippets",
+              title: 'SEO Optimization',
+              description:
+                'Structured data (Schema.org JSON-LD), OG/Twitter tags for rich snippets',
               icon: Search,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
         {
-          category: "Payments, Orders & Logistics",
+          category: 'Payments, Orders & Logistics',
           items: [
             {
-              title: "Razorpay Integration",
-              description: "UPI, cards, netbanking with webhooks and 97%+ success target",
+              title: 'Razorpay Integration',
+              description: 'UPI, cards, netbanking with webhooks and 97%+ success target',
               icon: DollarSign,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Logistics Integration",
-              description: "India Post/Shiprocket for labels and tracking",
+              title: 'Logistics Integration',
+              description: 'India Post/Shiprocket for labels and tracking',
               icon: Package,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
         {
-          category: "Enterprise Instrumentation v1",
+          category: 'Enterprise Instrumentation v1',
           items: [
             {
-              title: "Request Tracing",
+              title: 'Request Tracing',
               description:
-                "Request IDs propagated across services with structured logs and latency metrics",
+                'Request IDs propagated across services with structured logs and latency metrics',
               icon: BarChart3,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Monitoring Dashboard",
-              description: "Prometheus export, health endpoints, API latency and LLM usage tracking",
+              title: 'Monitoring Dashboard',
+              description:
+                'Prometheus export, health endpoints, API latency and LLM usage tracking',
               icon: TrendingUp,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
         {
-          category: "Compliance & Security Foundation",
+          category: 'Compliance & Security Foundation',
           items: [
             {
-              title: "DPDP Compliance",
+              title: 'DPDP Compliance',
               description:
-                "Cookie consent, privacy policy, consent logging, and easy data withdrawal",
+                'Cookie consent, privacy policy, consent logging, and easy data withdrawal',
               icon: Shield,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Secure Authentication",
-              description: "Role-based auth, secure sessions, CSRF protection",
+              title: 'Secure Authentication',
+              description: 'Role-based auth, secure sessions, CSRF protection',
               icon: Lock,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
         {
-          category: "Analytics Dashboard",
+          category: 'Analytics Dashboard',
           items: [
             {
-              title: "Artisan & Admin Analytics",
+              title: 'Artisan & Admin Analytics',
               description:
-                "Daily/weekly sales, top products, ratings, cancellations with cluster/region filters",
+                'Daily/weekly sales, top products, ratings, cancellations with cluster/region filters',
               icon: BarChart3,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
       ],
       outcomes: [
-        "1,000+ artisans onboarded",
-        "500K products listed",
-        "85%+ onboarding completion rate",
-        "₹50-100 Cr GMV achieved",
-        "DPDP baseline compliance in place",
-        "Solid infrastructure foundation",
+        '1,000+ artisans onboarded',
+        '500K products listed',
+        '85%+ onboarding completion rate',
+        '₹50-100 Cr GMV achieved',
+        'DPDP baseline compliance in place',
+        'Solid infrastructure foundation',
       ],
     },
     {
-      id: "phase2a",
-      name: "Phase 2A: Experience + Trust + Heritage",
-      tagline: "Build Trust & Enable Tourism",
-      duration: "7-9 Months",
+      id: 'phase2a',
+      name: 'Phase 2A: Experience + Trust + Heritage',
+      tagline: 'Build Trust & Enable Tourism',
+      duration: '7-9 Months',
       goals: {
         other: [
-          "Experience Economy Revenue",
-          "Deep Trust Infrastructure",
-          "Government/MSME Alignment",
+          'Experience Economy Revenue',
+          'Deep Trust Infrastructure',
+          'Government/MSME Alignment',
         ],
       },
       features: [
         {
-          category: "Workshop Tourism & Studio Visits",
+          category: 'Workshop Tourism & Studio Visits',
           items: [
             {
-              title: "Workshop Listings",
+              title: 'Workshop Listings',
               description:
-                "Schedule, capacity, price, skill level, materials included with calendar booking",
+                'Schedule, capacity, price, skill level, materials included with calendar booking',
               icon: Calendar,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Booking & Payments",
+              title: 'Booking & Payments',
               description:
-                "Online payment, geo-location directions, WhatsApp reminders, post-visit reviews",
+                'Online payment, geo-location directions, WhatsApp reminders, post-visit reviews',
               icon: MapPin,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
         {
-          category: "Workshop Marketplace UX",
+          category: 'Workshop Marketplace UX',
           items: [
             {
-              title: "Experience Discovery",
+              title: 'Experience Discovery',
               description:
                 '"Experiences near you" with search by craft, city, price, duration, endangered craft risk',
               icon: Search,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Tourism Integration",
-              description:
-                "Connect platform to craft tourism and local economic development",
+              title: 'Tourism Integration',
+              description: 'Connect platform to craft tourism and local economic development',
               icon: Globe,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
         {
-          category: "Advanced Authenticity Certificate System",
+          category: 'Advanced Authenticity Certificate System',
           items: [
             {
-              title: "Blockchain Provenance",
+              title: 'Blockchain Provenance',
               description:
-                "SHA-256 hash stored on Polygon L2 with public verification and integrity status",
+                'SHA-256 hash stored on Polygon L2 with public verification and integrity status',
               icon: ShieldCheck,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "QR Code Verification",
+              title: 'QR Code Verification',
               description:
                 'Real SVG QR codes with public verification page and "verified" badge in search',
               icon: Award,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Revocation System",
-              description: "Audit trail for counterfeits, disputes with immutable logging",
+              title: 'Revocation System',
+              description: 'Audit trail for counterfeits, disputes with immutable logging',
               icon: FileCheck,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
         {
-          category: "Cultural Heritage Database",
+          category: 'Cultural Heritage Database',
           items: [
             {
-              title: "Craft Registry",
+              title: 'Craft Registry',
               description:
-                "UNESCO/GI status, risk levels, regions, practitioner count, revival initiatives",
+                'UNESCO/GI status, risk levels, regions, practitioner count, revival initiatives',
               icon: Landmark,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Search Integration",
+              title: 'Search Integration',
               description:
                 'Powers storytelling, "support endangered crafts" filters, and impact reporting',
               icon: Search,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
         {
-          category: "Security & Compliance Hub",
+          category: 'Security & Compliance Hub',
           items: [
             {
-              title: "DPDP Dashboard",
-              description: "Consents, DSARs, breach log, retention views for admins",
+              title: 'DPDP Dashboard',
+              description: 'Consents, DSARs, breach log, retention views for admins',
               icon: Shield,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Audit Logging",
-              description:
-                "Immutable append-only audit log for payments, payouts, certificates",
+              title: 'Audit Logging',
+              description: 'Immutable append-only audit log for payments, payouts, certificates',
               icon: FileCheck,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Fraud Alerts",
-              description: "Risk scores, status tracking, automated actions",
+              title: 'Fraud Alerts',
+              description: 'Risk scores, status tracking, automated actions',
               icon: ShieldCheck,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
       ],
       outcomes: [
-        "500+ workshops listed",
-        "₹2-3 Cr monthly workshop GMV",
-        "100% transaction auditability",
-        "Provenance system live",
-        "DPDP and GST audit compliance",
-        "Cultural heritage database operational",
+        '500+ workshops listed',
+        '₹2-3 Cr monthly workshop GMV',
+        '100% transaction auditability',
+        'Provenance system live',
+        'DPDP and GST audit compliance',
+        'Cultural heritage database operational',
       ],
     },
     {
-      id: "phase2b",
-      name: "Phase 2B: Intelligence & Automation",
-      tagline: "Platform Runs Itself",
-      duration: "10-12 Months",
+      id: 'phase2b',
+      name: 'Phase 2B: Intelligence & Automation',
+      tagline: 'Platform Runs Itself',
+      duration: '10-12 Months',
       goals: {
-        other: [
-          "AI Agent Orchestration",
-          "Automated Support",
-          "Smart Marketing",
-          "Reduced Costs",
-        ],
+        other: ['AI Agent Orchestration', 'Automated Support', 'Smart Marketing', 'Reduced Costs'],
       },
       features: [
         {
-          category: "Multi-Agent AI System",
+          category: 'Multi-Agent AI System',
           items: [
             {
-              title: "Specialized AI Agents",
+              title: 'Specialized AI Agents',
               description:
-                "Triage, customer support, artisan support, fraud/compliance, insights, government integration",
+                'Triage, customer support, artisan support, fraud/compliance, insights, government integration',
               icon: Brain,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Orchestrator Pattern",
-              description:
-                "Supervisor-worker pattern with clear handoffs and shared state",
+              title: 'Orchestrator Pattern',
+              description: 'Supervisor-worker pattern with clear handoffs and shared state',
               icon: Workflow,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Agent Config UI",
+              title: 'Agent Config UI',
               description:
-                "Per-agent temperature, tokens, retries, custom prompts, and metrics dashboard",
+                'Per-agent temperature, tokens, retries, custom prompts, and metrics dashboard',
               icon: BarChart3,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
         {
-          category: "Advanced AI Triage",
+          category: 'Advanced AI Triage',
           items: [
             {
-              title: "Complexity Classifier",
+              title: 'Complexity Classifier',
               description:
-                "Real-time classification (simple/moderate/complex) for all conversations",
+                'Real-time classification (simple/moderate/complex) for all conversations',
               icon: Zap,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Multi-LLM Orchestration",
+              title: 'Multi-LLM Orchestration',
               description: 'Smart routing between "cheap/fast" vs "heavy/slow" models',
               icon: Workflow,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Progress Tracking",
-              description: "ETAs for complex flows like loan facilitation and disputes",
+              title: 'Progress Tracking',
+              description: 'ETAs for complex flows like loan facilitation and disputes',
               icon: TrendingUp,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
         {
-          category: "Customer Segmentation Engine",
+          category: 'Customer Segmentation Engine',
           items: [
             {
-              title: "Behavior-Based Personas",
+              title: 'Behavior-Based Personas',
               description:
-                "Heritage collectors, conscious consumers, gift buyers, students, bulk buyers",
+                'Heritage collectors, conscious consumers, gift buyers, students, bulk buyers',
               icon: Users,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Segment Scores",
-              description: "Per-user scores for recommendations, alerts, and campaigns",
+              title: 'Segment Scores',
+              description: 'Per-user scores for recommendations, alerts, and campaigns',
               icon: Target,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
         {
-          category: "Social Campaign Strategist",
+          category: 'Social Campaign Strategist',
           items: [
             {
-              title: "Multi-Platform Campaigns",
-              description:
-                "IG/FB/YouTube/WhatsApp with segment-aware messaging",
+              title: 'Multi-Platform Campaigns',
+              description: 'IG/FB/YouTube/WhatsApp with segment-aware messaging',
               icon: Sparkles,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Content Calendar",
-              description: "Best times and festival-driven launch windows",
+              title: 'Content Calendar',
+              description: 'Best times and festival-driven launch windows',
               icon: Calendar,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "A/B Testing Framework",
-              description:
-                "Test titles, hero images, CTAs with privacy-compliant analytics",
+              title: 'A/B Testing Framework',
+              description: 'Test titles, hero images, CTAs with privacy-compliant analytics',
               icon: BarChart3,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
         {
-          category: "Market Intelligence Engine v2",
+          category: 'Market Intelligence Engine v2',
           items: [
             {
-              title: "Trend Analysis",
+              title: 'Trend Analysis',
               description:
-                "Platform + external trends for concrete artisan guidance on stock and pricing",
+                'Platform + external trends for concrete artisan guidance on stock and pricing',
               icon: TrendingUp,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
         {
-          category: "Advanced Search & Discovery",
+          category: 'Advanced Search & Discovery',
           items: [
             {
-              title: "Semantic Search",
+              title: 'Semantic Search',
               description:
-                "Vector search over products, stories, and workshops with cursor pagination",
+                'Vector search over products, stories, and workshops with cursor pagination',
               icon: Search,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Multi-Filter System",
-              description:
-                "Craft type, price, region, certificate status, heritage risk level",
+              title: 'Multi-Filter System',
+              description: 'Craft type, price, region, certificate status, heritage risk level',
               icon: Award,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Values-Driven Filters",
-              description:
-                '"Support endangered crafts" and "certified authentic only" toggles',
+              title: 'Values-Driven Filters',
+              description: '"Support endangered crafts" and "certified authentic only" toggles',
               icon: Award,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
       ],
       outcomes: [
-        "50,000 artisans on platform",
-        "₹150-200 Cr GMV achieved",
-        "85%+ automated support resolution",
-        "40-60% lift in marketing ROI",
-        "Clear tourism + craft synergy evidence",
-        "Significantly reduced support costs",
+        '50,000 artisans on platform',
+        '₹150-200 Cr GMV achieved',
+        '85%+ automated support resolution',
+        '40-60% lift in marketing ROI',
+        'Clear tourism + craft synergy evidence',
+        'Significantly reduced support costs',
       ],
     },
     {
-      id: "phase3",
-      name: "Phase 3: Global, B2B & MSME Scale",
-      tagline: "Scale to ₹1,000+ Cr",
-      duration: "12+ Months",
+      id: 'phase3',
+      name: 'Phase 3: Global, B2B & MSME Scale',
+      tagline: 'Scale to ₹1,000+ Cr',
+      duration: '12+ Months',
       goals: {
-        artisans: "100,000 Artisans",
-        gmv: "₹1,000+ Cr GMV",
-        other: ["International Presence", "Strong Kerala/MSME Positioning"],
+        artisans: '100,000 Artisans',
+        gmv: '₹1,000+ Cr GMV',
+        other: ['International Presence', 'Strong Kerala/MSME Positioning'],
       },
       features: [
         {
-          category: "Global Expansion Suite",
+          category: 'Global Expansion Suite',
           items: [
             {
-              title: "Multi-Currency Payments",
-              description: "USD/EUR payments with FX-aware pricing",
+              title: 'Multi-Currency Payments',
+              description: 'USD/EUR payments with FX-aware pricing',
               icon: DollarSign,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "International Logistics",
-              description: "DHL/FedEx integration with aggregators",
+              title: 'International Logistics',
+              description: 'DHL/FedEx integration with aggregators',
               icon: Globe,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
         {
-          category: "B2B Wholesale Channel",
+          category: 'B2B Wholesale Channel',
           items: [
             {
-              title: "Bulk Catalogs",
-              description: "MOQ logic, quote requests, dedicated account managers",
+              title: 'Bulk Catalogs',
+              description: 'MOQ logic, quote requests, dedicated account managers',
               icon: Building2,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
         {
-          category: "MSME & State Integrations",
+          category: 'MSME & State Integrations',
           items: [
             {
-              title: "Local E-Commerce Portal",
+              title: 'Local E-Commerce Portal',
               description:
-                "Solve Kerala MSME visibility gap with local storefronts and digital toolkit",
+                'Solve Kerala MSME visibility gap with local storefronts and digital toolkit',
               icon: MapPin,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Government Program Integration",
+              title: 'Government Program Integration',
               description:
-                "PM Vishwakarma, ODOP, TRIFED flows for credit, certification, and promotion",
+                'PM Vishwakarma, ODOP, TRIFED flows for credit, certification, and promotion',
               icon: Landmark,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Free Digital Tools",
+              title: 'Free Digital Tools',
               description:
-                "Free billing, digital marketing toolkit, artisan/MSME discovery for districts",
+                'Free billing, digital marketing toolkit, artisan/MSME discovery for districts',
               icon: Sparkles,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
         {
-          category: "Enterprise Instrumentation v2",
+          category: 'Enterprise Instrumentation v2',
           items: [
             {
-              title: "Full Traceability",
-              description: "Per-agent, per-model, per-workflow metrics and cost tracking",
+              title: 'Full Traceability',
+              description: 'Per-agent, per-model, per-workflow metrics and cost tracking',
               icon: BarChart3,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "SLOs & Error Budgets",
-              description: "99.5% uptime, p95 < 200ms with on-call alerts",
+              title: 'SLOs & Error Budgets',
+              description: '99.5% uptime, p95 < 200ms with on-call alerts',
               icon: Target,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
         {
-          category: "Ephemeral/Degraded Mode",
+          category: 'Ephemeral/Degraded Mode',
           items: [
             {
-              title: "No-DB Fallback",
-              description:
-                "In-memory bookings and certificates with sample data for field demos",
+              title: 'No-DB Fallback',
+              description: 'In-memory bookings and certificates with sample data for field demos',
               icon: Zap,
-              status: "planned",
+              status: 'planned',
             },
             {
-              title: "Low-Infra Regions",
-              description: "Ensure demos work in areas with unstable infrastructure",
+              title: 'Low-Infra Regions',
+              description: 'Ensure demos work in areas with unstable infrastructure',
               icon: MapPin,
-              status: "planned",
+              status: 'planned',
             },
           ],
         },
       ],
       outcomes: [
-        "100,000+ artisans across India",
-        "Strong presence in Kerala and other states",
-        "₹1,000+ Cr GMV achieved",
-        "45-50% contribution margin",
-        "Full DPDP compliance",
-        "Tourism + crafts recognized as regional development driver",
-        "International market presence established",
+        '100,000+ artisans across India',
+        'Strong presence in Kerala and other states',
+        '₹1,000+ Cr GMV achieved',
+        '45-50% contribution margin',
+        'Full DPDP compliance',
+        'Tourism + crafts recognized as regional development driver',
+        'International market presence established',
       ],
     },
-  ]
+  ];
 
-  const currentPhase = phases.find((p) => p.id === selectedPhase) || phases[0]
+  const currentPhase = phases.find((p) => p.id === selectedPhase) || phases[0];
 
   return (
-    <div className="min-h-screen bg-warm-cream">
+    <div className="bg-warm-cream min-h-screen">
       <Navigation scrolled={scrolled} />
 
       {/* Header */}
-      <div className="bg-gradient-to-r from-warm-terracotta to-warm-rust text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-4">
-            <Rocket className="w-10 h-10 text-black" />
-            <h1 className="text-4xl sm:text-5xl font-serif font-bold text-black">Product Roadmap</h1>
+      <div className="from-warm-terracotta to-warm-rust bg-gradient-to-r py-16 text-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-4 flex items-center gap-3">
+            <Rocket className="h-10 w-10 text-black" />
+            <h1 className="font-serif text-4xl font-bold text-black sm:text-5xl">
+              Product Roadmap
+            </h1>
           </div>
-          <p className="text-lg text-white/90 max-w-3xl">
-            Our comprehensive plan to revolutionize the Indian handicrafts ecosystem with AI, trust, and
-            experience-driven commerce
+          <p className="max-w-3xl text-lg text-white/90">
+            Our comprehensive plan to revolutionize the Indian handicrafts ecosystem with AI, trust,
+            and experience-driven commerce
           </p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Overview Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+        <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-4">
           {phases.map((phase, index) => (
             <Card
               key={phase.id}
               className={`cursor-pointer transition-all ${
-                selectedPhase === phase.id
-                  ? "border-2 border-primary shadow-lg"
-                  : "hover:shadow-md"
+                selectedPhase === phase.id ? 'border-primary border-2 shadow-lg' : 'hover:shadow-md'
               }`}
               onClick={() => setSelectedPhase(phase.id)}
             >
               <CardHeader className="pb-3">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold">
+                <div className="mb-2 flex items-center gap-2">
+                  <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-full font-bold">
                     {index + 1}
                   </div>
-                  <Badge variant={selectedPhase === phase.id ? "default" : "secondary"}>
+                  <Badge variant={selectedPhase === phase.id ? 'default' : 'secondary'}>
                     {phase.duration}
                   </Badge>
                 </div>
-                <CardTitle className="text-lg">{phase.name.split(":")[0]}</CardTitle>
+                <CardTitle className="text-lg">{phase.name.split(':')[0]}</CardTitle>
                 <CardDescription className="text-sm">{phase.tagline}</CardDescription>
               </CardHeader>
               <CardContent>
                 {phase.goals.gmv && (
-                  <p className="text-sm font-semibold text-primary mb-1">{phase.goals.gmv}</p>
+                  <p className="text-primary mb-1 text-sm font-semibold">{phase.goals.gmv}</p>
                 )}
                 {phase.goals.artisans && (
-                  <p className="text-xs text-muted-foreground">{phase.goals.artisans}</p>
+                  <p className="text-muted-foreground text-xs">{phase.goals.artisans}</p>
                 )}
               </CardContent>
             </Card>
@@ -688,33 +676,33 @@ export default function Roadmap() {
           <Card>
             <CardHeader>
               <div className="flex items-center gap-2">
-                <Target className="w-6 h-6 text-primary" />
+                <Target className="text-primary h-6 w-6" />
                 <CardTitle>Phase Goals</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {currentPhase.goals.artisans && (
-                  <div className="flex items-center gap-3 p-4 bg-warm-sand rounded-lg">
-                    <Users className="w-8 h-8 text-primary" />
+                  <div className="bg-warm-sand flex items-center gap-3 rounded-lg p-4">
+                    <Users className="text-primary h-8 w-8" />
                     <div>
-                      <p className="text-sm text-muted-foreground">Artisans</p>
-                      <p className="font-bold text-lg">{currentPhase.goals.artisans}</p>
+                      <p className="text-muted-foreground text-sm">Artisans</p>
+                      <p className="text-lg font-bold">{currentPhase.goals.artisans}</p>
                     </div>
                   </div>
                 )}
                 {currentPhase.goals.gmv && (
-                  <div className="flex items-center gap-3 p-4 bg-warm-sand rounded-lg">
-                    <DollarSign className="w-8 h-8 text-primary" />
+                  <div className="bg-warm-sand flex items-center gap-3 rounded-lg p-4">
+                    <DollarSign className="text-primary h-8 w-8" />
                     <div>
-                      <p className="text-sm text-muted-foreground">GMV Target</p>
-                      <p className="font-bold text-lg">{currentPhase.goals.gmv}</p>
+                      <p className="text-muted-foreground text-sm">GMV Target</p>
+                      <p className="text-lg font-bold">{currentPhase.goals.gmv}</p>
                     </div>
                   </div>
                 )}
                 {currentPhase.goals.other.map((goal, index) => (
-                  <div key={index} className="flex items-center gap-3 p-4 bg-warm-sand rounded-lg">
-                    <CheckCircle2 className="w-8 h-8 text-primary" />
+                  <div key={index} className="bg-warm-sand flex items-center gap-3 rounded-lg p-4">
+                    <CheckCircle2 className="text-primary h-8 w-8" />
                     <p className="font-semibold">{goal}</p>
                   </div>
                 ))}
@@ -727,48 +715,48 @@ export default function Roadmap() {
             <Card key={catIndex}>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-primary" />
+                  <Sparkles className="text-primary h-5 w-5" />
                   {category.category}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {category.items.map((feature, featIndex) => {
-                    const Icon = feature.icon
+                    const Icon = feature.icon;
                     return (
                       <div
                         key={featIndex}
-                        className="flex items-start gap-4 p-4 bg-warm-sand rounded-lg hover:shadow-md transition"
+                        className="bg-warm-sand flex items-start gap-4 rounded-lg p-4 transition hover:shadow-md"
                       >
-                        <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                          <Icon className="w-5 h-5 text-primary" />
+                        <div className="bg-primary/10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg">
+                          <Icon className="text-primary h-5 w-5" />
                         </div>
                         <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h4 className="font-semibold text-warm-charcoal">{feature.title}</h4>
+                          <div className="mb-1 flex items-center gap-2">
+                            <h4 className="text-warm-charcoal font-semibold">{feature.title}</h4>
                             {feature.status && (
                               <Badge
                                 variant={
-                                  feature.status === "completed"
-                                    ? "default"
-                                    : feature.status === "in-progress"
-                                    ? "secondary"
-                                    : "outline"
+                                  feature.status === 'completed'
+                                    ? 'default'
+                                    : feature.status === 'in-progress'
+                                      ? 'secondary'
+                                      : 'outline'
                                 }
                                 className="text-xs"
                               >
-                                {feature.status === "completed"
-                                  ? "Done"
-                                  : feature.status === "in-progress"
-                                  ? "In Progress"
-                                  : "Planned"}
+                                {feature.status === 'completed'
+                                  ? 'Done'
+                                  : feature.status === 'in-progress'
+                                    ? 'In Progress'
+                                    : 'Planned'}
                               </Badge>
                             )}
                           </div>
-                          <p className="text-sm text-muted-foreground">{feature.description}</p>
+                          <p className="text-muted-foreground text-sm">{feature.description}</p>
                         </div>
                       </div>
-                    )
+                    );
                   })}
                 </div>
               </CardContent>
@@ -776,19 +764,19 @@ export default function Roadmap() {
           ))}
 
           {/* Expected Outcomes */}
-          <Card className="border-2 border-primary/20">
+          <Card className="border-primary/20 border-2">
             <CardHeader>
               <div className="flex items-center gap-2">
-                <Crown className="w-6 h-6 text-primary" />
+                <Crown className="text-primary h-6 w-6" />
                 <CardTitle>Expected Outcomes</CardTitle>
               </div>
-              <CardDescription>What we'll achieve by the end of this phase</CardDescription>
+              <CardDescription>What we&apos;ll achieve by the end of this phase</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 {currentPhase.outcomes.map((outcome, index) => (
                   <div key={index} className="flex items-start gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
                     <p className="text-sm font-medium">{outcome}</p>
                   </div>
                 ))}
@@ -798,32 +786,32 @@ export default function Roadmap() {
         </div>
 
         {/* Navigation Buttons */}
-        <div className="flex justify-between items-center mt-12 pt-8 border-t">
+        <div className="mt-12 flex items-center justify-between border-t pt-8">
           <Button
             variant="outline"
-            disabled={selectedPhase === "phase1"}
+            disabled={selectedPhase === 'phase1'}
             onClick={() => {
-              const currentIndex = phases.findIndex((p) => p.id === selectedPhase)
-              if (currentIndex > 0) setSelectedPhase(phases[currentIndex - 1].id)
+              const currentIndex = phases.findIndex((p) => p.id === selectedPhase);
+              if (currentIndex > 0) setSelectedPhase(phases[currentIndex - 1].id);
             }}
           >
             Previous Phase
           </Button>
           <Button
-            disabled={selectedPhase === "phase3"}
+            disabled={selectedPhase === 'phase3'}
             onClick={() => {
-              const currentIndex = phases.findIndex((p) => p.id === selectedPhase)
-              if (currentIndex < phases.length - 1) setSelectedPhase(phases[currentIndex + 1].id)
+              const currentIndex = phases.findIndex((p) => p.id === selectedPhase);
+              if (currentIndex < phases.length - 1) setSelectedPhase(phases[currentIndex + 1].id);
             }}
             className="gap-2"
           >
             Next Phase
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
       </div>
 
       <Footer />
     </div>
-  )
+  );
 }

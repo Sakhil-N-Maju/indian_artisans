@@ -1,12 +1,18 @@
 /**
  * Security Threat Detection System
- * 
+ *
  * Advanced threat detection and prevention
  */
 
 export interface ThreatDetection {
   id: string;
-  type: 'brute_force' | 'sql_injection' | 'xss' | 'ddos' | 'credential_stuffing' | 'suspicious_activity';
+  type:
+    | 'brute_force'
+    | 'sql_injection'
+    | 'xss'
+    | 'ddos'
+    | 'credential_stuffing'
+    | 'suspicious_activity';
   severity: 'low' | 'medium' | 'high' | 'critical';
   source: { ip: string; userAgent?: string; userId?: string };
   details: any;
@@ -69,14 +75,19 @@ export class SecurityThreatDetectionSystem {
     return this.blockedIPs.has(ip);
   }
 
-  async checkRateLimit(userId: string, action: string, limit: number, window: number): Promise<boolean> {
+  async checkRateLimit(
+    userId: string,
+    action: string,
+    limit: number,
+    window: number
+  ): Promise<boolean> {
     const key = `${userId}-${action}`;
-    const recentAttempts = Array.from(this.threats.values())
-      .filter(t => 
+    const recentAttempts = Array.from(this.threats.values()).filter(
+      (t) =>
         t.source.userId === userId &&
         t.details?.action === action &&
         t.timestamp > new Date(Date.now() - window)
-      ).length;
+    ).length;
 
     if (recentAttempts >= limit) {
       await this.detectThreat({
@@ -93,7 +104,7 @@ export class SecurityThreatDetectionSystem {
 
   async getActiveThreats(): Promise<ThreatDetection[]> {
     return Array.from(this.threats.values())
-      .filter(t => !t.resolved)
+      .filter((t) => !t.resolved)
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
   }
 
@@ -105,22 +116,28 @@ export class SecurityThreatDetectionSystem {
     activeThreats: number;
   }> {
     const threats = Array.from(this.threats.values());
-    const bySeverity = threats.reduce((acc, t) => {
-      acc[t.severity] = (acc[t.severity] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const bySeverity = threats.reduce(
+      (acc, t) => {
+        acc[t.severity] = (acc[t.severity] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const byType = threats.reduce((acc, t) => {
-      acc[t.type] = (acc[t.type] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const byType = threats.reduce(
+      (acc, t) => {
+        acc[t.type] = (acc[t.type] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     return {
       totalThreats: threats.length,
       bySeverity,
       byType,
       blockedIPs: this.blockedIPs.size,
-      activeThreats: threats.filter(t => !t.resolved).length,
+      activeThreats: threats.filter((t) => !t.resolved).length,
     };
   }
 

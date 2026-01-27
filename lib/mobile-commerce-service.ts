@@ -1,6 +1,6 @@
 /**
  * Mobile Commerce Service
- * 
+ *
  * Optimized mobile commerce features:
  * - Mobile checkout optimization
  * - One-tap purchasing
@@ -144,10 +144,7 @@ export class MobileCommerceService {
     deviceId: string;
     items: MobileCheckout['items'];
   }): Promise<MobileCheckout> {
-    const totalAmount = data.items.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
+    const totalAmount = data.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
     const checkout: MobileCheckout = {
       id: `checkout-${Date.now()}-${Math.random().toString(36).substring(7)}`,
@@ -245,8 +242,8 @@ export class MobileCommerceService {
     // Set other wallets to non-default if this is default
     if (data.isDefault) {
       Array.from(this.wallets.values())
-        .filter(w => w.userId === data.userId && w.isDefault)
-        .forEach(w => {
+        .filter((w) => w.userId === data.userId && w.isDefault)
+        .forEach((w) => {
           w.isDefault = false;
           this.wallets.set(w.id, w);
         });
@@ -283,7 +280,7 @@ export class MobileCommerceService {
    */
   async getUserWallets(userId: string): Promise<MobileWallet[]> {
     return Array.from(this.wallets.values())
-      .filter(w => w.userId === userId)
+      .filter((w) => w.userId === userId)
       .sort((a, b) => {
         if (a.isDefault) return -1;
         if (b.isDefault) return 1;
@@ -330,7 +327,7 @@ export class MobileCommerceService {
   async getActivePromotions(deviceType?: 'ios' | 'android'): Promise<MobilePromotion[]> {
     const now = new Date();
     return Array.from(this.promotions.values())
-      .filter(p => {
+      .filter((p) => {
         if (!p.active) return false;
         if (p.validFrom > now || p.validUntil < now) return false;
         if (p.usageLimit && p.usageCount >= p.usageLimit) return false;
@@ -343,13 +340,16 @@ export class MobileCommerceService {
   /**
    * Apply promotion
    */
-  async applyPromotion(promotionId: string, orderAmount: number): Promise<{
+  async applyPromotion(
+    promotionId: string,
+    orderAmount: number
+  ): Promise<{
     valid: boolean;
     discount: number;
     finalAmount: number;
   }> {
     const promotion = this.promotions.get(promotionId);
-    
+
     if (!promotion || !promotion.active) {
       return { valid: false, discount: 0, finalAmount: orderAmount };
     }
@@ -392,10 +392,7 @@ export class MobileCommerceService {
     originalOrderId: string;
     items: QuickReorder['items'];
   }): Promise<QuickReorder> {
-    const totalAmount = data.items.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
+    const totalAmount = data.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
     const reorder: QuickReorder = {
       id: `reorder-${Date.now()}-${Math.random().toString(36).substring(7)}`,
@@ -419,10 +416,7 @@ export class MobileCommerceService {
     deviceId: string;
     items: SavedCart['items'];
   }): Promise<SavedCart> {
-    const totalAmount = data.items.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
+    const totalAmount = data.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 30); // 30 days expiry
@@ -448,7 +442,7 @@ export class MobileCommerceService {
   async getSavedCarts(userId: string): Promise<SavedCart[]> {
     const now = new Date();
     return Array.from(this.savedCarts.values())
-      .filter(c => c.userId === userId && c.expiresAt > now && !c.converted)
+      .filter((c) => c.userId === userId && c.expiresAt > now && !c.converted)
       .sort((a, b) => b.savedAt.getTime() - a.savedAt.getTime());
   }
 
@@ -494,10 +488,7 @@ export class MobileCommerceService {
   /**
    * Complete payment
    */
-  async completePayment(
-    sessionId: string,
-    success: boolean
-  ): Promise<MobilePaymentSession> {
+  async completePayment(sessionId: string, success: boolean): Promise<MobilePaymentSession> {
     const session = this.paymentSessions.get(sessionId);
     if (!session) {
       throw new Error('Payment session not found');
@@ -551,66 +542,77 @@ export class MobileCommerceService {
     const cutoff = new Date(now.getTime() - periodMs);
 
     // Checkout analytics
-    const recentCheckouts = Array.from(this.checkouts.values())
-      .filter(c => c.startedAt >= cutoff);
-    const completedCheckouts = recentCheckouts.filter(c => c.completedAt);
-    const abandonedCheckouts = recentCheckouts.filter(c => c.abandonedAt);
+    const recentCheckouts = Array.from(this.checkouts.values()).filter(
+      (c) => c.startedAt >= cutoff
+    );
+    const completedCheckouts = recentCheckouts.filter((c) => c.completedAt);
+    const abandonedCheckouts = recentCheckouts.filter((c) => c.abandonedAt);
 
-    const avgTimeToComplete = completedCheckouts.length > 0
-      ? completedCheckouts.reduce((sum, c) => sum + (c.timeToComplete || 0), 0) / completedCheckouts.length
-      : 0;
+    const avgTimeToComplete =
+      completedCheckouts.length > 0
+        ? completedCheckouts.reduce((sum, c) => sum + (c.timeToComplete || 0), 0) /
+          completedCheckouts.length
+        : 0;
 
     // One-tap analytics
-    const recentOneTap = Array.from(this.oneTapPurchases.values())
-      .filter(o => o.timestamp >= cutoff);
-    const successfulOneTap = recentOneTap.filter(o => o.success);
-    const avgOneTapValue = recentOneTap.length > 0
-      ? recentOneTap.reduce((sum, o) => sum + o.amount, 0) / recentOneTap.length
-      : 0;
+    const recentOneTap = Array.from(this.oneTapPurchases.values()).filter(
+      (o) => o.timestamp >= cutoff
+    );
+    const successfulOneTap = recentOneTap.filter((o) => o.success);
+    const avgOneTapValue =
+      recentOneTap.length > 0
+        ? recentOneTap.reduce((sum, o) => sum + o.amount, 0) / recentOneTap.length
+        : 0;
 
     // Wallet analytics
-    const recentWallets = Array.from(this.wallets.values())
-      .filter(w => w.addedAt >= cutoff);
+    const recentWallets = Array.from(this.wallets.values()).filter((w) => w.addedAt >= cutoff);
     const providerCounts = new Map<string, number>();
-    Array.from(this.wallets.values()).forEach(w => {
+    Array.from(this.wallets.values()).forEach((w) => {
       providerCounts.set(w.provider, (providerCounts.get(w.provider) || 0) + w.transactionCount);
     });
-    const mostUsedProvider = Array.from(providerCounts.entries())
-      .sort((a, b) => b[1] - a[1])[0]?.[0] || 'none';
+    const mostUsedProvider =
+      Array.from(providerCounts.entries()).sort((a, b) => b[1] - a[1])[0]?.[0] || 'none';
 
-    const totalWalletTransactions = Array.from(this.wallets.values())
-      .reduce((sum, w) => sum + w.transactionCount, 0);
+    const totalWalletTransactions = Array.from(this.wallets.values()).reduce(
+      (sum, w) => sum + w.transactionCount,
+      0
+    );
 
     // Promotion analytics
-    const activePromotions = Array.from(this.promotions.values())
-      .filter(p => p.active && p.validFrom <= now && p.validUntil >= now);
-    const totalPromotionUsage = Array.from(this.promotions.values())
-      .reduce((sum, p) => sum + p.usageCount, 0);
+    const activePromotions = Array.from(this.promotions.values()).filter(
+      (p) => p.active && p.validFrom <= now && p.validUntil >= now
+    );
+    const totalPromotionUsage = Array.from(this.promotions.values()).reduce(
+      (sum, p) => sum + p.usageCount,
+      0
+    );
 
     // Reorder analytics
-    const recentReorders = Array.from(this.reorders.values())
-      .filter(r => r.reorderedAt >= cutoff);
+    const recentReorders = Array.from(this.reorders.values()).filter(
+      (r) => r.reorderedAt >= cutoff
+    );
 
     // Saved cart analytics
-    const recentSavedCarts = Array.from(this.savedCarts.values())
-      .filter(c => c.savedAt >= cutoff);
-    const convertedCarts = recentSavedCarts.filter(c => c.converted);
+    const recentSavedCarts = Array.from(this.savedCarts.values()).filter(
+      (c) => c.savedAt >= cutoff
+    );
+    const convertedCarts = recentSavedCarts.filter((c) => c.converted);
 
     return {
       checkouts: {
         started: recentCheckouts.length,
         completed: completedCheckouts.length,
         abandoned: abandonedCheckouts.length,
-        conversionRate: recentCheckouts.length > 0
-          ? (completedCheckouts.length / recentCheckouts.length) * 100
-          : 0,
+        conversionRate:
+          recentCheckouts.length > 0
+            ? (completedCheckouts.length / recentCheckouts.length) * 100
+            : 0,
         averageTimeToComplete: Math.round(avgTimeToComplete),
       },
       oneTapPurchases: {
         total: recentOneTap.length,
-        successRate: recentOneTap.length > 0
-          ? (successfulOneTap.length / recentOneTap.length) * 100
-          : 0,
+        successRate:
+          recentOneTap.length > 0 ? (successfulOneTap.length / recentOneTap.length) * 100 : 0,
         averageValue: Math.round(avgOneTapValue),
       },
       wallets: {
@@ -630,9 +632,8 @@ export class MobileCommerceService {
       savedCarts: {
         total: recentSavedCarts.length,
         converted: convertedCarts.length,
-        conversionRate: recentSavedCarts.length > 0
-          ? (convertedCarts.length / recentSavedCarts.length) * 100
-          : 0,
+        conversionRate:
+          recentSavedCarts.length > 0 ? (convertedCarts.length / recentSavedCarts.length) * 100 : 0,
       },
     };
   }

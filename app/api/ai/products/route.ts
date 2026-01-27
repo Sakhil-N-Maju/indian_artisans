@@ -25,20 +25,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Process with AI
-    const productData = await aiService.processArtisanMedia(
-      imageMediaId,
-      voiceMediaId,
-      {
-        id: artisan.id,
-        name: artisan.businessName,
-        location: `${artisan.district}, ${artisan.state}`,
-        experience: artisan.experience || undefined,
-      }
-    );
+    const productData = await aiService.processArtisanMedia(imageMediaId, voiceMediaId, {
+      id: artisan.id,
+      name: artisan.businessName,
+      location: `${artisan.district}, ${artisan.state}`,
+      experience: artisan.experience || undefined,
+    });
 
     // Create product
     const slug = `${productData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${Date.now()}`;
-    
+
     const product = await prisma.product.create({
       data: {
         artisanId: artisan.id,
@@ -78,10 +74,7 @@ export async function GET(request: NextRequest) {
     const mediaId = searchParams.get('mediaId');
 
     if (!mediaId) {
-      return NextResponse.json(
-        { error: 'Missing mediaId parameter' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing mediaId parameter' }, { status: 400 });
     }
 
     const imageBuffer = await aiService.downloadWhatsAppMedia(mediaId);

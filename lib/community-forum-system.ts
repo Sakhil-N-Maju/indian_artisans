@@ -1,6 +1,6 @@
 /**
  * Community Forum System
- * 
+ *
  * Provides community discussion features:
  * - Forum categories and topics
  * - Threaded discussions
@@ -16,21 +16,21 @@ export interface ForumCategory {
   description: string;
   icon: string;
   color: string;
-  
+
   // Permissions
   permissions: {
     canPost: 'all' | 'verified' | 'artisans' | 'moderators';
     canComment: 'all' | 'verified' | 'artisans';
     requiresApproval: boolean;
   };
-  
+
   // Stats
   stats: {
     totalTopics: number;
     totalPosts: number;
     totalMembers: number;
   };
-  
+
   isActive: boolean;
   order: number;
 }
@@ -38,7 +38,7 @@ export interface ForumCategory {
 export interface ForumTopic {
   id: string;
   categoryId: string;
-  
+
   // Author
   author: {
     id: string;
@@ -47,12 +47,12 @@ export interface ForumTopic {
     role: 'user' | 'artisan' | 'moderator' | 'admin';
     reputation: number;
   };
-  
+
   // Content
   title: string;
   content: string;
   tags: string[];
-  
+
   // Media
   attachments?: {
     type: 'image' | 'video' | 'document';
@@ -60,23 +60,23 @@ export interface ForumTopic {
     name: string;
     size: number;
   }[];
-  
+
   // Status
   status: 'draft' | 'published' | 'locked' | 'archived' | 'deleted';
   isPinned: boolean;
   isFeatured: boolean;
-  
+
   // Engagement
   views: number;
   replies: number;
   upvotes: number;
   downvotes: number;
-  
+
   // Timestamps
   createdAt: Date;
   updatedAt: Date;
   lastActivityAt: Date;
-  
+
   // Moderation
   reportCount: number;
   isApproved: boolean;
@@ -85,7 +85,7 @@ export interface ForumTopic {
 export interface ForumPost {
   id: string;
   topicId: string;
-  
+
   // Author
   author: {
     id: string;
@@ -94,29 +94,29 @@ export interface ForumPost {
     role: 'user' | 'artisan' | 'moderator' | 'admin';
     reputation: number;
   };
-  
+
   // Content
   content: string;
-  
+
   // Reply
   replyToId?: string;
-  
+
   // Media
   attachments?: ForumTopic['attachments'];
-  
+
   // Engagement
   upvotes: number;
   downvotes: number;
-  
+
   // Status
   status: 'published' | 'edited' | 'deleted' | 'hidden';
   isAcceptedAnswer: boolean;
-  
+
   // Timestamps
   createdAt: Date;
   updatedAt: Date;
   editedAt?: Date;
-  
+
   // Moderation
   reportCount: number;
   isApproved: boolean;
@@ -125,11 +125,11 @@ export interface ForumPost {
 export interface UserReputation {
   userId: string;
   username: string;
-  
+
   // Points
   points: number;
   level: number;
-  
+
   // Badges
   badges: {
     id: string;
@@ -138,7 +138,7 @@ export interface UserReputation {
     icon: string;
     earnedAt: Date;
   }[];
-  
+
   // Activity
   activity: {
     topicsCreated: number;
@@ -148,7 +148,7 @@ export interface UserReputation {
     acceptedAnswers: number;
     helpfulPosts: number;
   };
-  
+
   // Status
   rank: string;
   joinedAt: Date;
@@ -157,17 +157,17 @@ export interface UserReputation {
 export interface ForumNotification {
   id: string;
   userId: string;
-  
+
   type: 'reply' | 'mention' | 'upvote' | 'accepted_answer' | 'new_topic' | 'badge_earned';
-  
+
   // Content
   title: string;
   message: string;
-  
+
   // Reference
   topicId?: string;
   postId?: string;
-  
+
   // Status
   isRead: boolean;
   createdAt: Date;
@@ -301,7 +301,7 @@ export class CommunityForumSystem {
       },
     ];
 
-    categories.forEach(category => {
+    categories.forEach((category) => {
       this.categories.set(category.id, category);
     });
   }
@@ -311,7 +311,7 @@ export class CommunityForumSystem {
    */
   async getCategories(): Promise<ForumCategory[]> {
     return Array.from(this.categories.values())
-      .filter(c => c.isActive)
+      .filter((c) => c.isActive)
       .sort((a, b) => a.order - b.order);
   }
 
@@ -432,16 +432,12 @@ export class CommunityForumSystem {
   /**
    * Upvote topic or post
    */
-  async upvote(params: {
-    type: 'topic' | 'post';
-    id: string;
-    userId: string;
-  }): Promise<void> {
+  async upvote(params: { type: 'topic' | 'post'; id: string; userId: string }): Promise<void> {
     if (params.type === 'topic') {
       const topic = this.topics.get(params.id);
       if (topic) {
         topic.upvotes++;
-        
+
         // Award reputation points
         await this.addReputationPoints(topic.author.id, 5, 'upvote_received');
       }
@@ -449,7 +445,7 @@ export class CommunityForumSystem {
       const post = this.posts.get(params.id);
       if (post) {
         post.upvotes++;
-        
+
         // Award reputation points
         await this.addReputationPoints(post.author.id, 2, 'upvote_received');
       }
@@ -490,31 +486,34 @@ export class CommunityForumSystem {
   /**
    * Search topics and posts
    */
-  async search(query: string, filters?: {
-    categoryId?: string;
-    tags?: string[];
-    authorId?: string;
-  }): Promise<ForumSearchResult[]> {
+  async search(
+    query: string,
+    filters?: {
+      categoryId?: string;
+      tags?: string[];
+      authorId?: string;
+    }
+  ): Promise<ForumSearchResult[]> {
     const results: ForumSearchResult[] = [];
     const searchTerms = query.toLowerCase().split(' ');
 
     // Search topics
-    Array.from(this.topics.values()).forEach(topic => {
+    Array.from(this.topics.values()).forEach((topic) => {
       if (topic.status !== 'published') return;
 
       // Apply filters
       if (filters?.categoryId && topic.categoryId !== filters.categoryId) return;
       if (filters?.authorId && topic.author.id !== filters.authorId) return;
-      if (filters?.tags && !filters.tags.some(tag => topic.tags.includes(tag))) return;
+      if (filters?.tags && !filters.tags.some((tag) => topic.tags.includes(tag))) return;
 
       const titleLower = topic.title.toLowerCase();
       const contentLower = topic.content.toLowerCase();
-      
+
       let relevance = 0;
-      searchTerms.forEach(term => {
+      searchTerms.forEach((term) => {
         if (titleLower.includes(term)) relevance += 3;
         if (contentLower.includes(term)) relevance += 1;
-        if (topic.tags.some(tag => tag.toLowerCase().includes(term))) relevance += 2;
+        if (topic.tags.some((tag) => tag.toLowerCase().includes(term))) relevance += 2;
       });
 
       if (relevance > 0) {
@@ -535,16 +534,16 @@ export class CommunityForumSystem {
     });
 
     // Search posts
-    Array.from(this.posts.values()).forEach(post => {
+    Array.from(this.posts.values()).forEach((post) => {
       if (post.status === 'deleted' || post.status === 'hidden') return;
 
       // Apply filters
       if (filters?.authorId && post.author.id !== filters.authorId) return;
 
       const contentLower = post.content.toLowerCase();
-      
+
       let relevance = 0;
-      searchTerms.forEach(term => {
+      searchTerms.forEach((term) => {
         if (contentLower.includes(term)) relevance += 1;
       });
 
@@ -571,26 +570,31 @@ export class CommunityForumSystem {
   /**
    * Get topics by category
    */
-  async getTopicsByCategory(categoryId: string, options?: {
-    sortBy?: 'recent' | 'popular' | 'trending';
-    limit?: number;
-    offset?: number;
-  }): Promise<ForumTopic[]> {
+  async getTopicsByCategory(
+    categoryId: string,
+    options?: {
+      sortBy?: 'recent' | 'popular' | 'trending';
+      limit?: number;
+      offset?: number;
+    }
+  ): Promise<ForumTopic[]> {
     let topics = Array.from(this.topics.values()).filter(
-      t => t.categoryId === categoryId && t.status === 'published'
+      (t) => t.categoryId === categoryId && t.status === 'published'
     );
 
     // Sort
     switch (options?.sortBy) {
       case 'popular':
-        topics.sort((a, b) => (b.upvotes + b.replies) - (a.upvotes + a.replies));
+        topics.sort((a, b) => b.upvotes + b.replies - (a.upvotes + a.replies));
         break;
       case 'trending':
         // Simple trending algorithm based on recent activity and engagement
         topics.sort((a, b) => {
-          const aScore = (a.upvotes * 2 + a.replies) / 
+          const aScore =
+            (a.upvotes * 2 + a.replies) /
             Math.max(1, (Date.now() - a.lastActivityAt.getTime()) / (1000 * 60 * 60 * 24));
-          const bScore = (b.upvotes * 2 + b.replies) / 
+          const bScore =
+            (b.upvotes * 2 + b.replies) /
             Math.max(1, (Date.now() - b.lastActivityAt.getTime()) / (1000 * 60 * 60 * 24));
           return bScore - aScore;
         });
@@ -602,7 +606,7 @@ export class CommunityForumSystem {
     // Pagination
     const offset = options?.offset || 0;
     const limit = options?.limit || 20;
-    
+
     return topics.slice(offset, offset + limit);
   }
 
@@ -617,7 +621,7 @@ export class CommunityForumSystem {
     }
 
     return Array.from(this.posts.values())
-      .filter(p => p.topicId === topicId && p.status !== 'deleted')
+      .filter((p) => p.topicId === topicId && p.status !== 'deleted')
       .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
   }
 
@@ -653,7 +657,7 @@ export class CommunityForumSystem {
     }
 
     reputation.points += points;
-    
+
     // Update activity
     if (reason === 'upvote_received') {
       reputation.activity.upvotesReceived++;
@@ -707,9 +711,12 @@ export class CommunityForumSystem {
   /**
    * Get user notifications
    */
-  async getUserNotifications(userId: string, unreadOnly: boolean = false): Promise<ForumNotification[]> {
+  async getUserNotifications(
+    userId: string,
+    unreadOnly: boolean = false
+  ): Promise<ForumNotification[]> {
     return Array.from(this.notifications.values())
-      .filter(n => n.userId === userId && (!unreadOnly || !n.isRead))
+      .filter((n) => n.userId === userId && (!unreadOnly || !n.isRead))
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 
@@ -722,21 +729,21 @@ export class CommunityForumSystem {
     const posts = Array.from(this.posts.values());
     const users = Array.from(this.reputations.values());
 
-    const totalCategories = categories.filter(c => c.isActive).length;
-    const totalTopics = topics.filter(t => t.status === 'published').length;
-    const totalPosts = posts.filter(p => p.status === 'published').length;
+    const totalCategories = categories.filter((c) => c.isActive).length;
+    const totalTopics = topics.filter((t) => t.status === 'published').length;
+    const totalPosts = posts.filter((p) => p.status === 'published').length;
     const totalUsers = users.length;
 
-    const topContributors = users
-      .sort((a, b) => b.points - a.points)
-      .slice(0, 10);
+    const topContributors = users.sort((a, b) => b.points - a.points).slice(0, 10);
 
     const trendingTopics = topics
-      .filter(t => t.status === 'published')
+      .filter((t) => t.status === 'published')
       .sort((a, b) => {
-        const aScore = (a.upvotes * 2 + a.replies) / 
+        const aScore =
+          (a.upvotes * 2 + a.replies) /
           Math.max(1, (Date.now() - a.lastActivityAt.getTime()) / (1000 * 60 * 60 * 24));
-        const bScore = (b.upvotes * 2 + b.replies) / 
+        const bScore =
+          (b.upvotes * 2 + b.replies) /
           Math.max(1, (Date.now() - b.lastActivityAt.getTime()) / (1000 * 60 * 60 * 24));
         return bScore - aScore;
       })

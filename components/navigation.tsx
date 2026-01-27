@@ -1,119 +1,209 @@
-"use client"
+'use client';
 
-import Link from "next/link"
-import { Menu, X, Search, Heart, ShoppingCart, User } from "lucide-react"
-import { useState } from "react"
+import Link from 'next/link';
+import { Menu, X, Search, Heart, ShoppingCart, User, MessageCircle, Box } from 'lucide-react';
+import { useState } from 'react';
+import { useCart } from '@/lib/cart-context';
+import { useMessages } from '@/lib/message-context';
+import { useAuth } from '@/lib/auth-context';
 
 interface NavigationProps {
-  scrolled: boolean
+  scrolled: boolean;
 }
 
 export function Navigation({ scrolled }: NavigationProps) {
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const { totalItems } = useCart();
+  const { unreadCount } = useMessages();
+  const { role, isAuthenticated, logout } = useAuth();
+
+  const isArtisan = role === 'artisan';
+
+  const desktopLinks = isArtisan
+    ? [
+        { href: '/artisans', label: 'Artisans' },
+        { href: '/artisans/products', label: 'My Products' },
+        { href: '/features', label: 'Features' },
+        { href: '/admin', label: 'Admin' },
+        { href: '/analytics', label: 'Analytics' },
+        { href: '/profile', label: 'Profile' },
+      ]
+    : [
+        { href: '/shop', label: 'Shop' },
+        { href: '/artisans', label: 'Artisans' },
+        { href: '/features', label: 'Features' },
+        { href: '/admin', label: 'Admin' },
+        { href: '/analytics', label: 'Analytics' },
+        { href: '/about', label: 'About' },
+      ];
+
+  const mobileLinks = isArtisan
+    ? [
+        { href: '/artisans', label: 'Artisans' },
+        { href: '/artisans/products', label: 'My Products' },
+        { href: '/messages', label: unreadCount > 0 ? `Messages (${unreadCount})` : 'Messages' },
+        { href: '/features', label: 'Features' },
+        { href: '/admin', label: 'Admin' },
+        { href: '/analytics', label: 'Analytics' },
+        { href: '/profile', label: 'Profile' },
+      ]
+    : [
+        { href: '/shop', label: 'Shop' },
+        { href: '/artisans', label: 'Artisans' },
+        { href: '/story-hub', label: 'Stories' },
+        { href: '/workshops', label: 'Workshops' },
+        { href: '/market', label: 'Market' },
+        { href: '/analytics', label: 'Analytics' },
+        { href: '/roadmap', label: 'Roadmap' },
+        { href: '/about', label: 'About' },
+        { href: '/favorites', label: 'Favorites' },
+        { href: '/messages', label: unreadCount > 0 ? `Messages (${unreadCount})` : 'Messages' },
+        { href: '/cart', label: 'Cart' },
+        { href: '/profile', label: 'Profile' },
+      ];
+
+  const handleLogout = () => {
+    logout();
+    setMobileOpen(false);
+  };
 
   return (
     <nav
-      className={`sticky top-0 z-40 transition-all duration-300 ${scrolled ? "bg-white/90 backdrop-blur-sm shadow-md" : "bg-transparent"}`}
+      className={`sticky top-0 z-40 bg-[#FFFBF4] transition-all duration-300 ${scrolled ? 'shadow-md' : 'shadow-sm'}`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-serif font-bold text-lg">꿀</span>
+            <div className="bg-primary flex h-10 w-10 items-center justify-center rounded-lg">
+              <span className="font-serif text-lg font-bold text-white">꿀</span>
             </div>
-            <Link href="/" className="text-2xl font-serif font-bold text-warm-charcoal hidden sm:block">
+            <Link
+              href="/"
+              className="text-warm-charcoal hidden font-serif text-2xl font-bold sm:block"
+            >
               Artisans of India
             </Link>
           </div>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-8">
-            <Link href="/shop" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
-              Shop
-            </Link>
-            <Link href="/artisans" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
-              Artisans
-            </Link>
-            <Link href="/features" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
-              Features
-            </Link>
-            <Link href="/admin" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
-              Admin
-            </Link>
-            <Link href="/analytics" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
-              Analytics
-            </Link>
-            <Link href="/about" className="text-sm font-medium text-warm-charcoal hover:text-primary transition">
-              About
-            </Link>
+          <div className="hidden items-center gap-8 md:flex">
+            {desktopLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-warm-charcoal hover:text-primary text-sm font-medium transition"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
 
           {/* Right Icons */}
           <div className="flex items-center gap-4">
-            <button className="p-2 hover:bg-warm-sand rounded-lg transition hidden sm:block">
-              <Search className="w-5 h-5 text-warm-charcoal" />
-            </button>
-            <Link href="/favorites" className="p-2 hover:bg-warm-sand rounded-lg transition hidden sm:flex">
-              <Heart className="w-5 h-5 text-warm-charcoal" />
+            {!isArtisan && (
+              <button className="hover:bg-warm-sand hidden rounded-lg p-2 transition sm:block">
+                <Search className="text-warm-charcoal h-5 w-5" />
+              </button>
+            )}
+            {!isArtisan && (
+              <Link
+                href="/favorites"
+                className="hover:bg-warm-sand hidden rounded-lg p-2 transition sm:flex"
+              >
+                <Heart className="text-warm-charcoal h-5 w-5" />
+              </Link>
+            )}
+            <Link
+              href="/messages"
+              className="hover:bg-warm-sand relative hidden rounded-lg p-2 transition sm:block"
+            >
+              <MessageCircle className="text-warm-charcoal h-5 w-5" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-semibold text-white">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
             </Link>
-            <Link href="/cart" className="p-2 hover:bg-warm-sand rounded-lg transition hidden sm:block relative">
-              <ShoppingCart className="w-5 h-5 text-warm-charcoal" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full" />
+            {!isArtisan && (
+              <Link
+                href="/cart"
+                className="hover:bg-warm-sand relative hidden rounded-lg p-2 transition sm:block"
+              >
+                <ShoppingCart className="text-warm-charcoal h-5 w-5" />
+                {totalItems > 0 && (
+                  <span className="bg-primary absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold text-white">
+                    {totalItems > 9 ? '9+' : totalItems}
+                  </span>
+                )}
+              </Link>
+            )}
+            <Link
+              href="/profile"
+              className="hover:bg-warm-sand hidden rounded-lg p-2 transition sm:block"
+            >
+              <User className="text-warm-charcoal h-5 w-5" />
             </Link>
-            <Link href="/profile" className="p-2 hover:bg-warm-sand rounded-lg transition hidden sm:block">
-              <User className="w-5 h-5 text-warm-charcoal" />
-            </Link>
+            {isAuthenticated ? (
+              <button
+                onClick={handleLogout}
+                className="bg-warm-sand hover:bg-warm-sand/70 hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition sm:flex"
+              >
+                <Box className="h-4 w-4" />
+                Logout
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                className="bg-primary hover:bg-warm-rust hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-white transition sm:flex"
+              >
+                <Box className="h-4 w-4" />
+                Login
+              </Link>
+            )}
 
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2 hover:bg-warm-sand rounded-lg transition"
+              className="hover:bg-warm-sand rounded-lg p-2 transition md:hidden"
             >
-              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
         {mobileOpen && (
-          <div className="md:hidden pb-4 border-t border-border space-y-2">
-            <Link href="/shop" className="block px-4 py-2 text-sm hover:bg-warm-sand rounded transition">
-              Shop
-            </Link>
-            <Link href="/artisans" className="block px-4 py-2 text-sm hover:bg-warm-sand rounded transition">
-              Artisans
-            </Link>
-            <Link href="/story-hub" className="block px-4 py-2 text-sm hover:bg-warm-sand rounded transition">
-              Stories
-            </Link>
-            <Link href="/workshops" className="block px-4 py-2 text-sm hover:bg-warm-sand rounded transition">
-              Workshops
-            </Link>
-            <Link href="/market" className="block px-4 py-2 text-sm hover:bg-warm-sand rounded transition">
-              Market
-            </Link>
-            <Link href="/analytics" className="block px-4 py-2 text-sm hover:bg-warm-sand rounded transition">
-              Analytics
-            </Link>
-            <Link href="/roadmap" className="block px-4 py-2 text-sm hover:bg-warm-sand rounded transition">
-              Roadmap
-            </Link>
-            <Link href="/about" className="block px-4 py-2 text-sm hover:bg-warm-sand rounded transition">
-              About
-            </Link>
-            <Link href="/favorites" className="block px-4 py-2 text-sm hover:bg-warm-sand rounded transition">
-              Favorites
-            </Link>
-            <Link href="/cart" className="block px-4 py-2 text-sm hover:bg-warm-sand rounded transition">
-              Cart
-            </Link>
-            <Link href="/profile" className="block px-4 py-2 text-sm hover:bg-warm-sand rounded transition">
-              Profile
-            </Link>
+          <div className="border-border space-y-2 border-t pb-4 md:hidden">
+            {mobileLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="hover:bg-warm-sand block rounded px-4 py-2 text-sm transition"
+                onClick={() => setMobileOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
+            {isAuthenticated ? (
+              <button
+                onClick={handleLogout}
+                className="text-warm-charcoal hover:bg-warm-sand w-full rounded px-4 py-2 text-left text-sm font-semibold transition"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                className="text-primary hover:bg-warm-sand block rounded px-4 py-2 text-sm font-semibold transition"
+                onClick={() => setMobileOpen(false)}
+              >
+                Login
+              </Link>
+            )}
           </div>
         )}
       </div>
     </nav>
-  )
+  );
 }

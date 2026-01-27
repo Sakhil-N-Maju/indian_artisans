@@ -1,6 +1,6 @@
 /**
  * Database Optimization Service
- * 
+ *
  * Query optimization and database performance
  */
 
@@ -83,17 +83,16 @@ export class DatabaseOptimizationService {
 
   async getSlowQueries(threshold: number = 1000): Promise<QueryPerformance[]> {
     return Array.from(this.queryLog.values())
-      .filter(q => q.executionTime > threshold)
+      .filter((q) => q.executionTime > threshold)
       .sort((a, b) => b.executionTime - a.executionTime)
       .slice(0, 20);
   }
 
   async getIndexRecommendations(): Promise<IndexRecommendation[]> {
-    return Array.from(this.indexRecommendations.values())
-      .sort((a, b) => {
-        const priorityOrder = { high: 3, medium: 2, low: 1 };
-        return priorityOrder[b.priority] - priorityOrder[a.priority];
-      });
+    return Array.from(this.indexRecommendations.values()).sort((a, b) => {
+      const priorityOrder = { high: 3, medium: 2, low: 1 };
+      return priorityOrder[b.priority] - priorityOrder[a.priority];
+    });
   }
 
   async getConnectionStats(): Promise<DatabaseConnection> {
@@ -108,12 +107,13 @@ export class DatabaseOptimizationService {
     indexRecommendations: number;
   }> {
     const queries = Array.from(this.queryLog.values());
-    const avgTime = queries.length > 0
-      ? queries.reduce((sum, q) => sum + q.executionTime, 0) / queries.length
-      : 0;
+    const avgTime =
+      queries.length > 0
+        ? queries.reduce((sum, q) => sum + q.executionTime, 0) / queries.length
+        : 0;
 
-    const slow = queries.filter(q => q.executionTime > 1000).length;
-    const optimized = queries.filter(q => q.optimized).length;
+    const slow = queries.filter((q) => q.executionTime > 1000).length;
+    const optimized = queries.filter((q) => q.optimized).length;
     const optRate = queries.length > 0 ? (optimized / queries.length) * 100 : 0;
 
     return {

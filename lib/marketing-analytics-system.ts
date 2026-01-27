@@ -1,6 +1,6 @@
 /**
  * Marketing Analytics System
- * 
+ *
  * Comprehensive marketing performance analytics:
  * - Campaign performance tracking
  * - Channel attribution
@@ -15,9 +15,17 @@ export interface MarketingCampaign {
   id: string;
   name: string;
   description?: string;
-  type: 'email' | 'social' | 'display' | 'search' | 'influencer' | 'content' | 'affiliate' | 'other';
+  type:
+    | 'email'
+    | 'social'
+    | 'display'
+    | 'search'
+    | 'influencer'
+    | 'content'
+    | 'affiliate'
+    | 'other';
   status: 'draft' | 'scheduled' | 'active' | 'paused' | 'completed' | 'cancelled';
-  
+
   // Timeline
   timeline: {
     startDate: Date;
@@ -25,7 +33,7 @@ export interface MarketingCampaign {
     launchedAt?: Date;
     completedAt?: Date;
   };
-  
+
   // Budget
   budget: {
     total: number;
@@ -33,7 +41,7 @@ export interface MarketingCampaign {
     remaining: number;
     currency: string;
   };
-  
+
   // Targeting
   targeting: {
     audience: string[];
@@ -45,7 +53,7 @@ export interface MarketingCampaign {
       interests?: string[];
     };
   };
-  
+
   // Performance metrics
   metrics: {
     impressions: number;
@@ -60,7 +68,7 @@ export interface MarketingCampaign {
     roas: number; // Return on ad spend
     roi: number; // Return on investment
   };
-  
+
   // Engagement
   engagement: {
     likes: number;
@@ -69,7 +77,7 @@ export interface MarketingCampaign {
     saves: number;
     engagementRate: number;
   };
-  
+
   // Assets
   assets: {
     type: 'image' | 'video' | 'carousel' | 'text';
@@ -80,7 +88,7 @@ export interface MarketingCampaign {
       ctr: number;
     };
   }[];
-  
+
   createdBy: string;
   createdAt: Date;
   updatedAt: Date;
@@ -88,7 +96,7 @@ export interface MarketingCampaign {
 
 export interface ChannelAttribution {
   channel: string;
-  
+
   // Touch points
   touchpoints: {
     first: number; // First-touch attribution
@@ -97,7 +105,7 @@ export interface ChannelAttribution {
     timeDecay: number; // Time-decay attribution
     positionBased: number; // Position-based attribution
   };
-  
+
   // Performance
   performance: {
     impressions: number;
@@ -106,7 +114,7 @@ export interface ChannelAttribution {
     revenue: number;
     cost: number;
   };
-  
+
   // Attribution metrics
   attribution: {
     assistedConversions: number;
@@ -114,7 +122,7 @@ export interface ChannelAttribution {
     contributionPercentage: number;
     averageTimeToConversion: number; // days
   };
-  
+
   // ROI
   roi: {
     totalRevenue: number;
@@ -128,9 +136,17 @@ export interface ChannelAttribution {
 export interface ContentPerformance {
   contentId: string;
   title: string;
-  type: 'blog' | 'video' | 'infographic' | 'ebook' | 'webinar' | 'podcast' | 'social_post' | 'other';
+  type:
+    | 'blog'
+    | 'video'
+    | 'infographic'
+    | 'ebook'
+    | 'webinar'
+    | 'podcast'
+    | 'social_post'
+    | 'other';
   category: string;
-  
+
   // Publishing
   publishing: {
     publishedAt: Date;
@@ -138,7 +154,7 @@ export interface ContentPerformance {
     author: string;
     format: string;
   };
-  
+
   // Engagement metrics
   engagement: {
     views: number;
@@ -150,7 +166,7 @@ export interface ContentPerformance {
     comments: number;
     likes: number;
   };
-  
+
   // Conversion metrics
   conversion: {
     leads: number;
@@ -160,7 +176,7 @@ export interface ContentPerformance {
     revenue: number;
     conversionRate: number;
   };
-  
+
   // SEO metrics
   seo: {
     organicTraffic: number;
@@ -168,7 +184,7 @@ export interface ContentPerformance {
     backlinks: number;
     domainAuthority: number;
   };
-  
+
   // Performance score
   score: {
     overall: number; // 0-100
@@ -180,7 +196,7 @@ export interface ContentPerformance {
 
 export interface SocialMediaAnalytics {
   platform: 'facebook' | 'instagram' | 'twitter' | 'linkedin' | 'pinterest' | 'youtube' | 'tiktok';
-  
+
   // Account metrics
   account: {
     followers: number;
@@ -188,7 +204,7 @@ export interface SocialMediaAnalytics {
     following: number;
     posts: number;
   };
-  
+
   // Engagement metrics
   engagement: {
     totalEngagements: number;
@@ -200,7 +216,7 @@ export interface SocialMediaAnalytics {
     engagementRate: number;
     averageEngagementPerPost: number;
   };
-  
+
   // Reach metrics
   reach: {
     totalReach: number;
@@ -210,7 +226,7 @@ export interface SocialMediaAnalytics {
     organicReach: number;
     paidReach: number;
   };
-  
+
   // Audience
   audience: {
     demographics: {
@@ -221,7 +237,7 @@ export interface SocialMediaAnalytics {
     interests: { interest: string; percentage: number }[];
     activeHours: { hour: number; activity: number }[];
   };
-  
+
   // Top content
   topPosts: {
     postId: string;
@@ -232,7 +248,7 @@ export interface SocialMediaAnalytics {
     reach: number;
     clicks: number;
   }[];
-  
+
   // Conversions
   conversions: {
     clicks: number;
@@ -247,7 +263,7 @@ export interface EmailMarketingMetrics {
   campaignId: string;
   campaignName: string;
   type: 'promotional' | 'transactional' | 'newsletter' | 'automated' | 'other';
-  
+
   // Sending
   sending: {
     sentAt: Date;
@@ -261,7 +277,7 @@ export interface EmailMarketingMetrics {
       bounceRate: number;
     };
   };
-  
+
   // Opens
   opens: {
     uniqueOpens: number;
@@ -275,7 +291,7 @@ export interface EmailMarketingMetrics {
       webmail: number;
     };
   };
-  
+
   // Clicks
   clicks: {
     uniqueClicks: number;
@@ -288,7 +304,7 @@ export interface EmailMarketingMetrics {
       uniqueClicks: number;
     }[];
   };
-  
+
   // Engagement
   engagement: {
     forwards: number;
@@ -299,7 +315,7 @@ export interface EmailMarketingMetrics {
     spamComplaints: number;
     spamRate: number;
   };
-  
+
   // Conversions
   conversions: {
     clicks: number;
@@ -309,7 +325,7 @@ export interface EmailMarketingMetrics {
     revenuePerEmail: number;
     revenuePerRecipient: number;
   };
-  
+
   // A/B testing
   abTest?: {
     variant: string;
@@ -327,7 +343,7 @@ export interface SEOAnalytics {
     start: Date;
     end: Date;
   };
-  
+
   // Traffic
   traffic: {
     organicSessions: number;
@@ -337,7 +353,7 @@ export interface SEOAnalytics {
     averageSessionDuration: number;
     pagesPerSession: number;
   };
-  
+
   // Keywords
   keywords: {
     totalKeywords: number;
@@ -352,7 +368,7 @@ export interface SEOAnalytics {
       ctr: number;
     }[];
   };
-  
+
   // Rankings
   rankings: {
     averagePosition: number;
@@ -360,7 +376,7 @@ export interface SEOAnalytics {
     visibilityScore: number;
     featuredSnippets: number;
   };
-  
+
   // Pages
   pages: {
     totalIndexedPages: number;
@@ -372,7 +388,7 @@ export interface SEOAnalytics {
       conversions: number;
     }[];
   };
-  
+
   // Backlinks
   backlinks: {
     totalBacklinks: number;
@@ -382,11 +398,11 @@ export interface SEOAnalytics {
     domainAuthority: number;
     pageAuthority: number;
   };
-  
+
   // Technical SEO
   technical: {
     crawlErrors: number;
-    sitemap Status: 'ok' | 'warning' | 'error';
+    sitemapStatus: 'ok' | 'warning' | 'error';
     mobileUsability: number; // score 0-100
     pageSpeed: {
       desktop: number;
@@ -406,14 +422,14 @@ export interface SEMAnalytics {
     start: Date;
     end: Date;
   };
-  
+
   // Campaigns
   campaigns: {
     active: number;
     paused: number;
     total: number;
   };
-  
+
   // Performance
   performance: {
     impressions: number;
@@ -427,7 +443,7 @@ export interface SEMAnalytics {
     revenue: number;
     roas: number;
   };
-  
+
   // Keywords
   keywords: {
     totalKeywords: number;
@@ -444,7 +460,7 @@ export interface SEMAnalytics {
       qualityScore: number;
     }[];
   };
-  
+
   // Ads
   ads: {
     totalAds: number;
@@ -459,7 +475,7 @@ export interface SEMAnalytics {
       cost: number;
     }[];
   };
-  
+
   // Bidding
   bidding: {
     averageBid: number;
@@ -476,7 +492,7 @@ export interface MarketingROI {
     start: Date;
     end: Date;
   };
-  
+
   // Investment
   investment: {
     totalSpend: number;
@@ -491,7 +507,7 @@ export interface MarketingROI {
       percentage: number;
     }[];
   };
-  
+
   // Returns
   returns: {
     totalRevenue: number;
@@ -502,7 +518,7 @@ export interface MarketingROI {
       percentage: number;
     }[];
   };
-  
+
   // ROI metrics
   roi: {
     overall: number;
@@ -517,7 +533,7 @@ export interface MarketingROI {
       roas: number;
     }[];
   };
-  
+
   // Efficiency
   efficiency: {
     costPerLead: number;
@@ -526,7 +542,7 @@ export interface MarketingROI {
     leadToCustomerRate: number;
     marketingEfficiencyRatio: number; // Revenue / Marketing Spend
   };
-  
+
   // Lifetime value
   ltv: {
     averageCustomerLifetimeValue: number;
@@ -548,7 +564,7 @@ export class MarketingAnalyticsSystem {
     this.contentPerformance = new Map();
     this.socialAnalytics = new Map();
     this.emailMetrics = new Map();
-    
+
     // Initialize with mock data
     this.initializeMockData();
   }
@@ -628,7 +644,9 @@ export class MarketingAnalyticsSystem {
   /**
    * Create marketing campaign
    */
-  async createCampaign(params: Omit<MarketingCampaign, 'id' | 'metrics' | 'engagement' | 'createdAt' | 'updatedAt'>): Promise<MarketingCampaign> {
+  async createCampaign(
+    params: Omit<MarketingCampaign, 'id' | 'metrics' | 'engagement' | 'createdAt' | 'updatedAt'>
+  ): Promise<MarketingCampaign> {
     const campaign: MarketingCampaign = {
       ...params,
       id: `camp-${Date.now()}`,
@@ -817,7 +835,9 @@ export class MarketingAnalyticsSystem {
   /**
    * Get social media analytics
    */
-  async getSocialMediaAnalytics(platform: SocialMediaAnalytics['platform']): Promise<SocialMediaAnalytics> {
+  async getSocialMediaAnalytics(
+    platform: SocialMediaAnalytics['platform']
+  ): Promise<SocialMediaAnalytics> {
     return {
       platform,
       account: {
@@ -973,9 +993,30 @@ export class MarketingAnalyticsSystem {
         top10Keywords: 125,
         top50Keywords: 485,
         topKeywords: [
-          { keyword: 'handmade artisan products', position: 3, searches: 8500, clicks: 2550, impressions: 12500, ctr: 20.4 },
-          { keyword: 'indian handicrafts online', position: 5, searches: 6200, clicks: 1860, impressions: 9500, ctr: 19.6 },
-          { keyword: 'traditional pottery', position: 7, searches: 4500, clicks: 1125, impressions: 7800, ctr: 14.4 },
+          {
+            keyword: 'handmade artisan products',
+            position: 3,
+            searches: 8500,
+            clicks: 2550,
+            impressions: 12500,
+            ctr: 20.4,
+          },
+          {
+            keyword: 'indian handicrafts online',
+            position: 5,
+            searches: 6200,
+            clicks: 1860,
+            impressions: 9500,
+            ctr: 19.6,
+          },
+          {
+            keyword: 'traditional pottery',
+            position: 7,
+            searches: 4500,
+            clicks: 1125,
+            impressions: 7800,
+            ctr: 14.4,
+          },
         ],
       },
       rankings: {
@@ -987,9 +1028,27 @@ export class MarketingAnalyticsSystem {
       pages: {
         totalIndexedPages: 2850,
         topPages: [
-          { url: '/products/textiles', sessions: 12500, bounceRate: 32.5, averageTimeOnPage: 185, conversions: 285 },
-          { url: '/artisans', sessions: 9500, bounceRate: 28.5, averageTimeOnPage: 225, conversions: 128 },
-          { url: '/stories', sessions: 7800, bounceRate: 35.2, averageTimeOnPage: 265, conversions: 85 },
+          {
+            url: '/products/textiles',
+            sessions: 12500,
+            bounceRate: 32.5,
+            averageTimeOnPage: 185,
+            conversions: 285,
+          },
+          {
+            url: '/artisans',
+            sessions: 9500,
+            bounceRate: 28.5,
+            averageTimeOnPage: 225,
+            conversions: 128,
+          },
+          {
+            url: '/stories',
+            sessions: 7800,
+            bounceRate: 35.2,
+            averageTimeOnPage: 265,
+            conversions: 85,
+          },
         ],
       },
       backlinks: {
@@ -1033,7 +1092,7 @@ export class MarketingAnalyticsSystem {
         impressions: 850000,
         clicks: 25500,
         ctr: 3.0,
-        averageCpc: 8.50,
+        averageCpc: 8.5,
         cost: 216750,
         conversions: 765,
         conversionRate: 3.0,
@@ -1045,21 +1104,49 @@ export class MarketingAnalyticsSystem {
         totalKeywords: 285,
         activeKeywords: 185,
         topKeywords: [
-          { keyword: 'buy handmade pottery', matchType: 'phrase', impressions: 45000, clicks: 1800, ctr: 4.0, cpc: 9.50, cost: 17100, conversions: 72, qualityScore: 8 },
-          { keyword: 'artisan jewelry online', matchType: 'exact', impressions: 38000, clicks: 1520, ctr: 4.0, cpc: 10.25, cost: 15580, conversions: 61, qualityScore: 9 },
+          {
+            keyword: 'buy handmade pottery',
+            matchType: 'phrase',
+            impressions: 45000,
+            clicks: 1800,
+            ctr: 4.0,
+            cpc: 9.5,
+            cost: 17100,
+            conversions: 72,
+            qualityScore: 8,
+          },
+          {
+            keyword: 'artisan jewelry online',
+            matchType: 'exact',
+            impressions: 38000,
+            clicks: 1520,
+            ctr: 4.0,
+            cpc: 10.25,
+            cost: 15580,
+            conversions: 61,
+            qualityScore: 9,
+          },
         ],
       },
       ads: {
         totalAds: 45,
         activeAds: 28,
         topAds: [
-          { adId: 'ad-1', headline: 'Authentic Handmade Pottery - Shop Now', impressions: 125000, clicks: 5000, ctr: 4.0, conversions: 150, cost: 42500 },
+          {
+            adId: 'ad-1',
+            headline: 'Authentic Handmade Pottery - Shop Now',
+            impressions: 125000,
+            clicks: 5000,
+            ctr: 4.0,
+            conversions: 150,
+            cost: 42500,
+          },
         ],
       },
       bidding: {
-        averageBid: 8.50,
+        averageBid: 8.5,
         topOfPageBid: 12.75,
-        firstPositionBid: 15.50,
+        firstPositionBid: 15.5,
         impressionShare: 68.5,
         lostImpressionShareBudget: 18.5,
         lostImpressionShareRank: 13.0,
@@ -1134,11 +1221,11 @@ export class MarketingAnalyticsSystem {
    */
   async getAllCampaigns(status?: MarketingCampaign['status']): Promise<MarketingCampaign[]> {
     let campaigns = Array.from(this.campaigns.values());
-    
+
     if (status) {
-      campaigns = campaigns.filter(c => c.status === status);
+      campaigns = campaigns.filter((c) => c.status === status);
     }
-    
+
     return campaigns;
   }
 }

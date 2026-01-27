@@ -1,6 +1,6 @@
 /**
  * Social Media Integration System
- * 
+ *
  * Comprehensive social media integration supporting multiple platforms for
  * authentication, posting, analytics, sharing, and engagement tracking.
  */
@@ -9,7 +9,7 @@
 // Types & Interfaces
 // ============================================================================
 
-export type SocialPlatform = 
+export type SocialPlatform =
   | 'facebook'
   | 'instagram'
   | 'twitter'
@@ -19,7 +19,7 @@ export type SocialPlatform =
   | 'linkedin'
   | 'snapchat';
 
-export type PostType = 
+export type PostType =
   | 'text'
   | 'image'
   | 'video'
@@ -29,15 +29,9 @@ export type PostType =
   | 'short'
   | 'link';
 
-export type PostStatus = 
-  | 'draft'
-  | 'scheduled'
-  | 'publishing'
-  | 'published'
-  | 'failed'
-  | 'deleted';
+export type PostStatus = 'draft' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'deleted';
 
-export type EngagementType = 
+export type EngagementType =
   | 'like'
   | 'comment'
   | 'share'
@@ -47,74 +41,70 @@ export type EngagementType =
   | 'mention'
   | 'tag';
 
-export type AccountType = 
-  | 'personal'
-  | 'business'
-  | 'creator'
-  | 'brand';
+export type AccountType = 'personal' | 'business' | 'creator' | 'brand';
 
 export interface SocialAccount {
   id: string;
   platform: SocialPlatform;
   type: AccountType;
-  
+
   credentials: {
     accessToken: string;
     refreshToken?: string;
     expiresAt?: Date;
-    
+
     userId: string;
     username: string;
   };
-  
+
   profile: {
     displayName: string;
     bio?: string;
     avatar?: string;
     coverImage?: string;
     verified: boolean;
-    
+
     url?: string;
     website?: string;
   };
-  
+
   metrics: {
     followers: number;
     following: number;
     posts: number;
-    
+
     engagementRate: number;
     averageLikes: number;
     averageComments: number;
     averageShares: number;
   };
-  
+
   settings: {
     autoPublish: boolean;
     defaultHashtags: string[];
     defaultMentions: string[];
-    
+
     contentApproval: boolean;
-    
+
     analytics: {
       enabled: boolean;
       trackClicks: boolean;
       trackShares: boolean;
     };
   };
-  
+
   permissions: string[];
-  
+
   connected: boolean;
   lastSync?: Date;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface SocialPost {
   id: string;
-  
+
   accounts: Array<{
     platform: SocialPlatform;
     accountId: string;
@@ -123,36 +113,36 @@ export interface SocialPost {
     status: PostStatus;
     error?: string;
   }>;
-  
+
   type: PostType;
-  
+
   content: {
     text: string;
     hashtags: string[];
     mentions: string[];
-    
+
     media?: Array<{
       id: string;
       type: 'image' | 'video' | 'gif';
       url: string;
       thumbnail?: string;
       alt?: string;
-      
+
       dimensions?: {
         width: number;
         height: number;
       };
-      
+
       duration?: number; // for videos, in seconds
     }>;
-    
+
     link?: {
       url: string;
       title?: string;
       description?: string;
       image?: string;
     };
-    
+
     location?: {
       name: string;
       latitude?: number;
@@ -160,16 +150,16 @@ export interface SocialPost {
       placeId?: string;
     };
   };
-  
+
   schedule?: {
     publishAt: Date;
     timezone: string;
-    
+
     optimal?: boolean; // Auto-schedule at optimal time
   };
-  
+
   status: PostStatus;
-  
+
   timeline: {
     created: Date;
     scheduled?: Date;
@@ -177,26 +167,29 @@ export interface SocialPost {
     failed?: Date;
     deleted?: Date;
   };
-  
+
   engagement: {
     likes: number;
     comments: number;
     shares: number;
     saves: number;
     clicks: number;
-    
+
     reach: number;
     impressions: number;
-    
-    byPlatform: Record<SocialPlatform, {
-      likes: number;
-      comments: number;
-      shares: number;
-      reach: number;
-      impressions: number;
-    }>;
+
+    byPlatform: Record<
+      SocialPlatform,
+      {
+        likes: number;
+        comments: number;
+        shares: number;
+        reach: number;
+        impressions: number;
+      }
+    >;
   };
-  
+
   targeting?: {
     locations?: string[];
     languages?: string[];
@@ -206,7 +199,7 @@ export interface SocialPost {
       max: number;
     };
   };
-  
+
   metadata: {
     campaignId?: string;
     productId?: string;
@@ -214,7 +207,7 @@ export interface SocialPost {
     customData?: Record<string, any>;
     createdBy: string;
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -223,7 +216,7 @@ export interface SocialComment {
   id: string;
   postId: string;
   platform: SocialPlatform;
-  
+
   author: {
     id: string;
     username: string;
@@ -231,29 +224,29 @@ export interface SocialComment {
     avatar?: string;
     verified: boolean;
   };
-  
+
   content: {
     text: string;
     mentions: string[];
     hashtags: string[];
   };
-  
+
   parent?: {
     commentId: string;
     author: string;
   };
-  
+
   engagement: {
     likes: number;
     replies: number;
   };
-  
+
   sentiment?: {
     score: number; // -1 to 1
     category: 'positive' | 'negative' | 'neutral';
     confidence: number;
   };
-  
+
   moderation: {
     status: 'pending' | 'approved' | 'hidden' | 'deleted';
     flagged: boolean;
@@ -262,10 +255,10 @@ export interface SocialComment {
       confidence: number;
     }>;
   };
-  
+
   replied: boolean;
   replyId?: string;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -274,36 +267,36 @@ export interface SocialCampaign {
   id: string;
   name: string;
   objective: 'awareness' | 'engagement' | 'traffic' | 'conversions' | 'sales';
-  
+
   status: 'draft' | 'active' | 'paused' | 'completed';
-  
+
   platforms: SocialPlatform[];
-  
+
   schedule: {
     startDate: Date;
     endDate: Date;
-    
+
     postingSchedule: Array<{
       dayOfWeek: number;
       time: string;
       platforms: SocialPlatform[];
     }>;
   };
-  
+
   content: {
     posts: string[]; // Post IDs
     totalPosts: number;
     publishedPosts: number;
   };
-  
+
   budget?: {
     total: number;
     spent: number;
     currency: string;
-    
+
     byPlatform: Record<SocialPlatform, number>;
   };
-  
+
   targeting?: {
     demographics: {
       ageRange?: { min: number; max: number };
@@ -311,24 +304,24 @@ export interface SocialCampaign {
       locations?: string[];
       languages?: string[];
     };
-    
+
     interests?: string[];
     behaviors?: string[];
     customAudiences?: string[];
   };
-  
+
   performance: {
     reach: number;
     impressions: number;
     engagement: number;
     clicks: number;
     conversions: number;
-    
+
     costPerClick?: number;
     costPerEngagement?: number;
     returnOnAdSpend?: number;
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -336,18 +329,18 @@ export interface SocialCampaign {
 export interface SocialAnalytics {
   accountId: string;
   platform: SocialPlatform;
-  
+
   period: {
     start: Date;
     end: Date;
   };
-  
+
   audience: {
     followers: {
       current: number;
       change: number;
       changePercent: number;
-      
+
       growth: Array<{
         date: Date;
         followers: number;
@@ -355,7 +348,7 @@ export interface SocialAnalytics {
         lost: number;
       }>;
     };
-    
+
     demographics: {
       ageRanges: Record<string, number>;
       genders: Record<string, number>;
@@ -365,22 +358,22 @@ export interface SocialAnalytics {
       }>;
       languages: Record<string, number>;
     };
-    
+
     activeHours: Array<{
       hour: number;
       dayOfWeek: number;
       percentage: number;
     }>;
   };
-  
+
   content: {
     posts: {
       total: number;
       published: number;
-      
+
       byType: Record<PostType, number>;
     };
-    
+
     topPosts: Array<{
       postId: string;
       type: PostType;
@@ -388,44 +381,44 @@ export interface SocialAnalytics {
       reach: number;
       impressions: number;
     }>;
-    
+
     averageEngagementRate: number;
   };
-  
+
   engagement: {
     total: number;
-    
+
     likes: number;
     comments: number;
     shares: number;
     saves: number;
     clicks: number;
-    
+
     engagementRate: number;
-    
+
     byType: Record<EngagementType, number>;
-    
+
     trends: Array<{
       date: Date;
       engagement: number;
       engagementRate: number;
     }>;
   };
-  
+
   reach: {
     total: number;
     organic: number;
     paid: number;
-    
+
     impressions: number;
-    
+
     trends: Array<{
       date: Date;
       reach: number;
       impressions: number;
     }>;
   };
-  
+
   hashtags: {
     topHashtags: Array<{
       tag: string;
@@ -433,22 +426,22 @@ export interface SocialAnalytics {
       reach: number;
       engagement: number;
     }>;
-    
+
     trending: Array<{
       tag: string;
       growth: number;
     }>;
   };
-  
+
   mentions: {
     total: number;
-    
+
     sentiment: {
       positive: number;
       negative: number;
       neutral: number;
     };
-    
+
     topMentioners: Array<{
       username: string;
       mentions: number;
@@ -459,58 +452,61 @@ export interface SocialAnalytics {
 
 export interface SocialShare {
   id: string;
-  
+
   url: string;
-  
+
   content: {
     title: string;
     description?: string;
     image?: string;
-    
+
     type: 'product' | 'article' | 'video' | 'page';
-    
+
     metadata?: Record<string, any>;
   };
-  
+
   platforms: SocialPlatform[];
-  
+
   shares: Array<{
     platform: SocialPlatform;
     shareId?: string;
     url?: string;
     sharedBy: string;
     sharedAt: Date;
-    
+
     engagement?: {
       likes: number;
       comments: number;
       shares: number;
     };
   }>;
-  
+
   analytics: {
     totalShares: number;
     clicks: number;
     conversions: number;
-    
-    byPlatform: Record<SocialPlatform, {
-      shares: number;
-      clicks: number;
-    }>;
+
+    byPlatform: Record<
+      SocialPlatform,
+      {
+        shares: number;
+        clicks: number;
+      }
+    >;
   };
-  
+
   createdAt: Date;
 }
 
 export interface SocialLogin {
   id: string;
   userId: string;
-  
+
   platform: SocialPlatform;
-  
+
   socialId: string;
   email?: string;
-  
+
   profile: {
     displayName: string;
     firstName?: string;
@@ -518,15 +514,15 @@ export interface SocialLogin {
     avatar?: string;
     verified: boolean;
   };
-  
+
   accessToken: string;
   refreshToken?: string;
   expiresAt?: Date;
-  
+
   scopes: string[];
-  
+
   primary: boolean;
-  
+
   lastUsed: Date;
   createdAt: Date;
 }
@@ -534,29 +530,29 @@ export interface SocialLogin {
 export interface SocialMediaWidget {
   id: string;
   type: 'feed' | 'share-buttons' | 'follow-buttons' | 'comments' | 'gallery';
-  
+
   platforms: SocialPlatform[];
-  
+
   config: {
     layout: 'grid' | 'list' | 'carousel' | 'masonry';
     theme: 'light' | 'dark' | 'auto';
-    
+
     maxItems?: number;
     autoRefresh?: boolean;
     refreshInterval?: number; // seconds
-    
+
     showEngagement?: boolean;
     showTimestamps?: boolean;
     showAvatars?: boolean;
   };
-  
+
   filters?: {
     hashtags?: string[];
     mentions?: string[];
     excludeReplies?: boolean;
     excludeRetweets?: boolean;
   };
-  
+
   style?: {
     width?: string;
     height?: string;
@@ -564,73 +560,73 @@ export interface SocialMediaWidget {
     backgroundColor?: string;
     textColor?: string;
   };
-  
+
   embedCode?: string;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface InfluencerProfile {
   id: string;
-  
+
   platforms: Array<{
     platform: SocialPlatform;
     username: string;
     url: string;
-    
+
     followers: number;
     engagementRate: number;
     verified: boolean;
   }>;
-  
+
   profile: {
     name: string;
     bio: string;
     avatar: string;
-    
+
     category: string[];
     niche: string[];
   };
-  
+
   metrics: {
     totalFollowers: number;
     averageEngagementRate: number;
-    
+
     reach: number;
     impressions: number;
   };
-  
+
   audience: {
     demographics: {
       ageRanges: Record<string, number>;
       genders: Record<string, number>;
       locations: string[];
     };
-    
+
     authenticity: {
       score: number; // 0-100
       fakeFollowersPercentage: number;
       engagementQuality: number;
     };
   };
-  
+
   collaboration: {
     status: 'prospecting' | 'contacted' | 'negotiating' | 'active' | 'completed';
-    
+
     rate?: {
       post: number;
       story: number;
       video: number;
       currency: string;
     };
-    
+
     campaigns?: string[];
   };
-  
+
   tags: string[];
   notes?: string;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -638,72 +634,72 @@ export interface InfluencerProfile {
 export interface SocialListeningQuery {
   id: string;
   name: string;
-  
+
   keywords: string[];
   hashtags: string[];
   mentions: string[];
-  
+
   platforms: SocialPlatform[];
-  
+
   filters?: {
     languages?: string[];
     locations?: string[];
     excludeKeywords?: string[];
     minFollowers?: number;
   };
-  
+
   active: boolean;
-  
+
   results: Array<{
     id: string;
     platform: SocialPlatform;
-    
+
     author: {
       username: string;
       displayName: string;
       followers: number;
     };
-    
+
     content: {
       text: string;
       type: PostType;
       url: string;
     };
-    
+
     engagement: {
       likes: number;
       comments: number;
       shares: number;
     };
-    
+
     sentiment: {
       score: number;
       category: 'positive' | 'negative' | 'neutral';
     };
-    
+
     createdAt: Date;
   }>;
-  
+
   insights: {
     volume: number;
     reach: number;
-    
+
     sentiment: {
       positive: number;
       negative: number;
       neutral: number;
     };
-    
+
     topInfluencers: Array<{
       username: string;
       platform: SocialPlatform;
       mentions: number;
       followers: number;
     }>;
-    
+
     trendingTopics: string[];
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -723,7 +719,7 @@ export class SocialMediaIntegrationSystem {
   private widgets: Map<string, SocialMediaWidget> = new Map();
   private influencers: Map<string, InfluencerProfile> = new Map();
   private listeningQueries: Map<string, SocialListeningQuery> = new Map();
-  
+
   private schedulerInterval?: NodeJS.Timeout;
 
   constructor() {
@@ -842,7 +838,7 @@ export class SocialMediaIntegrationSystem {
   }): SocialPost {
     const post: SocialPost = {
       id: `post_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      accounts: params.accounts.map(acc => ({
+      accounts: params.accounts.map((acc) => ({
         platform: acc.platform,
         accountId: acc.accountId,
         status: params.schedule ? 'scheduled' : 'draft',
@@ -907,14 +903,18 @@ export class SocialMediaIntegrationSystem {
 
         accountRef.status = 'published';
         accountRef.postId = `${accountRef.platform}_${Date.now()}`;
-        accountRef.url = this.getPostUrl(accountRef.platform, account.credentials.username, accountRef.postId);
+        accountRef.url = this.getPostUrl(
+          accountRef.platform,
+          account.credentials.username,
+          accountRef.postId
+        );
       } catch (error) {
         accountRef.status = 'failed';
         accountRef.error = error instanceof Error ? error.message : 'Unknown error';
       }
     }
 
-    post.status = post.accounts.some(a => a.status === 'published') ? 'published' : 'failed';
+    post.status = post.accounts.some((a) => a.status === 'published') ? 'published' : 'failed';
     post.timeline.published = new Date();
     post.updatedAt = new Date();
 
@@ -976,7 +976,7 @@ export class SocialMediaIntegrationSystem {
     post.updatedAt = new Date();
 
     // Delete from platforms
-    post.accounts.forEach(acc => {
+    post.accounts.forEach((acc) => {
       if (acc.status === 'published' && acc.postId) {
         // Would call platform API to delete
         acc.status = 'deleted';
@@ -1010,13 +1010,13 @@ export class SocialMediaIntegrationSystem {
 
     // Simulate engagement growth
     const multiplier = iteration * 10;
-    
+
     post.engagement.likes += Math.floor(Math.random() * multiplier);
     post.engagement.comments += Math.floor(Math.random() * (multiplier / 5));
     post.engagement.shares += Math.floor(Math.random() * (multiplier / 10));
     post.engagement.saves += Math.floor(Math.random() * (multiplier / 8));
     post.engagement.clicks += Math.floor(Math.random() * multiplier * 2);
-    
+
     post.engagement.reach += Math.floor(Math.random() * multiplier * 5);
     post.engagement.impressions += Math.floor(Math.random() * multiplier * 8);
 
@@ -1042,7 +1042,7 @@ export class SocialMediaIntegrationSystem {
     await this.delay(500);
 
     return Array.from(this.comments.values())
-      .filter(c => c.postId === postId)
+      .filter((c) => c.postId === postId)
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 
@@ -1149,7 +1149,7 @@ export class SocialMediaIntegrationSystem {
     if (!campaign.content.posts.includes(postId)) {
       campaign.content.posts.push(postId);
       campaign.content.totalPosts++;
-      
+
       if (post.status === 'published') {
         campaign.content.publishedPosts++;
       }
@@ -1193,7 +1193,7 @@ export class SocialMediaIntegrationSystem {
         followers: {
           current: account.metrics.followers,
           change: Math.floor(Math.random() * 200 - 50),
-          changePercent: (Math.random() * 10 - 2),
+          changePercent: Math.random() * 10 - 2,
           growth: this.generateFollowerGrowth(period),
         },
         demographics: {
@@ -1205,9 +1205,9 @@ export class SocialMediaIntegrationSystem {
             '55+': 8,
           },
           genders: {
-            'female': 60,
-            'male': 38,
-            'other': 2,
+            female: 60,
+            male: 38,
+            other: 2,
           },
           locations: [
             { country: 'US', percentage: 45 },
@@ -1217,10 +1217,10 @@ export class SocialMediaIntegrationSystem {
             { country: 'Other', percentage: 22 },
           ],
           languages: {
-            'en': 85,
-            'es': 8,
-            'fr': 4,
-            'other': 3,
+            en: 85,
+            es: 8,
+            fr: 4,
+            other: 3,
           },
         },
         activeHours: this.generateActiveHours(),
@@ -1230,21 +1230,21 @@ export class SocialMediaIntegrationSystem {
           total: account.metrics.posts,
           published: account.metrics.posts,
           byType: {
-            'image': Math.floor(account.metrics.posts * 0.5),
-            'video': Math.floor(account.metrics.posts * 0.3),
-            'text': Math.floor(account.metrics.posts * 0.1),
-            'carousel': Math.floor(account.metrics.posts * 0.1),
-            'story': 0,
-            'reel': 0,
-            'short': 0,
-            'link': 0,
+            image: Math.floor(account.metrics.posts * 0.5),
+            video: Math.floor(account.metrics.posts * 0.3),
+            text: Math.floor(account.metrics.posts * 0.1),
+            carousel: Math.floor(account.metrics.posts * 0.1),
+            story: 0,
+            reel: 0,
+            short: 0,
+            link: 0,
           },
         },
         topPosts: this.getTopPosts(accountId, 5),
         averageEngagementRate: account.metrics.engagementRate,
       },
       engagement: {
-        total: Math.floor(account.metrics.followers * account.metrics.engagementRate / 100),
+        total: Math.floor((account.metrics.followers * account.metrics.engagementRate) / 100),
         likes: account.metrics.averageLikes * account.metrics.posts,
         comments: account.metrics.averageComments * account.metrics.posts,
         shares: account.metrics.averageShares * account.metrics.posts,
@@ -1302,8 +1302,7 @@ export class SocialMediaIntegrationSystem {
     platform: SocialPlatform;
     sharedBy: string;
   }): SocialShare {
-    const existingShare = Array.from(this.shares.values())
-      .find(s => s.url === params.url);
+    const existingShare = Array.from(this.shares.values()).find((s) => s.url === params.url);
 
     if (existingShare) {
       existingShare.shares.push({
@@ -1312,7 +1311,7 @@ export class SocialMediaIntegrationSystem {
         sharedAt: new Date(),
       });
       existingShare.analytics.totalShares++;
-      
+
       if (!existingShare.analytics.byPlatform[params.platform]) {
         existingShare.analytics.byPlatform[params.platform] = { shares: 0, clicks: 0 };
       }
@@ -1331,11 +1330,13 @@ export class SocialMediaIntegrationSystem {
         type: params.type,
       },
       platforms: [params.platform],
-      shares: [{
-        platform: params.platform,
-        sharedBy: params.sharedBy,
-        sharedAt: new Date(),
-      }],
+      shares: [
+        {
+          platform: params.platform,
+          sharedBy: params.sharedBy,
+          sharedAt: new Date(),
+        },
+      ],
       analytics: {
         totalShares: 1,
         clicks: 0,
@@ -1436,7 +1437,8 @@ export class SocialMediaIntegrationSystem {
       },
       metrics: {
         totalFollowers: params.platforms.reduce((sum, p) => sum + p.followers, 0),
-        averageEngagementRate: params.platforms.reduce((sum, p) => sum + p.engagementRate, 0) / params.platforms.length,
+        averageEngagementRate:
+          params.platforms.reduce((sum, p) => sum + p.engagementRate, 0) / params.platforms.length,
         reach: 0,
         impressions: 0,
       },
@@ -1521,17 +1523,19 @@ export class SocialMediaIntegrationSystem {
     query.insights.volume = query.results.length;
     query.insights.reach = query.results.reduce((sum, r) => sum + r.author.followers, 0);
 
-    const sentiments = query.results.map(r => r.sentiment.category);
+    const sentiments = query.results.map((r) => r.sentiment.category);
     query.insights.sentiment = {
-      positive: sentiments.filter(s => s === 'positive').length,
-      negative: sentiments.filter(s => s === 'negative').length,
-      neutral: sentiments.filter(s => s === 'neutral').length,
+      positive: sentiments.filter((s) => s === 'positive').length,
+      negative: sentiments.filter((s) => s === 'negative').length,
+      neutral: sentiments.filter((s) => s === 'neutral').length,
     };
 
     query.updatedAt = new Date();
   }
 
-  private generateMockListeningResults(query: SocialListeningQuery): SocialListeningQuery['results'] {
+  private generateMockListeningResults(
+    query: SocialListeningQuery
+  ): SocialListeningQuery['results'] {
     const count = Math.floor(Math.random() * 5) + 1;
     const results: SocialListeningQuery['results'] = [];
 
@@ -1577,14 +1581,13 @@ export class SocialMediaIntegrationSystem {
 
   private processScheduledPosts(): void {
     const now = new Date();
-    
+
     Array.from(this.posts.values())
-      .filter(post => 
-        post.status === 'scheduled' && 
-        post.schedule?.publishAt && 
-        post.schedule.publishAt <= now
+      .filter(
+        (post) =>
+          post.status === 'scheduled' && post.schedule?.publishAt && post.schedule.publishAt <= now
       )
-      .forEach(post => {
+      .forEach((post) => {
         this.publishPost(post.id);
       });
   }
@@ -1643,7 +1646,10 @@ export class SocialMediaIntegrationSystem {
     return scopes[platform] || [];
   }
 
-  private generateFollowerGrowth(period: { start: Date; end: Date }): SocialAnalytics['audience']['followers']['growth'] {
+  private generateFollowerGrowth(period: {
+    start: Date;
+    end: Date;
+  }): SocialAnalytics['audience']['followers']['growth'] {
     const days = Math.ceil((period.end.getTime() - period.start.getTime()) / (1000 * 60 * 60 * 24));
     const growth: SocialAnalytics['audience']['followers']['growth'] = [];
 
@@ -1683,13 +1689,18 @@ export class SocialMediaIntegrationSystem {
 
   private getTopPosts(accountId: string, limit: number): SocialAnalytics['content']['topPosts'] {
     return Array.from(this.posts.values())
-      .filter(post => post.accounts.some(a => a.accountId === accountId && a.status === 'published'))
-      .sort((a, b) => 
-        (b.engagement.likes + b.engagement.comments + b.engagement.shares) - 
-        (a.engagement.likes + a.engagement.comments + a.engagement.shares)
+      .filter((post) =>
+        post.accounts.some((a) => a.accountId === accountId && a.status === 'published')
+      )
+      .sort(
+        (a, b) =>
+          b.engagement.likes +
+          b.engagement.comments +
+          b.engagement.shares -
+          (a.engagement.likes + a.engagement.comments + a.engagement.shares)
       )
       .slice(0, limit)
-      .map(post => ({
+      .map((post) => ({
         postId: post.id,
         type: post.type,
         engagement: post.engagement.likes + post.engagement.comments + post.engagement.shares,
@@ -1698,7 +1709,10 @@ export class SocialMediaIntegrationSystem {
       }));
   }
 
-  private generateEngagementTrends(period: { start: Date; end: Date }): SocialAnalytics['engagement']['trends'] {
+  private generateEngagementTrends(period: {
+    start: Date;
+    end: Date;
+  }): SocialAnalytics['engagement']['trends'] {
     const days = Math.ceil((period.end.getTime() - period.start.getTime()) / (1000 * 60 * 60 * 24));
     const trends: SocialAnalytics['engagement']['trends'] = [];
 
@@ -1713,7 +1727,10 @@ export class SocialMediaIntegrationSystem {
     return trends;
   }
 
-  private generateReachTrends(period: { start: Date; end: Date }): SocialAnalytics['reach']['trends'] {
+  private generateReachTrends(period: {
+    start: Date;
+    end: Date;
+  }): SocialAnalytics['reach']['trends'] {
     const days = Math.ceil((period.end.getTime() - period.start.getTime()) / (1000 * 60 * 60 * 24));
     const trends: SocialAnalytics['reach']['trends'] = [];
 
@@ -1731,8 +1748,8 @@ export class SocialMediaIntegrationSystem {
 
   private generateTopHashtags(): SocialAnalytics['hashtags']['topHashtags'] {
     const tags = ['handmade', 'artisan', 'crafts', 'supportlocal', 'handcrafted', 'shopsmall'];
-    
-    return tags.map(tag => ({
+
+    return tags.map((tag) => ({
       tag,
       uses: Math.floor(Math.random() * 100),
       reach: Math.floor(Math.random() * 10000),
@@ -1749,7 +1766,7 @@ export class SocialMediaIntegrationSystem {
   }
 
   private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   // ============================================================================
@@ -1757,24 +1774,29 @@ export class SocialMediaIntegrationSystem {
   // ============================================================================
 
   getAccountsByPlatform(platform: SocialPlatform): SocialAccount[] {
-    return Array.from(this.accounts.values())
-      .filter(acc => acc.platform === platform && acc.connected);
+    return Array.from(this.accounts.values()).filter(
+      (acc) => acc.platform === platform && acc.connected
+    );
   }
 
   getScheduledPosts(): SocialPost[] {
     return Array.from(this.posts.values())
-      .filter(post => post.status === 'scheduled')
-      .sort((a, b) => (a.schedule?.publishAt?.getTime() || 0) - (b.schedule?.publishAt?.getTime() || 0));
+      .filter((post) => post.status === 'scheduled')
+      .sort(
+        (a, b) => (a.schedule?.publishAt?.getTime() || 0) - (b.schedule?.publishAt?.getTime() || 0)
+      );
   }
 
   getPostsByCampaign(campaignId: string): SocialPost[] {
-    return Array.from(this.posts.values())
-      .filter(post => post.metadata.campaignId === campaignId);
+    return Array.from(this.posts.values()).filter(
+      (post) => post.metadata.campaignId === campaignId
+    );
   }
 
   getCommentsByStatus(status: SocialComment['moderation']['status']): SocialComment[] {
-    return Array.from(this.comments.values())
-      .filter(comment => comment.moderation.status === status);
+    return Array.from(this.comments.values()).filter(
+      (comment) => comment.moderation.status === status
+    );
   }
 }
 

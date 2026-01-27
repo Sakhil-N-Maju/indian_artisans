@@ -1,6 +1,6 @@
 /**
  * Inventory Management System
- * 
+ *
  * Comprehensive inventory tracking and management:
  * - Real-time stock tracking
  * - Multi-location inventory
@@ -15,12 +15,12 @@
 export interface InventoryItem {
   id: string;
   productId: string;
-  
+
   // Product info
   productName: string;
   sku: string;
   barcode?: string;
-  
+
   // Stock levels
   stock: {
     available: number; // Available for sale
@@ -29,7 +29,7 @@ export interface InventoryItem {
     damaged: number; // Damaged/unusable
     total: number; // Total physical stock
   };
-  
+
   // Locations
   locations: {
     locationId: string;
@@ -39,7 +39,7 @@ export interface InventoryItem {
     bin?: string;
     shelf?: string;
   }[];
-  
+
   // Thresholds
   thresholds: {
     lowStock: number;
@@ -47,7 +47,7 @@ export interface InventoryItem {
     reorderQuantity: number;
     maxStock: number;
   };
-  
+
   // Tracking
   tracking: {
     method: 'none' | 'batch' | 'serial';
@@ -59,7 +59,7 @@ export interface InventoryItem {
     }[];
     serialNumbers?: string[];
   };
-  
+
   // Costing
   costing: {
     method: 'fifo' | 'lifo' | 'average' | 'standard';
@@ -67,12 +67,12 @@ export interface InventoryItem {
     averageCost: number;
     lastPurchasePrice: number;
   };
-  
+
   // Metadata
   artisanId: string;
   category: string;
   isActive: boolean;
-  
+
   lastStockUpdate: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -82,35 +82,35 @@ export interface StockMovement {
   id: string;
   inventoryItemId: string;
   productId: string;
-  
+
   // Movement type
   type: 'purchase' | 'sale' | 'transfer' | 'adjustment' | 'return' | 'damage' | 'production';
-  
+
   // Quantity
   quantity: number;
   direction: 'in' | 'out';
-  
+
   // Location
   fromLocation?: string;
   toLocation?: string;
-  
+
   // Reference
   referenceType?: 'order' | 'purchase_order' | 'transfer_order' | 'adjustment';
   referenceId?: string;
-  
+
   // Batch/Serial
   batchNumber?: string;
   serialNumber?: string;
-  
+
   // Cost
   unitCost?: number;
   totalCost?: number;
-  
+
   // Metadata
   performedBy: string;
   reason?: string;
   notes?: string;
-  
+
   timestamp: Date;
 }
 
@@ -119,35 +119,35 @@ export interface StockAlert {
   inventoryItemId: string;
   productId: string;
   productName: string;
-  
+
   // Alert type
   type: 'low_stock' | 'out_of_stock' | 'overstock' | 'expiring_soon' | 'expired';
   severity: 'info' | 'warning' | 'critical';
-  
+
   // Details
   currentStock: number;
   threshold?: number;
-  
+
   // Expiry (if applicable)
   expiryDate?: Date;
   daysUntilExpiry?: number;
-  
+
   // Status
   status: 'active' | 'acknowledged' | 'resolved';
   acknowledgedBy?: string;
   acknowledgedAt?: Date;
   resolvedAt?: Date;
-  
+
   createdAt: Date;
 }
 
 export interface StockTransfer {
   id: string;
-  
+
   // Locations
   fromLocation: string;
   toLocation: string;
-  
+
   // Items
   items: {
     inventoryItemId: string;
@@ -157,10 +157,10 @@ export interface StockTransfer {
     batchNumber?: string;
     serialNumbers?: string[];
   }[];
-  
+
   // Status
   status: 'pending' | 'in_transit' | 'received' | 'cancelled';
-  
+
   // Tracking
   tracking: {
     initiatedBy: string;
@@ -172,10 +172,10 @@ export interface StockTransfer {
     cancelledBy?: string;
     cancelledAt?: Date;
   };
-  
+
   // Notes
   notes?: string;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -184,11 +184,11 @@ export interface InventoryForecast {
   inventoryItemId: string;
   productId: string;
   productName: string;
-  
+
   // Current state
   currentStock: number;
   averageDailySales: number;
-  
+
   // Forecast
   forecast: {
     period: 'week' | 'month' | 'quarter';
@@ -196,7 +196,7 @@ export interface InventoryForecast {
     expectedStockout: Date | null;
     daysOfStockRemaining: number;
   };
-  
+
   // Recommendations
   recommendations: {
     shouldReorder: boolean;
@@ -204,10 +204,10 @@ export interface InventoryForecast {
     suggestedOrderDate: Date;
     reason: string;
   };
-  
+
   // Confidence
   confidence: number; // 0-1
-  
+
   generatedAt: Date;
 }
 
@@ -216,12 +216,12 @@ export interface InventoryValuation {
     start: Date;
     end: Date;
   };
-  
+
   // Total valuation
   totalValue: number;
   totalItems: number;
   totalQuantity: number;
-  
+
   // By category
   byCategory: {
     category: string;
@@ -229,7 +229,7 @@ export interface InventoryValuation {
     quantity: number;
     percentage: number;
   }[];
-  
+
   // By location
   byLocation: {
     locationId: string;
@@ -237,7 +237,7 @@ export interface InventoryValuation {
     value: number;
     quantity: number;
   }[];
-  
+
   // By artisan
   byArtisan: {
     artisanId: string;
@@ -245,7 +245,7 @@ export interface InventoryValuation {
     value: number;
     quantity: number;
   }[];
-  
+
   // Aging analysis
   aging: {
     range: string; // e.g., "0-30 days"
@@ -253,7 +253,7 @@ export interface InventoryValuation {
     quantity: number;
     percentage: number;
   }[];
-  
+
   // Dead stock
   deadStock: {
     itemCount: number;
@@ -273,7 +273,7 @@ export interface InventoryAnalytics {
     start: Date;
     end: Date;
   };
-  
+
   overview: {
     totalValue: number;
     totalItems: number;
@@ -281,7 +281,7 @@ export interface InventoryAnalytics {
     averageDaysToSell: number;
     stockoutRate: number; // percentage
   };
-  
+
   movements: {
     totalIn: number;
     totalOut: number;
@@ -292,7 +292,7 @@ export interface InventoryAnalytics {
       value: number;
     }[];
   };
-  
+
   alerts: {
     totalAlerts: number;
     activeAlerts: number;
@@ -302,7 +302,7 @@ export interface InventoryAnalytics {
     }[];
     averageResolutionTime: number; // hours
   };
-  
+
   topMovers: {
     fastMoving: {
       inventoryItemId: string;
@@ -351,7 +351,7 @@ export class InventoryManagementSystem {
     thresholds?: Partial<InventoryItem['thresholds']>;
   }): Promise<InventoryItem> {
     const initialQuantity = params.initialStock || 0;
-    
+
     const item: InventoryItem = {
       id: `inv-${Date.now()}`,
       productId: params.productId,
@@ -365,11 +365,15 @@ export class InventoryManagementSystem {
         damaged: 0,
         total: initialQuantity,
       },
-      locations: params.locationId ? [{
-        locationId: params.locationId,
-        locationName: params.locationName || 'Main Warehouse',
-        quantity: initialQuantity,
-      }] : [],
+      locations: params.locationId
+        ? [
+            {
+              locationId: params.locationId,
+              locationName: params.locationName || 'Main Warehouse',
+              quantity: initialQuantity,
+            },
+          ]
+        : [],
       thresholds: {
         lowStock: params.thresholds?.lowStock || 10,
         reorderPoint: params.thresholds?.reorderPoint || 15,
@@ -424,9 +428,9 @@ export class InventoryManagementSystem {
    * Get inventory by product
    */
   async getInventoryByProduct(productId: string): Promise<InventoryItem | null> {
-    return Array.from(this.inventoryItems.values()).find(
-      item => item.productId === productId
-    ) || null;
+    return (
+      Array.from(this.inventoryItems.values()).find((item) => item.productId === productId) || null
+    );
   }
 
   /**
@@ -453,10 +457,10 @@ export class InventoryManagementSystem {
     if (params.direction === 'in') {
       item.stock.available += params.quantity;
       item.stock.total += params.quantity;
-      
+
       // Update location stock
       if (params.locationId) {
-        const location = item.locations.find(l => l.locationId === params.locationId);
+        const location = item.locations.find((l) => l.locationId === params.locationId);
         if (location) {
           location.quantity += params.quantity;
         } else {
@@ -470,10 +474,10 @@ export class InventoryManagementSystem {
     } else {
       item.stock.available -= params.quantity;
       item.stock.total -= params.quantity;
-      
+
       // Update location stock
       if (params.locationId) {
-        const location = item.locations.find(l => l.locationId === params.locationId);
+        const location = item.locations.find((l) => l.locationId === params.locationId);
         if (location) {
           location.quantity -= params.quantity;
         }
@@ -675,7 +679,7 @@ export class InventoryManagementSystem {
     }
 
     // Save alerts
-    alerts.forEach(alert => this.alerts.set(alert.id, alert));
+    alerts.forEach((alert) => this.alerts.set(alert.id, alert));
   }
 
   /**
@@ -736,12 +740,12 @@ export class InventoryManagementSystem {
         item.stock.available += transferItem.quantity;
 
         // Update location stocks
-        const fromLoc = item.locations.find(l => l.locationId === transfer.fromLocation);
+        const fromLoc = item.locations.find((l) => l.locationId === transfer.fromLocation);
         if (fromLoc) {
           fromLoc.quantity -= transferItem.quantity;
         }
 
-        let toLoc = item.locations.find(l => l.locationId === transfer.toLocation);
+        let toLoc = item.locations.find((l) => l.locationId === transfer.toLocation);
         if (toLoc) {
           toLoc.quantity += transferItem.quantity;
         } else {
@@ -766,30 +770,30 @@ export class InventoryManagementSystem {
 
     // Calculate average daily sales from movements
     const salesMovements = Array.from(this.stockMovements.values()).filter(
-      m => m.inventoryItemId === inventoryItemId && 
-      m.type === 'sale' && 
-      m.direction === 'out'
+      (m) => m.inventoryItemId === inventoryItemId && m.type === 'sale' && m.direction === 'out'
     );
 
     const last30Days = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const recentSales = salesMovements.filter(m => m.timestamp >= last30Days);
+    const recentSales = salesMovements.filter((m) => m.timestamp >= last30Days);
     const totalSold = recentSales.reduce((sum, m) => sum + m.quantity, 0);
     const averageDailySales = totalSold / 30;
 
     // Forecast for next month
     const expectedMonthlySales = Math.ceil(averageDailySales * 30);
     const daysOfStock = averageDailySales > 0 ? item.stock.available / averageDailySales : 999;
-    const expectedStockout = averageDailySales > 0 && daysOfStock < 60
-      ? new Date(Date.now() + daysOfStock * 24 * 60 * 60 * 1000)
-      : null;
+    const expectedStockout =
+      averageDailySales > 0 && daysOfStock < 60
+        ? new Date(Date.now() + daysOfStock * 24 * 60 * 60 * 1000)
+        : null;
 
     // Generate recommendation
     const shouldReorder = item.stock.available <= item.thresholds.reorderPoint;
     const suggestedQuantity = shouldReorder ? item.thresholds.reorderQuantity : 0;
     const leadTimeDays = 7; // Assume 7 days lead time
-    const suggestedOrderDate = expectedStockout && daysOfStock < 14
-      ? new Date(Date.now() + (daysOfStock - leadTimeDays) * 24 * 60 * 60 * 1000)
-      : new Date();
+    const suggestedOrderDate =
+      expectedStockout && daysOfStock < 14
+        ? new Date(Date.now() + (daysOfStock - leadTimeDays) * 24 * 60 * 60 * 1000)
+        : new Date();
 
     const forecast: InventoryForecast = {
       inventoryItemId: item.id,
@@ -807,7 +811,7 @@ export class InventoryManagementSystem {
         shouldReorder,
         suggestedOrderQuantity: suggestedQuantity,
         suggestedOrderDate,
-        reason: shouldReorder 
+        reason: shouldReorder
           ? `Stock below reorder point (${item.thresholds.reorderPoint})`
           : 'Stock levels healthy',
       },
@@ -824,7 +828,7 @@ export class InventoryManagementSystem {
    */
   async getInventoryValuation(): Promise<InventoryValuation> {
     const items = Array.from(this.inventoryItems.values());
-    
+
     let totalValue = 0;
     let totalQuantity = 0;
 
@@ -833,7 +837,7 @@ export class InventoryManagementSystem {
     const locationMap = new Map<string, { name: string; value: number; quantity: number }>();
     const artisanMap = new Map<string, { name: string; value: number; quantity: number }>();
 
-    items.forEach(item => {
+    items.forEach((item) => {
       const itemValue = item.stock.total * item.costing.averageCost;
       totalValue += itemValue;
       totalQuantity += item.stock.total;
@@ -845,15 +849,23 @@ export class InventoryManagementSystem {
       categoryMap.set(item.category, catData);
 
       // By location
-      item.locations.forEach(loc => {
-        const locData = locationMap.get(loc.locationId) || { name: loc.locationName, value: 0, quantity: 0 };
+      item.locations.forEach((loc) => {
+        const locData = locationMap.get(loc.locationId) || {
+          name: loc.locationName,
+          value: 0,
+          quantity: 0,
+        };
         locData.value += loc.quantity * item.costing.averageCost;
         locData.quantity += loc.quantity;
         locationMap.set(loc.locationId, locData);
       });
 
       // By artisan
-      const artData = artisanMap.get(item.artisanId) || { name: 'Artisan ' + item.artisanId, value: 0, quantity: 0 };
+      const artData = artisanMap.get(item.artisanId) || {
+        name: 'Artisan ' + item.artisanId,
+        value: 0,
+        quantity: 0,
+      };
       artData.value += itemValue;
       artData.quantity += item.stock.total;
       artisanMap.set(item.artisanId, artData);
@@ -886,15 +898,35 @@ export class InventoryManagementSystem {
         quantity: data.quantity,
       })),
       aging: [
-        { range: '0-30 days', value: totalValue * 0.4, quantity: Math.floor(totalQuantity * 0.4), percentage: 40 },
-        { range: '31-60 days', value: totalValue * 0.3, quantity: Math.floor(totalQuantity * 0.3), percentage: 30 },
-        { range: '61-90 days', value: totalValue * 0.2, quantity: Math.floor(totalQuantity * 0.2), percentage: 20 },
-        { range: '90+ days', value: totalValue * 0.1, quantity: Math.floor(totalQuantity * 0.1), percentage: 10 },
+        {
+          range: '0-30 days',
+          value: totalValue * 0.4,
+          quantity: Math.floor(totalQuantity * 0.4),
+          percentage: 40,
+        },
+        {
+          range: '31-60 days',
+          value: totalValue * 0.3,
+          quantity: Math.floor(totalQuantity * 0.3),
+          percentage: 30,
+        },
+        {
+          range: '61-90 days',
+          value: totalValue * 0.2,
+          quantity: Math.floor(totalQuantity * 0.2),
+          percentage: 20,
+        },
+        {
+          range: '90+ days',
+          value: totalValue * 0.1,
+          quantity: Math.floor(totalQuantity * 0.1),
+          percentage: 10,
+        },
       ],
       deadStock: {
         itemCount: Math.floor(items.length * 0.05),
         totalValue: totalValue * 0.03,
-        items: items.slice(0, 3).map(item => ({
+        items: items.slice(0, 3).map((item) => ({
           inventoryItemId: item.id,
           productName: item.productName,
           quantity: item.stock.total,
@@ -909,12 +941,12 @@ export class InventoryManagementSystem {
    * Get active alerts
    */
   async getActiveAlerts(severity?: StockAlert['severity']): Promise<StockAlert[]> {
-    let alerts = Array.from(this.alerts.values()).filter(a => a.status === 'active');
-    
+    let alerts = Array.from(this.alerts.values()).filter((a) => a.status === 'active');
+
     if (severity) {
-      alerts = alerts.filter(a => a.severity === severity);
+      alerts = alerts.filter((a) => a.severity === severity);
     }
-    
+
     return alerts.sort((a, b) => {
       const severityOrder = { critical: 0, warning: 1, info: 2 };
       return severityOrder[a.severity] - severityOrder[b.severity];
@@ -927,19 +959,19 @@ export class InventoryManagementSystem {
   async getAnalytics(period: { start: Date; end: Date }): Promise<InventoryAnalytics> {
     const items = Array.from(this.inventoryItems.values());
     const movements = Array.from(this.stockMovements.values()).filter(
-      m => m.timestamp >= period.start && m.timestamp <= period.end
+      (m) => m.timestamp >= period.start && m.timestamp <= period.end
     );
 
     const valuation = await this.getInventoryValuation();
 
     // Calculate movements
-    const movementsIn = movements.filter(m => m.direction === 'in');
-    const movementsOut = movements.filter(m => m.direction === 'out');
+    const movementsIn = movements.filter((m) => m.direction === 'in');
+    const movementsOut = movements.filter((m) => m.direction === 'out');
     const totalIn = movementsIn.reduce((sum, m) => sum + m.quantity, 0);
     const totalOut = movementsOut.reduce((sum, m) => sum + m.quantity, 0);
 
     const movementsByType = new Map<StockMovement['type'], { quantity: number; value: number }>();
-    movements.forEach(m => {
+    movements.forEach((m) => {
       const data = movementsByType.get(m.type) || { quantity: 0, value: 0 };
       data.quantity += m.quantity;
       data.value += m.totalCost || 0;
@@ -973,21 +1005,27 @@ export class InventoryManagementSystem {
       },
       alerts: {
         totalAlerts: this.alerts.size,
-        activeAlerts: Array.from(this.alerts.values()).filter(a => a.status === 'active').length,
+        activeAlerts: Array.from(this.alerts.values()).filter((a) => a.status === 'active').length,
         byType: [
-          { type: 'low_stock', count: Array.from(this.alerts.values()).filter(a => a.type === 'low_stock').length },
-          { type: 'out_of_stock', count: Array.from(this.alerts.values()).filter(a => a.type === 'out_of_stock').length },
+          {
+            type: 'low_stock',
+            count: Array.from(this.alerts.values()).filter((a) => a.type === 'low_stock').length,
+          },
+          {
+            type: 'out_of_stock',
+            count: Array.from(this.alerts.values()).filter((a) => a.type === 'out_of_stock').length,
+          },
         ],
         averageResolutionTime: 24, // Mock
       },
       topMovers: {
-        fastMoving: items.slice(0, 5).map(item => ({
+        fastMoving: items.slice(0, 5).map((item) => ({
           inventoryItemId: item.id,
           productName: item.productName,
           soldQuantity: 150,
           turnoverRate: 12.5,
         })),
-        slowMoving: items.slice(-5).map(item => ({
+        slowMoving: items.slice(-5).map((item) => ({
           inventoryItemId: item.id,
           productName: item.productName,
           soldQuantity: 5,

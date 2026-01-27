@@ -1,6 +1,6 @@
 /**
  * Auto-Scaling Service
- * 
+ *
  * Automatic resource scaling based on demand
  */
 
@@ -80,7 +80,10 @@ export class AutoScalingService {
     return policy;
   }
 
-  async recordMetrics(instanceId: string, metrics: Omit<ResourceMetrics, 'instanceId' | 'timestamp'>): Promise<void> {
+  async recordMetrics(
+    instanceId: string,
+    metrics: Omit<ResourceMetrics, 'instanceId' | 'timestamp'>
+  ): Promise<void> {
     const metric: ResourceMetrics = {
       instanceId,
       ...metrics,
@@ -89,7 +92,7 @@ export class AutoScalingService {
 
     const instanceMetrics = this.metrics.get(instanceId) || [];
     instanceMetrics.push(metric);
-    
+
     // Keep only last 100 metrics
     if (instanceMetrics.length > 100) {
       instanceMetrics.shift();
@@ -117,13 +120,14 @@ export class AutoScalingService {
     const allMetrics = Array.from(this.metrics.values()).flat();
     if (allMetrics.length === 0) return 'none';
 
-    const recentMetrics = allMetrics.filter(m => 
-      m.timestamp > new Date(Date.now() - 60000) // Last minute
+    const recentMetrics = allMetrics.filter(
+      (m) => m.timestamp > new Date(Date.now() - 60000) // Last minute
     );
 
     if (recentMetrics.length === 0) return 'none';
 
-    const avgValue = recentMetrics.reduce((sum, m) => sum + m[policy.metric], 0) / recentMetrics.length;
+    const avgValue =
+      recentMetrics.reduce((sum, m) => sum + m[policy.metric], 0) / recentMetrics.length;
 
     if (avgValue > policy.threshold) return 'up';
     if (avgValue < policy.threshold * 0.5) return 'down';
@@ -187,10 +191,10 @@ export class AutoScalingService {
 
     return {
       totalPolicies: policies.length,
-      activePolicies: policies.filter(p => p.enabled).length,
+      activePolicies: policies.filter((p) => p.enabled).length,
       totalScalingEvents: events.length,
-      scaleUpEvents: events.filter(e => e.direction === 'up').length,
-      scaleDownEvents: events.filter(e => e.direction === 'down').length,
+      scaleUpEvents: events.filter((e) => e.direction === 'up').length,
+      scaleDownEvents: events.filter((e) => e.direction === 'down').length,
       currentInstances: Object.fromEntries(this.currentInstances.entries()),
     };
   }

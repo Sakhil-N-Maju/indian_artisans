@@ -1,6 +1,6 @@
 /**
  * Returns & Refunds System
- * 
+ *
  * Comprehensive returns and refunds management:
  * - Return request processing
  * - Return merchandise authorization (RMA)
@@ -14,12 +14,12 @@
 export interface ReturnRequest {
   id: string;
   rmaNumber: string; // Return Merchandise Authorization
-  
+
   // Order details
   orderId: string;
   customerId: string;
   customerName: string;
-  
+
   // Items to return
   items: {
     id: string;
@@ -28,21 +28,29 @@ export interface ReturnRequest {
     sku: string;
     quantity: number;
     price: number;
-    reason: 'defective' | 'damaged' | 'wrong_item' | 'not_as_described' | 'changed_mind' | 'size_issue' | 'quality_issue' | 'other';
+    reason:
+      | 'defective'
+      | 'damaged'
+      | 'wrong_item'
+      | 'not_as_described'
+      | 'changed_mind'
+      | 'size_issue'
+      | 'quality_issue'
+      | 'other';
     reasonDescription?: string;
     images?: string[];
   }[];
-  
+
   // Return type
   returnType: 'refund' | 'exchange' | 'store_credit';
-  
+
   // Exchange details (if applicable)
   exchange?: {
     newProductId: string;
     newProductName: string;
     priceDifference: number;
   };
-  
+
   // Shipping
   returnShipping: {
     method: 'customer_ships' | 'pickup_arranged' | 'prepaid_label';
@@ -51,10 +59,18 @@ export interface ReturnRequest {
     shippingCost: number;
     refundShipping: boolean; // Should shipping cost be refunded?
   };
-  
+
   // Status
-  status: 'pending_approval' | 'approved' | 'rejected' | 'shipping' | 'received' | 'inspecting' | 'completed' | 'cancelled';
-  
+  status:
+    | 'pending_approval'
+    | 'approved'
+    | 'rejected'
+    | 'shipping'
+    | 'received'
+    | 'inspecting'
+    | 'completed'
+    | 'cancelled';
+
   // Workflow
   workflow: {
     requestedAt: Date;
@@ -69,7 +85,7 @@ export interface ReturnRequest {
     inspectedAt?: Date;
     completedAt?: Date;
   };
-  
+
   // Policy compliance
   policy: {
     withinReturnWindow: boolean;
@@ -77,15 +93,15 @@ export interface ReturnRequest {
     restockingFeeApplicable: boolean;
     restockingFeePercentage: number;
   };
-  
+
   // Customer contact
   customerEmail: string;
   customerPhone?: string;
-  
+
   // Notes
   notes?: string;
   internalNotes?: string;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -94,11 +110,11 @@ export interface ReturnInspection {
   id: string;
   returnRequestId: string;
   rmaNumber: string;
-  
+
   // Inspector
   inspectedBy: string;
   inspectionDate: Date;
-  
+
   // Items inspected
   items: {
     productId: string;
@@ -110,7 +126,7 @@ export interface ReturnInspection {
     restockLocation?: string;
     images?: string[];
   }[];
-  
+
   // Overall assessment
   assessment: {
     allItemsReceived: boolean;
@@ -120,7 +136,7 @@ export interface ReturnInspection {
     requiresManualReview: boolean;
     reviewReason?: string;
   };
-  
+
   // Actions
   actions: {
     refundAmount: number;
@@ -130,11 +146,11 @@ export interface ReturnInspection {
     restockQuantity: number;
     disposeQuantity: number;
   };
-  
+
   // Documentation
   photos?: string[];
   notes?: string;
-  
+
   createdAt: Date;
 }
 
@@ -143,7 +159,7 @@ export interface Refund {
   returnRequestId: string;
   orderId: string;
   customerId: string;
-  
+
   // Refund details
   refund: {
     subtotal: number;
@@ -153,17 +169,17 @@ export interface Refund {
     totalAmount: number;
     currency: string;
   };
-  
+
   // Payment method
   paymentMethod: {
     type: 'original' | 'store_credit' | 'bank_transfer' | 'check';
     originalPaymentMethod?: string;
     accountDetails?: string;
   };
-  
+
   // Status
   status: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
-  
+
   // Processing
   processing: {
     initiatedBy: string;
@@ -173,11 +189,11 @@ export interface Refund {
     failureReason?: string;
     transactionId?: string;
   };
-  
+
   // Notifications
   customerNotified: boolean;
   notificationSentAt?: Date;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -187,7 +203,7 @@ export interface Exchange {
   returnRequestId: string;
   originalOrderId: string;
   customerId: string;
-  
+
   // Original items
   returnedItems: {
     productId: string;
@@ -195,7 +211,7 @@ export interface Exchange {
     quantity: number;
     price: number;
   }[];
-  
+
   // New items
   exchangeItems: {
     productId: string;
@@ -203,18 +219,18 @@ export interface Exchange {
     quantity: number;
     price: number;
   }[];
-  
+
   // Price difference
   priceDifference: number;
   paymentRequired: boolean;
   refundDue: boolean;
-  
+
   // New order
   newOrderId?: string;
-  
+
   // Status
   status: 'pending' | 'payment_required' | 'processing' | 'shipped' | 'completed' | 'cancelled';
-  
+
   // Workflow
   workflow: {
     createdAt: Date;
@@ -223,7 +239,7 @@ export interface Exchange {
     shippedAt?: Date;
     completedAt?: Date;
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -231,10 +247,10 @@ export interface Exchange {
 export interface ReturnPolicy {
   id: string;
   name: string;
-  
+
   // Timeframe
   returnWindow: number; // days from delivery
-  
+
   // Eligible conditions
   eligibleConditions: {
     allowDefective: boolean;
@@ -244,7 +260,7 @@ export interface ReturnPolicy {
     requiresUnusedCondition: boolean;
     requiresTags: boolean;
   };
-  
+
   // Costs
   costs: {
     restockingFeePercentage: number;
@@ -252,14 +268,14 @@ export interface ReturnPolicy {
     providePrepaidLabel: boolean;
     shippingFeeRefundable: boolean;
   };
-  
+
   // Categories
   applicableCategories?: string[];
   excludedCategories?: string[];
-  
+
   // Special items
   nonReturnable?: string[]; // product IDs or categories
-  
+
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -270,7 +286,7 @@ export interface ReturnAnalytics {
     start: Date;
     end: Date;
   };
-  
+
   overview: {
     totalReturns: number;
     totalReturnValue: number;
@@ -278,14 +294,14 @@ export interface ReturnAnalytics {
     averageReturnValue: number;
     totalRefunded: number;
   };
-  
+
   byReason: {
     reason: ReturnRequest['items'][0]['reason'];
     count: number;
     percentage: number;
     value: number;
   }[];
-  
+
   byProduct: {
     productId: string;
     productName: string;
@@ -293,27 +309,27 @@ export interface ReturnAnalytics {
     returnRate: number; // percentage
     primaryReason: string;
   }[];
-  
+
   byStatus: {
     status: ReturnRequest['status'];
     count: number;
     percentage: number;
   }[];
-  
+
   processing: {
     averageApprovalTime: number; // hours
     averageInspectionTime: number; // hours
     averageRefundTime: number; // hours
     averageTotalProcessingTime: number; // hours
   };
-  
+
   financial: {
     totalRefunds: number;
     totalRestockingFees: number;
     totalShippingCosts: number;
     netReturnCost: number;
   };
-  
+
   restocking: {
     itemsRestocked: number;
     itemsDisposed: number;
@@ -437,7 +453,7 @@ export class ReturnsRefundsSystem {
    */
   private isEligibleForReturn(request: ReturnRequest, policy: ReturnPolicy): boolean {
     // Check if all reasons are allowed
-    return request.items.every(item => {
+    return request.items.every((item) => {
       if (item.reason === 'defective' && policy.eligibleConditions.allowDefective) return true;
       if (item.reason === 'wrong_item' && policy.eligibleConditions.allowWrongItem) return true;
       if (item.reason === 'changed_mind' && policy.eligibleConditions.allowChangedMind) return true;
@@ -487,11 +503,11 @@ export class ReturnsRefundsSystem {
 
     request.status = 'shipping';
     request.workflow.shippedAt = new Date();
-    
+
     if (trackingNumber) {
       request.returnShipping.trackingNumber = trackingNumber;
     }
-    
+
     request.updatedAt = new Date();
   }
 
@@ -526,24 +542,26 @@ export class ReturnsRefundsSystem {
     }
 
     // Calculate refund amount
-    const subtotal = request.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const subtotal = request.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const restockingFee = request.policy.restockingFeeApplicable
       ? subtotal * (request.policy.restockingFeePercentage / 100)
       : 0;
-    const shippingRefund = request.returnShipping.refundShipping ? request.returnShipping.shippingCost : 0;
+    const shippingRefund = request.returnShipping.refundShipping
+      ? request.returnShipping.shippingCost
+      : 0;
     const totalRefund = subtotal - restockingFee + shippingRefund;
 
     // Count restock vs dispose
     const restockQuantity = params.items
-      .filter(i => i.canRestock)
+      .filter((i) => i.canRestock)
       .reduce((sum, i) => sum + i.quantityReceived, 0);
     const disposeQuantity = params.items
-      .filter(i => !i.canRestock)
+      .filter((i) => !i.canRestock)
       .reduce((sum, i) => sum + i.quantityReceived, 0);
 
     // Assessment
-    const allItemsReceived = params.items.every(i => i.quantityReceived > 0);
-    const conditionAsExpected = params.items.every(i => 
+    const allItemsReceived = params.items.every((i) => i.quantityReceived > 0);
+    const conditionAsExpected = params.items.every((i) =>
       ['new', 'like_new', 'good'].includes(i.condition)
     );
     const approvedForRefund = allItemsReceived && conditionAsExpected;
@@ -640,7 +658,7 @@ export class ReturnsRefundsSystem {
       refund.processing.transactionId = `TXN-${Date.now()}`;
       refund.customerNotified = true;
       refund.notificationSentAt = new Date();
-      
+
       request.status = 'completed';
       request.workflow.completedAt = new Date();
     }, 100);
@@ -663,18 +681,20 @@ export class ReturnsRefundsSystem {
       returnRequestId,
       originalOrderId: request.orderId,
       customerId: request.customerId,
-      returnedItems: request.items.map(item => ({
+      returnedItems: request.items.map((item) => ({
         productId: item.productId,
         productName: item.productName,
         quantity: item.quantity,
         price: item.price,
       })),
-      exchangeItems: [{
-        productId: request.exchange.newProductId,
-        productName: request.exchange.newProductName,
-        quantity: 1,
-        price: request.items[0].price + request.exchange.priceDifference,
-      }],
+      exchangeItems: [
+        {
+          productId: request.exchange.newProductId,
+          productName: request.exchange.newProductName,
+          quantity: 1,
+          price: request.items[0].price + request.exchange.priceDifference,
+        },
+      ],
       priceDifference: request.exchange.priceDifference,
       paymentRequired: request.exchange.priceDifference > 0,
       refundDue: request.exchange.priceDifference < 0,
@@ -701,25 +721,26 @@ export class ReturnsRefundsSystem {
    */
   async getAnalytics(period: { start: Date; end: Date }): Promise<ReturnAnalytics> {
     const returns = Array.from(this.returnRequests.values()).filter(
-      r => r.createdAt >= period.start && r.createdAt <= period.end
+      (r) => r.createdAt >= period.start && r.createdAt <= period.end
     );
 
-    const totalReturnValue = returns.reduce((sum, r) => 
-      sum + r.items.reduce((s, i) => s + (i.price * i.quantity), 0), 0
+    const totalReturnValue = returns.reduce(
+      (sum, r) => sum + r.items.reduce((s, i) => s + i.price * i.quantity, 0),
+      0
     );
 
     const refunds = Array.from(this.refunds.values()).filter(
-      r => r.createdAt >= period.start && r.createdAt <= period.end
+      (r) => r.createdAt >= period.start && r.createdAt <= period.end
     );
 
     const totalRefunded = refunds
-      .filter(r => r.status === 'completed')
+      .filter((r) => r.status === 'completed')
       .reduce((sum, r) => sum + r.refund.totalAmount, 0);
 
     // Return reasons
     const reasonCounts = new Map<string, { count: number; value: number }>();
-    returns.forEach(r => {
-      r.items.forEach(item => {
+    returns.forEach((r) => {
+      r.items.forEach((item) => {
         const data = reasonCounts.get(item.reason) || { count: 0, value: 0 };
         data.count++;
         data.value += item.price * item.quantity;
@@ -736,7 +757,7 @@ export class ReturnsRefundsSystem {
 
     // Status breakdown
     const statusCounts = new Map<ReturnRequest['status'], number>();
-    returns.forEach(r => {
+    returns.forEach((r) => {
       statusCounts.set(r.status, (statusCounts.get(r.status) || 0) + 1);
     });
 
@@ -748,13 +769,18 @@ export class ReturnsRefundsSystem {
 
     // Processing times
     const inspections = Array.from(this.inspections.values()).filter(
-      i => i.createdAt >= period.start && i.createdAt <= period.end
+      (i) => i.createdAt >= period.start && i.createdAt <= period.end
     );
 
-    const restockingRate = inspections.length > 0
-      ? (inspections.reduce((sum, i) => sum + i.actions.restockQuantity, 0) /
-         (inspections.reduce((sum, i) => sum + i.actions.restockQuantity + i.actions.disposeQuantity, 0))) * 100
-      : 0;
+    const restockingRate =
+      inspections.length > 0
+        ? (inspections.reduce((sum, i) => sum + i.actions.restockQuantity, 0) /
+            inspections.reduce(
+              (sum, i) => sum + i.actions.restockQuantity + i.actions.disposeQuantity,
+              0
+            )) *
+          100
+        : 0;
 
     return {
       period,
@@ -762,13 +788,26 @@ export class ReturnsRefundsSystem {
         totalReturns: returns.length,
         totalReturnValue: Number(totalReturnValue.toFixed(2)),
         returnRate: 3.5, // Mock - would calculate against total orders
-        averageReturnValue: returns.length > 0 ? Number((totalReturnValue / returns.length).toFixed(2)) : 0,
+        averageReturnValue:
+          returns.length > 0 ? Number((totalReturnValue / returns.length).toFixed(2)) : 0,
         totalRefunded: Number(totalRefunded.toFixed(2)),
       },
       byReason,
       byProduct: [
-        { productId: 'prod-1', productName: 'Product 1', returnCount: 5, returnRate: 2.5, primaryReason: 'size_issue' },
-        { productId: 'prod-2', productName: 'Product 2', returnCount: 3, returnRate: 1.8, primaryReason: 'quality_issue' },
+        {
+          productId: 'prod-1',
+          productName: 'Product 1',
+          returnCount: 5,
+          returnRate: 2.5,
+          primaryReason: 'size_issue',
+        },
+        {
+          productId: 'prod-2',
+          productName: 'Product 2',
+          returnCount: 3,
+          returnRate: 1.8,
+          primaryReason: 'quality_issue',
+        },
       ],
       byStatus,
       processing: {
@@ -802,7 +841,7 @@ export class ReturnsRefundsSystem {
    * Get returns by customer
    */
   async getReturnsByCustomer(customerId: string): Promise<ReturnRequest[]> {
-    return Array.from(this.returnRequests.values()).filter(r => r.customerId === customerId);
+    return Array.from(this.returnRequests.values()).filter((r) => r.customerId === customerId);
   }
 }
 

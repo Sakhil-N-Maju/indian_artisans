@@ -49,9 +49,9 @@ Unlike the basic setup suggested, you already have:
    - Click "Set Up" on WhatsApp
 
 3. **Get Your Credentials**
-   
+
    You'll see these values in **WhatsApp → API Setup**:
-   
+
    ```
    📱 From Number (test): +14155238886 (Meta's test number)
    📱 To Number: Your phone number (click "Manage phone number list")
@@ -107,11 +107,13 @@ WHATSAPP_WEBHOOK_VERIFY_TOKEN="mySecretToken123"  # Any random string
 ```
 
 **Generate a secure verify token:**
+
 ```bash
 node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
 ```
 
 **Restart your dev server** after updating `.env`:
+
 ```bash
 # Stop the server (Ctrl+C)
 npm run dev
@@ -128,15 +130,17 @@ WhatsApp needs a public HTTPS URL to send webhooks. Use ngrok:
    - Or: `npm install -g ngrok`
 
 2. **Start ngrok**
+
    ```bash
    ngrok http 3000
    ```
 
 3. **Copy the URL**
+
    ```
    Forwarding: https://abc123.ngrok.io -> http://localhost:3000
    ```
-   
+
    Copy the `https://abc123.ngrok.io` URL
 
 ---
@@ -181,7 +185,7 @@ async function test() {
     'Hello from Indian Artisans Marketplace! 🎨',
     'test-user-id'
   );
-  
+
   console.log('Result:', result);
 }
 
@@ -189,6 +193,7 @@ test();
 ```
 
 Run it:
+
 ```bash
 npx ts-node test-whatsapp.ts
 ```
@@ -220,11 +225,7 @@ const user = await prisma.user.findUnique({
 
 if (user?.phone && user.whatsappOptIn) {
   const { whatsappService } = await import('@/lib/services/whatsapp');
-  await whatsappService.sendOrderConfirmation(
-    user.phone,
-    orderId,
-    user.id
-  );
+  await whatsappService.sendOrderConfirmation(user.phone, orderId, user.id);
 }
 ```
 
@@ -234,34 +235,16 @@ if (user?.phone && user.whatsappOptIn) {
 import { whatsappService } from '@/lib/services/whatsapp';
 
 // Simple text
-await whatsappService.sendTextMessage(
-  '+919876543210',
-  'Your product is ready!',
-  userId
-);
+await whatsappService.sendTextMessage('+919876543210', 'Your product is ready!', userId);
 
 // Order confirmation
-await whatsappService.sendOrderConfirmation(
-  phone,
-  orderId,
-  userId
-);
+await whatsappService.sendOrderConfirmation(phone, orderId, userId);
 
 // Shipment update
-await whatsappService.sendShipmentUpdate(
-  phone,
-  orderId,
-  'TRK123456',
-  'Blue Dart',
-  userId
-);
+await whatsappService.sendShipmentUpdate(phone, orderId, 'TRK123456', 'Blue Dart', userId);
 
 // Delivery confirmation
-await whatsappService.sendDeliveryConfirmation(
-  phone,
-  orderNumber,
-  userId
-);
+await whatsappService.sendDeliveryConfirmation(phone, orderNumber, userId);
 ```
 
 ---
@@ -275,22 +258,22 @@ All messages are automatically logged:
 const messages = await prisma.whatsAppMessage.findMany({
   where: {
     direction: 'OUTBOUND',
-    userId: 'user-id'
+    userId: 'user-id',
   },
-  orderBy: { createdAt: 'desc' }
+  orderBy: { createdAt: 'desc' },
 });
 
 // View received messages
 const received = await prisma.whatsAppMessage.findMany({
   where: {
     direction: 'INBOUND',
-    phone: '+919876543210'
-  }
+    phone: '+919876543210',
+  },
 });
 
 // Check message status
 const message = await prisma.whatsAppMessage.findUnique({
-  where: { waMessageId: 'msg-id' }
+  where: { waMessageId: 'msg-id' },
 });
 console.log(message.status); // SENT, DELIVERED, READ
 ```
@@ -327,6 +310,7 @@ For promotional messages, create templates in Meta Business Manager:
    - Meta Business Manager → WhatsApp Manager
    - Message Templates → Create Template
    - Example: "order_confirmed"
+
    ```
    Hi {{1}}, your order #{{2}} for ₹{{3}} is confirmed! 🎉
    ```
@@ -340,7 +324,7 @@ For promotional messages, create templates in Meta Business Manager:
      [
        { type: 'text', text: 'John' },
        { type: 'text', text: 'ORD123' },
-       { type: 'text', text: '5000' }
+       { type: 'text', text: '5000' },
      ],
      userId
    );
@@ -351,18 +335,21 @@ For promotional messages, create templates in Meta Business Manager:
 ## 🔍 Debugging
 
 ### Check Webhook Logs
+
 ```bash
 # In your terminal running ngrok
 # You'll see all webhook requests
 ```
 
 ### Check Meta Webhook Logs
+
 - Meta App → WhatsApp → Configuration
 - Scroll to "Webhooks" section
 - Click "View webhook logs"
 - See all webhook attempts
 
 ### Check Database
+
 ```bash
 npm run db:studio
 # Open WhatsAppMessage table
@@ -372,16 +359,19 @@ npm run db:studio
 ### Common Issues
 
 **Webhook not verifying?**
+
 - Check `WHATSAPP_WEBHOOK_VERIFY_TOKEN` matches in .env and Meta
 - Ensure ngrok is running
 - Check terminal for errors
 
 **Messages not sending?**
+
 - Verify `WHATSAPP_ACCESS_TOKEN` is valid
 - Check phone number format: +[country code][number]
 - Ensure phone is added to test numbers in Meta
 
 **Not receiving webhooks?**
+
 - Ensure ngrok is running
 - Check webhook URL in Meta settings
 - Verify events are subscribed (messages, message_status)
@@ -393,6 +383,7 @@ npm run db:studio
 ### 1. Deploy to Vercel
 
 Your webhook URL will be:
+
 ```
 https://your-domain.vercel.app/api/webhooks/whatsapp
 ```
@@ -400,6 +391,7 @@ https://your-domain.vercel.app/api/webhooks/whatsapp
 ### 2. Update Meta Webhook
 
 Change webhook URL from ngrok to your production domain:
+
 ```
 https://your-domain.vercel.app/api/webhooks/whatsapp
 ```
@@ -407,6 +399,7 @@ https://your-domain.vercel.app/api/webhooks/whatsapp
 ### 3. Go Live
 
 Once ready to accept real customers:
+
 - Complete Business Verification in Meta
 - Add your own WhatsApp Business number
 - Remove test number restrictions
@@ -457,6 +450,7 @@ Want me to implement the AI pipeline for artisan product creation via WhatsApp? 
 ## 🎉 Summary
 
 You have a **production-grade WhatsApp integration** that's:
+
 - ✅ More advanced than basic setup
 - ✅ Database-backed
 - ✅ Status tracking

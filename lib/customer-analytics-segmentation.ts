@@ -1,6 +1,6 @@
 /**
  * Customer Analytics & Segmentation System
- * 
+ *
  * Advanced customer behavior analysis, segmentation, lifetime value calculation,
  * churn prediction, and personalization insights.
  */
@@ -9,7 +9,7 @@
 // Types & Interfaces
 // ============================================================================
 
-export type CustomerSegment = 
+export type CustomerSegment =
   | 'vip'
   | 'high-value'
   | 'loyal'
@@ -19,7 +19,7 @@ export type CustomerSegment =
   | 'occasional'
   | 'bargain-hunter';
 
-export type BehaviorType = 
+export type BehaviorType =
   | 'purchase'
   | 'browse'
   | 'search'
@@ -29,7 +29,7 @@ export type BehaviorType =
   | 'share'
   | 'return';
 
-export type CustomerLifecycleStage = 
+export type CustomerLifecycleStage =
   | 'prospect'
   | 'first-time'
   | 'active'
@@ -41,14 +41,9 @@ export type CustomerLifecycleStage =
 
 export type RFMScore = 1 | 2 | 3 | 4 | 5;
 
-export type ChurnRisk = 
-  | 'very-low'
-  | 'low'
-  | 'medium'
-  | 'high'
-  | 'very-high';
+export type ChurnRisk = 'very-low' | 'low' | 'medium' | 'high' | 'very-high';
 
-export type EngagementLevel = 
+export type EngagementLevel =
   | 'highly-engaged'
   | 'engaged'
   | 'moderately-engaged'
@@ -466,7 +461,12 @@ export interface CustomerValueSegmentation {
 
 export interface CustomerAnalyticsReport {
   id: string;
-  reportType: 'segment-analysis' | 'cohort-analysis' | 'churn-analysis' | 'ltv-analysis' | 'behavior-analysis';
+  reportType:
+    | 'segment-analysis'
+    | 'cohort-analysis'
+    | 'churn-analysis'
+    | 'ltv-analysis'
+    | 'behavior-analysis';
   period: {
     start: Date;
     end: Date;
@@ -539,7 +539,10 @@ export class CustomerAnalyticsSegmentationSystem {
   // Customer Profile Management
   // ============================================================================
 
-  createCustomerProfile(userId: string, demographics?: CustomerProfile['demographics']): CustomerProfile {
+  createCustomerProfile(
+    userId: string,
+    demographics?: CustomerProfile['demographics']
+  ): CustomerProfile {
     const profile: CustomerProfile = {
       userId,
       demographics: demographics || {},
@@ -648,13 +651,13 @@ export class CustomerAnalyticsSegmentationSystem {
 
     // Recalculate segments
     this.assignCustomerSegments(userId);
-    
+
     // Update RFM score
     this.calculateRFMScore(userId);
-    
+
     // Update lifecycle stage
     this.updateLifecycleStage(userId);
-    
+
     // Predict churn
     this.predictChurn(userId);
 
@@ -750,7 +753,11 @@ export class CustomerAnalyticsSegmentationSystem {
     }
 
     // Occasional segment
-    if (profile.metrics.totalOrders >= 2 && profile.metrics.totalOrders < 5 && !segments.includes('new')) {
+    if (
+      profile.metrics.totalOrders >= 2 &&
+      profile.metrics.totalOrders < 5 &&
+      !segments.includes('new')
+    ) {
       segments.push('occasional');
     }
 
@@ -864,7 +871,10 @@ export class CustomerAnalyticsSegmentationSystem {
     }
 
     // Engagement level
-    if (profile.engagement.level === 'disengaged' || profile.engagement.level === 'low-engagement') {
+    if (
+      profile.engagement.level === 'disengaged' ||
+      profile.engagement.level === 'low-engagement'
+    ) {
       churnScore += 25;
       factors.push({
         factor: 'Low engagement',
@@ -927,9 +937,11 @@ export class CustomerAnalyticsSegmentationSystem {
     return profile.churnPrediction;
   }
 
-  private generateChurnPreventionActions(factors: CustomerProfile['churnPrediction']['factors']): string[] {
+  private generateChurnPreventionActions(
+    factors: CustomerProfile['churnPrediction']['factors']
+  ): string[] {
     const actions: string[] = [];
-    const factorTypes = new Set(factors.map(f => f.factor));
+    const factorTypes = new Set(factors.map((f) => f.factor));
 
     if (factorTypes.has('Long time since last purchase')) {
       actions.push('Send personalized re-engagement email with exclusive offer');
@@ -998,25 +1010,26 @@ export class CustomerAnalyticsSegmentationSystem {
       case 'browse':
         profile.behavior.browsing.totalSessions++;
         break;
-      
+
       case 'purchase':
         profile.metrics.totalOrders++;
         if (event.metadata.value) {
           profile.metrics.totalSpent += event.metadata.value;
-          profile.metrics.averageOrderValue = profile.metrics.totalSpent / profile.metrics.totalOrders;
+          profile.metrics.averageOrderValue =
+            profile.metrics.totalSpent / profile.metrics.totalOrders;
         }
         break;
-      
+
       case 'search':
         if (event.context.searchQuery) {
           profile.behavior.browsing.searchQueries.push(event.context.searchQuery);
         }
         break;
-      
+
       case 'review':
         profile.behavior.loyalty.reviewsWritten++;
         break;
-      
+
       case 'wishlist':
         profile.behavior.loyalty.wishlistItems++;
         break;
@@ -1111,7 +1124,7 @@ export class CustomerAnalyticsSegmentationSystem {
 
     for (let period = 0; period < 12; period++) {
       // Retention calculation
-      retention *= (0.75 + Math.random() * 0.15); // 75-90% retention
+      retention *= 0.75 + Math.random() * 0.15; // 75-90% retention
       cohort.metrics.retention.push({
         period,
         rate: retention,
@@ -1138,7 +1151,7 @@ export class CustomerAnalyticsSegmentationSystem {
 
       // LTV calculation
       ltv = cumulativeRevenue / cohort.size;
-      const projectedLTV = ltv * (1 + (0.1 * (12 - period)));
+      const projectedLTV = ltv * (1 + 0.1 * (12 - period));
       cohort.metrics.ltv.push({
         period,
         value: ltv,
@@ -1153,7 +1166,7 @@ export class CustomerAnalyticsSegmentationSystem {
 
   createPersonalizationProfile(userId: string): PersonalizationProfile {
     const customerProfile = this.customerProfiles.get(userId);
-    
+
     const profile: PersonalizationProfile = {
       userId,
       preferences: {
@@ -1190,10 +1203,12 @@ export class CustomerAnalyticsSegmentationSystem {
     return profile;
   }
 
-  generateRecommendations(userId: string): PersonalizationProfile['preferences']['productRecommendations'] {
+  generateRecommendations(
+    userId: string
+  ): PersonalizationProfile['preferences']['productRecommendations'] {
     const profile = this.customerProfiles.get(userId);
     const personalization = this.personalizationProfiles.get(userId);
-    
+
     if (!profile || !personalization) return [];
 
     const recommendations: PersonalizationProfile['preferences']['productRecommendations'] = [];
@@ -1265,7 +1280,8 @@ export class CustomerAnalyticsSegmentationSystem {
     if (params.nps) {
       metrics.nps = {
         score: params.nps.score,
-        category: params.nps.score >= 9 ? 'promoter' : params.nps.score >= 7 ? 'passive' : 'detractor',
+        category:
+          params.nps.score >= 9 ? 'promoter' : params.nps.score >= 7 ? 'passive' : 'detractor',
         surveyDate: new Date(),
         feedback: params.nps.feedback,
       };
@@ -1274,15 +1290,23 @@ export class CustomerAnalyticsSegmentationSystem {
     if (params.csat) {
       metrics.csat.surveyCount++;
       metrics.csat.score = params.csat.score;
-      metrics.csat.avgScore = ((metrics.csat.avgScore * (metrics.csat.surveyCount - 1)) + params.csat.score) / metrics.csat.surveyCount;
+      metrics.csat.avgScore =
+        (metrics.csat.avgScore * (metrics.csat.surveyCount - 1) + params.csat.score) /
+        metrics.csat.surveyCount;
     }
 
     if (params.ces) {
       metrics.ces.score = params.ces.score;
-      metrics.ces.effort = params.ces.score <= 2 ? 'very-low' : 
-                           params.ces.score <= 3 ? 'low' :
-                           params.ces.score <= 5 ? 'medium' :
-                           params.ces.score <= 6 ? 'high' : 'very-high';
+      metrics.ces.effort =
+        params.ces.score <= 2
+          ? 'very-low'
+          : params.ces.score <= 3
+            ? 'low'
+            : params.ces.score <= 5
+              ? 'medium'
+              : params.ces.score <= 6
+                ? 'high'
+                : 'very-high';
       metrics.ces.interactions.push({
         type: params.ces.type,
         score: params.ces.score,
@@ -1312,16 +1336,21 @@ export class CustomerAnalyticsSegmentationSystem {
       data: {
         summary: {
           totalCustomers: profiles.length,
-          activeCustomers: profiles.filter(p => p.metrics.daysSinceLastPurchase <= 90).length,
-          newCustomers: profiles.filter(p => p.lifecycleStage === 'new' || p.lifecycleStage === 'first-time').length,
-          churnedCustomers: profiles.filter(p => p.lifecycleStage === 'churned').length,
-          reactivatedCustomers: profiles.filter(p => p.lifecycleStage === 'reactivated').length,
+          activeCustomers: profiles.filter((p) => p.metrics.daysSinceLastPurchase <= 90).length,
+          newCustomers: profiles.filter(
+            (p) => p.lifecycleStage === 'new' || p.lifecycleStage === 'first-time'
+          ).length,
+          churnedCustomers: profiles.filter((p) => p.lifecycleStage === 'churned').length,
+          reactivatedCustomers: profiles.filter((p) => p.lifecycleStage === 'reactivated').length,
         },
         segments: this.calculateSegmentMetrics(profiles),
         metrics: {
-          avgLifetimeValue: profiles.reduce((sum, p) => sum + p.metrics.lifetimeValue, 0) / profiles.length,
-          avgOrderValue: profiles.reduce((sum, p) => sum + p.metrics.averageOrderValue, 0) / profiles.length,
-          avgPurchaseFrequency: profiles.reduce((sum, p) => sum + p.metrics.purchaseFrequency, 0) / profiles.length,
+          avgLifetimeValue:
+            profiles.reduce((sum, p) => sum + p.metrics.lifetimeValue, 0) / profiles.length,
+          avgOrderValue:
+            profiles.reduce((sum, p) => sum + p.metrics.averageOrderValue, 0) / profiles.length,
+          avgPurchaseFrequency:
+            profiles.reduce((sum, p) => sum + p.metrics.purchaseFrequency, 0) / profiles.length,
           customerRetentionRate: 85,
           churnRate: 15,
           reactivationRate: 5,
@@ -1336,30 +1365,47 @@ export class CustomerAnalyticsSegmentationSystem {
     return report;
   }
 
-  private calculateSegmentMetrics(profiles: CustomerProfile[]): CustomerAnalyticsReport['data']['segments'] {
+  private calculateSegmentMetrics(
+    profiles: CustomerProfile[]
+  ): CustomerAnalyticsReport['data']['segments'] {
     const segmentMetrics: CustomerAnalyticsReport['data']['segments'] = [];
-    const segments: CustomerSegment[] = ['vip', 'high-value', 'loyal', 'at-risk', 'dormant', 'new', 'occasional', 'bargain-hunter'];
+    const segments: CustomerSegment[] = [
+      'vip',
+      'high-value',
+      'loyal',
+      'at-risk',
+      'dormant',
+      'new',
+      'occasional',
+      'bargain-hunter',
+    ];
 
-    segments.forEach(segment => {
-      const segmentProfiles = profiles.filter(p => p.segments.includes(segment));
-      
+    segments.forEach((segment) => {
+      const segmentProfiles = profiles.filter((p) => p.segments.includes(segment));
+
       segmentMetrics.push({
         segment,
         size: segmentProfiles.length,
         growth: 10, // Simulated
         revenue: segmentProfiles.reduce((sum, p) => sum + p.metrics.totalSpent, 0),
-        avgLTV: segmentProfiles.reduce((sum, p) => sum + p.metrics.lifetimeValue, 0) / (segmentProfiles.length || 1),
+        avgLTV:
+          segmentProfiles.reduce((sum, p) => sum + p.metrics.lifetimeValue, 0) /
+          (segmentProfiles.length || 1),
       });
     });
 
     return segmentMetrics;
   }
 
-  private generateAnalyticsInsights(profiles: CustomerProfile[]): CustomerAnalyticsReport['data']['insights'] {
+  private generateAnalyticsInsights(
+    profiles: CustomerProfile[]
+  ): CustomerAnalyticsReport['data']['insights'] {
     const insights: CustomerAnalyticsReport['data']['insights'] = [];
 
     // High churn risk insight
-    const highRiskCustomers = profiles.filter(p => p.churnPrediction.risk === 'high' || p.churnPrediction.risk === 'very-high');
+    const highRiskCustomers = profiles.filter(
+      (p) => p.churnPrediction.risk === 'high' || p.churnPrediction.risk === 'very-high'
+    );
     if (highRiskCustomers.length > profiles.length * 0.15) {
       insights.push({
         type: 'churn-risk',
@@ -1370,8 +1416,8 @@ export class CustomerAnalyticsSegmentationSystem {
     }
 
     // VIP growth opportunity
-    const vipCustomers = profiles.filter(p => p.segments.includes('vip'));
-    const highValueCustomers = profiles.filter(p => p.segments.includes('high-value'));
+    const vipCustomers = profiles.filter((p) => p.segments.includes('vip'));
+    const highValueCustomers = profiles.filter((p) => p.segments.includes('high-value'));
     if (highValueCustomers.length > vipCustomers.length * 2) {
       insights.push({
         type: 'growth-opportunity',
@@ -1382,7 +1428,9 @@ export class CustomerAnalyticsSegmentationSystem {
     }
 
     // Engagement decline
-    const lowEngagement = profiles.filter(p => p.engagement.level === 'disengaged' || p.engagement.level === 'low-engagement');
+    const lowEngagement = profiles.filter(
+      (p) => p.engagement.level === 'disengaged' || p.engagement.level === 'low-engagement'
+    );
     if (lowEngagement.length > profiles.length * 0.2) {
       insights.push({
         type: 'engagement',
@@ -1418,9 +1466,7 @@ export class CustomerAnalyticsSegmentationSystem {
       name: 'At-Risk Customers',
       description: 'Customers with high churn probability',
       criteria: {
-        rules: [
-          { field: 'churnPrediction.risk', operator: 'in', value: ['high', 'very-high'] },
-        ],
+        rules: [{ field: 'churnPrediction.risk', operator: 'in', value: ['high', 'very-high'] }],
         combineWith: 'AND',
       },
     });
@@ -1444,51 +1490,64 @@ export class CustomerAnalyticsSegmentationSystem {
   // ============================================================================
 
   getCustomersBySegment(segment: CustomerSegment): CustomerProfile[] {
-    return Array.from(this.customerProfiles.values())
-      .filter(profile => profile.segments.includes(segment));
+    return Array.from(this.customerProfiles.values()).filter((profile) =>
+      profile.segments.includes(segment)
+    );
   }
 
   getCustomersByLifecycleStage(stage: CustomerLifecycleStage): CustomerProfile[] {
-    return Array.from(this.customerProfiles.values())
-      .filter(profile => profile.lifecycleStage === stage);
+    return Array.from(this.customerProfiles.values()).filter(
+      (profile) => profile.lifecycleStage === stage
+    );
   }
 
   getHighValueCustomers(minLTV: number): CustomerProfile[] {
     return Array.from(this.customerProfiles.values())
-      .filter(profile => profile.metrics.lifetimeValue >= minLTV)
+      .filter((profile) => profile.metrics.lifetimeValue >= minLTV)
       .sort((a, b) => b.metrics.lifetimeValue - a.metrics.lifetimeValue);
   }
 
   getChurnRiskCustomers(minRisk: ChurnRisk = 'medium'): CustomerProfile[] {
     const riskLevels: Record<ChurnRisk, number> = {
       'very-low': 1,
-      'low': 2,
-      'medium': 3,
-      'high': 4,
+      low: 2,
+      medium: 3,
+      high: 4,
       'very-high': 5,
     };
 
     return Array.from(this.customerProfiles.values())
-      .filter(profile => riskLevels[profile.churnPrediction.risk] >= riskLevels[minRisk])
+      .filter((profile) => riskLevels[profile.churnPrediction.risk] >= riskLevels[minRisk])
       .sort((a, b) => b.churnPrediction.probability - a.churnPrediction.probability);
   }
 
   getSegmentStatistics(): any {
     const profiles = Array.from(this.customerProfiles.values());
-    const segments: CustomerSegment[] = ['vip', 'high-value', 'loyal', 'at-risk', 'dormant', 'new', 'occasional', 'bargain-hunter'];
+    const segments: CustomerSegment[] = [
+      'vip',
+      'high-value',
+      'loyal',
+      'at-risk',
+      'dormant',
+      'new',
+      'occasional',
+      'bargain-hunter',
+    ];
 
     const stats: any = {
       total: profiles.length,
       bySegment: {},
       byLifecycleStage: {},
       avgMetrics: {
-        lifetimeValue: profiles.reduce((sum, p) => sum + p.metrics.lifetimeValue, 0) / profiles.length,
-        orderValue: profiles.reduce((sum, p) => sum + p.metrics.averageOrderValue, 0) / profiles.length,
+        lifetimeValue:
+          profiles.reduce((sum, p) => sum + p.metrics.lifetimeValue, 0) / profiles.length,
+        orderValue:
+          profiles.reduce((sum, p) => sum + p.metrics.averageOrderValue, 0) / profiles.length,
       },
     };
 
-    segments.forEach(segment => {
-      stats.bySegment[segment] = profiles.filter(p => p.segments.includes(segment)).length;
+    segments.forEach((segment) => {
+      stats.bySegment[segment] = profiles.filter((p) => p.segments.includes(segment)).length;
     });
 
     return stats;

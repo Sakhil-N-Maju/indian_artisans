@@ -34,17 +34,14 @@ class AIService {
    */
   async downloadWhatsAppMedia(mediaId: string): Promise<Buffer> {
     const token = process.env.WHATSAPP_ACCESS_TOKEN;
-    
+
     try {
       // Step 1: Get media URL from WhatsApp
-      const mediaResponse = await axios.get(
-        `https://graph.facebook.com/v18.0/${mediaId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const mediaResponse = await axios.get(`https://graph.facebook.com/v18.0/${mediaId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       const mediaUrl = mediaResponse.data.url;
 
@@ -66,11 +63,14 @@ class AIService {
   /**
    * Transcribe voice message using Whisper API
    */
-  async transcribeVoice(audioBuffer: Buffer, mimeType: string = 'audio/ogg'): Promise<VoiceTranscription> {
+  async transcribeVoice(
+    audioBuffer: Buffer,
+    mimeType: string = 'audio/ogg'
+  ): Promise<VoiceTranscription> {
     try {
       // Convert Node Buffer to ArrayBuffer for Web API compatibility
       const arrayBuffer = audioBuffer.buffer.slice(
-        audioBuffer.byteOffset, 
+        audioBuffer.byteOffset,
         audioBuffer.byteOffset + audioBuffer.byteLength
       ) as ArrayBuffer;
       const blob = new Blob([arrayBuffer], { type: mimeType });
@@ -137,7 +137,7 @@ Respond in JSON format.`,
       });
 
       const content = response.choices[0].message.content || '{}';
-      
+
       // Try to parse JSON from response
       try {
         return JSON.parse(content);
@@ -154,10 +154,7 @@ Respond in JSON format.`,
   /**
    * Extract product details from voice + image analysis
    */
-  async extractProductDetails(
-    voiceText: string,
-    imageAnalysis: any
-  ): Promise<ProductExtraction> {
+  async extractProductDetails(voiceText: string, imageAnalysis: any): Promise<ProductExtraction> {
     try {
       const prompt = `You are helping an Indian artisan create a product listing. Based on their voice description and image analysis, extract structured product information.
 
@@ -194,7 +191,8 @@ Return ONLY valid JSON, no additional text.`;
         messages: [
           {
             role: 'system',
-            content: 'You are an expert in Indian handicrafts and e-commerce product listing optimization.',
+            content:
+              'You are an expert in Indian handicrafts and e-commerce product listing optimization.',
           },
           {
             role: 'user',
@@ -283,7 +281,7 @@ Length: 150-250 words`;
   ): Promise<ProductExtraction & { story: string }> {
     try {
       console.log('📥 Downloading media from WhatsApp...');
-      
+
       // Download media
       const [imageBuffer, voiceBuffer] = await Promise.all([
         this.downloadWhatsAppMedia(imageMediaId),
@@ -300,10 +298,7 @@ Length: 150-250 words`;
 
       console.log('🤖 Extracting product details...');
       // Extract product details
-      const productDetails = await this.extractProductDetails(
-        transcription.text,
-        imageAnalysis
-      );
+      const productDetails = await this.extractProductDetails(transcription.text, imageAnalysis);
 
       console.log('📖 Generating product story...');
       // Generate story

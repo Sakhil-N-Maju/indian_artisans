@@ -1,6 +1,6 @@
 /**
  * External API Management System
- * 
+ *
  * Centralized API management for third-party integrations with rate limiting,
  * caching, monitoring, webhooks, and comprehensive error handling.
  */
@@ -9,7 +9,7 @@
 // Types & Interfaces
 // ============================================================================
 
-export type ApiProvider = 
+export type ApiProvider =
   | 'google-maps'
   | 'google-analytics'
   | 'cloudinary'
@@ -28,7 +28,7 @@ export type ApiProvider =
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS';
 
-export type AuthType = 
+export type AuthType =
   | 'none'
   | 'api-key'
   | 'bearer'
@@ -38,7 +38,7 @@ export type AuthType =
   | 'jwt'
   | 'custom';
 
-export type RequestStatus = 
+export type RequestStatus =
   | 'pending'
   | 'success'
   | 'failed'
@@ -46,42 +46,38 @@ export type RequestStatus =
   | 'rate-limited'
   | 'cached';
 
-export type WebhookStatus = 
-  | 'active'
-  | 'inactive'
-  | 'failed'
-  | 'paused';
+export type WebhookStatus = 'active' | 'inactive' | 'failed' | 'paused';
 
 export interface ApiConfiguration {
   id: string;
   provider: ApiProvider;
   name: string;
   enabled: boolean;
-  
+
   endpoint: {
     baseUrl: string;
     version?: string;
     customHeaders?: Record<string, string>;
   };
-  
+
   authentication: {
     type: AuthType;
-    
+
     apiKey?: {
       key: string;
       headerName: string;
       prefix?: string;
     };
-    
+
     bearer?: {
       token: string;
     };
-    
+
     basic?: {
       username: string;
       password: string;
     };
-    
+
     oauth2?: {
       clientId: string;
       clientSecret: string;
@@ -91,75 +87,78 @@ export interface ApiConfiguration {
       scopes?: string[];
       expiresAt?: Date;
     };
-    
+
     jwt?: {
       secret: string;
       algorithm: string;
       expiresIn: number;
     };
   };
-  
+
   rateLimit: {
     enabled: boolean;
     maxRequests: number;
     windowMs: number; // time window in milliseconds
     strategy: 'fixed-window' | 'sliding-window' | 'token-bucket';
-    
-    perEndpoint?: Record<string, {
-      maxRequests: number;
-      windowMs: number;
-    }>;
+
+    perEndpoint?: Record<
+      string,
+      {
+        maxRequests: number;
+        windowMs: number;
+      }
+    >;
   };
-  
+
   cache: {
     enabled: boolean;
     ttl: number; // seconds
     strategy: 'memory' | 'redis' | 'none';
-    
+
     keyPrefix?: string;
-    
+
     cacheable: {
       methods: HttpMethod[];
       statusCodes: number[];
     };
   };
-  
+
   retry: {
     enabled: boolean;
     maxAttempts: number;
     backoffMultiplier: number;
     initialDelay: number; // milliseconds
     maxDelay: number;
-    
+
     retryableStatusCodes: number[];
     retryableErrors: string[];
   };
-  
+
   timeout: {
     connect: number; // milliseconds
     request: number;
     response: number;
   };
-  
+
   monitoring: {
     enabled: boolean;
     logRequests: boolean;
     logResponses: boolean;
     logErrors: boolean;
-    
+
     metrics: {
       enabled: boolean;
       sampleRate: number; // 0-1
     };
   };
-  
+
   circuitBreaker?: {
     enabled: boolean;
     threshold: number; // failure threshold
     timeout: number; // milliseconds to keep circuit open
     resetTimeout: number; // time before attempting to close circuit
   };
-  
+
   metadata: {
     createdAt: Date;
     updatedAt: Date;
@@ -171,19 +170,19 @@ export interface ApiRequest {
   id: string;
   configId: string;
   provider: ApiProvider;
-  
+
   method: HttpMethod;
   endpoint: string;
-  
+
   headers: Record<string, string>;
   queryParams?: Record<string, any>;
   body?: any;
-  
+
   authentication?: {
     type: AuthType;
     applied: boolean;
   };
-  
+
   metadata: {
     userId?: string;
     sessionId?: string;
@@ -191,22 +190,22 @@ export interface ApiRequest {
     tags?: string[];
     customData?: Record<string, any>;
   };
-  
+
   createdAt: Date;
 }
 
 export interface ApiResponse {
   id: string;
   requestId: string;
-  
+
   status: RequestStatus;
-  
+
   http: {
     statusCode: number;
     statusText: string;
     headers: Record<string, string>;
   };
-  
+
   data?: any;
   error?: {
     code: string;
@@ -214,74 +213,74 @@ export interface ApiResponse {
     details?: any;
     stack?: string;
   };
-  
+
   timing: {
     start: Date;
     end: Date;
     duration: number; // milliseconds
-    
+
     dns?: number;
     tcp?: number;
     tls?: number;
     firstByte?: number;
     download?: number;
   };
-  
+
   cache: {
     hit: boolean;
     key?: string;
     ttl?: number;
   };
-  
+
   retry: {
     attempts: number;
     successful: boolean;
   };
-  
+
   size: {
     request: number; // bytes
     response: number;
   };
-  
+
   createdAt: Date;
 }
 
 export interface RateLimitState {
   configId: string;
   endpoint?: string;
-  
+
   window: {
     start: Date;
     end: Date;
   };
-  
+
   current: {
     requests: number;
     remaining: number;
     limit: number;
   };
-  
+
   reset: Date;
-  
+
   tokens?: number; // for token bucket strategy
 }
 
 export interface CacheEntry {
   key: string;
   value: any;
-  
+
   metadata: {
     configId: string;
     requestHash: string;
-    
+
     size: number;
     compressed: boolean;
   };
-  
+
   ttl: number;
   createdAt: Date;
   expiresAt: Date;
-  
+
   hits: number;
   lastAccessed: Date;
 }
@@ -289,40 +288,40 @@ export interface CacheEntry {
 export interface Webhook {
   id: string;
   url: string;
-  
+
   events: string[];
-  
+
   authentication?: {
     type: 'none' | 'header' | 'query' | 'signature';
-    
+
     header?: {
       name: string;
       value: string;
     };
-    
+
     signature?: {
       secret: string;
       algorithm: 'sha256' | 'sha512';
       header: string;
     };
   };
-  
+
   retry: {
     enabled: boolean;
     maxAttempts: number;
     backoffMultiplier: number;
   };
-  
+
   timeout: number;
-  
+
   filters?: Array<{
     field: string;
     operator: string;
     value: any;
   }>;
-  
+
   status: WebhookStatus;
-  
+
   stats: {
     totalDeliveries: number;
     successfulDeliveries: number;
@@ -332,7 +331,7 @@ export interface Webhook {
     lastFailure?: Date;
     averageResponseTime: number;
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -340,20 +339,20 @@ export interface Webhook {
 export interface WebhookDelivery {
   id: string;
   webhookId: string;
-  
+
   event: {
     type: string;
     data: any;
     timestamp: Date;
   };
-  
+
   request: {
     url: string;
     method: HttpMethod;
     headers: Record<string, string>;
     body: any;
   };
-  
+
   response?: {
     statusCode: number;
     statusText: string;
@@ -361,18 +360,18 @@ export interface WebhookDelivery {
     body?: any;
     duration: number;
   };
-  
+
   status: 'pending' | 'delivered' | 'failed' | 'retrying';
-  
+
   attempts: number;
   maxAttempts: number;
   nextRetry?: Date;
-  
+
   error?: {
     message: string;
     details?: any;
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -380,74 +379,74 @@ export interface WebhookDelivery {
 export interface ApiMetrics {
   configId: string;
   provider: ApiProvider;
-  
+
   period: {
     start: Date;
     end: Date;
   };
-  
+
   requests: {
     total: number;
     successful: number;
     failed: number;
     cached: number;
     rateLimited: number;
-    
+
     byMethod: Record<HttpMethod, number>;
     byStatus: Record<number, number>;
     byEndpoint: Record<string, number>;
   };
-  
+
   performance: {
     averageResponseTime: number;
     p50: number;
     p95: number;
     p99: number;
-    
+
     fastest: number;
     slowest: number;
-    
+
     totalDuration: number;
   };
-  
+
   errors: {
     total: number;
-    
+
     byType: Record<string, number>;
     byEndpoint: Record<string, number>;
-    
+
     topErrors: Array<{
       code: string;
       message: string;
       count: number;
     }>;
   };
-  
+
   cache: {
     hits: number;
     misses: number;
     hitRate: number;
-    
+
     size: number; // bytes
     entries: number;
   };
-  
+
   rateLimit: {
     throttled: number;
     throttleRate: number;
   };
-  
+
   bandwidth: {
     sent: number; // bytes
     received: number;
     total: number;
   };
-  
+
   availability: {
     uptime: number; // percentage
     downtime: number; // milliseconds
   };
-  
+
   trends: {
     hourly: Array<{
       hour: Date;
@@ -455,7 +454,7 @@ export interface ApiMetrics {
       averageResponseTime: number;
       errorRate: number;
     }>;
-    
+
     daily: Array<{
       date: Date;
       requests: number;
@@ -469,35 +468,35 @@ export interface ApiProxy {
   id: string;
   name: string;
   path: string;
-  
+
   target: {
     configId: string;
     endpoint: string;
     rewrite?: Record<string, string>;
   };
-  
+
   methods: HttpMethod[];
-  
+
   middleware: Array<{
     type: 'auth' | 'rate-limit' | 'cache' | 'transform' | 'validate' | 'log';
     config: any;
     order: number;
   }>;
-  
+
   cors?: {
     enabled: boolean;
     origins: string[];
     methods: HttpMethod[];
     credentials: boolean;
   };
-  
+
   enabled: boolean;
-  
+
   stats: {
     requests: number;
     lastRequest?: Date;
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -506,52 +505,52 @@ export interface ApiKey {
   id: string;
   key: string;
   name: string;
-  
+
   type: 'public' | 'private' | 'restricted';
-  
+
   permissions: {
     providers: ApiProvider[];
     methods: HttpMethod[];
     endpoints?: string[];
-    
+
     rateLimit?: {
       maxRequests: number;
       windowMs: number;
     };
   };
-  
+
   usage: {
     totalRequests: number;
     lastUsed?: Date;
   };
-  
+
   status: 'active' | 'revoked' | 'expired';
-  
+
   expiresAt?: Date;
-  
+
   metadata?: {
     userId?: string;
     applicationId?: string;
     description?: string;
     tags?: string[];
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface CircuitBreakerState {
   configId: string;
-  
+
   state: 'closed' | 'open' | 'half-open';
-  
+
   failures: number;
   threshold: number;
-  
+
   lastFailure?: Date;
   openedAt?: Date;
   nextAttempt?: Date;
-  
+
   stats: {
     totalRequests: number;
     successfulRequests: number;
@@ -575,7 +574,7 @@ export class ExternalApiManagementSystem {
   private proxies: Map<string, ApiProxy> = new Map();
   private apiKeys: Map<string, ApiKey> = new Map();
   private circuitBreakers: Map<string, CircuitBreakerState> = new Map();
-  
+
   private cacheCleanupInterval?: NodeJS.Timeout;
   private webhookProcessorInterval?: NodeJS.Timeout;
 
@@ -660,7 +659,7 @@ export class ExternalApiManagementSystem {
     };
 
     this.configurations.set(config.id, config);
-    
+
     // Initialize circuit breaker
     if (config.circuitBreaker?.enabled) {
       this.initializeCircuitBreaker(config.id, config.circuitBreaker.threshold);
@@ -710,11 +709,7 @@ export class ExternalApiManagementSystem {
     if (config.circuitBreaker?.enabled) {
       const canProceed = this.checkCircuitBreaker(params.configId);
       if (!canProceed) {
-        return this.createErrorResponse(
-          params,
-          'Circuit breaker is open',
-          'CIRCUIT_OPEN'
-        );
+        return this.createErrorResponse(params, 'Circuit breaker is open', 'CIRCUIT_OPEN');
       }
     }
 
@@ -722,11 +717,7 @@ export class ExternalApiManagementSystem {
     if (config.rateLimit.enabled) {
       const rateLimitOk = this.checkRateLimit(params.configId, params.endpoint);
       if (!rateLimitOk) {
-        return this.createErrorResponse(
-          params,
-          'Rate limit exceeded',
-          'RATE_LIMITED'
-        );
+        return this.createErrorResponse(params, 'Rate limit exceeded', 'RATE_LIMITED');
       }
     }
 
@@ -806,7 +797,7 @@ export class ExternalApiManagementSystem {
     switch (auth.type) {
       case 'api-key':
         if (auth.apiKey) {
-          const value = auth.apiKey.prefix 
+          const value = auth.apiKey.prefix
             ? `${auth.apiKey.prefix} ${auth.apiKey.key}`
             : auth.apiKey.key;
           request.headers[auth.apiKey.headerName] = value;
@@ -823,7 +814,9 @@ export class ExternalApiManagementSystem {
 
       case 'basic':
         if (auth.basic) {
-          const encoded = Buffer.from(`${auth.basic.username}:${auth.basic.password}`).toString('base64');
+          const encoded = Buffer.from(`${auth.basic.username}:${auth.basic.password}`).toString(
+            'base64'
+          );
           request.headers['Authorization'] = `Basic ${encoded}`;
           request.authentication!.applied = true;
         }
@@ -886,11 +879,11 @@ export class ExternalApiManagementSystem {
 
         this.responses.set(response.id, response);
         return response;
-
       } catch (error) {
-        const shouldRetry = config.retry.enabled && 
-                          attempt < config.retry.maxAttempts &&
-                          this.isRetryable(error, config);
+        const shouldRetry =
+          config.retry.enabled &&
+          attempt < config.retry.maxAttempts &&
+          this.isRetryable(error, config);
 
         if (!shouldRetry) {
           return this.createErrorResponse(
@@ -910,18 +903,18 @@ export class ExternalApiManagementSystem {
       }
     }
 
-    return this.createErrorResponse(
-      request,
-      'Max retry attempts exceeded',
-      'MAX_RETRIES',
-      attempt
-    );
+    return this.createErrorResponse(request, 'Max retry attempts exceeded', 'MAX_RETRIES', attempt);
   }
 
   private async simulateApiCall(
     request: ApiRequest,
     config: ApiConfiguration
-  ): Promise<{ statusCode: number; statusText: string; headers: Record<string, string>; data: any }> {
+  ): Promise<{
+    statusCode: number;
+    statusText: string;
+    headers: Record<string, string>;
+    data: any;
+  }> {
     // Simulate network delay
     await this.delay(100 + Math.random() * 400);
 
@@ -952,7 +945,7 @@ export class ExternalApiManagementSystem {
     attempts: number = 1
   ): ApiResponse {
     const requestId = 'id' in requestOrParams ? requestOrParams.id : `req_error_${Date.now()}`;
-    
+
     const response: ApiResponse = {
       id: `res_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       requestId,
@@ -997,22 +990,23 @@ export class ExternalApiManagementSystem {
     const config = this.configurations.get(configId);
     if (!config || !config.rateLimit.enabled) return true;
 
-    const key = endpoint && config.rateLimit.perEndpoint?.[endpoint]
-      ? `${configId}:${endpoint}`
-      : configId;
+    const key =
+      endpoint && config.rateLimit.perEndpoint?.[endpoint] ? `${configId}:${endpoint}` : configId;
 
     let state = this.rateLimitStates.get(key);
     const now = new Date();
 
     // Initialize or reset window
     if (!state || now >= state.window.end) {
-      const limit = endpoint && config.rateLimit.perEndpoint?.[endpoint]
-        ? config.rateLimit.perEndpoint[endpoint].maxRequests
-        : config.rateLimit.maxRequests;
+      const limit =
+        endpoint && config.rateLimit.perEndpoint?.[endpoint]
+          ? config.rateLimit.perEndpoint[endpoint].maxRequests
+          : config.rateLimit.maxRequests;
 
-      const windowMs = endpoint && config.rateLimit.perEndpoint?.[endpoint]
-        ? config.rateLimit.perEndpoint[endpoint].windowMs
-        : config.rateLimit.windowMs;
+      const windowMs =
+        endpoint && config.rateLimit.perEndpoint?.[endpoint]
+          ? config.rateLimit.perEndpoint[endpoint].windowMs
+          : config.rateLimit.windowMs;
 
       state = {
         configId,
@@ -1058,8 +1052,10 @@ export class ExternalApiManagementSystem {
   }
 
   private shouldCache(response: ApiResponse, config: ApiConfiguration): boolean {
-    return response.status === 'success' &&
-           config.cache.cacheable.statusCodes.includes(response.http.statusCode);
+    return (
+      response.status === 'success' &&
+      config.cache.cacheable.statusCodes.includes(response.http.statusCode)
+    );
   }
 
   private getCachedResponse(request: ApiRequest, config: ApiConfiguration): ApiResponse | null {
@@ -1114,7 +1110,11 @@ export class ExternalApiManagementSystem {
     return response;
   }
 
-  private cacheResponse(request: ApiRequest, response: ApiResponse, config: ApiConfiguration): void {
+  private cacheResponse(
+    request: ApiRequest,
+    response: ApiResponse,
+    config: ApiConfiguration
+  ): void {
     const cacheKey = this.generateCacheKey(request, config);
     const now = new Date();
 
@@ -1150,21 +1150,21 @@ export class ExternalApiManagementSystem {
       queryParams: request.queryParams,
       body: request.body,
     });
-    
+
     // Simple hash function
     let hash = 0;
     for (let i = 0; i < data.length; i++) {
       const char = data.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash;
     }
-    
+
     return hash.toString(36);
   }
 
   invalidateCache(configId: string, pattern?: string): number {
     let count = 0;
-    
+
     this.cache.forEach((entry, key) => {
       if (entry.metadata.configId === configId) {
         if (!pattern || key.includes(pattern)) {
@@ -1209,7 +1209,7 @@ export class ExternalApiManagementSystem {
         breaker.state = 'half-open';
         return true;
       }
-      
+
       breaker.stats.rejectedRequests++;
       return false;
     }
@@ -1229,7 +1229,7 @@ export class ExternalApiManagementSystem {
     if (success) {
       breaker.stats.successfulRequests++;
       breaker.failures = 0;
-      
+
       if (breaker.state === 'half-open') {
         breaker.state = 'closed';
       }
@@ -1299,8 +1299,9 @@ export class ExternalApiManagementSystem {
   }
 
   async triggerWebhook(event: { type: string; data: any }): Promise<void> {
-    const webhooks = Array.from(this.webhooks.values())
-      .filter(wh => wh.status === 'active' && wh.events.includes(event.type));
+    const webhooks = Array.from(this.webhooks.values()).filter(
+      (wh) => wh.status === 'active' && wh.events.includes(event.type)
+    );
 
     for (const webhook of webhooks) {
       const delivery = this.createWebhookDelivery(webhook, event);
@@ -1308,7 +1309,10 @@ export class ExternalApiManagementSystem {
     }
   }
 
-  private createWebhookDelivery(webhook: Webhook, event: { type: string; data: any }): WebhookDelivery {
+  private createWebhookDelivery(
+    webhook: Webhook,
+    event: { type: string; data: any }
+  ): WebhookDelivery {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       'User-Agent': 'Artisans-Webhook/1.0',
@@ -1381,8 +1385,8 @@ export class ExternalApiManagementSystem {
 
         webhook.stats.successfulDeliveries++;
         webhook.stats.lastSuccess = new Date();
-        webhook.stats.averageResponseTime = 
-          (webhook.stats.averageResponseTime * (webhook.stats.totalDeliveries - 1) + duration) / 
+        webhook.stats.averageResponseTime =
+          (webhook.stats.averageResponseTime * (webhook.stats.totalDeliveries - 1) + duration) /
           webhook.stats.totalDeliveries;
       } else {
         throw new Error('Webhook delivery failed');
@@ -1409,7 +1413,11 @@ export class ExternalApiManagementSystem {
     webhook.updatedAt = new Date();
   }
 
-  private generateWebhookSignature(data: any, secret: string, algorithm: 'sha256' | 'sha512'): string {
+  private generateWebhookSignature(
+    data: any,
+    secret: string,
+    algorithm: 'sha256' | 'sha512'
+  ): string {
     // Simplified signature generation
     const payload = JSON.stringify(data);
     return `${algorithm}=${Buffer.from(payload + secret).toString('base64')}`;
@@ -1471,7 +1479,9 @@ export class ExternalApiManagementSystem {
         totalRequests: 0,
       },
       status: 'active',
-      expiresAt: params.expiresIn ? new Date(Date.now() + params.expiresIn * 24 * 60 * 60 * 1000) : undefined,
+      expiresAt: params.expiresIn
+        ? new Date(Date.now() + params.expiresIn * 24 * 60 * 60 * 1000)
+        : undefined,
       metadata: params.metadata,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -1482,8 +1492,8 @@ export class ExternalApiManagementSystem {
   }
 
   validateApiKey(key: string): ApiKey | null {
-    const apiKey = Array.from(this.apiKeys.values()).find(k => k.key === key);
-    
+    const apiKey = Array.from(this.apiKeys.values()).find((k) => k.key === key);
+
     if (!apiKey) return null;
     if (apiKey.status !== 'active') return null;
     if (apiKey.expiresAt && new Date() >= apiKey.expiresAt) {
@@ -1514,19 +1524,23 @@ export class ExternalApiManagementSystem {
     const config = this.configurations.get(configId);
     if (!config) throw new Error('API configuration not found');
 
-    const requests = Array.from(this.requests.values())
-      .filter(req => req.configId === configId && req.createdAt >= period.start && req.createdAt <= period.end);
+    const requests = Array.from(this.requests.values()).filter(
+      (req) =>
+        req.configId === configId && req.createdAt >= period.start && req.createdAt <= period.end
+    );
 
     const responses = requests
-      .map(req => this.responses.get(req.id))
-      .filter(res => res !== undefined) as ApiResponse[];
+      .map((req) => this.responses.get(req.id))
+      .filter((res) => res !== undefined) as ApiResponse[];
 
-    const successful = responses.filter(res => res.status === 'success' || res.status === 'cached');
-    const failed = responses.filter(res => res.status === 'failed');
-    const cached = responses.filter(res => res.status === 'cached');
-    const rateLimited = responses.filter(res => res.status === 'rate-limited');
+    const successful = responses.filter(
+      (res) => res.status === 'success' || res.status === 'cached'
+    );
+    const failed = responses.filter((res) => res.status === 'failed');
+    const cached = responses.filter((res) => res.status === 'cached');
+    const rateLimited = responses.filter((res) => res.status === 'rate-limited');
 
-    const durations = responses.map(res => res.timing.duration).sort((a, b) => a - b);
+    const durations = responses.map((res) => res.timing.duration).sort((a, b) => a - b);
 
     const metrics: ApiMetrics = {
       configId,
@@ -1543,7 +1557,8 @@ export class ExternalApiManagementSystem {
         byEndpoint: this.groupByEndpoint(requests),
       },
       performance: {
-        averageResponseTime: durations.length > 0 ? durations.reduce((a, b) => a + b, 0) / durations.length : 0,
+        averageResponseTime:
+          durations.length > 0 ? durations.reduce((a, b) => a + b, 0) / durations.length : 0,
         p50: durations[Math.floor(durations.length * 0.5)] || 0,
         p95: durations[Math.floor(durations.length * 0.95)] || 0,
         p99: durations[Math.floor(durations.length * 0.99)] || 0,
@@ -1611,7 +1626,7 @@ export class ExternalApiManagementSystem {
 
   private groupByMethod(requests: ApiRequest[]): Record<HttpMethod, number> {
     const grouped: Partial<Record<HttpMethod, number>> = {};
-    requests.forEach(req => {
+    requests.forEach((req) => {
       grouped[req.method] = (grouped[req.method] || 0) + 1;
     });
     return grouped as Record<HttpMethod, number>;
@@ -1619,7 +1634,7 @@ export class ExternalApiManagementSystem {
 
   private groupByStatus(responses: ApiResponse[]): Record<number, number> {
     const grouped: Record<number, number> = {};
-    responses.forEach(res => {
+    responses.forEach((res) => {
       grouped[res.http.statusCode] = (grouped[res.http.statusCode] || 0) + 1;
     });
     return grouped;
@@ -1627,7 +1642,7 @@ export class ExternalApiManagementSystem {
 
   private groupByEndpoint(requests: ApiRequest[]): Record<string, number> {
     const grouped: Record<string, number> = {};
-    requests.forEach(req => {
+    requests.forEach((req) => {
       grouped[req.endpoint] = (grouped[req.endpoint] || 0) + 1;
     });
     return grouped;
@@ -1635,7 +1650,7 @@ export class ExternalApiManagementSystem {
 
   private groupErrorsByType(responses: ApiResponse[]): Record<string, number> {
     const grouped: Record<string, number> = {};
-    responses.forEach(res => {
+    responses.forEach((res) => {
       if (res.error) {
         grouped[res.error.code] = (grouped[res.error.code] || 0) + 1;
       }
@@ -1643,10 +1658,13 @@ export class ExternalApiManagementSystem {
     return grouped;
   }
 
-  private groupErrorsByEndpoint(responses: ApiResponse[], requests: ApiRequest[]): Record<string, number> {
+  private groupErrorsByEndpoint(
+    responses: ApiResponse[],
+    requests: ApiRequest[]
+  ): Record<string, number> {
     const grouped: Record<string, number> = {};
-    responses.forEach(res => {
-      const req = requests.find(r => r.id === res.requestId);
+    responses.forEach((res) => {
+      const req = requests.find((r) => r.id === res.requestId);
       if (req) {
         grouped[req.endpoint] = (grouped[req.endpoint] || 0) + 1;
       }
@@ -1657,7 +1675,7 @@ export class ExternalApiManagementSystem {
   private getTopErrors(responses: ApiResponse[], limit: number): ApiMetrics['errors']['topErrors'] {
     const errors = new Map<string, { code: string; message: string; count: number }>();
 
-    responses.forEach(res => {
+    responses.forEach((res) => {
       if (res.error) {
         const key = res.error.code;
         const existing = errors.get(key);
@@ -1680,7 +1698,7 @@ export class ExternalApiManagementSystem {
 
   private calculateCacheSize(configId: string): number {
     let size = 0;
-    this.cache.forEach(entry => {
+    this.cache.forEach((entry) => {
       if (entry.metadata.configId === configId) {
         size += entry.metadata.size;
       }
@@ -1690,7 +1708,7 @@ export class ExternalApiManagementSystem {
 
   private getCacheEntryCount(configId: string): number {
     let count = 0;
-    this.cache.forEach(entry => {
+    this.cache.forEach((entry) => {
       if (entry.metadata.configId === configId) {
         count++;
       }
@@ -1699,7 +1717,7 @@ export class ExternalApiManagementSystem {
   }
 
   private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   // ============================================================================
@@ -1719,10 +1737,11 @@ export class ExternalApiManagementSystem {
 
   private startWebhookProcessor(): void {
     this.webhookProcessorInterval = setInterval(() => {
-      const pending = Array.from(this.webhookDeliveries.values())
-        .filter(d => d.status === 'pending');
+      const pending = Array.from(this.webhookDeliveries.values()).filter(
+        (d) => d.status === 'pending'
+      );
 
-      pending.forEach(delivery => {
+      pending.forEach((delivery) => {
         if (!delivery.nextRetry || new Date() >= delivery.nextRetry) {
           this.processWebhookDelivery(delivery);
         }
@@ -1743,39 +1762,44 @@ export class ExternalApiManagementSystem {
   // ============================================================================
 
   getConfigurationsByProvider(provider: ApiProvider): ApiConfiguration[] {
-    return Array.from(this.configurations.values())
-      .filter(config => config.provider === provider);
+    return Array.from(this.configurations.values()).filter(
+      (config) => config.provider === provider
+    );
   }
 
   getRecentRequests(configId: string, limit: number = 10): ApiRequest[] {
     return Array.from(this.requests.values())
-      .filter(req => req.configId === configId)
+      .filter((req) => req.configId === configId)
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       .slice(0, limit);
   }
 
-  getFailedRequests(configId: string, limit: number = 10): Array<{ request: ApiRequest; response: ApiResponse }> {
-    const requests = Array.from(this.requests.values())
-      .filter(req => req.configId === configId);
+  getFailedRequests(
+    configId: string,
+    limit: number = 10
+  ): Array<{ request: ApiRequest; response: ApiResponse }> {
+    const requests = Array.from(this.requests.values()).filter((req) => req.configId === configId);
 
     return requests
-      .map(req => {
-        const response = Array.from(this.responses.values()).find(res => res.requestId === req.id);
+      .map((req) => {
+        const response = Array.from(this.responses.values()).find(
+          (res) => res.requestId === req.id
+        );
         return response && response.status === 'failed' ? { request: req, response } : null;
       })
-      .filter(item => item !== null)
+      .filter((item) => item !== null)
       .sort((a, b) => b!.request.createdAt.getTime() - a!.request.createdAt.getTime())
       .slice(0, limit) as Array<{ request: ApiRequest; response: ApiResponse }>;
   }
 
   getActiveWebhooks(): Webhook[] {
-    return Array.from(this.webhooks.values())
-      .filter(wh => wh.status === 'active');
+    return Array.from(this.webhooks.values()).filter((wh) => wh.status === 'active');
   }
 
   getPendingWebhookDeliveries(): WebhookDelivery[] {
-    return Array.from(this.webhookDeliveries.values())
-      .filter(d => d.status === 'pending' || d.status === 'retrying');
+    return Array.from(this.webhookDeliveries.values()).filter(
+      (d) => d.status === 'pending' || d.status === 'retrying'
+    );
   }
 }
 

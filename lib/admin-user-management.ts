@@ -1,6 +1,6 @@
 /**
  * Admin User Management System
- * 
+ *
  * Comprehensive admin system for managing users:
  * - User account management
  * - Role and permission management
@@ -78,7 +78,15 @@ export interface UserAction {
   id: string;
   userId: string;
   adminId: string;
-  actionType: 'suspend' | 'unsuspend' | 'ban' | 'unban' | 'verify' | 'reject_verification' | 'delete_content' | 'update_profile';
+  actionType:
+    | 'suspend'
+    | 'unsuspend'
+    | 'ban'
+    | 'unban'
+    | 'verify'
+    | 'reject_verification'
+    | 'delete_content'
+    | 'update_profile';
   reason: string;
   details?: any;
   timestamp: Date;
@@ -141,10 +149,7 @@ export class AdminUserManagementSystem {
   /**
    * Update admin permissions
    */
-  async updateAdminPermissions(
-    adminId: string,
-    permissions: Permission[]
-  ): Promise<AdminUser> {
+  async updateAdminPermissions(adminId: string, permissions: Permission[]): Promise<AdminUser> {
     const admin = this.adminUsers.get(adminId);
     if (!admin) {
       throw new Error('Admin user not found');
@@ -171,7 +176,7 @@ export class AdminUserManagementSystem {
     if (admin.role === 'super_admin') return true;
 
     return admin.permissions.some(
-      p => p.category === category && p.action === action && p.resource === resource
+      (p) => p.category === category && p.action === action && p.resource === resource
     );
   }
 
@@ -197,24 +202,24 @@ export class AdminUserManagementSystem {
 
     if (query.email) {
       const emailLower = query.email.toLowerCase();
-      results = results.filter(u => u.email.toLowerCase().includes(emailLower));
+      results = results.filter((u) => u.email.toLowerCase().includes(emailLower));
     }
 
     if (query.name) {
       const nameLower = query.name.toLowerCase();
-      results = results.filter(u => u.name.toLowerCase().includes(nameLower));
+      results = results.filter((u) => u.name.toLowerCase().includes(nameLower));
     }
 
     if (query.type) {
-      results = results.filter(u => u.type === query.type);
+      results = results.filter((u) => u.type === query.type);
     }
 
     if (query.status) {
-      results = results.filter(u => u.status === query.status);
+      results = results.filter((u) => u.status === query.status);
     }
 
     if (query.verificationLevel) {
-      results = results.filter(u => u.verificationLevel === query.verificationLevel);
+      results = results.filter((u) => u.verificationLevel === query.verificationLevel);
     }
 
     results.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
@@ -328,11 +333,7 @@ export class AdminUserManagementSystem {
   /**
    * Add note to user account
    */
-  async addUserNote(data: {
-    userId: string;
-    adminId: string;
-    note: string;
-  }): Promise<void> {
+  async addUserNote(data: { userId: string; adminId: string; note: string }): Promise<void> {
     const user = this.userAccounts.get(data.userId);
     if (!user) {
       throw new Error('User not found');
@@ -432,7 +433,7 @@ export class AdminUserManagementSystem {
    */
   async getPendingKYC(limit: number = 50): Promise<KYCVerification[]> {
     return Array.from(this.kycVerifications.values())
-      .filter(k => k.status === 'pending')
+      .filter((k) => k.status === 'pending')
       .sort((a, b) => a.submittedAt.getTime() - b.submittedAt.getTime())
       .slice(0, limit);
   }
@@ -469,12 +470,9 @@ export class AdminUserManagementSystem {
   /**
    * Get user activities
    */
-  async getUserActivities(
-    userId: string,
-    limit: number = 100
-  ): Promise<UserActivity[]> {
+  async getUserActivities(userId: string, limit: number = 100): Promise<UserActivity[]> {
     return Array.from(this.userActivities.values())
-      .filter(a => a.userId === userId)
+      .filter((a) => a.userId === userId)
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
       .slice(0, limit);
   }
@@ -484,7 +482,7 @@ export class AdminUserManagementSystem {
    */
   async getFlaggedActivities(limit: number = 100): Promise<UserActivity[]> {
     return Array.from(this.userActivities.values())
-      .filter(a => a.flagged)
+      .filter((a) => a.flagged)
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
       .slice(0, limit);
   }
@@ -517,39 +515,45 @@ export class AdminUserManagementSystem {
     };
   }> {
     const users = Array.from(this.userAccounts.values());
-    const byType = users.reduce((acc, u) => {
-      acc[u.type] = (acc[u.type] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const byType = users.reduce(
+      (acc, u) => {
+        acc[u.type] = (acc[u.type] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const byStatus = users.reduce((acc, u) => {
-      acc[u.status] = (acc[u.status] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const byStatus = users.reduce(
+      (acc, u) => {
+        acc[u.status] = (acc[u.status] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const byVerificationLevel = users.reduce((acc, u) => {
-      acc[u.verificationLevel] = (acc[u.verificationLevel] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const byVerificationLevel = users.reduce(
+      (acc, u) => {
+        acc[u.verificationLevel] = (acc[u.verificationLevel] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     const kycList = Array.from(this.kycVerifications.values());
-    const pendingKYC = kycList.filter(k => k.status === 'pending').length;
-    const approvedKYC = kycList.filter(k => k.status === 'approved').length;
-    const rejectedKYC = kycList.filter(k => k.status === 'rejected').length;
-    const approvalRate = (approvedKYC + rejectedKYC) > 0
-      ? (approvedKYC / (approvedKYC + rejectedKYC)) * 100
-      : 0;
+    const pendingKYC = kycList.filter((k) => k.status === 'pending').length;
+    const approvedKYC = kycList.filter((k) => k.status === 'approved').length;
+    const rejectedKYC = kycList.filter((k) => k.status === 'rejected').length;
+    const approvalRate =
+      approvedKYC + rejectedKYC > 0 ? (approvedKYC / (approvedKYC + rejectedKYC)) * 100 : 0;
 
     const actions = Array.from(this.userActions.values());
-    const suspensions = actions.filter(a => a.actionType === 'suspend').length;
-    const bans = actions.filter(a => a.actionType === 'ban').length;
-    const verifications = actions.filter(a => a.actionType === 'verify').length;
+    const suspensions = actions.filter((a) => a.actionType === 'suspend').length;
+    const bans = actions.filter((a) => a.actionType === 'ban').length;
+    const verifications = actions.filter((a) => a.actionType === 'verify').length;
 
     const activities = Array.from(this.userActivities.values());
-    const flaggedActivities = activities.filter(a => a.flagged).length;
-    const flagRate = activities.length > 0
-      ? (flaggedActivities / activities.length) * 100
-      : 0;
+    const flaggedActivities = activities.filter((a) => a.flagged).length;
+    const flagRate = activities.length > 0 ? (flaggedActivities / activities.length) * 100 : 0;
 
     return {
       users: {
@@ -607,21 +611,25 @@ export class AdminUserManagementSystem {
    */
   private async checkForSuspiciousActivity(activity: UserActivity): Promise<void> {
     // Simple fraud detection rules
-    const recentActivities = Array.from(this.userActivities.values())
-      .filter(a => 
-        a.userId === activity.userId &&
-        a.timestamp > new Date(Date.now() - 3600000) // Last hour
-      );
+    const recentActivities = Array.from(this.userActivities.values()).filter(
+      (a) => a.userId === activity.userId && a.timestamp > new Date(Date.now() - 3600000) // Last hour
+    );
 
     // Flag if too many login attempts
-    if (activity.activityType === 'login' && recentActivities.filter(a => a.activityType === 'login').length > 5) {
+    if (
+      activity.activityType === 'login' &&
+      recentActivities.filter((a) => a.activityType === 'login').length > 5
+    ) {
       activity.flagged = true;
       activity.flagReason = 'Multiple login attempts in short time';
       this.userActivities.set(activity.id, activity);
     }
 
     // Flag if multiple purchases in short time
-    if (activity.activityType === 'purchase' && recentActivities.filter(a => a.activityType === 'purchase').length > 3) {
+    if (
+      activity.activityType === 'purchase' &&
+      recentActivities.filter((a) => a.activityType === 'purchase').length > 3
+    ) {
       activity.flagged = true;
       activity.flagReason = 'Multiple purchases in short time';
       this.userActivities.set(activity.id, activity);
@@ -638,23 +646,19 @@ export class AdminUserManagementSystem {
       case 'super_admin':
         return allPermissions;
       case 'admin':
-        return allPermissions.filter(p => 
-          p.category !== 'system' || p.action === 'read'
-        );
+        return allPermissions.filter((p) => p.category !== 'system' || p.action === 'read');
       case 'moderator':
-        return allPermissions.filter(p =>
-          (p.category === 'users' || p.category === 'content') &&
-          (p.action === 'read' || p.action === 'update')
+        return allPermissions.filter(
+          (p) =>
+            (p.category === 'users' || p.category === 'content') &&
+            (p.action === 'read' || p.action === 'update')
         );
       case 'support':
-        return allPermissions.filter(p =>
-          (p.category === 'users' || p.category === 'orders') &&
-          p.action === 'read'
+        return allPermissions.filter(
+          (p) => (p.category === 'users' || p.category === 'orders') && p.action === 'read'
         );
       case 'analyst':
-        return allPermissions.filter(p =>
-          p.category === 'analytics' && p.action === 'read'
-        );
+        return allPermissions.filter((p) => p.category === 'analytics' && p.action === 'read');
       default:
         return [];
     }
@@ -665,11 +669,18 @@ export class AdminUserManagementSystem {
    */
   private initializeDefaultData(): void {
     // Create permissions
-    const categories: Permission['category'][] = ['users', 'products', 'orders', 'content', 'analytics', 'system'];
+    const categories: Permission['category'][] = [
+      'users',
+      'products',
+      'orders',
+      'content',
+      'analytics',
+      'system',
+    ];
     const actions: Permission['action'][] = ['create', 'read', 'update', 'delete', 'manage'];
 
-    categories.forEach(category => {
-      actions.forEach(action => {
+    categories.forEach((category) => {
+      actions.forEach((action) => {
         const permission: Permission = {
           id: `perm-${category}-${action}`,
           name: `${action.charAt(0).toUpperCase() + action.slice(1)} ${category}`,

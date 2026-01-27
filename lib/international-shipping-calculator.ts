@@ -1,6 +1,6 @@
 /**
  * International Shipping Calculator
- * 
+ *
  * Calculates international shipping costs:
  * - Multi-carrier support
  * - Weight-based pricing
@@ -21,11 +21,11 @@ export interface ShippingCarrier {
   id: string;
   name: string;
   type: 'express' | 'standard' | 'economy';
-  
+
   // Coverage
   domesticCountries: string[];
   internationalZones: string[];
-  
+
   // Pricing
   pricing: {
     baseRate: number;
@@ -33,7 +33,7 @@ export interface ShippingCarrier {
     currency: string;
     dimensionalFactor: number; // For volumetric weight
   };
-  
+
   // Limits
   limits: {
     maxWeight: number; // kg
@@ -41,7 +41,7 @@ export interface ShippingCarrier {
     maxWidth: number; // cm
     maxHeight: number; // cm
   };
-  
+
   // Features
   features: {
     tracking: boolean;
@@ -49,7 +49,7 @@ export interface ShippingCarrier {
     signatureRequired: boolean;
     customsClearance: boolean;
   };
-  
+
   isActive: boolean;
 }
 
@@ -76,7 +76,7 @@ export interface ShippingQuote {
     name: string;
     type: string;
   };
-  
+
   // Costs
   costs: {
     baseCost: number;
@@ -88,14 +88,14 @@ export interface ShippingQuote {
     total: number;
     currency: string;
   };
-  
+
   // Delivery
   delivery: {
     estimatedDays: number;
     estimatedDate: Date;
     guaranteedDate?: Date;
   };
-  
+
   // Details
   details: {
     actualWeight: number;
@@ -103,18 +103,18 @@ export interface ShippingQuote {
     chargeableWeight: number;
     zone: string;
   };
-  
+
   validUntil: Date;
 }
 
 export interface Shipment {
   id: string;
   orderId: string;
-  
+
   // Routing
   origin: ShippingAddress;
   destination: ShippingAddress;
-  
+
   // Package
   package: ShipmentDimensions;
   contents: {
@@ -123,14 +123,14 @@ export interface Shipment {
     currency: string;
     quantity: number;
   }[];
-  
+
   // Carrier
   carrier: {
     id: string;
     name: string;
     trackingNumber?: string;
   };
-  
+
   // Costs
   shipping: {
     cost: number;
@@ -139,16 +139,24 @@ export interface Shipment {
     total: number;
     currency: string;
   };
-  
+
   // Status
-  status: 'created' | 'label_printed' | 'picked_up' | 'in_transit' | 'customs' | 'out_for_delivery' | 'delivered' | 'exception';
+  status:
+    | 'created'
+    | 'label_printed'
+    | 'picked_up'
+    | 'in_transit'
+    | 'customs'
+    | 'out_for_delivery'
+    | 'delivered'
+    | 'exception';
   statusHistory: {
     status: string;
     location?: string;
     timestamp: Date;
     notes?: string;
   }[];
-  
+
   // Tracking
   trackingEvents: {
     event: string;
@@ -156,28 +164,28 @@ export interface Shipment {
     timestamp: Date;
     description: string;
   }[];
-  
+
   createdAt: Date;
   deliveredAt?: Date;
 }
 
 export interface CustomsDeclaration {
   shipmentId: string;
-  
+
   // Shipper
   shipper: {
     name: string;
     address: ShippingAddress;
     taxId?: string;
   };
-  
+
   // Recipient
   recipient: {
     name: string;
     address: ShippingAddress;
     taxId?: string;
   };
-  
+
   // Contents
   items: {
     description: string;
@@ -188,7 +196,7 @@ export interface CustomsDeclaration {
     currency: string;
     countryOfOrigin: string;
   }[];
-  
+
   // Declaration
   declaration: {
     purpose: 'sale' | 'gift' | 'sample' | 'return';
@@ -197,7 +205,7 @@ export interface CustomsDeclaration {
     invoiceNumber?: string;
     invoiceDate?: Date;
   };
-  
+
   // Signature
   signature: {
     name: string;
@@ -270,7 +278,7 @@ export class InternationalShippingCalculator {
       },
     ];
 
-    zones.forEach(zone => {
+    zones.forEach((zone) => {
       this.zones.set(zone.id, zone);
     });
   }
@@ -386,7 +394,7 @@ export class InternationalShippingCalculator {
       },
     ];
 
-    carriers.forEach(carrier => {
+    carriers.forEach((carrier) => {
       this.carriers.set(carrier.id, carrier);
     });
   }
@@ -406,7 +414,10 @@ export class InternationalShippingCalculator {
   /**
    * Calculate volumetric weight
    */
-  private calculateVolumetricWeight(dimensions: ShipmentDimensions, dimensionalFactor: number): number {
+  private calculateVolumetricWeight(
+    dimensions: ShipmentDimensions,
+    dimensionalFactor: number
+  ): number {
     const { length, width, height } = dimensions;
     return (length * width * height) / dimensionalFactor;
   }
@@ -414,7 +425,10 @@ export class InternationalShippingCalculator {
   /**
    * Get chargeable weight (higher of actual or volumetric)
    */
-  private getChargeableWeight(dimensions: ShipmentDimensions, dimensionalFactor: number): {
+  private getChargeableWeight(
+    dimensions: ShipmentDimensions,
+    dimensionalFactor: number
+  ): {
     actualWeight: number;
     volumetricWeight: number;
     chargeableWeight: number;
@@ -446,9 +460,9 @@ export class InternationalShippingCalculator {
     }
 
     const carriers = params.carrierId
-      ? [this.carriers.get(params.carrierId)].filter(Boolean) as ShippingCarrier[]
-      : Array.from(this.carriers.values()).filter(c => 
-          c.isActive && c.internationalZones.includes(zone.id)
+      ? ([this.carriers.get(params.carrierId)].filter(Boolean) as ShippingCarrier[])
+      : Array.from(this.carriers.values()).filter(
+          (c) => c.isActive && c.internationalZones.includes(zone.id)
         );
 
     const quotes: ShippingQuote[] = [];
@@ -470,28 +484,30 @@ export class InternationalShippingCalculator {
       // Calculate costs
       const baseCost = carrier.pricing.baseRate;
       const weightCost = weights.chargeableWeight * carrier.pricing.perKgRate;
-      
+
       // Zone surcharge (10% per zone level)
       const zoneLevel = parseInt(zone.id.split('-')[1] || '0');
       const zoneSurcharge = (baseCost + weightCost) * (zoneLevel * 0.1);
-      
+
       // Fuel surcharge (15% of base + weight)
       const fuelSurcharge = (baseCost + weightCost) * 0.15;
-      
+
       // Insurance (1% of declared value)
       const insuranceCost = params.insuranceValue ? params.insuranceValue * 0.01 : 0;
-      
+
       // Customs handling (flat fee for international)
       const customsHandling = zone.id !== 'zone-domestic' ? 10 : 0;
 
-      const total = baseCost + weightCost + zoneSurcharge + fuelSurcharge + insuranceCost + customsHandling;
+      const total =
+        baseCost + weightCost + zoneSurcharge + fuelSurcharge + insuranceCost + customsHandling;
 
       // Calculate delivery estimate
-      const estimatedDays = carrier.type === 'express' 
-        ? zone.baseDeliveryDays 
-        : carrier.type === 'standard'
-        ? zone.baseDeliveryDays + 2
-        : zone.baseDeliveryDays + 5;
+      const estimatedDays =
+        carrier.type === 'express'
+          ? zone.baseDeliveryDays
+          : carrier.type === 'standard'
+            ? zone.baseDeliveryDays + 2
+            : zone.baseDeliveryDays + 5;
 
       const estimatedDate = new Date();
       estimatedDate.setDate(estimatedDate.getDate() + estimatedDays);
@@ -580,11 +596,13 @@ export class InternationalShippingCalculator {
         currency: quote.costs.currency,
       },
       status: 'created',
-      statusHistory: [{
-        status: 'created',
-        timestamp: new Date(),
-        notes: 'Shipment created',
-      }],
+      statusHistory: [
+        {
+          status: 'created',
+          timestamp: new Date(),
+          notes: 'Shipment created',
+        },
+      ],
       trackingEvents: [],
       createdAt: new Date(),
     };
@@ -680,10 +698,11 @@ export class InternationalShippingCalculator {
     const zone = this.getZoneForCountry(destination);
     if (!zone) return [];
 
-    return Array.from(this.carriers.values()).filter(carrier =>
-      carrier.isActive &&
-      carrier.domesticCountries.includes(origin) &&
-      carrier.internationalZones.includes(zone.id)
+    return Array.from(this.carriers.values()).filter(
+      (carrier) =>
+        carrier.isActive &&
+        carrier.domesticCountries.includes(origin) &&
+        carrier.internationalZones.includes(zone.id)
     );
   }
 
@@ -694,34 +713,47 @@ export class InternationalShippingCalculator {
     const shipments = Array.from(this.shipments.values());
 
     const totalShipments = shipments.length;
-    const byStatus = shipments.reduce((acc, ship) => {
-      acc[ship.status] = (acc[ship.status] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const byStatus = shipments.reduce(
+      (acc, ship) => {
+        acc[ship.status] = (acc[ship.status] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const byCarrier = shipments.reduce((acc, ship) => {
-      acc[ship.carrier.name] = (acc[ship.carrier.name] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const byCarrier = shipments.reduce(
+      (acc, ship) => {
+        acc[ship.carrier.name] = (acc[ship.carrier.name] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const byDestination = shipments.reduce((acc, ship) => {
-      acc[ship.destination.country] = (acc[ship.destination.country] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const byDestination = shipments.reduce(
+      (acc, ship) => {
+        acc[ship.destination.country] = (acc[ship.destination.country] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const averageCost = shipments.length > 0
-      ? shipments.reduce((sum, s) => sum + s.shipping.total, 0) / shipments.length
-      : 0;
+    const averageCost =
+      shipments.length > 0
+        ? shipments.reduce((sum, s) => sum + s.shipping.total, 0) / shipments.length
+        : 0;
 
-    const deliveredShipments = shipments.filter(s => s.status === 'delivered');
-    const averageDeliveryTime = deliveredShipments.length > 0
-      ? deliveredShipments.reduce((sum, s) => {
-          if (s.deliveredAt) {
-            return sum + (s.deliveredAt.getTime() - s.createdAt.getTime()) / (1000 * 60 * 60 * 24);
-          }
-          return sum;
-        }, 0) / deliveredShipments.length
-      : 0;
+    const deliveredShipments = shipments.filter((s) => s.status === 'delivered');
+    const averageDeliveryTime =
+      deliveredShipments.length > 0
+        ? deliveredShipments.reduce((sum, s) => {
+            if (s.deliveredAt) {
+              return (
+                sum + (s.deliveredAt.getTime() - s.createdAt.getTime()) / (1000 * 60 * 60 * 24)
+              );
+            }
+            return sum;
+          }, 0) / deliveredShipments.length
+        : 0;
 
     return {
       totalShipments,

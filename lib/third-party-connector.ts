@@ -1,6 +1,6 @@
 /**
  * Third-Party Service Connector
- * 
+ *
  * Connect with external services and APIs
  */
 
@@ -102,7 +102,7 @@ export class ThirdPartyServiceConnector {
   async listIntegrations(category?: ServiceIntegration['category']): Promise<ServiceIntegration[]> {
     let integrations = Array.from(this.integrations.values());
     if (category) {
-      integrations = integrations.filter(i => i.category === category);
+      integrations = integrations.filter((i) => i.category === category);
     }
     return integrations;
   }
@@ -121,26 +121,31 @@ export class ThirdPartyServiceConnector {
     const integrations = Array.from(this.integrations.values());
     const calls = Array.from(this.calls.values());
 
-    const byProvider = integrations.reduce((acc, i) => {
-      acc[i.provider] = (acc[i.provider] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const byProvider = integrations.reduce(
+      (acc, i) => {
+        acc[i.provider] = (acc[i.provider] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const byCategory = integrations.reduce((acc, i) => {
-      acc[i.category] = (acc[i.category] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const byCategory = integrations.reduce(
+      (acc, i) => {
+        acc[i.category] = (acc[i.category] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const successful = calls.filter(c => c.success).length;
-    const failed = calls.filter(c => !c.success).length;
+    const successful = calls.filter((c) => c.success).length;
+    const failed = calls.filter((c) => !c.success).length;
     const successRate = calls.length > 0 ? (successful / calls.length) * 100 : 0;
-    const avgResponseTime = calls.length > 0
-      ? calls.reduce((sum, c) => sum + c.responseTime, 0) / calls.length
-      : 0;
+    const avgResponseTime =
+      calls.length > 0 ? calls.reduce((sum, c) => sum + c.responseTime, 0) / calls.length : 0;
 
     return {
       totalIntegrations: integrations.length,
-      enabledIntegrations: integrations.filter(i => i.enabled).length,
+      enabledIntegrations: integrations.filter((i) => i.enabled).length,
       byProvider,
       byCategory,
       totalCalls: calls.length,

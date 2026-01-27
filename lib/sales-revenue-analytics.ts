@@ -1,6 +1,6 @@
 /**
  * Sales & Revenue Analytics System
- * 
+ *
  * Comprehensive sales and revenue analytics:
  * - Sales performance tracking
  * - Revenue analysis and forecasting
@@ -16,7 +16,7 @@ export interface SalesMetrics {
     start: Date;
     end: Date;
   };
-  
+
   // Overall sales
   overall: {
     totalSales: number;
@@ -26,7 +26,7 @@ export interface SalesMetrics {
     averageItemsPerOrder: number;
     conversionRate: number;
   };
-  
+
   // Growth metrics
   growth: {
     salesGrowth: number; // percentage
@@ -39,7 +39,7 @@ export interface SalesMetrics {
       changePercentage: number;
     };
   };
-  
+
   // Daily breakdown
   daily: {
     date: Date;
@@ -47,7 +47,7 @@ export interface SalesMetrics {
     orders: number;
     units: number;
   }[];
-  
+
   // Hourly patterns
   hourlyPatterns: {
     hour: number; // 0-23
@@ -55,7 +55,7 @@ export interface SalesMetrics {
     averageOrders: number;
     peakIndicator: boolean;
   }[];
-  
+
   // Day of week patterns
   dayOfWeekPatterns: {
     dayOfWeek: number; // 0-6
@@ -70,7 +70,7 @@ export interface RevenueAnalytics {
     start: Date;
     end: Date;
   };
-  
+
   // Revenue breakdown
   revenue: {
     gross: number;
@@ -80,7 +80,7 @@ export interface RevenueAnalytics {
     taxes: number;
     shipping: number;
   };
-  
+
   // Revenue by source
   bySource: {
     source: string;
@@ -88,7 +88,7 @@ export interface RevenueAnalytics {
     percentage: number;
     growth: number;
   }[];
-  
+
   // Revenue by category
   byCategory: {
     category: string;
@@ -97,7 +97,7 @@ export interface RevenueAnalytics {
     growth: number;
     margin: number;
   }[];
-  
+
   // Revenue by channel
   byChannel: {
     channel: 'website' | 'mobile' | 'marketplace' | 'social' | 'pos' | 'other';
@@ -106,7 +106,7 @@ export interface RevenueAnalytics {
     orders: number;
     averageOrderValue: number;
   }[];
-  
+
   // Revenue by geography
   byGeography: {
     country: string;
@@ -116,7 +116,7 @@ export interface RevenueAnalytics {
     percentage: number;
     customers: number;
   }[];
-  
+
   // Revenue by customer segment
   byCustomerSegment: {
     segment: string;
@@ -125,7 +125,7 @@ export interface RevenueAnalytics {
     customers: number;
     averageRevenuePerCustomer: number;
   }[];
-  
+
   // Recurring vs one-time
   recurring: {
     recurringRevenue: number;
@@ -141,7 +141,7 @@ export interface ProductPerformance {
   productName: string;
   sku?: string;
   category: string;
-  
+
   // Sales metrics
   sales: {
     revenue: number;
@@ -150,7 +150,7 @@ export interface ProductPerformance {
     averagePrice: number;
     averageDiscount: number;
   };
-  
+
   // Performance
   performance: {
     rank: number;
@@ -159,7 +159,7 @@ export interface ProductPerformance {
     growthRate: number;
     marketShare: number; // percentage of category
   };
-  
+
   // Profitability
   profitability: {
     cost: number;
@@ -167,7 +167,7 @@ export interface ProductPerformance {
     margin: number; // percentage
     roi: number;
   };
-  
+
   // Inventory
   inventory: {
     currentStock: number;
@@ -175,7 +175,7 @@ export interface ProductPerformance {
     daysInStock: number;
     stockoutRate: number;
   };
-  
+
   // Customer metrics
   customer: {
     uniqueBuyers: number;
@@ -189,7 +189,7 @@ export interface ProductPerformance {
 export interface SalesFunnel {
   stage: string;
   order: number;
-  
+
   // Metrics
   metrics: {
     visitors: number;
@@ -198,13 +198,13 @@ export interface SalesFunnel {
     dropoffRate: number;
     averageTimeInStage: number; // seconds
   };
-  
+
   // Revenue
   revenue: {
     total: number;
     average: number;
   };
-  
+
   // Comparison
   comparison?: {
     previousPeriod: {
@@ -225,7 +225,7 @@ export interface DiscountAnalytics {
     start: Date;
     end: Date;
   };
-  
+
   // Overall impact
   overall: {
     totalDiscounts: number;
@@ -234,7 +234,7 @@ export interface DiscountAnalytics {
     averageDiscountAmount: number;
     averageDiscountPercentage: number;
   };
-  
+
   // By discount type
   byType: {
     type: 'percentage' | 'fixed' | 'bogo' | 'free_shipping' | 'bundle' | 'other';
@@ -243,7 +243,7 @@ export interface DiscountAnalytics {
     revenue: number;
     effectiveness: number; // ROI
   }[];
-  
+
   // By promotion
   byPromotion: {
     promotionId: string;
@@ -256,10 +256,10 @@ export interface DiscountAnalytics {
     redemptionRate: number;
     roi: number;
   }[];
-  
+
   // Impact analysis
   impact: {
-    incremental Revenue: number;
+    incrementalRevenue: number;
     incrementalOrders: number;
     averageOrderValueImpact: number;
     profitMarginImpact: number;
@@ -271,7 +271,7 @@ export interface SalesTeamPerformance {
   teamMemberName: string;
   role: string;
   territory?: string;
-  
+
   // Sales metrics
   sales: {
     revenue: number;
@@ -279,7 +279,7 @@ export interface SalesTeamPerformance {
     units: number;
     averageOrderValue: number;
   };
-  
+
   // Performance
   performance: {
     quota: number;
@@ -289,7 +289,7 @@ export interface SalesTeamPerformance {
     averageDealSize: number;
     salesCycleLength: number; // days
   };
-  
+
   // Activity
   activity: {
     calls: number;
@@ -298,7 +298,7 @@ export interface SalesTeamPerformance {
     proposals: number;
     demos: number;
   };
-  
+
   // Customer metrics
   customer: {
     newCustomers: number;
@@ -306,7 +306,7 @@ export interface SalesTeamPerformance {
     customerSatisfaction: number;
     retentionRate: number;
   };
-  
+
   // Targets
   targets: {
     monthly: number;
@@ -325,7 +325,7 @@ export interface RevenueForecast {
     start: Date;
     end: Date;
   };
-  
+
   // Forecast data
   forecast: {
     date: Date;
@@ -336,7 +336,7 @@ export interface RevenueForecast {
       level: number; // percentage (e.g., 95%)
     };
   }[];
-  
+
   // Actual vs forecast
   comparison: {
     date: Date;
@@ -345,7 +345,7 @@ export interface RevenueForecast {
     variance: number;
     variancePercentage: number;
   }[];
-  
+
   // Model info
   model: {
     type: 'linear' | 'exponential' | 'arima' | 'prophet' | 'ensemble';
@@ -354,7 +354,7 @@ export interface RevenueForecast {
     rmse: number; // Root Mean Square Error
     lastTrainedAt: Date;
   };
-  
+
   // Factors
   factors: {
     seasonality: {
@@ -376,7 +376,7 @@ export interface RevenueForecast {
 
 export interface ChannelAnalytics {
   channel: string;
-  
+
   // Performance
   performance: {
     revenue: number;
@@ -386,14 +386,14 @@ export interface ChannelAnalytics {
     conversionRate: number;
     averageOrderValue: number;
   };
-  
+
   // Growth
   growth: {
     revenueGrowth: number;
     orderGrowth: number;
     visitorGrowth: number;
   };
-  
+
   // Customer acquisition
   acquisition: {
     newCustomers: number;
@@ -401,14 +401,14 @@ export interface ChannelAnalytics {
     customerLifetimeValue: number;
     ltvcacRatio: number;
   };
-  
+
   // Profitability
   profitability: {
     grossProfit: number;
     margin: number;
     roi: number;
   };
-  
+
   // Behavior
   behavior: {
     averageSessionDuration: number;
@@ -429,7 +429,7 @@ export class SalesRevenueAnalytics {
     this.revenueData = new Map();
     this.productPerformance = new Map();
     this.forecasts = new Map();
-    
+
     // Initialize with mock data
     this.initializeMockData();
   }
@@ -607,7 +607,8 @@ export class SalesRevenueAnalytics {
       daily,
       hourlyPatterns: Array.from({ length: 24 }, (_, hour) => ({
         hour,
-        averageSales: hour >= 9 && hour <= 21 ? 1500 + Math.random() * 500 : 500 + Math.random() * 200,
+        averageSales:
+          hour >= 9 && hour <= 21 ? 1500 + Math.random() * 500 : 500 + Math.random() * 200,
         averageOrders: hour >= 9 && hour <= 21 ? 3 + Math.floor(Math.random() * 2) : 1,
         peakIndicator: hour >= 19 && hour <= 21,
       })),
@@ -628,7 +629,7 @@ export class SalesRevenueAnalytics {
    */
   async getRevenueAnalytics(period: { start: Date; end: Date }): Promise<RevenueAnalytics> {
     const grossRevenue = 1250000;
-    
+
     return {
       period,
       revenue: {
@@ -653,24 +654,74 @@ export class SalesRevenueAnalytics {
         { category: 'Woodwork', revenue: 195000, percentage: 15.6, growth: 5.8, margin: 38 },
       ],
       byChannel: [
-        { channel: 'website', revenue: 875000, percentage: 70, orders: 1715, averageOrderValue: 510.20 },
-        { channel: 'mobile', revenue: 250000, percentage: 20, orders: 490, averageOrderValue: 510.20 },
-        { channel: 'marketplace', revenue: 125000, percentage: 10, orders: 245, averageOrderValue: 510.20 },
+        {
+          channel: 'website',
+          revenue: 875000,
+          percentage: 70,
+          orders: 1715,
+          averageOrderValue: 510.2,
+        },
+        {
+          channel: 'mobile',
+          revenue: 250000,
+          percentage: 20,
+          orders: 490,
+          averageOrderValue: 510.2,
+        },
+        {
+          channel: 'marketplace',
+          revenue: 125000,
+          percentage: 10,
+          orders: 245,
+          averageOrderValue: 510.2,
+        },
         { channel: 'social', revenue: 0, percentage: 0, orders: 0, averageOrderValue: 0 },
         { channel: 'pos', revenue: 0, percentage: 0, orders: 0, averageOrderValue: 0 },
         { channel: 'other', revenue: 0, percentage: 0, orders: 0, averageOrderValue: 0 },
       ],
       byGeography: [
-        { country: 'India', state: 'Maharashtra', city: 'Mumbai', revenue: 375000, percentage: 30, customers: 4569 },
-        { country: 'India', state: 'Karnataka', city: 'Bangalore', revenue: 312500, percentage: 25, customers: 3808 },
+        {
+          country: 'India',
+          state: 'Maharashtra',
+          city: 'Mumbai',
+          revenue: 375000,
+          percentage: 30,
+          customers: 4569,
+        },
+        {
+          country: 'India',
+          state: 'Karnataka',
+          city: 'Bangalore',
+          revenue: 312500,
+          percentage: 25,
+          customers: 3808,
+        },
         { country: 'India', state: 'Delhi', revenue: 250000, percentage: 20, customers: 3046 },
         { country: 'USA', revenue: 187500, percentage: 15, customers: 1523 },
         { country: 'UK', revenue: 125000, percentage: 10, customers: 1015 },
       ],
       byCustomerSegment: [
-        { segment: 'VIP', revenue: 437500, percentage: 35, customers: 1523, averageRevenuePerCustomer: 287.24 },
-        { segment: 'Regular', revenue: 562500, percentage: 45, customers: 7615, averageRevenuePerCustomer: 73.88 },
-        { segment: 'New', revenue: 250000, percentage: 20, customers: 6092, averageRevenuePerCustomer: 41.04 },
+        {
+          segment: 'VIP',
+          revenue: 437500,
+          percentage: 35,
+          customers: 1523,
+          averageRevenuePerCustomer: 287.24,
+        },
+        {
+          segment: 'Regular',
+          revenue: 562500,
+          percentage: 45,
+          customers: 7615,
+          averageRevenuePerCustomer: 73.88,
+        },
+        {
+          segment: 'New',
+          revenue: 250000,
+          percentage: 20,
+          customers: 6092,
+          averageRevenuePerCustomer: 41.04,
+        },
       ],
       recurring: {
         recurringRevenue: 187500,
@@ -687,14 +738,14 @@ export class SalesRevenueAnalytics {
    */
   async getProductPerformance(limit?: number): Promise<ProductPerformance[]> {
     let products = Array.from(this.productPerformance.values());
-    
+
     // Sort by revenue rank
     products.sort((a, b) => a.performance.revenueRank - b.performance.revenueRank);
-    
+
     if (limit) {
       products = products.slice(0, limit);
     }
-    
+
     return products;
   }
 
@@ -761,7 +812,7 @@ export class SalesRevenueAnalytics {
           dropoffRate: 50.1,
           averageTimeInStage: 180,
         },
-        revenue: { total: 1250000, average: 510.20 },
+        revenue: { total: 1250000, average: 510.2 },
         comparison: {
           previousPeriod: { visitors: 4446, conversions: 2223, conversionRate: 50.0 },
           change: { visitors: 467, conversions: 227, conversionRate: -0.1 },
@@ -784,9 +835,21 @@ export class SalesRevenueAnalytics {
         averageDiscountPercentage: 12.5,
       },
       byType: [
-        { type: 'percentage', discountAmount: 31250, orders: 490, revenue: 250000, effectiveness: 3.2 },
+        {
+          type: 'percentage',
+          discountAmount: 31250,
+          orders: 490,
+          revenue: 250000,
+          effectiveness: 3.2,
+        },
         { type: 'fixed', discountAmount: 18750, orders: 294, revenue: 150000, effectiveness: 2.8 },
-        { type: 'free_shipping', discountAmount: 9375, orders: 147, revenue: 75000, effectiveness: 2.5 },
+        {
+          type: 'free_shipping',
+          discountAmount: 9375,
+          orders: 147,
+          revenue: 75000,
+          effectiveness: 2.5,
+        },
         { type: 'bogo', discountAmount: 2500, orders: 39, revenue: 20000, effectiveness: 3.5 },
         { type: 'bundle', discountAmount: 625, orders: 10, revenue: 5000, effectiveness: 4.0 },
         { type: 'other', discountAmount: 0, orders: 0, revenue: 0, effectiveness: 0 },
@@ -838,14 +901,14 @@ export class SalesRevenueAnalytics {
           revenue: 450000,
           orders: 882,
           units: 1890,
-          averageOrderValue: 510.20,
+          averageOrderValue: 510.2,
         },
         performance: {
           quota: 400000,
           quotaAttainment: 112.5,
           rank: 1,
           winRate: 68.5,
-          averageDealSize: 510.20,
+          averageDealSize: 510.2,
           salesCycleLength: 7,
         },
         activity: {
@@ -877,14 +940,14 @@ export class SalesRevenueAnalytics {
           revenue: 375000,
           orders: 735,
           units: 1575,
-          averageOrderValue: 510.20,
+          averageOrderValue: 510.2,
         },
         performance: {
           quota: 350000,
           quotaAttainment: 107.1,
           rank: 2,
           winRate: 65.2,
-          averageDealSize: 510.20,
+          averageDealSize: 510.2,
           salesCycleLength: 8,
         },
         activity: {
@@ -922,12 +985,12 @@ export class SalesRevenueAnalytics {
     const forecast = Array.from({ length: months * 30 }, (_, i) => {
       const date = new Date(startDate);
       date.setDate(date.getDate() + i);
-      
+
       const baseValue = 42000;
       const trend = i * 150;
       const seasonality = Math.sin((i / 30) * Math.PI) * 5000;
       const predicted = baseValue + trend + seasonality;
-      
+
       return {
         date,
         predicted: Number(predicted.toFixed(2)),
@@ -981,7 +1044,7 @@ export class SalesRevenueAnalytics {
           units: 3675,
           visitors: 85000,
           conversionRate: 2.02,
-          averageOrderValue: 510.20,
+          averageOrderValue: 510.2,
         },
         growth: {
           revenueGrowth: 12.5,
@@ -1014,7 +1077,7 @@ export class SalesRevenueAnalytics {
           units: 1050,
           visitors: 28000,
           conversionRate: 1.75,
-          averageOrderValue: 510.20,
+          averageOrderValue: 510.2,
         },
         growth: {
           revenueGrowth: 25.8,

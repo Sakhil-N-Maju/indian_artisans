@@ -1,6 +1,6 @@
 /**
  * Fraud Detection System
- * 
+ *
  * Comprehensive fraud detection and prevention:
  * - Transaction fraud detection
  * - Account fraud detection
@@ -15,15 +15,15 @@
 export interface FraudCheck {
   id: string;
   timestamp: Date;
-  
+
   // Entity being checked
   entityType: 'transaction' | 'user' | 'payment' | 'order' | 'login' | 'registration';
   entityId: string;
-  
+
   // Risk assessment
   riskScore: number; // 0-100
   riskLevel: 'low' | 'medium' | 'high' | 'critical';
-  
+
   // Fraud indicators
   fraudIndicators: {
     indicator: string;
@@ -32,10 +32,10 @@ export interface FraudCheck {
     description: string;
     weight: number;
   }[];
-  
+
   // Decision
   decision: 'approve' | 'review' | 'challenge' | 'reject' | 'block';
-  
+
   // Rules triggered
   rulesTriggered: {
     ruleId: string;
@@ -43,7 +43,7 @@ export interface FraudCheck {
     matched: boolean;
     score: number;
   }[];
-  
+
   // ML model results
   mlModels?: {
     modelName: string;
@@ -51,14 +51,14 @@ export interface FraudCheck {
     confidence: number;
     features: Record<string, any>;
   }[];
-  
+
   // Recommendation
   recommendation: {
     action: string;
     reason: string;
     alternativeActions?: string[];
   };
-  
+
   // Context
   context: {
     userId?: string;
@@ -71,7 +71,7 @@ export interface FraudCheck {
     };
     userAgent?: string;
   };
-  
+
   // Review
   reviewRequired: boolean;
   reviewed: boolean;
@@ -85,30 +85,45 @@ export interface FraudRule {
   id: string;
   name: string;
   description: string;
-  category: 'transaction' | 'account' | 'payment' | 'behavioral' | 'device' | 'location' | 'velocity';
-  
+  category:
+    | 'transaction'
+    | 'account'
+    | 'payment'
+    | 'behavioral'
+    | 'device'
+    | 'location'
+    | 'velocity';
+
   // Rule definition
   conditions: {
     field: string;
-    operator: 'equals' | 'not_equals' | 'greater_than' | 'less_than' | 'contains' | 'in' | 'not_in' | 'matches_pattern';
+    operator:
+      | 'equals'
+      | 'not_equals'
+      | 'greater_than'
+      | 'less_than'
+      | 'contains'
+      | 'in'
+      | 'not_in'
+      | 'matches_pattern';
     value: any;
     timeWindow?: number; // minutes
   }[];
-  
+
   // Scoring
   riskScore: number; // 0-100
   weight: number; // multiplier
-  
+
   // Actions
   actions: {
     type: 'flag' | 'review' | 'challenge' | 'block' | 'notify';
     config?: Record<string, any>;
   }[];
-  
+
   // Status
   enabled: boolean;
   priority: number;
-  
+
   // Statistics
   stats: {
     totalMatches: number;
@@ -116,19 +131,19 @@ export interface FraudRule {
     falsePositives: number;
     accuracy: number;
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface TransactionFraud {
   transactionId: string;
-  
+
   // Transaction details
   amount: number;
   currency: string;
   paymentMethod: string;
-  
+
   // Parties
   buyer: {
     id: string;
@@ -137,7 +152,7 @@ export interface TransactionFraud {
     totalSpent: number;
     riskScore: number;
   };
-  
+
   seller?: {
     id: string;
     accountAge: number;
@@ -145,40 +160,40 @@ export interface TransactionFraud {
     rating: number;
     riskScore: number;
   };
-  
+
   // Fraud signals
   signals: {
     // Amount signals
     unusualAmount: boolean;
     amountDeviation: number; // percentage from user's average
-    
+
     // Velocity signals
     transactionsInLastHour: number;
     transactionsInLastDay: number;
     totalAmountInLastDay: number;
-    
+
     // Payment signals
     newPaymentMethod: boolean;
     paymentMethodMismatch: boolean;
     billingAddressMismatch: boolean;
-    
+
     // Device signals
     newDevice: boolean;
     deviceFingerprint?: string;
     multipleAccounts: boolean;
-    
+
     // Location signals
     locationChange: boolean;
     distanceFromLastTransaction?: number; // km
     highRiskCountry: boolean;
     vpnDetected: boolean;
-    
+
     // Behavioral signals
     unusualTimeOfDay: boolean;
     rapidClicking: boolean;
     suspiciousPatterns: string[];
   };
-  
+
   // Risk assessment
   riskFactors: {
     factor: string;
@@ -190,49 +205,49 @@ export interface TransactionFraud {
 export interface AccountFraud {
   accountId: string;
   accountType: 'customer' | 'artisan' | 'vendor';
-  
+
   // Account details
   createdAt: Date;
   accountAge: number; // days
-  
+
   // Verification status
   emailVerified: boolean;
   phoneVerified: boolean;
   identityVerified: boolean;
-  
+
   // Fraud signals
   signals: {
     // Registration signals
     disposableEmail: boolean;
     suspiciousEmailPattern: boolean;
     phoneNumberRisk: number; // 0-1
-    
+
     // Identity signals
     identityTheftRisk: number; // 0-1
     syntheticIdentity: boolean;
     duplicateIdentity: boolean;
-    
+
     // Behavioral signals
     rapidAccountCreation: boolean;
     multipleAccountsFromIP: number;
     multipleAccountsFromDevice: number;
-    
+
     // Activity signals
     unusualActivityPattern: boolean;
     dormantThenActive: boolean;
     bulkActions: boolean;
-    
+
     // Reputation signals
     chargebackHistory: number;
     disputeHistory: number;
     negativeReviews: number;
     reportedByUsers: number;
   };
-  
+
   // Risk score
   riskScore: number;
   riskLevel: 'low' | 'medium' | 'high' | 'critical';
-  
+
   // Trust score
   trustScore: number; // 0-100
   trustFactors: {
@@ -244,12 +259,12 @@ export interface AccountFraud {
 
 export interface PaymentFraud {
   paymentId: string;
-  
+
   // Payment details
   amount: number;
   currency: string;
   method: 'card' | 'bank_transfer' | 'wallet' | 'upi' | 'netbanking';
-  
+
   // Card details (if applicable)
   card?: {
     bin: string; // First 6 digits
@@ -257,14 +272,14 @@ export interface PaymentFraud {
     brand: string;
     country: string;
     cardType: 'credit' | 'debit' | 'prepaid';
-    
+
     // Fraud signals
     stolenCard: boolean;
     cardTestingDetected: boolean;
     binRisk: number; // 0-1
     velocityExceeded: boolean;
   };
-  
+
   // 3DS verification
   threeDSecure?: {
     enrolled: boolean;
@@ -273,21 +288,21 @@ export interface PaymentFraud {
     eci: string;
     cavv?: string;
   };
-  
+
   // AVS check
   avsCheck?: {
     addressMatch: boolean;
     postalCodeMatch: boolean;
     result: string;
   };
-  
+
   // CVV check
   cvvCheck?: {
     provided: boolean;
     match: boolean;
     result: string;
   };
-  
+
   // Gateway response
   gatewayResponse?: {
     approved: boolean;
@@ -295,7 +310,7 @@ export interface PaymentFraud {
     message: string;
     fraudScore?: number;
   };
-  
+
   // Fraud assessment
   fraudProbability: number; // 0-1
   fraudReasons: string[];
@@ -303,7 +318,7 @@ export interface PaymentFraud {
 
 export interface BotDetection {
   sessionId: string;
-  
+
   // Detection signals
   signals: {
     // Behavioral signals
@@ -312,46 +327,46 @@ export interface BotDetection {
       entropy: number;
       pattern: string;
     };
-    
+
     keyboardInput: {
       natural: boolean;
       timingVariance: number;
       copypaste: boolean;
     };
-    
+
     // Browser signals
     browserFingerprint: string;
     headlessBrowser: boolean;
     automationDetected: boolean;
     webDriverDetected: boolean;
-    
+
     // Network signals
     ipReputation: number; // 0-1
     datacenterIP: boolean;
     torNode: boolean;
     proxy: boolean;
     vpn: boolean;
-    
+
     // Request signals
     requestRate: number; // requests per minute
     honeypotTriggered: boolean;
     javascriptDisabled: boolean;
     cookiesDisabled: boolean;
-    
+
     // Timing signals
     pageLoadSpeed: number;
     actionSpeed: number;
     suspiciouslyFast: boolean;
   };
-  
+
   // Bot score
   botScore: number; // 0-1, higher = more likely bot
   botType?: 'scraper' | 'account_takeover' | 'credential_stuffing' | 'spam' | 'ddos' | 'unknown';
-  
+
   // Decision
   isBot: boolean;
   confidence: number; // 0-1
-  
+
   // Captcha
   captchaRequired: boolean;
   captchaSolved: boolean;
@@ -362,20 +377,29 @@ export interface FraudPattern {
   id: string;
   name: string;
   description: string;
-  
+
   // Pattern type
-  type: 'account_takeover' | 'payment_fraud' | 'friendly_fraud' | 'refund_abuse' | 'promo_abuse' | 'identity_theft' | 'synthetic_identity' | 'card_testing' | 'triangulation_fraud';
-  
+  type:
+    | 'account_takeover'
+    | 'payment_fraud'
+    | 'friendly_fraud'
+    | 'refund_abuse'
+    | 'promo_abuse'
+    | 'identity_theft'
+    | 'synthetic_identity'
+    | 'card_testing'
+    | 'triangulation_fraud';
+
   // Pattern characteristics
   characteristics: {
     timeWindow: number; // minutes
     minimumOccurrences: number;
     indicators: string[];
   };
-  
+
   // Detection
   detectionMethod: 'rule_based' | 'ml_based' | 'anomaly_detection' | 'graph_analysis';
-  
+
   // Instances
   instances: {
     detectedAt: Date;
@@ -383,12 +407,12 @@ export interface FraudPattern {
     confidence: number;
     status: 'investigating' | 'confirmed' | 'false_positive';
   }[];
-  
+
   // Statistics
   totalDetections: number;
   confirmedCases: number;
   falsePositives: number;
-  
+
   // Impact
   estimatedLoss: number;
   preventedLoss: number;
@@ -397,31 +421,31 @@ export interface FraudPattern {
 export interface FraudAlert {
   id: string;
   timestamp: Date;
-  
+
   // Alert details
   severity: 'low' | 'medium' | 'high' | 'critical';
   type: string;
   title: string;
   description: string;
-  
+
   // Entity
   entityType: string;
   entityId: string;
-  
+
   // Evidence
   evidence: {
     type: string;
     description: string;
     data: any;
   }[];
-  
+
   // Status
   status: 'new' | 'investigating' | 'confirmed' | 'false_positive' | 'resolved';
-  
+
   // Assignment
   assignedTo?: string;
   investigatedBy?: string;
-  
+
   // Resolution
   resolvedAt?: Date;
   resolution?: {
@@ -429,7 +453,7 @@ export interface FraudAlert {
     notes: string;
     preventiveMeasures?: string[];
   };
-  
+
   // Actions taken
   actionsTaken: {
     timestamp: Date;
@@ -441,11 +465,11 @@ export interface FraudAlert {
 
 export interface RiskProfile {
   userId: string;
-  
+
   // Overall risk
   overallRiskScore: number; // 0-100
   riskLevel: 'low' | 'medium' | 'high' | 'critical';
-  
+
   // Risk factors
   factors: {
     category: 'account' | 'transaction' | 'behavior' | 'reputation' | 'device' | 'location';
@@ -454,7 +478,7 @@ export interface RiskProfile {
     weight: number;
     description: string;
   }[];
-  
+
   // Historical data
   history: {
     totalTransactions: number;
@@ -464,7 +488,7 @@ export interface RiskProfile {
     chargebacks: number;
     disputes: number;
   };
-  
+
   // Behavioral patterns
   patterns: {
     normalTransactionRange: { min: number; max: number };
@@ -473,7 +497,7 @@ export interface RiskProfile {
     commonLocations: string[];
     averageSessionDuration: number;
   };
-  
+
   // Trust indicators
   trustIndicators: {
     accountAge: number;
@@ -482,7 +506,7 @@ export interface RiskProfile {
     successfulTransactions: number;
     communityReputation: number;
   };
-  
+
   // Velocity metrics
   velocity: {
     transactionsLast24h: number;
@@ -490,40 +514,40 @@ export interface RiskProfile {
     newDevicesLast7d: number;
     locationChangesLast30d: number;
   };
-  
+
   lastUpdated: Date;
 }
 
 export interface FraudInvestigation {
   id: string;
   caseNumber: string;
-  
+
   // Case details
   title: string;
   description: string;
   category: 'transaction_fraud' | 'account_fraud' | 'payment_fraud' | 'identity_theft' | 'other';
-  
+
   // Status
   status: 'open' | 'investigating' | 'pending_info' | 'resolved' | 'closed';
   priority: 'low' | 'medium' | 'high' | 'urgent';
-  
+
   // Involved entities
   entities: {
     type: string;
     id: string;
     role: 'suspect' | 'victim' | 'witness' | 'related';
   }[];
-  
+
   // Timeline
   createdAt: Date;
   assignedAt?: Date;
   resolvedAt?: Date;
   closedAt?: Date;
-  
+
   // Assignment
   assignedTo?: string;
   team?: string;
-  
+
   // Evidence
   evidence: {
     id: string;
@@ -533,7 +557,7 @@ export interface FraudInvestigation {
     metadata?: Record<string, any>;
     collectedAt: Date;
   }[];
-  
+
   // Actions
   actions: {
     timestamp: Date;
@@ -541,7 +565,7 @@ export interface FraudInvestigation {
     performedBy: string;
     notes: string;
   }[];
-  
+
   // Outcome
   outcome?: {
     decision: 'fraud_confirmed' | 'no_fraud' | 'inconclusive';
@@ -570,7 +594,7 @@ export class FraudDetectionSystem {
     this.investigations = new Map();
     this.blocklist = new Set();
     this.whitelist = new Set();
-    
+
     // Initialize default rules and patterns
     this.initializeDefaults();
   }
@@ -585,15 +609,10 @@ export class FraudDetectionSystem {
         name: 'High Value Transaction',
         description: 'Flag transactions above ₹50,000',
         category: 'transaction',
-        conditions: [
-          { field: 'amount', operator: 'greater_than', value: 50000 },
-        ],
+        conditions: [{ field: 'amount', operator: 'greater_than', value: 50000 }],
         riskScore: 50,
         weight: 1.0,
-        actions: [
-          { type: 'review' },
-          { type: 'notify', config: { channels: ['email', 'slack'] } },
-        ],
+        actions: [{ type: 'review' }, { type: 'notify', config: { channels: ['email', 'slack'] } }],
         enabled: true,
         priority: 5,
         stats: {
@@ -612,10 +631,7 @@ export class FraudDetectionSystem {
         ],
         riskScore: 70,
         weight: 1.5,
-        actions: [
-          { type: 'challenge' },
-          { type: 'block' },
-        ],
+        actions: [{ type: 'challenge' }, { type: 'block' }],
         enabled: true,
         priority: 8,
         stats: {
@@ -635,10 +651,7 @@ export class FraudDetectionSystem {
         ],
         riskScore: 80,
         weight: 2.0,
-        actions: [
-          { type: 'review' },
-          { type: 'challenge' },
-        ],
+        actions: [{ type: 'review' }, { type: 'challenge' }],
         enabled: true,
         priority: 9,
         stats: {
@@ -657,10 +670,7 @@ export class FraudDetectionSystem {
         ],
         riskScore: 60,
         weight: 1.2,
-        actions: [
-          { type: 'flag' },
-          { type: 'review' },
-        ],
+        actions: [{ type: 'flag' }, { type: 'review' }],
         enabled: true,
         priority: 7,
         stats: {
@@ -680,10 +690,7 @@ export class FraudDetectionSystem {
         ],
         riskScore: 75,
         weight: 1.8,
-        actions: [
-          { type: 'challenge' },
-          { type: 'notify' },
-        ],
+        actions: [{ type: 'challenge' }, { type: 'notify' }],
         enabled: true,
         priority: 8,
         stats: {
@@ -697,21 +704,17 @@ export class FraudDetectionSystem {
         name: 'High Risk Country',
         description: 'Transaction from high-risk country',
         category: 'location',
-        conditions: [
-          { field: 'country_risk_score', operator: 'greater_than', value: 0.7 },
-        ],
+        conditions: [{ field: 'country_risk_score', operator: 'greater_than', value: 0.7 }],
         riskScore: 65,
         weight: 1.3,
-        actions: [
-          { type: 'review' },
-        ],
+        actions: [{ type: 'review' }],
         enabled: true,
         priority: 6,
         stats: {
           totalMatches: 445,
           truePositives: 89,
           falsePositives: 356,
-          accuracy: 0.80,
+          accuracy: 0.8,
         },
       },
       {
@@ -724,9 +727,7 @@ export class FraudDetectionSystem {
         ],
         riskScore: 55,
         weight: 1.1,
-        actions: [
-          { type: 'challenge' },
-        ],
+        actions: [{ type: 'challenge' }],
         enabled: true,
         priority: 5,
         stats: {
@@ -848,7 +849,7 @@ export class FraudDetectionSystem {
 
       if (matched) {
         totalRiskScore += rule.riskScore * rule.weight;
-        
+
         fraudIndicators.push({
           indicator: rule.name,
           severity: rule.riskScore > 70 ? 'high' : rule.riskScore > 50 ? 'medium' : 'low',
@@ -887,14 +888,20 @@ export class FraudDetectionSystem {
       decision,
       rulesTriggered,
       recommendation: {
-        action: decision === 'approve' ? 'Process transaction' : 
-                decision === 'challenge' ? 'Request additional verification' :
-                decision === 'review' ? 'Hold for manual review' :
-                'Block transaction',
-        reason: fraudIndicators.length > 0 
-          ? `${fraudIndicators.length} fraud indicators detected`
-          : 'Transaction appears legitimate',
-        alternativeActions: decision === 'block' ? ['Contact customer', 'Request verification'] : undefined,
+        action:
+          decision === 'approve'
+            ? 'Process transaction'
+            : decision === 'challenge'
+              ? 'Request additional verification'
+              : decision === 'review'
+                ? 'Hold for manual review'
+                : 'Block transaction',
+        reason:
+          fraudIndicators.length > 0
+            ? `${fraudIndicators.length} fraud indicators detected`
+            : 'Transaction appears legitimate',
+        alternativeActions:
+          decision === 'block' ? ['Contact customer', 'Request verification'] : undefined,
       },
       context: {
         userId: params.userId,
@@ -917,7 +924,7 @@ export class FraudDetectionSystem {
         description: `Transaction ${params.transactionId} flagged with risk score ${normalizedScore.toFixed(1)}`,
         entityType: 'transaction',
         entityId: params.transactionId,
-        evidence: fraudIndicators.map(fi => ({
+        evidence: fraudIndicators.map((fi) => ({
           type: 'fraud_indicator',
           description: fi.description,
           data: fi,
@@ -932,9 +939,9 @@ export class FraudDetectionSystem {
    * Evaluate fraud rule
    */
   private evaluateRule(rule: FraudRule, data: any): boolean {
-    return rule.conditions.every(condition => {
+    return rule.conditions.every((condition) => {
       const value = this.getNestedValue(data, condition.field);
-      
+
       switch (condition.operator) {
         case 'equals':
           return value === condition.value;
@@ -974,8 +981,16 @@ export class FraudDetectionSystem {
   }): Promise<BotDetection> {
     let botScore = 0;
     const signals: BotDetection['signals'] = {
-      mouseMovement: params.behaviorSignals?.mouseMovement || { natural: true, entropy: 0.8, pattern: 'normal' },
-      keyboardInput: params.behaviorSignals?.keyboardInput || { natural: true, timingVariance: 0.5, copypaste: false },
+      mouseMovement: params.behaviorSignals?.mouseMovement || {
+        natural: true,
+        entropy: 0.8,
+        pattern: 'normal',
+      },
+      keyboardInput: params.behaviorSignals?.keyboardInput || {
+        natural: true,
+        timingVariance: 0.5,
+        copypaste: false,
+      },
       browserFingerprint: params.sessionId,
       headlessBrowser: false,
       automationDetected: false,
@@ -1132,7 +1147,7 @@ export class FraudDetectionSystem {
    */
   async blockEntity(entityId: string, reason: string): Promise<void> {
     this.blocklist.add(entityId);
-    
+
     await this.createAlert({
       severity: 'critical',
       type: 'entity_blocked',
@@ -1140,11 +1155,13 @@ export class FraudDetectionSystem {
       description: `Entity has been added to blocklist. Reason: ${reason}`,
       entityType: 'user',
       entityId,
-      evidence: [{
-        type: 'document',
-        description: `Block reason: ${reason}`,
-        data: { reason },
-      }],
+      evidence: [
+        {
+          type: 'document',
+          description: `Block reason: ${reason}`,
+          data: { reason },
+        },
+      ],
     });
   }
 
@@ -1183,19 +1200,19 @@ export class FraudDetectionSystem {
     let checks = Array.from(this.fraudChecks.values());
 
     if (params.entityType) {
-      checks = checks.filter(c => c.entityType === params.entityType);
+      checks = checks.filter((c) => c.entityType === params.entityType);
     }
 
     if (params.riskLevel) {
-      checks = checks.filter(c => c.riskLevel === params.riskLevel);
+      checks = checks.filter((c) => c.riskLevel === params.riskLevel);
     }
 
     if (params.decision) {
-      checks = checks.filter(c => c.decision === params.decision);
+      checks = checks.filter((c) => c.decision === params.decision);
     }
 
     if (params.reviewRequired !== undefined) {
-      checks = checks.filter(c => c.reviewRequired === params.reviewRequired);
+      checks = checks.filter((c) => c.reviewRequired === params.reviewRequired);
     }
 
     checks.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
@@ -1218,11 +1235,11 @@ export class FraudDetectionSystem {
     let alerts = Array.from(this.fraudAlerts.values());
 
     if (params.severity) {
-      alerts = alerts.filter(a => a.severity === params.severity);
+      alerts = alerts.filter((a) => a.severity === params.severity);
     }
 
     if (params.status) {
-      alerts = alerts.filter(a => a.status === params.status);
+      alerts = alerts.filter((a) => a.status === params.status);
     }
 
     alerts.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
@@ -1241,7 +1258,7 @@ export class FraudDetectionSystem {
     let rules = Array.from(this.fraudRules.values());
 
     if (enabled !== undefined) {
-      rules = rules.filter(r => r.enabled === enabled);
+      rules = rules.filter((r) => r.enabled === enabled);
     }
 
     return rules.sort((a, b) => b.priority - a.priority);
@@ -1254,7 +1271,7 @@ export class FraudDetectionSystem {
     let investigations = Array.from(this.investigations.values());
 
     if (status) {
-      investigations = investigations.filter(i => i.status === status);
+      investigations = investigations.filter((i) => i.status === status);
     }
 
     return investigations.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());

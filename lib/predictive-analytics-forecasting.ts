@@ -1,6 +1,6 @@
 /**
  * Predictive Analytics & Forecasting System
- * 
+ *
  * Advanced machine learning models, demand forecasting, trend prediction,
  * recommendation engine, and A/B testing analytics.
  */
@@ -9,7 +9,7 @@
 // Types & Interfaces
 // ============================================================================
 
-export type ModelType = 
+export type ModelType =
   | 'linear-regression'
   | 'logistic-regression'
   | 'decision-tree'
@@ -19,7 +19,7 @@ export type ModelType =
   | 'time-series'
   | 'ensemble';
 
-export type PredictionType = 
+export type PredictionType =
   | 'demand'
   | 'churn'
   | 'ltv'
@@ -31,18 +31,9 @@ export type PredictionType =
 
 export type FeatureImportance = 'high' | 'medium' | 'low';
 
-export type TestStatus = 
-  | 'draft'
-  | 'running'
-  | 'paused'
-  | 'completed'
-  | 'stopped';
+export type TestStatus = 'draft' | 'running' | 'paused' | 'completed' | 'stopped';
 
-export type TestConclusion = 
-  | 'winner-a'
-  | 'winner-b'
-  | 'no-difference'
-  | 'inconclusive';
+export type TestConclusion = 'winner-a' | 'winner-b' | 'no-difference' | 'inconclusive';
 
 export interface MachineLearningModel {
   id: string;
@@ -51,7 +42,7 @@ export interface MachineLearningModel {
   type: ModelType;
   predictionType: PredictionType;
   version: string;
-  
+
   training: {
     datasetSize: number;
     features: Array<{
@@ -68,7 +59,7 @@ export interface MachineLearningModel {
     completedAt?: Date;
     duration?: number; // minutes
   };
-  
+
   performance: {
     accuracy: number; // percentage
     precision: number;
@@ -81,9 +72,9 @@ export interface MachineLearningModel {
     mape: number; // Mean Absolute Percentage Error
     r2Score: number;
   };
-  
+
   hyperparameters: Record<string, any>;
-  
+
   deployment: {
     status: 'development' | 'staging' | 'production' | 'deprecated';
     deployedAt?: Date;
@@ -91,7 +82,7 @@ export interface MachineLearningModel {
     predictionsMade: number;
     avgPredictionTime: number; // milliseconds
   };
-  
+
   monitoring: {
     modelDrift: {
       detected: boolean;
@@ -111,7 +102,7 @@ export interface MachineLearningModel {
       degradationPercent: number;
     };
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -120,12 +111,12 @@ export interface Prediction {
   id: string;
   modelId: string;
   type: PredictionType;
-  
+
   input: {
     features: Record<string, any>;
     timestamp: Date;
   };
-  
+
   output: {
     prediction: any;
     confidence: number; // 0-1
@@ -137,7 +128,7 @@ export interface Prediction {
       probability: number;
     }>;
   };
-  
+
   explanation: {
     topFactors: Array<{
       feature: string;
@@ -147,13 +138,13 @@ export interface Prediction {
     shapValues?: Record<string, number>;
     reasoning: string;
   };
-  
+
   metadata: {
     processingTime: number; // milliseconds
     cacheHit: boolean;
     modelVersion: string;
   };
-  
+
   createdAt: Date;
 }
 
@@ -162,7 +153,7 @@ export interface DemandForecast {
   productId: string;
   productName: string;
   category: string;
-  
+
   forecast: {
     period: 'daily' | 'weekly' | 'monthly';
     horizon: number; // number of periods
@@ -179,13 +170,13 @@ export interface DemandForecast {
       };
     }>;
   };
-  
+
   influencingFactors: Array<{
     factor: string;
     impact: number; // -1 to 1
     description: string;
   }>;
-  
+
   seasonality: {
     detected: boolean;
     pattern: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly';
@@ -193,14 +184,14 @@ export interface DemandForecast {
     peaks: Date[];
     troughs: Date[];
   };
-  
+
   trends: {
     overall: 'increasing' | 'decreasing' | 'stable';
     shortTerm: 'up' | 'down' | 'flat';
     longTerm: 'growth' | 'decline' | 'steady';
     changeRate: number; // percentage per period
   };
-  
+
   accuracy: {
     historical: {
       mape: number;
@@ -209,13 +200,13 @@ export interface DemandForecast {
     };
     lastUpdated: Date;
   };
-  
+
   recommendations: {
     inventory: string[];
     pricing: string[];
     marketing: string[];
   };
-  
+
   generatedAt: Date;
   validUntil: Date;
 }
@@ -228,14 +219,14 @@ export interface ChurnPredictionModel {
     churnRisk: 'very-low' | 'low' | 'medium' | 'high' | 'very-high';
     predictedChurnDate?: Date;
     timeToChurn?: number; // days
-    
+
     factors: Array<{
       factor: string;
       impact: number; // percentage
       currentValue: any;
       normalValue: any;
     }>;
-    
+
     recommendations: {
       retentionActions: Array<{
         action: string;
@@ -250,16 +241,16 @@ export interface ChurnPredictionModel {
       };
       bestChannel: string;
     };
-    
+
     customerValue: {
       lifetimeValue: number;
       retentionValue: number; // value if retained
       churnCost: number; // cost if churned
     };
-    
+
     lastUpdated: Date;
   }>;
-  
+
   batchStatistics: {
     totalCustomers: number;
     highRiskCount: number;
@@ -269,20 +260,20 @@ export interface ChurnPredictionModel {
     estimatedChurnCost: number;
     retentionBudgetRecommended: number;
   };
-  
+
   generatedAt: Date;
 }
 
 export interface RecommendationEngine {
   userId: string;
-  
+
   productRecommendations: Array<{
     productId: string;
     productName: string;
     score: number; // 0-1
     reason: string;
     recommendationType: 'collaborative' | 'content-based' | 'hybrid' | 'trending' | 'personalized';
-    
+
     factors: {
       userHistory: number;
       similarUsers: number;
@@ -291,14 +282,14 @@ export interface RecommendationEngine {
       trending: number;
       seasonality: number;
     };
-    
+
     expectedMetrics: {
       clickProbability: number;
       purchaseProbability: number;
       expectedRevenue: number;
     };
   }>;
-  
+
   bundleRecommendations: Array<{
     products: string[];
     bundleName: string;
@@ -307,7 +298,7 @@ export interface RecommendationEngine {
     expectedRevenue: number;
     conversionProbability: number;
   }>;
-  
+
   contentRecommendations: Array<{
     contentId: string;
     contentType: 'article' | 'video' | 'tutorial' | 'story';
@@ -315,7 +306,7 @@ export interface RecommendationEngine {
     score: number;
     engagementProbability: number;
   }>;
-  
+
   personalizedOffers: Array<{
     offerId: string;
     offerType: 'discount' | 'free-shipping' | 'bundle' | 'loyalty';
@@ -323,7 +314,7 @@ export interface RecommendationEngine {
     conversionLift: number; // expected percentage increase
     expiryDate: Date;
   }>;
-  
+
   generatedAt: Date;
   validUntil: Date;
 }
@@ -333,7 +324,7 @@ export interface ABTest {
   name: string;
   description: string;
   hypothesis: string;
-  
+
   configuration: {
     testType: 'split' | 'multivariate' | 'multi-armed-bandit';
     trafficAllocation: number; // percentage
@@ -345,7 +336,7 @@ export interface ABTest {
       configuration: Record<string, any>;
     }>;
   };
-  
+
   targeting: {
     segments: string[];
     filters: Array<{
@@ -356,7 +347,7 @@ export interface ABTest {
     startDate: Date;
     endDate?: Date;
   };
-  
+
   metrics: {
     primary: {
       name: string;
@@ -369,9 +360,9 @@ export interface ABTest {
       goal: 'increase' | 'decrease';
     }>;
   };
-  
+
   status: TestStatus;
-  
+
   results: {
     participants: Array<{
       variantId: string;
@@ -382,14 +373,14 @@ export interface ABTest {
       revenue: number;
       revenuePerUser: number;
     }>;
-    
+
     primaryMetric: Array<{
       variantId: string;
       value: number;
       variance: number;
       improvement: number; // percentage vs control
     }>;
-    
+
     secondaryMetrics: Array<{
       metricName: string;
       values: Array<{
@@ -398,7 +389,7 @@ export interface ABTest {
         improvement: number;
       }>;
     }>;
-    
+
     statistical: {
       sampleSize: number;
       confidence: number; // percentage
@@ -408,7 +399,7 @@ export interface ABTest {
       daysRunning: number;
       estimatedDaysToSignificance?: number;
     };
-    
+
     winner?: {
       variantId: string;
       confidence: number;
@@ -416,7 +407,7 @@ export interface ABTest {
       estimatedRevenueLift: number;
     };
   };
-  
+
   conclusion?: {
     decision: TestConclusion;
     summary: string;
@@ -424,7 +415,7 @@ export interface ABTest {
     recommendations: string[];
     nextSteps: string[];
   };
-  
+
   createdBy: string;
   createdAt: Date;
   startedAt?: Date;
@@ -439,13 +430,13 @@ export interface TrendAnalysis {
     start: Date;
     end: Date;
   };
-  
+
   trends: Array<{
     item: string;
     trendScore: number; // 0-100
     trendStatus: 'emerging' | 'growing' | 'peak' | 'declining' | 'fading';
     momentum: number; // rate of change
-    
+
     metrics: {
       current: number;
       previous: number;
@@ -453,23 +444,23 @@ export interface TrendAnalysis {
       changePercent: number;
       growthRate: number; // per period
     };
-    
+
     forecast: {
       nextPeriod: number;
       confidence: number;
       peak?: Date;
       sustainabilityScore: number; // 0-1
     };
-    
+
     demographics: {
       primarySegment: string;
       ageGroups: Record<string, number>;
       locations: Record<string, number>;
     };
-    
+
     relatedTrends: string[];
   }>;
-  
+
   insights: {
     topEmerging: string[];
     topGrowing: string[];
@@ -480,14 +471,14 @@ export interface TrendAnalysis {
       expectedPeaks: Date[];
     }>;
   };
-  
+
   generatedAt: Date;
 }
 
 export interface PricingOptimization {
   productId: string;
   productName: string;
-  
+
   currentPricing: {
     price: number;
     cost: number;
@@ -497,7 +488,7 @@ export interface PricingOptimization {
       price: number;
     }>;
   };
-  
+
   optimization: {
     recommendedPrice: number;
     priceRange: {
@@ -505,27 +496,27 @@ export interface PricingOptimization {
       maximum: number;
       optimal: number;
     };
-    
+
     expectedOutcomes: {
       demand: number;
       revenue: number;
       profit: number;
       marketShare: number;
     };
-    
+
     sensitivity: {
       elasticity: number;
       demandChange: number; // per 1% price change
       revenueImpact: number;
     };
   };
-  
+
   strategies: Array<{
     strategy: string;
     price: number;
     description: string;
     scenario: 'penetration' | 'skimming' | 'competitive' | 'premium' | 'value';
-    
+
     projections: {
       demandChange: number;
       revenueChange: number;
@@ -533,7 +524,7 @@ export interface PricingOptimization {
       riskLevel: 'low' | 'medium' | 'high';
     };
   }>;
-  
+
   dynamicPricing: {
     enabled: boolean;
     rules: Array<{
@@ -542,14 +533,14 @@ export interface PricingOptimization {
       priority: number;
       enabled: boolean;
     }>;
-    
+
     timeBasedPricing: Array<{
       dayOfWeek?: number;
       hour?: number;
       priceMultiplier: number;
       reason: string;
     }>;
-    
+
     inventoryBasedPricing: {
       lowStock: number; // price when stock < threshold
       highStock: number; // price when stock > threshold
@@ -559,21 +550,21 @@ export interface PricingOptimization {
       };
     };
   };
-  
+
   abTestRecommendations: Array<{
     testName: string;
     pricePoints: number[];
     duration: number; // days
     expectedLearnings: string[];
   }>;
-  
+
   lastOptimized: Date;
 }
 
 export interface InventoryForecast {
   productId: string;
   warehouseId?: string;
-  
+
   forecast: {
     period: 'daily' | 'weekly' | 'monthly';
     predictions: Array<{
@@ -585,19 +576,19 @@ export interface InventoryForecast {
       reorderQuantity: number;
     }>;
   };
-  
+
   optimization: {
     optimalStockLevel: number;
     minimumStockLevel: number;
     maximumStockLevel: number;
-    
+
     costs: {
       holdingCost: number;
       orderingCost: number;
       stockoutCost: number;
       totalCost: number;
     };
-    
+
     reorderPolicy: {
       method: 'fixed-order-quantity' | 'fixed-time-period' | 'min-max' | 'just-in-time';
       reorderPoint: number;
@@ -605,20 +596,20 @@ export interface InventoryForecast {
       reviewPeriod?: number; // days
     };
   };
-  
+
   risks: Array<{
     risk: 'stockout' | 'overstock' | 'obsolescence' | 'spoilage';
     probability: number;
     impact: number;
     mitigation: string;
   }>;
-  
+
   seasonalAdjustments: Array<{
     period: string;
     adjustment: number; // percentage
     reason: string;
   }>;
-  
+
   generatedAt: Date;
 }
 
@@ -627,14 +618,14 @@ export interface PredictiveMaintenanceAlert {
   assetId: string;
   assetName: string;
   assetType: string;
-  
+
   prediction: {
     failureProbability: number; // 0-1
     estimatedFailureDate: Date;
     daysUntilFailure: number;
     confidence: number;
   };
-  
+
   indicators: Array<{
     indicator: string;
     currentValue: number;
@@ -642,7 +633,7 @@ export interface PredictiveMaintenanceAlert {
     threshold: number;
     severity: 'low' | 'medium' | 'high' | 'critical';
   }>;
-  
+
   recommendations: {
     maintenanceActions: Array<{
       action: string;
@@ -654,7 +645,7 @@ export interface PredictiveMaintenanceAlert {
     optimalMaintenanceDate: Date;
     costOfInaction: number;
   };
-  
+
   historicalContext: {
     lastMaintenance: Date;
     maintenanceHistory: Array<{
@@ -669,7 +660,7 @@ export interface PredictiveMaintenanceAlert {
       cost: number;
     }>;
   };
-  
+
   createdAt: Date;
 }
 
@@ -774,7 +765,7 @@ export class PredictiveAnalyticsForecastingSystem {
     // Simulate training
     const accuracy = 0.85 + Math.random() * 0.12;
     const precision = 0.82 + Math.random() * 0.15;
-    const recall = 0.80 + Math.random() * 0.17;
+    const recall = 0.8 + Math.random() * 0.17;
 
     model.training.completedAt = new Date();
     model.training.duration = 5 + Math.random() * 25; // minutes
@@ -784,12 +775,12 @@ export class PredictiveAnalyticsForecastingSystem {
       precision,
       recall,
       f1Score: (2 * precision * recall) / (precision + recall),
-      auc: 0.88 + Math.random() * 0.10,
+      auc: 0.88 + Math.random() * 0.1,
       mse: 100 + Math.random() * 200,
       rmse: Math.sqrt(100 + Math.random() * 200),
       mae: 50 + Math.random() * 100,
       mape: 5 + Math.random() * 10,
-      r2Score: 0.80 + Math.random() * 0.15,
+      r2Score: 0.8 + Math.random() * 0.15,
     };
 
     model.monitoring.performanceDegradation.baselineAccuracy = model.performance.accuracy;
@@ -799,7 +790,10 @@ export class PredictiveAnalyticsForecastingSystem {
     return model;
   }
 
-  deployModel(modelId: string, environment: MachineLearningModel['deployment']['status']): MachineLearningModel {
+  deployModel(
+    modelId: string,
+    environment: MachineLearningModel['deployment']['status']
+  ): MachineLearningModel {
     const model = this.models.get(modelId);
     if (!model) throw new Error('Model not found');
 
@@ -814,10 +808,7 @@ export class PredictiveAnalyticsForecastingSystem {
   // Predictions
   // ============================================================================
 
-  makePrediction(params: {
-    modelId: string;
-    features: Record<string, any>;
-  }): Prediction {
+  makePrediction(params: { modelId: string; features: Record<string, any> }): Prediction {
     const model = this.models.get(params.modelId);
     if (!model) throw new Error('Model not found');
 
@@ -831,7 +822,7 @@ export class PredictiveAnalyticsForecastingSystem {
       },
       output: {
         prediction: null,
-        confidence: 0.75 + Math.random() * 0.20,
+        confidence: 0.75 + Math.random() * 0.2,
         probability: 0,
         value: 0,
       },
@@ -851,28 +842,30 @@ export class PredictiveAnalyticsForecastingSystem {
     switch (model.predictionType) {
       case 'churn':
         prediction.output.probability = Math.random();
-        prediction.output.prediction = prediction.output.probability > 0.5 ? 'Will Churn' : 'Will Not Churn';
+        prediction.output.prediction =
+          prediction.output.probability > 0.5 ? 'Will Churn' : 'Will Not Churn';
         break;
-      
+
       case 'ltv':
         prediction.output.value = 200 + Math.random() * 800;
         prediction.output.prediction = prediction.output.value;
         break;
-      
+
       case 'demand':
         prediction.output.value = 100 + Math.random() * 500;
         prediction.output.prediction = Math.round(prediction.output.value);
         break;
-      
+
       case 'conversion':
         prediction.output.probability = Math.random();
-        prediction.output.prediction = prediction.output.probability > 0.5 ? 'Will Convert' : 'Will Not Convert';
+        prediction.output.prediction =
+          prediction.output.probability > 0.5 ? 'Will Convert' : 'Will Not Convert';
         break;
     }
 
     // Generate explanation
     const featureNames = Object.keys(params.features);
-    prediction.explanation.topFactors = featureNames.slice(0, 3).map(feature => ({
+    prediction.explanation.topFactors = featureNames.slice(0, 3).map((feature) => ({
       feature,
       contribution: 20 + Math.random() * 30,
       value: params.features[feature],
@@ -883,7 +876,8 @@ export class PredictiveAnalyticsForecastingSystem {
     // Update model stats
     model.deployment.predictionsMade++;
     const totalTime = model.deployment.avgPredictionTime * (model.deployment.predictionsMade - 1);
-    model.deployment.avgPredictionTime = (totalTime + prediction.metadata.processingTime) / model.deployment.predictionsMade;
+    model.deployment.avgPredictionTime =
+      (totalTime + prediction.metadata.processingTime) / model.deployment.predictionsMade;
 
     this.predictions.set(prediction.id, prediction);
     return prediction;
@@ -911,11 +905,27 @@ export class PredictiveAnalyticsForecastingSystem {
         predictions: [],
       },
       influencingFactors: [
-        { factor: 'Historical Sales', impact: 0.35, description: 'Past sales patterns strongly influence future demand' },
+        {
+          factor: 'Historical Sales',
+          impact: 0.35,
+          description: 'Past sales patterns strongly influence future demand',
+        },
         { factor: 'Seasonality', impact: 0.25, description: 'Seasonal variations affect demand' },
-        { factor: 'Marketing Activities', impact: 0.20, description: 'Promotional campaigns drive demand' },
-        { factor: 'Economic Conditions', impact: 0.12, description: 'Economic factors affect purchasing power' },
-        { factor: 'Competitor Actions', impact: -0.08, description: 'Competitive pressure may reduce demand' },
+        {
+          factor: 'Marketing Activities',
+          impact: 0.2,
+          description: 'Promotional campaigns drive demand',
+        },
+        {
+          factor: 'Economic Conditions',
+          impact: 0.12,
+          description: 'Economic factors affect purchasing power',
+        },
+        {
+          factor: 'Competitor Actions',
+          impact: -0.08,
+          description: 'Competitive pressure may reduce demand',
+        },
       ],
       seasonality: {
         detected: true,
@@ -953,20 +963,20 @@ export class PredictiveAnalyticsForecastingSystem {
 
     for (let i = 0; i < params.horizon; i++) {
       const date = new Date(startDate);
-      
+
       if (params.period === 'daily') date.setDate(date.getDate() + i);
       else if (params.period === 'weekly') date.setDate(date.getDate() + i * 7);
       else date.setMonth(date.getMonth() + i);
 
       // Add trend
       const trend = i * (baseDemand * 0.05);
-      
+
       // Add seasonality
       const seasonality = Math.sin((i / params.horizon) * Math.PI * 2) * baseDemand * 0.2;
-      
+
       // Add randomness
       const noise = (Math.random() - 0.5) * baseDemand * 0.1;
-      
+
       const demand = Math.max(0, baseDemand + trend + seasonality + noise);
       const units = Math.round(demand);
       const avgPrice = 50 + Math.random() * 50;
@@ -995,7 +1005,7 @@ export class PredictiveAnalyticsForecastingSystem {
   // ============================================================================
 
   predictChurnBatch(customerIds: string[]): ChurnPredictionModel {
-    const predictions = customerIds.map(customerId => {
+    const predictions = customerIds.map((customerId) => {
       const churnProbability = Math.random();
       const timeToChurn = churnProbability > 0.7 ? 30 + Math.random() * 90 : undefined;
 
@@ -1014,7 +1024,9 @@ export class PredictiveAnalyticsForecastingSystem {
         customerId,
         churnProbability,
         churnRisk,
-        predictedChurnDate: timeToChurn ? new Date(Date.now() + timeToChurn * 24 * 60 * 60 * 1000) : undefined,
+        predictedChurnDate: timeToChurn
+          ? new Date(Date.now() + timeToChurn * 24 * 60 * 60 * 1000)
+          : undefined,
         timeToChurn,
         factors: [
           { factor: 'Days Since Last Purchase', impact: 30, currentValue: 45, normalValue: 20 },
@@ -1025,9 +1037,27 @@ export class PredictiveAnalyticsForecastingSystem {
         ],
         recommendations: {
           retentionActions: [
-            { action: 'Send personalized offer', priority: 'high', expectedImpact: 0.15, cost: 25, roi: 3.5 },
-            { action: 'Schedule customer success call', priority: 'medium', expectedImpact: 0.10, cost: 50, roi: 2.2 },
-            { action: 'Provide exclusive access', priority: 'low', expectedImpact: 0.05, cost: 10, roi: 1.8 },
+            {
+              action: 'Send personalized offer',
+              priority: 'high',
+              expectedImpact: 0.15,
+              cost: 25,
+              roi: 3.5,
+            },
+            {
+              action: 'Schedule customer success call',
+              priority: 'medium',
+              expectedImpact: 0.1,
+              cost: 50,
+              roi: 2.2,
+            },
+            {
+              action: 'Provide exclusive access',
+              priority: 'low',
+              expectedImpact: 0.05,
+              cost: 10,
+              roi: 1.8,
+            },
           ],
           bestContactTime: { day: 2, hour: 10 },
           bestChannel: 'email',
@@ -1041,9 +1071,11 @@ export class PredictiveAnalyticsForecastingSystem {
       };
     });
 
-    const highRisk = predictions.filter(p => p.churnRisk === 'high' || p.churnRisk === 'very-high');
-    const mediumRisk = predictions.filter(p => p.churnRisk === 'medium');
-    const lowRisk = predictions.filter(p => p.churnRisk === 'low' || p.churnRisk === 'very-low');
+    const highRisk = predictions.filter(
+      (p) => p.churnRisk === 'high' || p.churnRisk === 'very-high'
+    );
+    const mediumRisk = predictions.filter((p) => p.churnRisk === 'medium');
+    const lowRisk = predictions.filter((p) => p.churnRisk === 'low' || p.churnRisk === 'very-low');
 
     const result: ChurnPredictionModel = {
       modelId: 'churn_model_v1',
@@ -1053,9 +1085,16 @@ export class PredictiveAnalyticsForecastingSystem {
         highRiskCount: highRisk.length,
         mediumRiskCount: mediumRisk.length,
         lowRiskCount: lowRisk.length,
-        avgChurnProbability: predictions.reduce((sum, p) => sum + p.churnProbability, 0) / predictions.length,
-        estimatedChurnCost: predictions.reduce((sum, p) => sum + (p.customerValue.churnCost * p.churnProbability), 0),
-        retentionBudgetRecommended: highRisk.reduce((sum, p) => sum + (p.customerValue.retentionValue * 0.1), 0),
+        avgChurnProbability:
+          predictions.reduce((sum, p) => sum + p.churnProbability, 0) / predictions.length,
+        estimatedChurnCost: predictions.reduce(
+          (sum, p) => sum + p.customerValue.churnCost * p.churnProbability,
+          0
+        ),
+        retentionBudgetRecommended: highRisk.reduce(
+          (sum, p) => sum + p.customerValue.retentionValue * 0.1,
+          0
+        ),
       },
       generatedAt: new Date(),
     };
@@ -1097,7 +1136,7 @@ export class PredictiveAnalyticsForecastingSystem {
           seasonality: Math.random() * 0.1,
         },
         expectedMetrics: {
-          clickProbability: 0.15 + Math.random() * 0.20,
+          clickProbability: 0.15 + Math.random() * 0.2,
           purchaseProbability: 0.05 + Math.random() * 0.15,
           expectedRevenue: 50 + Math.random() * 150,
         },
@@ -1123,7 +1162,9 @@ export class PredictiveAnalyticsForecastingSystem {
     for (let i = 0; i < 5; i++) {
       recommendations.contentRecommendations.push({
         contentId: `content_${i + 1}`,
-        contentType: ['article', 'video', 'tutorial', 'story'][Math.floor(Math.random() * 4)] as any,
+        contentType: ['article', 'video', 'tutorial', 'story'][
+          Math.floor(Math.random() * 4)
+        ] as any,
         title: `Content Title ${i + 1}`,
         score: 0.6 + Math.random() * 0.4,
         engagementProbability: 0.2 + Math.random() * 0.3,
@@ -1134,7 +1175,9 @@ export class PredictiveAnalyticsForecastingSystem {
     for (let i = 0; i < 3; i++) {
       recommendations.personalizedOffers.push({
         offerId: `offer_${i + 1}`,
-        offerType: ['discount', 'free-shipping', 'bundle', 'loyalty'][Math.floor(Math.random() * 4)] as any,
+        offerType: ['discount', 'free-shipping', 'bundle', 'loyalty'][
+          Math.floor(Math.random() * 4)
+        ] as any,
         value: 10 + Math.random() * 40,
         conversionLift: 15 + Math.random() * 35,
         expiryDate: new Date(Date.now() + (3 + Math.random() * 4) * 24 * 60 * 60 * 1000),
@@ -1154,8 +1197,13 @@ export class PredictiveAnalyticsForecastingSystem {
   }
 
   private selectRecommendationType(): RecommendationEngine['productRecommendations'][0]['recommendationType'] {
-    const types: RecommendationEngine['productRecommendations'][0]['recommendationType'][] = 
-      ['collaborative', 'content-based', 'hybrid', 'trending', 'personalized'];
+    const types: RecommendationEngine['productRecommendations'][0]['recommendationType'][] = [
+      'collaborative',
+      'content-based',
+      'hybrid',
+      'trending',
+      'personalized',
+    ];
     return types[Math.floor(Math.random() * types.length)];
   }
 
@@ -1229,7 +1277,7 @@ export class PredictiveAnalyticsForecastingSystem {
     if (!test) throw new Error('Test not found');
 
     // Simulate test results
-    test.results.participants = test.configuration.variants.map(variant => ({
+    test.results.participants = test.configuration.variants.map((variant) => ({
       variantId: variant.id,
       users: Math.floor(1000 + Math.random() * 4000),
       sessions: Math.floor(1500 + Math.random() * 6000),
@@ -1239,34 +1287,39 @@ export class PredictiveAnalyticsForecastingSystem {
       revenuePerUser: 0,
     }));
 
-    test.results.participants.forEach(p => {
+    test.results.participants.forEach((p) => {
       p.conversionRate = (p.conversions / p.users) * 100;
       p.revenuePerUser = p.revenue / p.users;
     });
 
     // Calculate statistical significance
     const controlConversionRate = test.results.participants[0].conversionRate;
-    
-    test.results.primaryMetric = test.results.participants.map(p => ({
+
+    test.results.primaryMetric = test.results.participants.map((p) => ({
       variantId: p.variantId,
       value: p.conversionRate,
       variance: 0.5,
       improvement: ((p.conversionRate - controlConversionRate) / controlConversionRate) * 100,
     }));
 
-    test.results.statistical.sampleSize = test.results.participants.reduce((sum, p) => sum + p.users, 0);
+    test.results.statistical.sampleSize = test.results.participants.reduce(
+      (sum, p) => sum + p.users,
+      0
+    );
     test.results.statistical.confidence = 85 + Math.random() * 12;
     test.results.statistical.pValue = 0.01 + Math.random() * 0.08;
     test.results.statistical.significant = test.results.statistical.pValue < 0.05;
     test.results.statistical.powerAchieved = 75 + Math.random() * 20;
-    
+
     if (test.startedAt) {
-      test.results.statistical.daysRunning = Math.floor((Date.now() - test.startedAt.getTime()) / (1000 * 60 * 60 * 24));
+      test.results.statistical.daysRunning = Math.floor(
+        (Date.now() - test.startedAt.getTime()) / (1000 * 60 * 60 * 24)
+      );
     }
 
     // Determine winner
     if (test.results.statistical.significant) {
-      const bestVariant = test.results.primaryMetric.reduce((best, current) => 
+      const bestVariant = test.results.primaryMetric.reduce((best, current) =>
         current.value > best.value ? current : best
       );
 
@@ -1318,7 +1371,7 @@ export class PredictiveAnalyticsForecastingSystem {
     };
 
     // Generate trends for each item
-    params.items.forEach(item => {
+    params.items.forEach((item) => {
       const trendScore = Math.random() * 100;
       const current = 100 + Math.random() * 400;
       const previous = current * (0.7 + Math.random() * 0.5);
@@ -1352,7 +1405,7 @@ export class PredictiveAnalyticsForecastingSystem {
         demographics: {
           primarySegment: 'Young Adults',
           ageGroups: { '18-24': 35, '25-34': 40, '35-44': 15, '45+': 10 },
-          locations: { 'Urban': 60, 'Suburban': 30, 'Rural': 10 },
+          locations: { Urban: 60, Suburban: 30, Rural: 10 },
         },
         relatedTrends: [],
       });
@@ -1360,21 +1413,21 @@ export class PredictiveAnalyticsForecastingSystem {
 
     // Sort and categorize
     analysis.trends.sort((a, b) => b.trendScore - a.trendScore);
-    
+
     analysis.insights.topEmerging = analysis.trends
-      .filter(t => t.trendStatus === 'emerging')
+      .filter((t) => t.trendStatus === 'emerging')
       .slice(0, 5)
-      .map(t => t.item);
-    
+      .map((t) => t.item);
+
     analysis.insights.topGrowing = analysis.trends
-      .filter(t => t.trendStatus === 'growing')
+      .filter((t) => t.trendStatus === 'growing')
       .slice(0, 5)
-      .map(t => t.item);
-    
+      .map((t) => t.item);
+
     analysis.insights.topDeclining = analysis.trends
-      .filter(t => t.trendStatus === 'declining' || t.trendStatus === 'fading')
+      .filter((t) => t.trendStatus === 'declining' || t.trendStatus === 'fading')
       .slice(0, 5)
-      .map(t => t.item);
+      .map((t) => t.item);
 
     this.trendAnalyses.set(analysis.id, analysis);
     return analysis;
@@ -1400,7 +1453,10 @@ export class PredictiveAnalyticsForecastingSystem {
         competitorPrices: [
           { competitor: 'Competitor A', price: params.currentPrice * (0.9 + Math.random() * 0.2) },
           { competitor: 'Competitor B', price: params.currentPrice * (0.85 + Math.random() * 0.3) },
-          { competitor: 'Competitor C', price: params.currentPrice * (0.95 + Math.random() * 0.15) },
+          {
+            competitor: 'Competitor C',
+            price: params.currentPrice * (0.95 + Math.random() * 0.15),
+          },
         ],
       },
       optimization: {
@@ -1427,8 +1483,18 @@ export class PredictiveAnalyticsForecastingSystem {
         enabled: true,
         rules: [
           { condition: 'Peak hours (6PM-9PM)', priceAdjustment: 5, priority: 1, enabled: true },
-          { condition: 'Low inventory (<20 units)', priceAdjustment: 10, priority: 2, enabled: true },
-          { condition: 'High demand day (Friday-Sunday)', priceAdjustment: 8, priority: 3, enabled: true },
+          {
+            condition: 'Low inventory (<20 units)',
+            priceAdjustment: 10,
+            priority: 2,
+            enabled: true,
+          },
+          {
+            condition: 'High demand day (Friday-Sunday)',
+            priceAdjustment: 8,
+            priority: 3,
+            enabled: true,
+          },
         ],
         timeBasedPricing: [
           { dayOfWeek: 5, priceMultiplier: 1.05, reason: 'Higher demand on Fridays' },
@@ -1444,7 +1510,12 @@ export class PredictiveAnalyticsForecastingSystem {
       abTestRecommendations: [
         {
           testName: 'Price Point Optimization',
-          pricePoints: [params.currentPrice * 0.95, params.currentPrice, params.currentPrice * 1.05, params.currentPrice * 1.10],
+          pricePoints: [
+            params.currentPrice * 0.95,
+            params.currentPrice,
+            params.currentPrice * 1.05,
+            params.currentPrice * 1.1,
+          ],
           duration: 14,
           expectedLearnings: ['Optimal price point', 'Price elasticity', 'Revenue impact'],
         },
@@ -1456,7 +1527,7 @@ export class PredictiveAnalyticsForecastingSystem {
     optimization.strategies = [
       {
         strategy: 'Premium Positioning',
-        price: params.currentPrice * 1.20,
+        price: params.currentPrice * 1.2,
         description: 'Position as premium product',
         scenario: 'premium',
         projections: {
@@ -1480,7 +1551,7 @@ export class PredictiveAnalyticsForecastingSystem {
       },
       {
         strategy: 'Value Pricing',
-        price: params.currentPrice * 0.90,
+        price: params.currentPrice * 0.9,
         description: 'Increase volume through lower price',
         scenario: 'value',
         projections: {
@@ -1528,11 +1599,25 @@ export class PredictiveAnalyticsForecastingSystem {
         },
       },
       risks: [
-        { risk: 'stockout', probability: 0.15, impact: 0.7, mitigation: 'Increase safety stock by 20%' },
-        { risk: 'overstock', probability: 0.25, impact: 0.4, mitigation: 'Implement dynamic pricing' },
+        {
+          risk: 'stockout',
+          probability: 0.15,
+          impact: 0.7,
+          mitigation: 'Increase safety stock by 20%',
+        },
+        {
+          risk: 'overstock',
+          probability: 0.25,
+          impact: 0.4,
+          mitigation: 'Implement dynamic pricing',
+        },
       ],
       seasonalAdjustments: [
-        { period: 'Holiday Season (Nov-Dec)', adjustment: 40, reason: 'Increased demand during holidays' },
+        {
+          period: 'Holiday Season (Nov-Dec)',
+          adjustment: 40,
+          reason: 'Increased demand during holidays',
+        },
         { period: 'Summer (Jun-Aug)', adjustment: -15, reason: 'Lower demand in summer' },
       ],
       generatedAt: new Date(),
@@ -1544,7 +1629,7 @@ export class PredictiveAnalyticsForecastingSystem {
       date.setDate(date.getDate() + week * 7);
 
       const baseDemand = 20 + Math.random() * 30;
-      const seasonalFactor = 1 + (Math.sin(week / 52 * Math.PI * 2) * 0.2);
+      const seasonalFactor = 1 + Math.sin((week / 52) * Math.PI * 2) * 0.2;
       const demandForecast = Math.round(baseDemand * seasonalFactor);
 
       forecast.forecast.predictions.push({
@@ -1552,16 +1637,16 @@ export class PredictiveAnalyticsForecastingSystem {
         demandForecast,
         recommendedStock: demandForecast * 1.5,
         safetyStock: demandForecast * 0.3,
-        reorderPoint: (demandForecast * params.leadTime / 7) + (demandForecast * 0.3),
+        reorderPoint: (demandForecast * params.leadTime) / 7 + demandForecast * 0.3,
         reorderQuantity: demandForecast * 4,
       });
     }
 
     // Calculate total costs
-    forecast.optimization.costs.totalCost = 
-      (forecast.optimization.optimalStockLevel * forecast.optimization.costs.holdingCost) +
+    forecast.optimization.costs.totalCost =
+      forecast.optimization.optimalStockLevel * forecast.optimization.costs.holdingCost +
       forecast.optimization.costs.orderingCost +
-      (forecast.optimization.costs.stockoutCost * 0.1);
+      forecast.optimization.costs.stockoutCost * 0.1;
 
     this.inventoryForecasts.set(params.productId, forecast);
     return forecast;
@@ -1579,10 +1664,25 @@ export class PredictiveAnalyticsForecastingSystem {
       type: 'random-forest',
       predictionType: 'churn',
       features: [
-        { name: 'days_since_last_purchase', type: 'numerical', importance: 'high', correlationScore: 0.75 },
+        {
+          name: 'days_since_last_purchase',
+          type: 'numerical',
+          importance: 'high',
+          correlationScore: 0.75,
+        },
         { name: 'total_purchases', type: 'numerical', importance: 'high', correlationScore: -0.68 },
-        { name: 'engagement_score', type: 'numerical', importance: 'medium', correlationScore: -0.55 },
-        { name: 'support_tickets', type: 'numerical', importance: 'medium', correlationScore: 0.42 },
+        {
+          name: 'engagement_score',
+          type: 'numerical',
+          importance: 'medium',
+          correlationScore: -0.55,
+        },
+        {
+          name: 'support_tickets',
+          type: 'numerical',
+          importance: 'medium',
+          correlationScore: 0.42,
+        },
         { name: 'email_open_rate', type: 'numerical', importance: 'low', correlationScore: -0.35 },
       ],
       targetVariable: 'churned',
@@ -1599,7 +1699,12 @@ export class PredictiveAnalyticsForecastingSystem {
       features: [
         { name: 'historical_sales', type: 'numerical', importance: 'high', correlationScore: 0.82 },
         { name: 'seasonality', type: 'categorical', importance: 'high', correlationScore: 0.65 },
-        { name: 'marketing_spend', type: 'numerical', importance: 'medium', correlationScore: 0.48 },
+        {
+          name: 'marketing_spend',
+          type: 'numerical',
+          importance: 'medium',
+          correlationScore: 0.48,
+        },
         { name: 'price', type: 'numerical', importance: 'medium', correlationScore: -0.52 },
       ],
       targetVariable: 'demand',
@@ -1613,15 +1718,15 @@ export class PredictiveAnalyticsForecastingSystem {
   // ============================================================================
 
   getModelsByType(type: ModelType): MachineLearningModel[] {
-    return Array.from(this.models.values()).filter(m => m.type === type);
+    return Array.from(this.models.values()).filter((m) => m.type === type);
   }
 
   getProductionModels(): MachineLearningModel[] {
-    return Array.from(this.models.values()).filter(m => m.deployment.status === 'production');
+    return Array.from(this.models.values()).filter((m) => m.deployment.status === 'production');
   }
 
   getActiverTests(): ABTest[] {
-    return Array.from(this.abTests.values()).filter(t => t.status === 'running');
+    return Array.from(this.abTests.values()).filter((t) => t.status === 'running');
   }
 
   getRecentPredictions(limit: number = 100): Prediction[] {
@@ -1631,7 +1736,7 @@ export class PredictiveAnalyticsForecastingSystem {
   }
 
   getDemandForecastsByProduct(productId: string): DemandForecast[] {
-    return Array.from(this.demandForecasts.values()).filter(f => f.productId === productId);
+    return Array.from(this.demandForecasts.values()).filter((f) => f.productId === productId);
   }
 }
 

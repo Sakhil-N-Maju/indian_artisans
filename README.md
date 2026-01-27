@@ -16,6 +16,7 @@ A comprehensive, production-grade e-commerce platform connecting traditional Ind
 ## 🚀 Features
 
 ### 🤖 **AI-Powered Product Creation** ⭐ NEW
+
 - **WhatsApp Integration**: Artisans send photo + voice → AI creates professional listing
 - **GPT-4 Vision**: Analyzes product images for visual details
 - **Whisper**: Transcribes voice in any language (Hindi, English, regional languages)
@@ -26,6 +27,7 @@ A comprehensive, production-grade e-commerce platform connecting traditional Ind
 - 📖 [Full Documentation](AI_PIPELINE.md) | 🧪 [Testing Guide](AI_TESTING.md)
 
 ### 🛍️ **Marketplace**
+
 - Product catalog with advanced filtering
 - AI-generated product descriptions & stories
 - Multi-currency support (40+ currencies)
@@ -33,6 +35,7 @@ A comprehensive, production-grade e-commerce platform connecting traditional Ind
 - Advanced search with Elasticsearch integration
 
 ### 👨‍🎨 **Artisan Features**
+
 - Verified artisan profiles with KYC
 - Digital storytelling platform
 - Virtual & physical workshops
@@ -40,6 +43,7 @@ A comprehensive, production-grade e-commerce platform connecting traditional Ind
 - Business analytics dashboard
 
 ### 💳 **Payments & Orders**
+
 - Razorpay payment gateway integration
 - Multiple payment methods (UPI, Cards, NetBanking, Wallets)
 - Secure payment processing
@@ -47,6 +51,7 @@ A comprehensive, production-grade e-commerce platform connecting traditional Ind
 - Subscription management
 
 ### 📱 **WhatsApp Integration**
+
 - **AI Product Creation** (photo + voice → listing)
 - Order confirmations via WhatsApp
 - Shipment tracking updates
@@ -55,6 +60,7 @@ A comprehensive, production-grade e-commerce platform connecting traditional Ind
 - Automated notifications
 
 ### 🔐 **Security & Compliance**
+
 - Multi-factor authentication (MFA)
 - Data encryption (AES-256)
 - GDPR & data privacy compliance
@@ -63,6 +69,7 @@ A comprehensive, production-grade e-commerce platform connecting traditional Ind
 - Audit logging
 
 ### 📊 **Analytics & Insights**
+
 - Real-time dashboard
 - Customer segmentation
 - Predictive analytics
@@ -71,6 +78,7 @@ A comprehensive, production-grade e-commerce platform connecting traditional Ind
 - Marketing attribution
 
 ### 🌍 **Global Marketplace**
+
 - Multi-language support (12+ languages)
 - Regional adaptation
 - International shipping calculator
@@ -78,6 +86,7 @@ A comprehensive, production-grade e-commerce platform connecting traditional Ind
 - Localized payment methods
 
 ### 🎯 **Advanced Features**
+
 - AR/VR product visualization
 - AI-powered personalization
 - Social commerce integration
@@ -90,6 +99,7 @@ A comprehensive, production-grade e-commerce platform connecting traditional Ind
 ## 📋 Quick Start
 
 ### Prerequisites
+
 - Node.js 18+
 - PostgreSQL 14+
 - Razorpay account
@@ -122,6 +132,7 @@ Visit http://localhost:3000
 ## 🏗️ Tech Stack
 
 ### Frontend
+
 - **Framework**: Next.js 16 with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
@@ -130,6 +141,7 @@ Visit http://localhost:3000
 - **Forms**: React Hook Form + Zod
 
 ### Backend
+
 - **Runtime**: Node.js
 - **Database**: PostgreSQL
 - **ORM**: Prisma 7
@@ -137,6 +149,7 @@ Visit http://localhost:3000
 - **Authentication**: NextAuth.js
 
 ### Integrations
+
 - **AI**: OpenAI (GPT-4 Vision, Whisper, GPT-4 Turbo)
 - **Payments**: Razorpay
 - **Messaging**: WhatsApp Cloud API (Meta)
@@ -144,6 +157,7 @@ Visit http://localhost:3000
 - **Password Hashing**: bcrypt
 
 ### DevOps
+
 - **Hosting**: Vercel (recommended)
 - **Database**: Supabase / Neon / Railway
 - **Version Control**: Git
@@ -205,6 +219,7 @@ indian_artisans/
 - Loyalty Points
 
 **View Schema**:
+
 ```bash
 npx prisma studio
 ```
@@ -214,12 +229,14 @@ npx prisma studio
 ## 🔌 API Endpoints
 
 ### AI Product Creation ⭐ NEW
+
 ```
 POST /api/ai/products           # AI product creation
 GET  /api/ai/products           # Quick image analysis
 ```
 
 ### Products
+
 ```
 GET  /api/products              # List products
 GET  /api/products?id={id}      # Get product
@@ -227,6 +244,7 @@ POST /api/products              # Create product
 ```
 
 ### Orders
+
 ```
 POST /api/orders                # Create order
 GET  /api/orders?userId={id}    # User orders
@@ -234,11 +252,13 @@ GET  /api/orders?orderId={id}   # Order details
 ```
 
 ### Payments
+
 ```
 POST /api/payment/verify        # Verify payment
 ```
 
 ### Webhooks
+
 ```
 POST /api/webhooks/razorpay     # Razorpay events
 POST /api/webhooks/whatsapp     # WhatsApp messages (+ AI processing)
@@ -249,6 +269,7 @@ POST /api/webhooks/whatsapp     # WhatsApp messages (+ AI processing)
 ## 🎯 Key Features Implemented
 
 ### ✅ Phase 1-4 (Foundation)
+
 - User authentication & authorization
 - Product catalog & search
 - Shopping cart & checkout
@@ -256,6 +277,7 @@ POST /api/webhooks/whatsapp     # WhatsApp messages (+ AI processing)
 - Order management
 
 ### ✅ Phase 5-7 (Enhanced Experience)
+
 - Voice commerce
 - Cultural storytelling
 - Workshop management
@@ -263,6 +285,7 @@ POST /api/webhooks/whatsapp     # WhatsApp messages (+ AI processing)
 - International shipping
 
 ### ✅ Phase 8-12 (Advanced)
+
 - Mobile app backend
 - Admin dashboard (40 systems)
 - Security & compliance
@@ -328,6 +351,7 @@ NEXTAUTH_URL                   # App URL
 ```
 
 **Get API Keys**:
+
 - OpenAI: https://platform.openai.com/api-keys
 - Razorpay: https://dashboard.razorpay.com
 - WhatsApp: https://developers.facebook.com/apps
@@ -339,6 +363,7 @@ NEXTAUTH_URL                   # App URL
 Access: http://localhost:3000/admin
 
 **Features**:
+
 - 40 system overview
 - Real-time statistics
 - User management
@@ -353,18 +378,22 @@ Access: http://localhost:3000/admin
 ## 🧪 Testing
 
 ### Test AI Product Creation
+
 ```bash
 # 1. Configure OpenAI API key in .env
 # 2. Follow testing guide
 ```
+
 📖 **Full Testing Guide**: [AI_TESTING.md](AI_TESTING.md)
 
 ### Test Payment
+
 1. Use Razorpay test mode
 2. Test card: `4111 1111 1111 1111`
 3. Any CVV, future expiry
 
 ### Test WhatsApp
+
 1. Add test number in Meta dashboard
 2. Trigger order notification
 3. Verify message delivery

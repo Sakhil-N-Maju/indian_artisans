@@ -1,6 +1,6 @@
 /**
  * Customer Analytics System
- * 
+ *
  * Comprehensive customer intelligence and analytics:
  * - Customer segmentation
  * - Behavioral analytics
@@ -15,17 +15,24 @@ export interface CustomerSegment {
   id: string;
   name: string;
   description: string;
-  
+
   // Segmentation criteria
   criteria: {
     type: 'demographic' | 'behavioral' | 'psychographic' | 'geographic' | 'value-based';
     rules: {
       field: string;
-      operator: 'equals' | 'not_equals' | 'contains' | 'greater_than' | 'less_than' | 'in' | 'between';
+      operator:
+        | 'equals'
+        | 'not_equals'
+        | 'contains'
+        | 'greater_than'
+        | 'less_than'
+        | 'in'
+        | 'between';
       value: any;
     }[];
   };
-  
+
   // Segment metrics
   metrics: {
     customerCount: number;
@@ -37,7 +44,7 @@ export interface CustomerSegment {
     retentionRate: number;
     churnRate: number;
   };
-  
+
   // Characteristics
   characteristics: {
     averageAge?: number;
@@ -46,21 +53,21 @@ export interface CustomerSegment {
     topProducts?: { productId: string; productName: string; purchases: number }[];
     preferredChannels?: { channel: string; percentage: number }[];
   };
-  
+
   // Recommendations
   recommendations: {
     marketingStrategy: string[];
     productRecommendations: string[];
     communicationPreferences: string[];
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface CustomerBehavior {
   customerId: string;
-  
+
   // Purchase behavior
   purchase: {
     totalOrders: number;
@@ -73,7 +80,7 @@ export interface CustomerBehavior {
     favoriteCategories: { category: string; purchases: number }[];
     favoriteProducts: { productId: string; productName: string; purchases: number }[];
   };
-  
+
   // Browsing behavior
   browsing: {
     totalSessions: number;
@@ -84,7 +91,7 @@ export interface CustomerBehavior {
     topPages: { url: string; views: number }[];
     devicePreference: 'desktop' | 'mobile' | 'tablet';
   };
-  
+
   // Engagement
   engagement: {
     emailOpenRate: number;
@@ -95,7 +102,7 @@ export interface CustomerBehavior {
     reviewsWritten: number;
     referralsMade: number;
   };
-  
+
   // Cart behavior
   cart: {
     abandonmentRate: number;
@@ -103,7 +110,7 @@ export interface CustomerBehavior {
     averageItemsInCart: number;
     abandonedCarts: number;
   };
-  
+
   // Channel preference
   channelPreference: {
     preferredChannel: string;
@@ -114,14 +121,14 @@ export interface CustomerBehavior {
 export interface CustomerLifetimeValue {
   customerId: string;
   customerName: string;
-  
+
   // CLV metrics
   clv: {
     historical: number;
     predicted: number;
     potential: number;
   };
-  
+
   // Components
   components: {
     averageOrderValue: number;
@@ -130,7 +137,7 @@ export interface CustomerLifetimeValue {
     grossMargin: number;
     retentionRate: number;
   };
-  
+
   // Breakdown
   breakdown: {
     productRevenue: number;
@@ -138,14 +145,14 @@ export interface CustomerLifetimeValue {
     serviceRevenue: number;
     referralValue: number;
   };
-  
+
   // Cohort comparison
   cohort: {
     cohortName: string;
     cohortAverage: number;
     percentile: number;
   };
-  
+
   // Profitability
   profitability: {
     acquisitionCost: number;
@@ -153,7 +160,7 @@ export interface CustomerLifetimeValue {
     profitMargin: number;
     roi: number;
   };
-  
+
   // Risk assessment
   risk: {
     churnProbability: number;
@@ -165,7 +172,7 @@ export interface CustomerLifetimeValue {
 export interface ChurnPrediction {
   customerId: string;
   customerName: string;
-  
+
   // Prediction
   prediction: {
     churnProbability: number;
@@ -173,14 +180,14 @@ export interface ChurnPrediction {
     confidenceScore: number;
     predictedChurnDate?: Date;
   };
-  
+
   // Risk factors
   riskFactors: {
     factor: string;
     impact: number; // 0-1
     severity: 'low' | 'medium' | 'high';
   }[];
-  
+
   // Behavioral signals
   signals: {
     decreasedEngagement: boolean;
@@ -191,7 +198,7 @@ export interface ChurnPrediction {
     unsubscribedFromEmails: boolean;
     longTimeSinceLastPurchase: boolean;
   };
-  
+
   // Recommendations
   recommendations: {
     action: string;
@@ -199,7 +206,7 @@ export interface ChurnPrediction {
     expectedImpact: number;
     effort: 'low' | 'medium' | 'high';
   }[];
-  
+
   // Historical comparison
   historical: {
     currentScore: number;
@@ -212,7 +219,7 @@ export interface ChurnPrediction {
 
 export interface CustomerJourney {
   customerId: string;
-  
+
   // Journey stages
   stages: {
     stage: 'awareness' | 'consideration' | 'purchase' | 'retention' | 'advocacy';
@@ -227,7 +234,7 @@ export interface CustomerJourney {
       outcome?: string;
     }[];
   }[];
-  
+
   // Current stage
   currentStage: {
     stage: CustomerJourney['stages'][0]['stage'];
@@ -235,7 +242,7 @@ export interface CustomerJourney {
     completionPercentage: number;
     nextAction?: string;
   };
-  
+
   // Journey metrics
   metrics: {
     totalTouchpoints: number;
@@ -243,7 +250,7 @@ export interface CustomerJourney {
     conversionRate: number;
     dropoffPoints: { stage: string; rate: number }[];
   };
-  
+
   // Path analysis
   path: {
     commonPaths: { path: string[]; frequency: number }[];
@@ -254,8 +261,13 @@ export interface CustomerJourney {
 
 export interface CohortAnalysis {
   cohortName: string;
-  cohortType: 'acquisition_month' | 'acquisition_quarter' | 'first_product' | 'customer_segment' | 'custom';
-  
+  cohortType:
+    | 'acquisition_month'
+    | 'acquisition_quarter'
+    | 'first_product'
+    | 'customer_segment'
+    | 'custom';
+
   // Cohort definition
   definition: {
     startDate: Date;
@@ -263,7 +275,7 @@ export interface CohortAnalysis {
     size: number;
     criteria?: Record<string, any>;
   };
-  
+
   // Retention
   retention: {
     month: number;
@@ -272,7 +284,7 @@ export interface CohortAnalysis {
     revenue: number;
     cumulativeRevenue: number;
   }[];
-  
+
   // Performance
   performance: {
     totalRevenue: number;
@@ -281,10 +293,10 @@ export interface CohortAnalysis {
     churnRate: number;
     activeRate: number;
   };
-  
+
   // Comparison
   comparison?: {
-    industry Benchmark: number;
+    industryBenchmark: number;
     companyAverage: number;
     performanceRating: 'excellent' | 'good' | 'average' | 'poor';
   };
@@ -293,7 +305,7 @@ export interface CohortAnalysis {
 export interface RFMAnalysis {
   customerId: string;
   customerName: string;
-  
+
   // RFM scores
   scores: {
     recency: number; // 1-5
@@ -301,23 +313,33 @@ export interface RFMAnalysis {
     monetary: number; // 1-5
     total: number; // 3-15
   };
-  
+
   // Raw values
   values: {
     recency: number; // days since last purchase
     frequency: number; // number of purchases
     monetary: number; // total spent
   };
-  
+
   // Segment
   segment: {
     name: string;
     description: string;
-    type: 'champions' | 'loyal' | 'potential_loyalist' | 'new_customers' | 'promising' | 
-           'need_attention' | 'about_to_sleep' | 'at_risk' | 'cant_lose' | 'hibernating' | 'lost';
+    type:
+      | 'champions'
+      | 'loyal'
+      | 'potential_loyalist'
+      | 'new_customers'
+      | 'promising'
+      | 'need_attention'
+      | 'about_to_sleep'
+      | 'at_risk'
+      | 'cant_lose'
+      | 'hibernating'
+      | 'lost';
     priority: 'high' | 'medium' | 'low';
   };
-  
+
   // Recommendations
   recommendations: {
     action: string;
@@ -325,7 +347,7 @@ export interface RFMAnalysis {
     message: string;
     offer?: string;
   }[];
-  
+
   lastUpdated: Date;
 }
 
@@ -334,7 +356,7 @@ export interface CustomerInsights {
     start: Date;
     end: Date;
   };
-  
+
   // Overview
   overview: {
     totalCustomers: number;
@@ -345,7 +367,7 @@ export interface CustomerInsights {
     averageLifetimeValue: number;
     averageAcquisitionCost: number;
   };
-  
+
   // Segmentation
   segmentation: {
     byValue: {
@@ -366,7 +388,7 @@ export interface CustomerInsights {
       inactive: number;
     };
   };
-  
+
   // Trends
   trends: {
     customerGrowth: number; // percentage
@@ -375,7 +397,7 @@ export interface CustomerInsights {
     reactivationRate: number;
     referralRate: number;
   };
-  
+
   // Top customers
   topCustomers: {
     customerId: string;
@@ -403,7 +425,7 @@ export class CustomerAnalyticsSystem {
     this.journeys = new Map();
     this.cohorts = new Map();
     this.rfmAnalysis = new Map();
-    
+
     // Initialize default segments
     this.initializeDefaultSegments();
   }
@@ -573,7 +595,9 @@ export class CustomerAnalyticsSystem {
   /**
    * Create customer segment
    */
-  async createSegment(params: Omit<CustomerSegment, 'id' | 'metrics' | 'createdAt' | 'updatedAt'>): Promise<CustomerSegment> {
+  async createSegment(
+    params: Omit<CustomerSegment, 'id' | 'metrics' | 'createdAt' | 'updatedAt'>
+  ): Promise<CustomerSegment> {
     const segment: CustomerSegment = {
       ...params,
       id: `seg-${Date.now()}`,
@@ -723,7 +747,7 @@ export class CustomerAnalyticsSystem {
       riskFactors: [
         { factor: 'Decreased purchase frequency', impact: 0.45, severity: 'high' },
         { factor: 'Longer time since last purchase', impact: 0.35, severity: 'medium' },
-        { factor: 'Lower email engagement', impact: 0.20, severity: 'low' },
+        { factor: 'Lower email engagement', impact: 0.2, severity: 'low' },
       ],
       signals: {
         decreasedEngagement: true,
@@ -829,7 +853,8 @@ export class CustomerAnalyticsSystem {
         customers: params.definition.size * Math.pow(0.85, i),
         retentionRate: Math.pow(0.85, i) * 100,
         revenue: params.definition.size * Math.pow(0.85, i) * 500,
-        cumulativeRevenue: params.definition.size * 500 * ((1 - Math.pow(0.85, i + 1)) / (1 - 0.85)),
+        cumulativeRevenue:
+          params.definition.size * 500 * ((1 - Math.pow(0.85, i + 1)) / (1 - 0.85)),
       })),
       performance: {
         totalRevenue: params.definition.size * 6850,
@@ -891,9 +916,27 @@ export class CustomerAnalyticsSystem {
         referralRate: 8.5,
       },
       topCustomers: [
-        { customerId: 'cust-1', customerName: 'Priya Sharma', totalSpent: 25600, orders: 38, lifetimeValue: 32000 },
-        { customerId: 'cust-2', customerName: 'Rajesh Kumar', totalSpent: 22400, orders: 35, lifetimeValue: 28000 },
-        { customerId: 'cust-3', customerName: 'Anita Desai', totalSpent: 19800, orders: 32, lifetimeValue: 24500 },
+        {
+          customerId: 'cust-1',
+          customerName: 'Priya Sharma',
+          totalSpent: 25600,
+          orders: 38,
+          lifetimeValue: 32000,
+        },
+        {
+          customerId: 'cust-2',
+          customerName: 'Rajesh Kumar',
+          totalSpent: 22400,
+          orders: 35,
+          lifetimeValue: 28000,
+        },
+        {
+          customerId: 'cust-3',
+          customerName: 'Anita Desai',
+          totalSpent: 19800,
+          orders: 32,
+          lifetimeValue: 24500,
+        },
       ],
     };
   }

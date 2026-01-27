@@ -1,6 +1,6 @@
 /**
  * Admin Order Management System
- * 
+ *
  * Comprehensive admin order management:
  * - Order processing and tracking
  * - Order modification and cancellation
@@ -13,7 +13,14 @@ export interface AdminOrder {
   id: string;
   orderNumber: string;
   userId: string;
-  status: 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'disputed';
+  status:
+    | 'pending'
+    | 'confirmed'
+    | 'processing'
+    | 'shipped'
+    | 'delivered'
+    | 'cancelled'
+    | 'disputed';
   items: {
     productId: string;
     name: string;
@@ -93,25 +100,25 @@ export class AdminOrderManagementSystem {
     let results = Array.from(this.orders.values());
 
     if (query.orderNumber) {
-      results = results.filter(o => o.orderNumber.includes(query.orderNumber!));
+      results = results.filter((o) => o.orderNumber.includes(query.orderNumber!));
     }
     if (query.userId) {
-      results = results.filter(o => o.userId === query.userId);
+      results = results.filter((o) => o.userId === query.userId);
     }
     if (query.status) {
-      results = results.filter(o => o.status === query.status);
+      results = results.filter((o) => o.status === query.status);
     }
     if (query.dateFrom) {
-      results = results.filter(o => o.createdAt >= query.dateFrom!);
+      results = results.filter((o) => o.createdAt >= query.dateFrom!);
     }
     if (query.dateTo) {
-      results = results.filter(o => o.createdAt <= query.dateTo!);
+      results = results.filter((o) => o.createdAt <= query.dateTo!);
     }
     if (query.minAmount) {
-      results = results.filter(o => o.totalAmount >= query.minAmount!);
+      results = results.filter((o) => o.totalAmount >= query.minAmount!);
     }
     if (query.maxAmount) {
-      results = results.filter(o => o.totalAmount <= query.maxAmount!);
+      results = results.filter((o) => o.totalAmount <= query.maxAmount!);
     }
 
     results.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
@@ -123,7 +130,11 @@ export class AdminOrderManagementSystem {
     return results;
   }
 
-  async updateOrderStatus(orderId: string, status: AdminOrder['status'], adminId: string): Promise<AdminOrder> {
+  async updateOrderStatus(
+    orderId: string,
+    status: AdminOrder['status'],
+    adminId: string
+  ): Promise<AdminOrder> {
     const order = this.orders.get(orderId);
     if (!order) throw new Error('Order not found');
 
@@ -206,7 +217,7 @@ export class AdminOrderManagementSystem {
     // Update order
     const order = this.orders.get(dispute.orderId);
     if (order) {
-      order.flags = order.flags.filter(f => f !== 'disputed');
+      order.flags = order.flags.filter((f) => f !== 'disputed');
       if (data.action === 'refund' || data.action === 'partial_refund') {
         order.paymentStatus = data.action === 'refund' ? 'refunded' : 'partially_refunded';
       }
@@ -279,19 +290,23 @@ export class AdminOrderManagementSystem {
     };
   }> {
     const orders = Array.from(this.orders.values());
-    const byStatus = orders.reduce((acc, o) => {
-      acc[o.status] = (acc[o.status] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const byStatus = orders.reduce(
+      (acc, o) => {
+        acc[o.status] = (acc[o.status] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const flagged = orders.filter(o => o.flags.length > 0).length;
-    const avgValue = orders.length > 0
-      ? orders.reduce((sum, o) => sum + o.totalAmount, 0) / orders.length
-      : 0;
+    const flagged = orders.filter((o) => o.flags.length > 0).length;
+    const avgValue =
+      orders.length > 0 ? orders.reduce((sum, o) => sum + o.totalAmount, 0) / orders.length : 0;
 
     const disputes = Array.from(this.disputes.values());
-    const openDisputes = disputes.filter(d => d.status === 'open' || d.status === 'investigating').length;
-    const resolvedDisputes = disputes.filter(d => d.status === 'resolved').length;
+    const openDisputes = disputes.filter(
+      (d) => d.status === 'open' || d.status === 'investigating'
+    ).length;
+    const resolvedDisputes = disputes.filter((d) => d.status === 'resolved').length;
     const resolutionRate = disputes.length > 0 ? (resolvedDisputes / disputes.length) * 100 : 0;
 
     return {
@@ -315,9 +330,7 @@ export class AdminOrderManagementSystem {
       orderNumber: 'ORD-2024-001',
       userId: 'user-1',
       status: 'confirmed',
-      items: [
-        { productId: 'prod-1', name: 'Handwoven Scarf', quantity: 1, price: 1500 },
-      ],
+      items: [{ productId: 'prod-1', name: 'Handwoven Scarf', quantity: 1, price: 1500 }],
       totalAmount: 1500,
       paymentStatus: 'paid',
       shippingAddress: {},

@@ -1,68 +1,71 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Navigation } from "@/components/navigation"
-import { ProductGrid } from "@/components/product-grid"
-import { ProductFilters } from "@/components/product-filters"
-import { Footer } from "@/components/footer"
-import { Filter, TrendingUp } from "lucide-react"
+import { useState } from 'react';
+import { Navigation } from '@/components/navigation';
+import { ProductGrid } from '@/components/product-grid';
+import { ProductFilters } from '@/components/product-filters';
+import { Footer } from '@/components/footer';
+import { Filter, TrendingUp } from 'lucide-react';
 
 export default function ShopPage() {
-  const [scrolled, setScrolled] = useState(false)
-  const [showFilters, setShowFilters] = useState(false)
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [priceRange, setPriceRange] = useState([0, 10000])
-  const [sortBy, setSortBy] = useState("trending")
-  const [searchQuery, setSearchQuery] = useState("")
+  const [scrolled, setScrolled] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [priceRange, setPriceRange] = useState([0, 10000]);
+  const [sortBy, setSortBy] = useState('trending');
+  const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <main className="min-h-screen bg-warm-cream">
+    <main className="bg-warm-cream min-h-screen">
       <Navigation scrolled={scrolled} />
 
       {/* Hero Banner */}
-      <section className="relative bg-gradient-to-br from-primary/10 to-secondary/10 overflow-hidden pt-20 pb-12 sm:pb-16 md:h-72">
+      <section className="from-primary/10 to-secondary/10 relative overflow-hidden bg-gradient-to-br pt-20 pb-12 sm:pb-16 md:h-72">
         <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-10 right-20 w-80 h-80 bg-secondary/20 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-20 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
+          <div className="bg-secondary/20 absolute top-10 right-20 h-80 w-80 rounded-full blur-3xl" />
+          <div className="bg-primary/10 absolute bottom-0 left-20 h-96 w-96 rounded-full blur-3xl" />
         </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="space-y-3 sm:space-y-4">
             <div className="flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-              <span className="text-xs sm:text-sm font-semibold text-primary">CURATED COLLECTION</span>
+              <TrendingUp className="text-primary h-5 w-5 sm:h-6 sm:w-6" />
+              <span className="text-primary text-xs font-semibold sm:text-sm">
+                CURATED COLLECTION
+              </span>
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-warm-charcoal">
+            <h1 className="text-warm-charcoal font-serif text-3xl font-bold sm:text-4xl md:text-5xl">
               Shop Our Collection
             </h1>
-            <p className="text-base sm:text-lg text-warm-charcoal/70 max-w-2xl">
-              Browse thousands of authentic handcrafted products from artisans across India, each piece tells a story
+            <p className="text-warm-charcoal/70 max-w-2xl text-base sm:text-lg">
+              Browse thousands of authentic handcrafted products from artisans across India, each
+              piece tells a story
             </p>
           </div>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <div className="flex flex-col gap-4 mb-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+        <div className="mb-8 flex flex-col gap-4">
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 px-4 py-2.5 border border-border rounded-lg hover:bg-warm-sand transition md:hidden w-full sm:w-auto justify-center font-semibold"
+            className="border-border hover:bg-warm-sand flex w-full items-center justify-center gap-2 rounded-lg border px-4 py-2.5 font-semibold transition sm:w-auto md:hidden"
           >
-            <Filter className="w-5 h-5" />
-            {showFilters ? "Hide" : "Show"} Filters
+            <Filter className="h-5 w-5" />
+            {showFilters ? 'Hide' : 'Show'} Filters
           </button>
 
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row">
             <input
               type="text"
               placeholder="Search products..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 px-4 py-2.5 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-base"
+              className="border-border focus:ring-primary flex-1 rounded-lg border px-4 py-2.5 text-base focus:ring-2 focus:outline-none"
             />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2.5 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-base"
+              className="border-border focus:ring-primary rounded-lg border px-4 py-2.5 text-base focus:ring-2 focus:outline-none"
             >
               <option value="trending">Trending</option>
               <option value="newest">Newest</option>
@@ -74,10 +77,10 @@ export default function ShopPage() {
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-4 md:gap-8">
           {/* Filters Sidebar - Mobile Modal */}
           {showFilters && (
-            <div className="md:col-span-1 mb-6 md:mb-0">
+            <div className="mb-6 md:col-span-1 md:mb-0">
               <ProductFilters
                 selectedCategory={selectedCategory}
                 onCategoryChange={setSelectedCategory}
@@ -88,7 +91,7 @@ export default function ShopPage() {
           )}
 
           {/* Products Grid */}
-          <div className={showFilters ? "md:col-span-3" : "md:col-span-4"}>
+          <div className={showFilters ? 'md:col-span-3' : 'md:col-span-4'}>
             <ProductGrid
               category={selectedCategory}
               priceRange={priceRange}
@@ -101,5 +104,5 @@ export default function ShopPage() {
 
       <Footer />
     </main>
-  )
+  );
 }

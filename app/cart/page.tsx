@@ -1,109 +1,124 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Navigation } from "@/components/navigation"
-import { Footer } from "@/components/footer"
-import { ShoppingCart, Trash2, Plus, Minus, ArrowRight, Truck, Shield, RotateCcw } from "lucide-react"
+import { useState } from 'react';
+import { Navigation } from '@/components/navigation';
+import { Footer } from '@/components/footer';
+import {
+  ShoppingCart,
+  Trash2,
+  Plus,
+  Minus,
+  ArrowRight,
+  Truck,
+  Shield,
+  RotateCcw,
+} from 'lucide-react';
 
 interface CartItem {
-  id: number
-  name: string
-  price: number
-  quantity: number
-  image: string
-  artisan: string
-  category: string
+  id: number;
+  name: string;
+  price: number;
+  quantity: number;
+  image: string;
+  artisan: string;
+  category: string;
 }
 
 const mockCartItems: CartItem[] = [
   {
     id: 1,
-    name: "Hand-Woven Saree",
+    name: 'Hand-Woven Saree',
     price: 4500,
     quantity: 1,
-    image: "/hand-woven-saree.jpg",
-    artisan: "Priya Textiles",
-    category: "Textiles",
+    image: '/hand-woven-saree.jpg',
+    artisan: 'Priya Textiles',
+    category: 'Textiles',
   },
   {
     id: 2,
-    name: "Kundan Necklace",
+    name: 'Kundan Necklace',
     price: 8900,
     quantity: 2,
-    image: "/kundan-necklace.jpg",
-    artisan: "Meera Jewelry",
-    category: "Jewelry",
+    image: '/kundan-necklace.jpg',
+    artisan: 'Meera Jewelry',
+    category: 'Jewelry',
   },
   {
     id: 3,
-    name: "Blue Pottery Bowl",
+    name: 'Blue Pottery Bowl',
     price: 2800,
     quantity: 1,
-    image: "/blue-pottery-bowl.jpg",
-    artisan: "Khurja Crafts",
-    category: "Pottery",
+    image: '/blue-pottery-bowl.jpg',
+    artisan: 'Khurja Crafts',
+    category: 'Pottery',
   },
-]
+];
 
 export default function CartPage() {
-  const [scrolled, setScrolled] = useState(false)
-  const [cartItems, setCartItems] = useState(mockCartItems)
+  const [scrolled, setScrolled] = useState(false);
+  const [cartItems, setCartItems] = useState(mockCartItems);
 
   const updateQuantity = (id: number, delta: number) => {
     setCartItems(
       cartItems
-        .map((item) => (item.id === id ? { ...item, quantity: Math.max(1, item.quantity + delta) } : item))
-        .filter((item) => item.quantity > 0),
-    )
-  }
+        .map((item) =>
+          item.id === id ? { ...item, quantity: Math.max(1, item.quantity + delta) } : item
+        )
+        .filter((item) => item.quantity > 0)
+    );
+  };
 
   const removeItem = (id: number) => {
-    setCartItems(cartItems.filter((item) => item.id !== id))
-  }
+    setCartItems(cartItems.filter((item) => item.id !== id));
+  };
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  const shipping = subtotal > 5000 ? 0 : 200
-  const tax = Math.round(subtotal * 0.05)
-  const total = subtotal + shipping + tax
+  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const shipping = subtotal > 5000 ? 0 : 200;
+  const tax = Math.round(subtotal * 0.05);
+  const total = subtotal + shipping + tax;
 
   return (
-    <main className="min-h-screen bg-warm-cream">
+    <main className="bg-warm-cream min-h-screen">
       <Navigation scrolled={scrolled} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pt-28 sm:pt-32">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-3 mb-8 sm:mb-12">
-          <ShoppingCart className="w-7 h-7 sm:w-8 sm:h-8 text-primary" />
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold text-warm-charcoal">Shopping Cart</h1>
-          <span className="ml-auto px-3 sm:px-4 py-2 bg-primary/10 rounded-full text-xs sm:text-sm font-semibold text-primary">
-            {cartItems.length} item{cartItems.length !== 1 ? "s" : ""}
+      <div className="mx-auto max-w-7xl px-4 py-8 pt-28 sm:px-6 sm:py-12 sm:pt-32 lg:px-8">
+        <div className="mb-8 flex flex-col items-start gap-4 sm:mb-12 sm:flex-row sm:items-center sm:gap-3">
+          <ShoppingCart className="text-primary h-7 w-7 sm:h-8 sm:w-8" />
+          <h1 className="text-warm-charcoal font-serif text-3xl font-bold sm:text-4xl">
+            Shopping Cart
+          </h1>
+          <span className="bg-primary/10 text-primary ml-auto rounded-full px-3 py-2 text-xs font-semibold sm:px-4 sm:text-sm">
+            {cartItems.length} item{cartItems.length !== 1 ? 's' : ''}
           </span>
         </div>
 
         {cartItems.length > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8">
             {/* Cart Items */}
-            <div className="lg:col-span-2 space-y-4">
+            <div className="space-y-4 lg:col-span-2">
               {cartItems.map((item) => (
                 <div key={item.id} className="card-light flex gap-4 p-4 sm:p-5">
                   {/* Image */}
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden bg-warm-sand flex-shrink-0">
+                  <div className="bg-warm-sand h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg sm:h-24 sm:w-24">
                     <img
-                      src={item.image || "/placeholder.svg"}
+                      src={item.image || '/placeholder.svg'}
                       alt={item.name}
-                      className="w-full h-full object-cover"
+                      className="h-full w-full object-cover"
                     />
                   </div>
 
                   {/* Details */}
-                  <div className="flex-1 flex flex-col justify-between">
+                  <div className="flex flex-1 flex-col justify-between">
                     <div>
-                      <p className="text-xs text-primary font-semibold mb-1">{item.category}</p>
-                      <h3 className="text-sm sm:text-lg font-serif font-bold text-warm-charcoal line-clamp-2">
+                      <p className="text-primary mb-1 text-xs font-semibold">{item.category}</p>
+                      <h3 className="text-warm-charcoal line-clamp-2 font-serif text-sm font-bold sm:text-lg">
                         {item.name}
                       </h3>
-                      <p className="text-xs sm:text-sm text-warm-charcoal/60 mt-1">{item.artisan}</p>
+                      <p className="text-warm-charcoal/60 mt-1 text-xs sm:text-sm">
+                        {item.artisan}
+                      </p>
                     </div>
-                    <p className="text-base sm:text-lg font-bold text-primary mt-2">
+                    <p className="text-primary mt-2 text-base font-bold sm:text-lg">
                       ₹{(item.price * item.quantity).toLocaleString()}
                     </p>
                   </div>
@@ -114,21 +129,21 @@ export default function CartPage() {
                       onClick={() => removeItem(item.id)}
                       className="text-warm-charcoal/60 hover:text-primary transition"
                     >
-                      <Trash2 className="w-5 h-5" />
+                      <Trash2 className="h-5 w-5" />
                     </button>
-                    <div className="flex items-center gap-2 bg-warm-sand rounded-lg px-2 py-1">
+                    <div className="bg-warm-sand flex items-center gap-2 rounded-lg px-2 py-1">
                       <button
                         onClick={() => updateQuantity(item.id, -1)}
-                        className="p-1 hover:bg-warm-cream rounded transition"
+                        className="hover:bg-warm-cream rounded p-1 transition"
                       >
-                        <Minus className="w-3 h-3 sm:w-4 sm:h-4 text-warm-charcoal" />
+                        <Minus className="text-warm-charcoal h-3 w-3 sm:h-4 sm:w-4" />
                       </button>
-                      <span className="w-6 text-center font-semibold text-sm">{item.quantity}</span>
+                      <span className="w-6 text-center text-sm font-semibold">{item.quantity}</span>
                       <button
                         onClick={() => updateQuantity(item.id, 1)}
-                        className="p-1 hover:bg-warm-cream rounded transition"
+                        className="hover:bg-warm-cream rounded p-1 transition"
                       >
-                        <Plus className="w-3 h-3 sm:w-4 sm:h-4 text-warm-charcoal" />
+                        <Plus className="text-warm-charcoal h-3 w-3 sm:h-4 sm:w-4" />
                       </button>
                     </div>
                   </div>
@@ -139,17 +154,21 @@ export default function CartPage() {
             {/* Order Summary */}
             <div className="lg:col-span-1">
               {/* Summary Card */}
-              <div className="card-light sticky top-28 sm:top-32 space-y-5 p-5 sm:p-6">
-                <h2 className="text-lg sm:text-xl font-serif font-bold text-warm-charcoal">Order Summary</h2>
+              <div className="card-light sticky top-28 space-y-5 p-5 sm:top-32 sm:p-6">
+                <h2 className="text-warm-charcoal font-serif text-lg font-bold sm:text-xl">
+                  Order Summary
+                </h2>
 
-                <div className="space-y-3 pb-5 sm:pb-6 border-b border-border">
+                <div className="border-border space-y-3 border-b pb-5 sm:pb-6">
                   <div className="flex justify-between text-xs sm:text-sm">
                     <span className="text-warm-charcoal/60">Subtotal</span>
                     <span className="font-semibold">₹{subtotal.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between text-xs sm:text-sm">
                     <span className="text-warm-charcoal/60">Shipping</span>
-                    <span className="font-semibold">{shipping === 0 ? "FREE" : `₹${shipping}`}</span>
+                    <span className="font-semibold">
+                      {shipping === 0 ? 'FREE' : `₹${shipping}`}
+                    </span>
                   </div>
                   <div className="flex justify-between text-xs sm:text-sm">
                     <span className="text-warm-charcoal/60">Tax (5%)</span>
@@ -158,23 +177,23 @@ export default function CartPage() {
                 </div>
 
                 <div className="flex justify-between text-base sm:text-lg">
-                  <span className="font-bold text-warm-charcoal">Total</span>
-                  <span className="font-bold text-primary">₹{total.toLocaleString()}</span>
+                  <span className="text-warm-charcoal font-bold">Total</span>
+                  <span className="text-primary font-bold">₹{total.toLocaleString()}</span>
                 </div>
 
                 {subtotal > 5000 && (
-                  <div className="bg-primary/10 p-3 rounded-lg">
-                    <p className="text-xs text-primary font-semibold">FREE SHIPPING</p>
-                    <p className="text-xs text-primary/70">You qualified for free shipping!</p>
+                  <div className="bg-primary/10 rounded-lg p-3">
+                    <p className="text-primary text-xs font-semibold">FREE SHIPPING</p>
+                    <p className="text-primary/70 text-xs">You qualified for free shipping!</p>
                   </div>
                 )}
 
-                <button className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-warm-rust transition flex items-center justify-center gap-2">
+                <button className="bg-primary hover:bg-warm-rust flex w-full items-center justify-center gap-2 rounded-lg py-3 font-semibold text-white transition">
                   Proceed to Checkout
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="h-4 w-4" />
                 </button>
 
-                <button className="w-full border-2 border-primary text-primary py-3 rounded-lg font-semibold hover:bg-primary/5 transition">
+                <button className="border-primary text-primary hover:bg-primary/5 w-full rounded-lg border-2 py-3 font-semibold transition">
                   Continue Shopping
                 </button>
               </div>
@@ -182,23 +201,23 @@ export default function CartPage() {
               {/* Trust Badges */}
               <div className="mt-6 space-y-3">
                 <div className="flex gap-3 text-xs sm:text-sm">
-                  <Truck className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                  <Truck className="text-primary mt-0.5 h-5 w-5 flex-shrink-0" />
                   <div>
-                    <p className="font-semibold text-warm-charcoal">Free shipping over ₹5000</p>
+                    <p className="text-warm-charcoal font-semibold">Free shipping over ₹5000</p>
                     <p className="text-warm-charcoal/60 text-xs">On orders above ₹5000</p>
                   </div>
                 </div>
                 <div className="flex gap-3 text-xs sm:text-sm">
-                  <Shield className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                  <Shield className="text-primary mt-0.5 h-5 w-5 flex-shrink-0" />
                   <div>
-                    <p className="font-semibold text-warm-charcoal">Secure checkout</p>
+                    <p className="text-warm-charcoal font-semibold">Secure checkout</p>
                     <p className="text-warm-charcoal/60 text-xs">Your data is safe with us</p>
                   </div>
                 </div>
                 <div className="flex gap-3 text-xs sm:text-sm">
-                  <RotateCcw className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                  <RotateCcw className="text-primary mt-0.5 h-5 w-5 flex-shrink-0" />
                   <div>
-                    <p className="font-semibold text-warm-charcoal">Easy returns</p>
+                    <p className="text-warm-charcoal font-semibold">Easy returns</p>
                     <p className="text-warm-charcoal/60 text-xs">30-day return guarantee</p>
                   </div>
                 </div>
@@ -206,15 +225,17 @@ export default function CartPage() {
             </div>
           </div>
         ) : (
-          <div className="text-center py-12 sm:py-16">
-            <ShoppingCart className="w-12 sm:w-16 h-12 sm:h-16 text-warm-sand mx-auto mb-4" />
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-warm-charcoal mb-2">Cart is Empty</h2>
+          <div className="py-12 text-center sm:py-16">
+            <ShoppingCart className="text-warm-sand mx-auto mb-4 h-12 w-12 sm:h-16 sm:w-16" />
+            <h2 className="text-warm-charcoal mb-2 font-serif text-2xl font-bold sm:text-3xl">
+              Cart is Empty
+            </h2>
             <p className="text-warm-charcoal/60 mb-6 text-sm sm:text-base">
               Add some beautiful handcrafted items to your cart
             </p>
             <a
               href="/shop"
-              className="inline-block px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:bg-warm-rust transition"
+              className="bg-primary hover:bg-warm-rust inline-block rounded-lg px-6 py-3 font-semibold text-white transition"
             >
               Start Shopping
             </a>
@@ -224,5 +245,5 @@ export default function CartPage() {
 
       <Footer />
     </main>
-  )
+  );
 }

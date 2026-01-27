@@ -1,6 +1,6 @@
 /**
  * Warehouse Management System
- * 
+ *
  * Comprehensive warehouse operations management:
  * - Multi-warehouse support
  * - Receiving and putaway
@@ -15,7 +15,7 @@ export interface Warehouse {
   id: string;
   name: string;
   code: string;
-  
+
   // Location
   address: {
     street: string;
@@ -28,10 +28,10 @@ export interface Warehouse {
       longitude: number;
     };
   };
-  
+
   // Type
   type: 'distribution_center' | 'fulfillment_center' | 'storage' | 'retail' | 'dark_store';
-  
+
   // Capacity
   capacity: {
     totalArea: number; // square meters
@@ -42,19 +42,20 @@ export interface Warehouse {
     maxWeight: number; // kg
     currentWeight: number;
   };
-  
+
   // Operating hours
   operating: {
     timezone: string;
     hours: {
-      [key: string]: { // day of week
+      [key: string]: {
+        // day of week
         open: string; // HH:MM
         close: string; // HH:MM
       };
     };
     is24x7: boolean;
   };
-  
+
   // Zones
   zones: {
     id: string;
@@ -63,17 +64,17 @@ export interface Warehouse {
     area: number;
     temperature?: 'ambient' | 'refrigerated' | 'frozen';
   }[];
-  
+
   // Status
   status: 'active' | 'inactive' | 'maintenance';
-  
+
   // Staff
   staff: {
     managerId: string;
     totalStaff: number;
     currentShift: number;
   };
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -81,17 +82,17 @@ export interface Warehouse {
 export interface StorageLocation {
   id: string;
   warehouseId: string;
-  
+
   // Location hierarchy
   zone: string;
   aisle: string;
   rack: string;
   shelf: string;
   bin: string;
-  
+
   // Full location code
   locationCode: string; // e.g., "A-01-R3-S2-B5"
-  
+
   // Capacity
   capacity: {
     maxItems: number;
@@ -101,7 +102,7 @@ export interface StorageLocation {
     maxVolume: number; // cubic meters
     currentVolume: number;
   };
-  
+
   // Dimensions
   dimensions?: {
     length: number;
@@ -109,7 +110,7 @@ export interface StorageLocation {
     height: number;
     unit: 'cm' | 'meter';
   };
-  
+
   // Restrictions
   restrictions?: {
     itemTypes?: string[];
@@ -117,17 +118,17 @@ export interface StorageLocation {
     hazmat?: boolean;
     fragile?: boolean;
   };
-  
+
   // Current inventory
   inventory: {
     productId: string;
     quantity: number;
     lastUpdated: Date;
   }[];
-  
+
   // Status
   status: 'available' | 'occupied' | 'reserved' | 'maintenance' | 'damaged';
-  
+
   lastInventoryCheck?: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -136,7 +137,7 @@ export interface StorageLocation {
 export interface ReceivingOrder {
   id: string;
   warehouseId: string;
-  
+
   // Source
   source: {
     type: 'purchase_order' | 'transfer' | 'return' | 'production';
@@ -144,7 +145,7 @@ export interface ReceivingOrder {
     supplierId?: string;
     supplierName?: string;
   };
-  
+
   // Expected items
   expectedItems: {
     productId: string;
@@ -155,7 +156,7 @@ export interface ReceivingOrder {
     damagedQuantity: number;
     discrepancy: number;
   }[];
-  
+
   // Receiving details
   receiving: {
     expectedDate: Date;
@@ -165,7 +166,7 @@ export interface ReceivingOrder {
     containerNumber?: string;
     sealNumber?: string;
   };
-  
+
   // Quality check
   qualityCheck?: {
     performed: boolean;
@@ -175,18 +176,18 @@ export interface ReceivingOrder {
     inspector?: string;
     inspectionDate?: Date;
   };
-  
+
   // Status
   status: 'scheduled' | 'in_progress' | 'completed' | 'discrepancy' | 'cancelled';
-  
+
   // Documents
   documents: {
     type: 'packing_list' | 'invoice' | 'quality_report' | 'photos';
     url: string;
   }[];
-  
+
   notes?: string;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -195,7 +196,7 @@ export interface PutawayTask {
   id: string;
   warehouseId: string;
   receivingOrderId: string;
-  
+
   // Items to putaway
   items: {
     productId: string;
@@ -207,35 +208,35 @@ export interface PutawayTask {
     actualLocation?: string;
     completedQuantity: number;
   }[];
-  
+
   // Assignment
   assignedTo?: string;
   assignedAt?: Date;
-  
+
   // Status
   status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
-  
+
   // Priority
   priority: 'low' | 'normal' | 'high' | 'urgent';
-  
+
   // Timing
   startedAt?: Date;
   completedAt?: Date;
-  
+
   createdAt: Date;
 }
 
 export interface CycleCount {
   id: string;
   warehouseId: string;
-  
+
   // Count details
   count: {
     type: 'full' | 'partial' | 'abc' | 'random';
     schedule: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'ad_hoc';
     locations: string[]; // Location IDs
   };
-  
+
   // Items counted
   items: {
     productId: string;
@@ -248,14 +249,14 @@ export interface CycleCount {
     variancePercentage: number;
     notes?: string;
   }[];
-  
+
   // Assignment
   assignedTo: string;
   assignedAt: Date;
-  
+
   // Status
   status: 'scheduled' | 'in_progress' | 'completed' | 'review' | 'approved';
-  
+
   // Results
   results?: {
     totalItems: number;
@@ -264,37 +265,37 @@ export interface CycleCount {
     totalVariance: number;
     accuracy: number; // percentage
   };
-  
+
   // Approval
   approvedBy?: string;
   approvedAt?: Date;
-  
+
   // Timing
   scheduledDate: Date;
   startedAt?: Date;
   completedAt?: Date;
-  
+
   createdAt: Date;
 }
 
 export interface CrossDockOperation {
   id: string;
   warehouseId: string;
-  
+
   // Inbound
   inbound: {
     receivingOrderId: string;
     arrivalTime: Date;
     dock: string;
   };
-  
+
   // Outbound
   outbound: {
     fulfillmentOrderIds: string[];
     departureTime: Date;
     dock: string;
   };
-  
+
   // Items
   items: {
     productId: string;
@@ -302,17 +303,17 @@ export interface CrossDockOperation {
     fromDock: string;
     toDock: string;
   }[];
-  
+
   // Status
   status: 'scheduled' | 'receiving' | 'transferring' | 'shipping' | 'completed';
-  
+
   // Performance
   performance?: {
     dwellTime: number; // minutes
     targetDwellTime: number;
     onTime: boolean;
   };
-  
+
   createdAt: Date;
   completedAt?: Date;
 }
@@ -320,38 +321,47 @@ export interface CrossDockOperation {
 export interface WarehouseTask {
   id: string;
   warehouseId: string;
-  
+
   // Task details
-  type: 'receiving' | 'putaway' | 'picking' | 'packing' | 'shipping' | 'cycle_count' | 'inventory_adjustment' | 'cleaning' | 'maintenance';
+  type:
+    | 'receiving'
+    | 'putaway'
+    | 'picking'
+    | 'packing'
+    | 'shipping'
+    | 'cycle_count'
+    | 'inventory_adjustment'
+    | 'cleaning'
+    | 'maintenance';
   title: string;
   description?: string;
-  
+
   // Assignment
   assignedTo?: string;
   assignedAt?: Date;
-  
+
   // Priority
   priority: 'low' | 'normal' | 'high' | 'urgent';
-  
+
   // Location
   location?: string;
   zone?: string;
-  
+
   // Status
   status: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'on_hold';
-  
+
   // Due date
   dueDate?: Date;
-  
+
   // Timing
   estimatedDuration?: number; // minutes
   actualDuration?: number;
   startedAt?: Date;
   completedAt?: Date;
-  
+
   // Notes
   notes?: string;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -361,7 +371,7 @@ export interface WarehouseMetrics {
     start: Date;
     end: Date;
   };
-  
+
   overview: {
     totalWarehouses: number;
     activeWarehouses: number;
@@ -369,7 +379,7 @@ export interface WarehouseMetrics {
     utilizationRate: number; // percentage
     inventoryValue: number;
   };
-  
+
   capacity: {
     warehouseId: string;
     warehouseName: string;
@@ -378,7 +388,7 @@ export interface WarehouseMetrics {
     utilizationRate: number;
     palletUtilization: number;
   }[];
-  
+
   operations: {
     totalReceivingOrders: number;
     totalPutaways: number;
@@ -387,7 +397,7 @@ export interface WarehouseMetrics {
     cycleCountsCompleted: number;
     inventoryAccuracy: number; // percentage
   };
-  
+
   productivity: {
     itemsReceived: number;
     itemsPutaway: number;
@@ -395,7 +405,7 @@ export interface WarehouseMetrics {
     itemsShipped: number;
     averageItemsPerLabor: number;
   };
-  
+
   performance: {
     averageDockToStockTime: number; // hours
     orderFillRate: number; // percentage
@@ -462,9 +472,27 @@ export class WarehouseManagementSystem {
         is24x7: false,
       },
       zones: [
-        { id: 'zone-receiving', name: 'Receiving', type: 'receiving', area: 500, temperature: 'ambient' },
-        { id: 'zone-storage-a', name: 'Storage A', type: 'storage', area: 2000, temperature: 'ambient' },
-        { id: 'zone-storage-b', name: 'Storage B', type: 'storage', area: 1500, temperature: 'ambient' },
+        {
+          id: 'zone-receiving',
+          name: 'Receiving',
+          type: 'receiving',
+          area: 500,
+          temperature: 'ambient',
+        },
+        {
+          id: 'zone-storage-a',
+          name: 'Storage A',
+          type: 'storage',
+          area: 2000,
+          temperature: 'ambient',
+        },
+        {
+          id: 'zone-storage-b',
+          name: 'Storage B',
+          type: 'storage',
+          area: 1500,
+          temperature: 'ambient',
+        },
         { id: 'zone-picking', name: 'Picking', type: 'picking', area: 600 },
         { id: 'zone-packing', name: 'Packing', type: 'packing', area: 300 },
         { id: 'zone-shipping', name: 'Shipping', type: 'shipping', area: 400 },
@@ -526,7 +554,10 @@ export class WarehouseManagementSystem {
   async createReceivingOrder(params: {
     warehouseId: string;
     source: ReceivingOrder['source'];
-    expectedItems: Omit<ReceivingOrder['expectedItems'][0], 'receivedQuantity' | 'damagedQuantity' | 'discrepancy'>[];
+    expectedItems: Omit<
+      ReceivingOrder['expectedItems'][0],
+      'receivedQuantity' | 'damagedQuantity' | 'discrepancy'
+    >[];
     expectedDate: Date;
     dock?: string;
     notes?: string;
@@ -535,7 +566,7 @@ export class WarehouseManagementSystem {
       id: `rcv-${Date.now()}`,
       warehouseId: params.warehouseId,
       source: params.source,
-      expectedItems: params.expectedItems.map(item => ({
+      expectedItems: params.expectedItems.map((item) => ({
         ...item,
         receivedQuantity: 0,
         damagedQuantity: 0,
@@ -577,8 +608,8 @@ export class WarehouseManagementSystem {
     order.receiving.receivedDate = new Date();
 
     // Update received quantities
-    params.items.forEach(item => {
-      const expectedItem = order.expectedItems.find(e => e.productId === item.productId);
+    params.items.forEach((item) => {
+      const expectedItem = order.expectedItems.find((e) => e.productId === item.productId);
       if (expectedItem) {
         expectedItem.receivedQuantity = item.receivedQuantity;
         expectedItem.damagedQuantity = item.damagedQuantity;
@@ -595,7 +626,7 @@ export class WarehouseManagementSystem {
     }
 
     // Check for discrepancies
-    const hasDiscrepancy = order.expectedItems.some(item => item.discrepancy !== 0);
+    const hasDiscrepancy = order.expectedItems.some((item) => item.discrepancy !== 0);
     order.status = hasDiscrepancy ? 'discrepancy' : 'completed';
 
     order.updatedAt = new Date();
@@ -616,7 +647,7 @@ export class WarehouseManagementSystem {
     }
 
     // Suggest locations for items
-    const items = receivingOrder.expectedItems.map(item => {
+    const items = receivingOrder.expectedItems.map((item) => {
       const suggestedLocation = this.suggestStorageLocation(
         receivingOrder.warehouseId,
         item.productId
@@ -653,9 +684,10 @@ export class WarehouseManagementSystem {
   private suggestStorageLocation(warehouseId: string, productId: string): string | null {
     // Find available locations
     const availableLocations = Array.from(this.locations.values()).filter(
-      loc => loc.warehouseId === warehouseId && 
-      loc.status === 'available' &&
-      loc.capacity.currentItems < loc.capacity.maxItems
+      (loc) =>
+        loc.warehouseId === warehouseId &&
+        loc.status === 'available' &&
+        loc.capacity.currentItems < loc.capacity.maxItems
     );
 
     if (availableLocations.length === 0) return null;
@@ -680,8 +712,8 @@ export class WarehouseManagementSystem {
     if (!task) return;
 
     // Update task items
-    params.items.forEach(item => {
-      const taskItem = task.items.find(i => i.productId === item.productId);
+    params.items.forEach((item) => {
+      const taskItem = task.items.find((i) => i.productId === item.productId);
       if (taskItem) {
         taskItem.actualLocation = item.actualLocation;
         taskItem.completedQuantity = item.quantity;
@@ -689,11 +721,11 @@ export class WarehouseManagementSystem {
 
       // Update storage location inventory
       const location = Array.from(this.locations.values()).find(
-        loc => loc.locationCode === item.actualLocation && loc.warehouseId === task.warehouseId
+        (loc) => loc.locationCode === item.actualLocation && loc.warehouseId === task.warehouseId
       );
 
       if (location) {
-        const existing = location.inventory.find(inv => inv.productId === item.productId);
+        const existing = location.inventory.find((inv) => inv.productId === item.productId);
         if (existing) {
           existing.quantity += item.quantity;
           existing.lastUpdated = new Date();
@@ -712,7 +744,7 @@ export class WarehouseManagementSystem {
     });
 
     // Check if all items completed
-    const allCompleted = task.items.every(i => i.completedQuantity === i.quantity);
+    const allCompleted = task.items.every((i) => i.completedQuantity === i.quantity);
     if (allCompleted) {
       task.status = 'completed';
       task.completedAt = new Date();
@@ -772,23 +804,25 @@ export class WarehouseManagementSystem {
     cycleCount.startedAt = new Date();
 
     // Process counts
-    cycleCount.items = params.counts.map(count => ({
+    cycleCount.items = params.counts.map((count) => ({
       ...count,
       variance: count.countedQuantity - count.systemQuantity,
-      variancePercentage: count.systemQuantity > 0 
-        ? ((count.countedQuantity - count.systemQuantity) / count.systemQuantity) * 100
-        : 0,
+      variancePercentage:
+        count.systemQuantity > 0
+          ? ((count.countedQuantity - count.systemQuantity) / count.systemQuantity) * 100
+          : 0,
     }));
 
     cycleCount.completedAt = new Date();
     cycleCount.status = 'completed';
 
     // Calculate results
-    const itemsWithVariance = cycleCount.items.filter(i => i.variance !== 0).length;
+    const itemsWithVariance = cycleCount.items.filter((i) => i.variance !== 0).length;
     const totalVariance = cycleCount.items.reduce((sum, i) => sum + Math.abs(i.variance), 0);
-    const accuracy = cycleCount.items.length > 0
-      ? ((cycleCount.items.length - itemsWithVariance) / cycleCount.items.length) * 100
-      : 100;
+    const accuracy =
+      cycleCount.items.length > 0
+        ? ((cycleCount.items.length - itemsWithVariance) / cycleCount.items.length) * 100
+        : 100;
 
     cycleCount.results = {
       totalItems: cycleCount.items.length,
@@ -846,28 +880,32 @@ export class WarehouseManagementSystem {
    */
   async getMetrics(period: { start: Date; end: Date }): Promise<WarehouseMetrics> {
     const warehouses = Array.from(this.warehouses.values());
-    const activeWarehouses = warehouses.filter(w => w.status === 'active');
+    const activeWarehouses = warehouses.filter((w) => w.status === 'active');
 
     const totalArea = warehouses.reduce((sum, w) => sum + w.capacity.totalArea, 0);
     const usedArea = warehouses.reduce((sum, w) => sum + w.capacity.usedArea, 0);
     const utilizationRate = totalArea > 0 ? (usedArea / totalArea) * 100 : 0;
 
     const receivingOrders = Array.from(this.receivingOrders.values()).filter(
-      r => r.createdAt >= period.start && r.createdAt <= period.end
+      (r) => r.createdAt >= period.start && r.createdAt <= period.end
     );
 
     const putawayTasks = Array.from(this.putawayTasks.values()).filter(
-      p => p.createdAt >= period.start && p.createdAt <= period.end
+      (p) => p.createdAt >= period.start && p.createdAt <= period.end
     );
 
     const cycleCounts = Array.from(this.cycleCounts.values()).filter(
-      c => c.scheduledDate >= period.start && c.scheduledDate <= period.end
+      (c) => c.scheduledDate >= period.start && c.scheduledDate <= period.end
     );
 
-    const completedCycleCounts = cycleCounts.filter(c => c.status === 'completed' || c.status === 'approved');
-    const averageAccuracy = completedCycleCounts.length > 0
-      ? completedCycleCounts.reduce((sum, c) => sum + (c.results?.accuracy || 0), 0) / completedCycleCounts.length
-      : 0;
+    const completedCycleCounts = cycleCounts.filter(
+      (c) => c.status === 'completed' || c.status === 'approved'
+    );
+    const averageAccuracy =
+      completedCycleCounts.length > 0
+        ? completedCycleCounts.reduce((sum, c) => sum + (c.results?.accuracy || 0), 0) /
+          completedCycleCounts.length
+        : 0;
 
     return {
       period,
@@ -878,13 +916,15 @@ export class WarehouseManagementSystem {
         utilizationRate: Number(utilizationRate.toFixed(2)),
         inventoryValue: 5250000, // Mock
       },
-      capacity: warehouses.map(w => ({
+      capacity: warehouses.map((w) => ({
         warehouseId: w.id,
         warehouseName: w.name,
         totalArea: w.capacity.totalArea,
         usedArea: w.capacity.usedArea,
         utilizationRate: Number(((w.capacity.usedArea / w.capacity.totalArea) * 100).toFixed(2)),
-        palletUtilization: Number(((w.capacity.currentPallets / w.capacity.maxPallets) * 100).toFixed(2)),
+        palletUtilization: Number(
+          ((w.capacity.currentPallets / w.capacity.maxPallets) * 100).toFixed(2)
+        ),
       })),
       operations: {
         totalReceivingOrders: receivingOrders.length,
@@ -895,11 +935,13 @@ export class WarehouseManagementSystem {
         inventoryAccuracy: Number(averageAccuracy.toFixed(2)),
       },
       productivity: {
-        itemsReceived: receivingOrders.reduce((sum, r) => 
-          sum + r.expectedItems.reduce((s, i) => s + i.receivedQuantity, 0), 0
+        itemsReceived: receivingOrders.reduce(
+          (sum, r) => sum + r.expectedItems.reduce((s, i) => s + i.receivedQuantity, 0),
+          0
         ),
-        itemsPutaway: putawayTasks.reduce((sum, p) =>
-          sum + p.items.reduce((s, i) => s + i.completedQuantity, 0), 0
+        itemsPutaway: putawayTasks.reduce(
+          (sum, p) => sum + p.items.reduce((s, i) => s + i.completedQuantity, 0),
+          0
         ),
         itemsPicked: 1250, // Mock
         itemsShipped: 1180, // Mock

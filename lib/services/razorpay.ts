@@ -207,11 +207,7 @@ class RazorpayService {
       if (!order.razorpayPaymentId) throw new Error('No payment to refund');
 
       // Create refund in Razorpay
-      const refundResult = await this.createRefund(
-        order.razorpayPaymentId,
-        amount,
-        { reason }
-      );
+      const refundResult = await this.createRefund(order.razorpayPaymentId, amount, { reason });
 
       if (!refundResult.success) {
         throw new Error(refundResult.error);

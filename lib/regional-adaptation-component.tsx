@@ -1,6 +1,6 @@
 /**
  * Regional Adaptation Component
- * 
+ *
  * Provides UI components for regional customization:
  * - Language selector
  * - Currency selector
@@ -101,7 +101,12 @@ const CURRENCIES: Currency[] = [
 ];
 
 const REGIONS: Region[] = [
-  { code: 'IN', name: 'India', languages: ['en', 'hi', 'bn', 'te', 'mr', 'ta', 'gu', 'kn', 'ml', 'pa'], currencies: ['INR'] },
+  {
+    code: 'IN',
+    name: 'India',
+    languages: ['en', 'hi', 'bn', 'te', 'mr', 'ta', 'gu', 'kn', 'ml', 'pa'],
+    currencies: ['INR'],
+  },
   { code: 'US', name: 'United States', languages: ['en', 'es'], currencies: ['USD'] },
   { code: 'UK', name: 'United Kingdom', languages: ['en'], currencies: ['GBP'] },
   { code: 'EU', name: 'European Union', languages: ['en', 'de', 'fr', 'es'], currencies: ['EUR'] },
@@ -114,32 +119,37 @@ const REGIONS: Region[] = [
 
 // Provider Component
 export function RegionalProvider({ children }: { children: React.ReactNode }) {
-  const [settings, setSettings] = useState<RegionalSettings>({
-    language: 'en',
-    currency: 'USD',
-    region: 'US',
-    timezone: 'America/New_York',
-    dateFormat: 'MM/DD/YYYY',
-    numberFormat: 'en-US',
-  });
-
-  // Load settings from localStorage on mount
-  useEffect(() => {
-    const savedSettings = localStorage.getItem('regionalSettings');
-    if (savedSettings) {
-      setSettings(JSON.parse(savedSettings));
-    } else {
-      // Auto-detect region from browser
-      const browserLang = navigator.language.split('-')[0];
-      const detectedRegion = detectRegion();
-      
-      setSettings(prev => ({
-        ...prev,
-        language: browserLang,
-        region: detectedRegion,
-      }));
+  const [settings, setSettings] = useState<RegionalSettings>(() => {
+    if (typeof window === 'undefined') {
+      return {
+        language: 'en',
+        currency: 'USD',
+        region: 'US',
+        timezone: 'America/New_York',
+        dateFormat: 'MM/DD/YYYY',
+        numberFormat: 'en-US',
+      };
     }
-  }, []);
+    const saved = localStorage.getItem('regionalSettings');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        // Fall through to auto-detect
+      }
+    }
+    // Auto-detect region from browser
+    const browserLang = navigator.language.split('-')[0];
+    const detectedRegion = detectRegion();
+    return {
+      language: browserLang,
+      currency: 'USD',
+      region: detectedRegion,
+      timezone: 'America/New_York',
+      dateFormat: 'MM/DD/YYYY',
+      numberFormat: 'en-US',
+    };
+  });
 
   // Save settings to localStorage when they change
   useEffect(() => {
@@ -147,11 +157,19 @@ export function RegionalProvider({ children }: { children: React.ReactNode }) {
   }, [settings]);
 
   const updateSettings = (newSettings: Partial<RegionalSettings>) => {
-    setSettings(prev => ({ ...prev, ...newSettings }));
+    setSettings((prev) => ({ ...prev, ...newSettings }));
   };
 
   return (
-    <RegionalContext.Provider value={{ settings, updateSettings, languages: LANGUAGES, currencies: CURRENCIES, regions: REGIONS }}>
+    <RegionalContext.Provider
+      value={{
+        settings,
+        updateSettings,
+        languages: LANGUAGES,
+        currencies: CURRENCIES,
+        regions: REGIONS,
+      }}
+    >
       {children}
     </RegionalContext.Provider>
   );
@@ -160,27 +178,28 @@ export function RegionalProvider({ children }: { children: React.ReactNode }) {
 // Helper function to detect region
 function detectRegion(): string {
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  
-  if (timezone.includes('America/New_York') || timezone.includes('America/Los_Angeles')) return 'US';
+
+  if (timezone.includes('America/New_York') || timezone.includes('America/Los_Angeles'))
+    return 'US';
   if (timezone.includes('Europe/London')) return 'UK';
   if (timezone.includes('Europe/')) return 'EU';
   if (timezone.includes('Asia/Kolkata')) return 'IN';
   if (timezone.includes('Asia/Tokyo')) return 'JP';
   if (timezone.includes('Australia/')) return 'AU';
   if (timezone.includes('Asia/Dubai')) return 'AE';
-  
+
   return 'US'; // Default
 }
 
 // Language Selector Component
 export function LanguageSelector({ variant = 'dropdown' }: { variant?: 'dropdown' | 'inline' }) {
   const { settings, updateSettings, languages } = useRegional();
-  const currentLanguage = languages.find(l => l.code === settings.language);
+  const currentLanguage = languages.find((l) => l.code === settings.language);
 
   if (variant === 'inline') {
     return (
       <div className="flex flex-wrap gap-2">
-        {languages.map(lang => (
+        {languages.map((lang) => (
           <Button
             key={lang.code}
             variant={settings.language === lang.code ? 'default' : 'outline'}
@@ -207,7 +226,7 @@ export function LanguageSelector({ variant = 'dropdown' }: { variant?: 'dropdown
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>Select Language</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {languages.map(lang => (
+        {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
             onClick={() => updateSettings({ language: lang.code })}
@@ -216,7 +235,7 @@ export function LanguageSelector({ variant = 'dropdown' }: { variant?: 'dropdown
             <span className="mr-2">{lang.flag}</span>
             <div className="flex flex-col">
               <span>{lang.name}</span>
-              <span className="text-xs text-muted-foreground">{lang.nativeName}</span>
+              <span className="text-muted-foreground text-xs">{lang.nativeName}</span>
             </div>
           </DropdownMenuItem>
         ))}
@@ -228,7 +247,7 @@ export function LanguageSelector({ variant = 'dropdown' }: { variant?: 'dropdown
 // Currency Selector Component
 export function CurrencySelector() {
   const { settings, updateSettings, currencies } = useRegional();
-  const currentCurrency = currencies.find(c => c.code === settings.currency);
+  const currentCurrency = currencies.find((c) => c.code === settings.currency);
 
   return (
     <DropdownMenu>
@@ -241,7 +260,7 @@ export function CurrencySelector() {
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>Select Currency</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {currencies.map(currency => (
+        {currencies.map((currency) => (
           <DropdownMenuItem
             key={currency.code}
             onClick={() => updateSettings({ currency: currency.code })}
@@ -250,7 +269,7 @@ export function CurrencySelector() {
             <span className="mr-2 font-bold">{currency.symbol}</span>
             <div className="flex flex-col">
               <span>{currency.code}</span>
-              <span className="text-xs text-muted-foreground">{currency.name}</span>
+              <span className="text-muted-foreground text-xs">{currency.name}</span>
             </div>
           </DropdownMenuItem>
         ))}
@@ -262,7 +281,7 @@ export function CurrencySelector() {
 // Region Selector Component
 export function RegionSelector() {
   const { settings, updateSettings, regions } = useRegional();
-  const currentRegion = regions.find(r => r.code === settings.region);
+  const currentRegion = regions.find((r) => r.code === settings.region);
 
   return (
     <DropdownMenu>
@@ -275,11 +294,11 @@ export function RegionSelector() {
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>Select Region</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {regions.map(region => (
+        {regions.map((region) => (
           <DropdownMenuItem
             key={region.code}
             onClick={() => {
-              updateSettings({ 
+              updateSettings({
                 region: region.code,
                 currency: region.currencies[0],
                 language: region.languages[0],
@@ -309,7 +328,7 @@ export function RegionalSettings() {
 // Utility Hooks
 export function useFormatCurrency() {
   const { settings, currencies } = useRegional();
-  const currency = currencies.find(c => c.code === settings.currency);
+  const currency = currencies.find((c) => c.code === settings.currency);
 
   return (amount: number) => {
     if (!currency) return amount.toString();

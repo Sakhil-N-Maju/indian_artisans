@@ -23,15 +23,15 @@ npm install --legacy-peer-deps    # Install dependencies
 
 ## Key URLs
 
-| Service | URL |
-|---------|-----|
-| **Local App** | http://localhost:3000 |
-| **Admin Dashboard** | http://localhost:3000/admin |
-| **Features Page** | http://localhost:3000/features |
-| **Prisma Studio** | http://localhost:5555 (after `npm run db:studio`) |
-| **Razorpay Dashboard** | https://dashboard.razorpay.com |
-| **Meta Developers** | https://developers.facebook.com |
-| **Supabase** | https://supabase.com |
+| Service                | URL                                               |
+| ---------------------- | ------------------------------------------------- |
+| **Local App**          | http://localhost:3000                             |
+| **Admin Dashboard**    | http://localhost:3000/admin                       |
+| **Features Page**      | http://localhost:3000/features                    |
+| **Prisma Studio**      | http://localhost:5555 (after `npm run db:studio`) |
+| **Razorpay Dashboard** | https://dashboard.razorpay.com                    |
+| **Meta Developers**    | https://developers.facebook.com                   |
+| **Supabase**           | https://supabase.com                              |
 
 ---
 
@@ -96,6 +96,7 @@ NEXT_PUBLIC_APP_URL="http://localhost:3000"
 ## Test Credentials
 
 ### Razorpay Test Cards
+
 ```
 Card Number: 4111 1111 1111 1111
 CVV: Any 3 digits
@@ -103,6 +104,7 @@ Expiry: Any future date
 ```
 
 ### Generate Secret
+
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
@@ -120,6 +122,7 @@ npx prisma generate
 ```
 
 ### Main Models
+
 - `User` - Customer/Artisan/Admin accounts
 - `Artisan` - Artisan profiles
 - `Product` - Products with images
@@ -135,6 +138,7 @@ npx prisma generate
 ## Common Tasks
 
 ### Add New Product
+
 ```typescript
 POST /api/products
 {
@@ -151,6 +155,7 @@ POST /api/products
 ```
 
 ### Create Order
+
 ```typescript
 POST /api/orders
 {
@@ -170,14 +175,11 @@ POST /api/orders
 ```
 
 ### Send WhatsApp Message
+
 ```typescript
 import { whatsappService } from '@/lib/services/whatsapp';
 
-await whatsappService.sendTextMessage(
-  '+919876543210',
-  'Your order is confirmed!',
-  userId
-);
+await whatsappService.sendTextMessage('+919876543210', 'Your order is confirmed!', userId);
 ```
 
 ---
@@ -185,6 +187,7 @@ await whatsappService.sendTextMessage(
 ## Troubleshooting
 
 ### Can't connect to database
+
 ```bash
 # Check DATABASE_URL
 # Ensure PostgreSQL is running
@@ -192,11 +195,13 @@ npx prisma studio  # Test connection
 ```
 
 ### Prisma client not found
+
 ```bash
 npm run db:generate
 ```
 
 ### Build errors
+
 ```bash
 # Clear Next.js cache
 rm -rf .next
@@ -204,6 +209,7 @@ npm run dev
 ```
 
 ### Payment verification fails
+
 - Check Razorpay API keys (test vs live)
 - Verify signature calculation
 - Check server logs
@@ -235,15 +241,15 @@ indian_artisans/
 
 ## Documentation Files
 
-| File | Purpose |
-|------|---------|
-| `README.md` | Project overview |
-| `SETUP_GUIDE.md` | Step-by-step setup |
-| `ARCHITECTURE.md` | Technical details |
-| `IMPLEMENTATION_STATUS.md` | All 40 systems |
-| `ENHANCEMENT_SUMMARY.md` | Recent changes |
-| `STATUS.md` | Current status |
-| `.env.example` | Config template |
+| File                       | Purpose            |
+| -------------------------- | ------------------ |
+| `README.md`                | Project overview   |
+| `SETUP_GUIDE.md`           | Step-by-step setup |
+| `ARCHITECTURE.md`          | Technical details  |
+| `IMPLEMENTATION_STATUS.md` | All 40 systems     |
+| `ENHANCEMENT_SUMMARY.md`   | Recent changes     |
+| `STATUS.md`                | Current status     |
+| `.env.example`             | Config template    |
 
 ---
 
@@ -256,7 +262,7 @@ indian_artisans/
 ✅ Admin Dashboard  
 ✅ RESTful APIs  
 ✅ Type-Safe with TypeScript  
-✅ Production Ready  
+✅ Production Ready
 
 ---
 
@@ -287,7 +293,7 @@ git push
 📚 **Docs**: See documentation files  
 🔗 **Prisma**: https://prisma.io/docs  
 💳 **Razorpay**: https://razorpay.com/docs  
-📱 **WhatsApp**: https://developers.facebook.com/docs/whatsapp  
+📱 **WhatsApp**: https://developers.facebook.com/docs/whatsapp
 
 ---
 

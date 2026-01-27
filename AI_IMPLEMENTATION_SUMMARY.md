@@ -7,6 +7,7 @@ You now have a **production-ready AI-powered product creation system** integrate
 ### Core Capabilities
 
 ✅ **WhatsApp-to-Product Pipeline**
+
 - Artisans send product photo via WhatsApp
 - AI analyzes image with GPT-4 Vision
 - Artisan sends voice description (any language)
@@ -17,6 +18,7 @@ You now have a **production-ready AI-powered product creation system** integrate
 - **Total time: ~30 seconds**
 
 ✅ **AI Features**
+
 - **Image Analysis**: GPT-4 Vision extracts visual details (colors, materials, patterns, craftsmanship)
 - **Voice Transcription**: Whisper API supports 50+ languages (Hindi, English, regional languages)
 - **Product Generation**: AI creates titles, descriptions, pricing, categories, tags
@@ -24,6 +26,7 @@ You now have a **production-ready AI-powered product creation system** integrate
 - **Quality Scoring**: Confidence scores for manual review decisions
 
 ✅ **Integration Points**
+
 - WhatsApp Cloud API webhook enhanced with AI processing
 - Automatic product creation in PostgreSQL database
 - Real-time status updates via WhatsApp
@@ -92,7 +95,7 @@ You now have a **production-ready AI-powered product creation system** integrate
 
 ```json
 {
-  "openai": "^4.77.3"  // Official OpenAI SDK
+  "openai": "^4.77.3" // Official OpenAI SDK
 }
 ```
 
@@ -240,6 +243,7 @@ WhatsApp Confirmation (sent to artisan)
 ### Operational Costs (Ongoing)
 
 **Per Product**:
+
 - Voice Transcription: ₹0.85 (~$0.01)
 - Image Analysis: ₹0.85 (~$0.01)
 - Product Extraction: ₹1.70 (~$0.02)
@@ -247,11 +251,13 @@ WhatsApp Confirmation (sent to artisan)
 - **Total: ₹4.25 (~$0.05)**
 
 **Monthly Estimates**:
+
 - 10 products/day × 30 days = ₹1,275 (~$15/month)
 - 50 products/day × 30 days = ₹6,375 (~$75/month)
 - 100 products/day × 30 days = ₹12,750 (~$150/month)
 
 **ROI Comparison**:
+
 - Manual listing time: 15-20 minutes per product
 - AI listing time: 30 seconds
 - **Time saved: 97%**
@@ -264,17 +270,20 @@ WhatsApp Confirmation (sent to artisan)
 ### For Artisans
 
 ✅ **Faster Onboarding**
+
 - 30 seconds vs 20 minutes to create listing
 - No technical skills required
 - Use familiar WhatsApp interface
 
 ✅ **Better Product Listings**
+
 - Professional titles and descriptions
 - SEO-optimized content
 - Cultural storytelling included
 - Suggested pricing based on analysis
 
 ✅ **Language Inclusivity**
+
 - Speak in any language (Hindi, English, regional)
 - AI handles translation and formatting
 - Preserves authentic voice and story
@@ -282,16 +291,19 @@ WhatsApp Confirmation (sent to artisan)
 ### For Platform
 
 ✅ **Scale Operations**
+
 - Handle 100+ artisans simultaneously
 - Consistent listing quality
 - Automated moderation scoring
 
 ✅ **Competitive Advantage**
+
 - First marketplace with AI-powered artisan onboarding
 - Lower barrier to entry for rural artisans
 - Unique cultural storytelling feature
 
 ✅ **Data Insights**
+
 - Track product categories and trends
 - Analyze pricing patterns
 - Improve AI prompts based on feedback
@@ -301,18 +313,21 @@ WhatsApp Confirmation (sent to artisan)
 ## 🔒 Security & Privacy
 
 ✅ **Data Handling**
+
 - Media temporarily stored for processing
 - Deleted after product creation
 - OpenAI API calls are encrypted
 - No data stored by OpenAI (per policy)
 
 ✅ **API Security**
+
 - WhatsApp webhook verification
 - OpenAI key stored in environment variables
 - Rate limiting on AI endpoints
 - Error messages don't expose sensitive data
 
 ✅ **Compliance**
+
 - GDPR-compliant data processing
 - Artisan consent for AI processing
 - Transparent about AI-generated content
@@ -349,14 +364,14 @@ WhatsApp Confirmation (sent to artisan)
 
 ### Common Issues
 
-| Issue | Solution |
-|-------|----------|
-| "OPENAI_API_KEY not found" | Add key to `.env`, restart server |
-| "Insufficient credits" | Add payment method in OpenAI dashboard |
-| "Media download failed" | Check WhatsApp access token validity |
-| "Transcription failed" | Verify audio format (ogg/mp3/m4a) |
-| "Low confidence score" | Image quality or voice clarity issue |
-| "Product not created" | Check artisan exists, verify DB connection |
+| Issue                      | Solution                                   |
+| -------------------------- | ------------------------------------------ |
+| "OPENAI_API_KEY not found" | Add key to `.env`, restart server          |
+| "Insufficient credits"     | Add payment method in OpenAI dashboard     |
+| "Media download failed"    | Check WhatsApp access token validity       |
+| "Transcription failed"     | Verify audio format (ogg/mp3/m4a)          |
+| "Low confidence score"     | Image quality or voice clarity issue       |
+| "Product not created"      | Check artisan exists, verify DB connection |
 
 ### Debug Commands
 
@@ -378,31 +393,34 @@ curl "http://localhost:3000/api/ai/products?mediaId=xxx"
 
 ## 📚 Documentation Index
 
-| Document | Purpose | Audience |
-|----------|---------|----------|
-| `AI_QUICKSTART.md` | 5-minute setup guide | You (first time) |
-| `AI_PIPELINE.md` | Complete documentation | Developers |
-| `AI_TESTING.md` | Testing guide | QA/Testing |
-| `README.md` | Platform overview | Everyone |
-| `SETUP_GUIDE.md` | Full setup | Deployment |
-| `ARCHITECTURE.md` | System design | Technical team |
+| Document           | Purpose                | Audience         |
+| ------------------ | ---------------------- | ---------------- |
+| `AI_QUICKSTART.md` | 5-minute setup guide   | You (first time) |
+| `AI_PIPELINE.md`   | Complete documentation | Developers       |
+| `AI_TESTING.md`    | Testing guide          | QA/Testing       |
+| `README.md`        | Platform overview      | Everyone         |
+| `SETUP_GUIDE.md`   | Full setup             | Deployment       |
+| `ARCHITECTURE.md`  | System design          | Technical team   |
 
 ---
 
 ## 🎓 Learning Resources
 
 ### OpenAI
+
 - API Documentation: https://platform.openai.com/docs
 - Pricing: https://openai.com/pricing
 - Community: https://community.openai.com
 - Examples: https://platform.openai.com/examples
 
 ### WhatsApp Cloud API
+
 - Documentation: https://developers.facebook.com/docs/whatsapp
 - Business API: https://business.whatsapp.com
 - Webhook Guide: https://developers.facebook.com/docs/whatsapp/webhooks
 
 ### Best Practices
+
 - Prompt Engineering: https://platform.openai.com/docs/guides/prompt-engineering
 - Image Best Practices: https://platform.openai.com/docs/guides/vision
 - Voice Guidelines: https://platform.openai.com/docs/guides/speech-to-text
@@ -412,18 +430,21 @@ curl "http://localhost:3000/api/ai/products?mediaId=xxx"
 ## ✨ What Makes This Special
 
 ### Innovation
+
 - **First of its kind** for artisan marketplaces in India
 - Combines **3 cutting-edge AI technologies** (GPT-4 Vision, Whisper, GPT-4 Turbo)
 - **WhatsApp-native** interface (700M+ users in India)
 - **Multi-language** support for digital inclusion
 
 ### Technical Excellence
+
 - **Production-ready** code with proper error handling
 - **Type-safe** TypeScript implementation
 - **Scalable** architecture (handles concurrent requests)
 - **Well-documented** (1000+ lines of documentation)
 
 ### Business Value
+
 - **97% time savings** on product listing creation
 - **Low cost** at ₹3.50 per product
 - **Inclusive** for non-tech-savvy artisans
@@ -434,6 +455,7 @@ curl "http://localhost:3000/api/ai/products?mediaId=xxx"
 ## 🙏 Credits
 
 Built using:
+
 - **OpenAI GPT-4 Vision** - Image understanding
 - **OpenAI Whisper** - Speech-to-text
 - **OpenAI GPT-4 Turbo** - Text generation

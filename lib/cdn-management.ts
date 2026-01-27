@@ -1,6 +1,6 @@
 /**
  * CDN Management Service
- * 
+ *
  * Content Delivery Network management
  */
 
@@ -92,13 +92,14 @@ export class CDNManagementService {
     bandwidthUsage: number;
   }> {
     const endpoints = Array.from(this.endpoints.values());
-    const active = endpoints.filter(e => e.status === 'active');
+    const active = endpoints.filter((e) => e.status === 'active');
     const assets = Array.from(this.assets.values());
-    
+
     const totalSize = assets.reduce((sum, a) => sum + a.size, 0);
-    const avgHitRate = endpoints.length > 0
-      ? endpoints.reduce((sum, e) => sum + e.cacheHitRate, 0) / endpoints.length
-      : 0;
+    const avgHitRate =
+      endpoints.length > 0
+        ? endpoints.reduce((sum, e) => sum + e.cacheHitRate, 0) / endpoints.length
+        : 0;
     const bandwidth = endpoints.reduce((sum, e) => sum + e.bandwidth, 0);
 
     return {
@@ -113,8 +114,8 @@ export class CDNManagementService {
 
   private initializeEndpoints(): void {
     const regions = ['us-east', 'us-west', 'eu-west', 'ap-south'];
-    
-    regions.forEach(region => {
+
+    regions.forEach((region) => {
       const endpoint: CDNEndpoint = {
         id: `cdn-${region}`,
         region,
