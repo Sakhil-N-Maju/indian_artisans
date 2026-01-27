@@ -8,19 +8,47 @@ interface RazorpayConfig {
 }
 
 class RazorpayService {
-  private razorpay: Razorpay;
+  private razorpay: Razorpay | null = null;
   private config: RazorpayConfig;
+  private initialized = false;
 
   constructor() {
     this.config = {
       keyId: process.env.RAZORPAY_KEY_ID || '',
       keySecret: process.env.RAZORPAY_KEY_SECRET || '',
     };
+  }
 
-    this.razorpay = new Razorpay({
-      key_id: this.config.keyId,
-      key_secret: this.config.keySecret,
-    });
+  /**
+   * Initialize Razorpay instance lazily
+   */
+  private initializeRazorpay() {
+    if (this.initialized) return;
+
+    if (!this.config.keyId || !this.config.keySecret) {
+      console.warn('Razorpay credentials not configured. Payment features will be disabled.');
+      this.initialized = true;
+      return;
+    }
+
+    try {
+      this.razorpay = new Razorpay({
+        key_id: this.config.keyId,
+        key_secret: this.config.keySecret,
+      });
+      this.initialized = true;
+    } catch (error) {
+      console.error('Failed to initialize Razorpay:', error);
+      this.initialized = true;
+    }
+  }
+
+  /**
+   * Check if Razorpay is available
+   */
+  private isAvailable(): boolean {
+    this.initializeRazorpay();
+    return this.razorpay !== null;
   }
 
   /**
@@ -28,7 +56,11 @@ class RazorpayService {
    */
   async createOrder(amount: number, currency: string = 'INR', receipt?: string, notes?: any) {
     try {
-      const order = await this.razorpay.orders.create({
+      if (!this.isAvailable()) {
+        return { success: false, error: 'Razorpay not configured' };
+      }
+
+      const order = await this.razorpay!.orders.create({
         amount: Math.round(amount * 100), // Convert to paise
         currency,
         receipt: receipt || `order_${Date.now()}`,
@@ -56,6 +88,11 @@ class RazorpayService {
     razorpaySignature: string
   ): boolean {
     try {
+      if (!this.config.keySecret) {
+        console.error('Cannot verify signature: Razorpay key secret not configured');
+        return false;
+      }
+
       const text = `${razorpayOrderId}|${razorpayPaymentId}`;
       const generated_signature = crypto
         .createHmac('sha256', this.config.keySecret)
@@ -79,6 +116,10 @@ class RazorpayService {
     razorpaySignature: string
   ) {
     try {
+      if (!this.isAvailable()) {
+        return { success: false, error: 'Razorpay not configured' };
+      }
+
       // Verify signature
       const isValid = this.verifyPaymentSignature(
         razorpayOrderId,
@@ -91,7 +132,7 @@ class RazorpayService {
       }
 
       // Fetch payment details from Razorpay
-      const payment = await this.razorpay.payments.fetch(razorpayPaymentId);
+      const payment = await this.razorpay!.payments.fetch(razorpayPaymentId);
 
       // Update order in database
       const order = await prisma.order.update({
@@ -156,7 +197,11 @@ class RazorpayService {
    */
   async capturePayment(paymentId: string, amount: number, currency: string = 'INR') {
     try {
-      const payment = await this.razorpay.payments.capture(
+      if (!this.isAvailable()) {
+        return { success: false, error: 'Razorpay not configured' };
+      }
+
+      const payment = await this.razorpay!.payments.capture(
         paymentId,
         Math.round(amount * 100),
         currency
@@ -174,12 +219,16 @@ class RazorpayService {
    */
   async createRefund(paymentId: string, amount?: number, notes?: any) {
     try {
+      if (!this.isAvailable()) {
+        return { success: false, error: 'Razorpay not configured' };
+      }
+
       const refundData: any = { notes };
       if (amount) {
         refundData.amount = Math.round(amount * 100); // Convert to paise
       }
 
-      const refund = await this.razorpay.payments.refund(paymentId, refundData);
+      const refund = await this.razorpay!.payments.refund(paymentId, refundData);
 
       return {
         success: true,
@@ -245,7 +294,11 @@ class RazorpayService {
    */
   async getPayment(paymentId: string) {
     try {
-      const payment = await this.razorpay.payments.fetch(paymentId);
+      if (!this.isAvailable()) {
+        return { success: false, error: 'Razorpay not configured' };
+      }
+
+      const payment = await this.razorpay!.payments.fetch(paymentId);
       return { success: true, payment };
     } catch (error: any) {
       console.error('Fetch payment error:', error);
@@ -258,7 +311,11 @@ class RazorpayService {
    */
   async getOrder(orderId: string) {
     try {
-      const order = await this.razorpay.orders.fetch(orderId);
+      if (!this.isAvailable()) {
+        return { success: false, error: 'Razorpay not configured' };
+      }
+
+      const order = await this.razorpay!.orders.fetch(orderId);
       return { success: true, order };
     } catch (error: any) {
       console.error('Fetch order error:', error);
@@ -272,6 +329,12 @@ class RazorpayService {
   verifyWebhookSignature(body: string, signature: string, secret?: string): boolean {
     try {
       const webhookSecret = secret || this.config.keySecret;
+
+      if (!webhookSecret) {
+        console.error('Cannot verify webhook signature: No secret provided or configured');
+        return false;
+      }
+
       const expectedSignature = crypto
         .createHmac('sha256', webhookSecret)
         .update(body)
@@ -303,7 +366,11 @@ class RazorpayService {
    */
   async createSubscription(planId: string, customerId: string, quantity: number = 1) {
     try {
-      const subscription = await this.razorpay.subscriptions.create({
+      if (!this.isAvailable()) {
+        return { success: false, error: 'Razorpay not configured' };
+      }
+
+      const subscription = await this.razorpay!.subscriptions.create({
         plan_id: planId,
         customer_notify: 1,
         quantity,
@@ -322,7 +389,11 @@ class RazorpayService {
    */
   async cancelSubscription(subscriptionId: string, cancelAtCycleEnd: boolean = false) {
     try {
-      const subscription = await this.razorpay.subscriptions.cancel(
+      if (!this.isAvailable()) {
+        return { success: false, error: 'Razorpay not configured' };
+      }
+
+      const subscription = await this.razorpay!.subscriptions.cancel(
         subscriptionId,
         cancelAtCycleEnd as any
       );
