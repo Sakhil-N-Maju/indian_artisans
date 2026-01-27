@@ -88,6 +88,11 @@ class RazorpayService {
     razorpaySignature: string
   ): boolean {
     try {
+      if (!this.config.keySecret) {
+        console.error('Cannot verify signature: Razorpay key secret not configured');
+        return false;
+      }
+
       const text = `${razorpayOrderId}|${razorpayPaymentId}`;
       const generated_signature = crypto
         .createHmac('sha256', this.config.keySecret)
@@ -324,6 +329,12 @@ class RazorpayService {
   verifyWebhookSignature(body: string, signature: string, secret?: string): boolean {
     try {
       const webhookSecret = secret || this.config.keySecret;
+
+      if (!webhookSecret) {
+        console.error('Cannot verify webhook signature: No secret provided or configured');
+        return false;
+      }
+
       const expectedSignature = crypto
         .createHmac('sha256', webhookSecret)
         .update(body)
