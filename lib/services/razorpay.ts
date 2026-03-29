@@ -8,7 +8,7 @@ interface RazorpayConfig {
 }
 
 class RazorpayService {
-  private razorpay: Razorpay;
+  private razorpay: Razorpay | null = null;
   private config: RazorpayConfig;
 
   constructor() {
@@ -16,11 +16,19 @@ class RazorpayService {
       keyId: process.env.RAZORPAY_KEY_ID || '',
       keySecret: process.env.RAZORPAY_KEY_SECRET || '',
     };
+  }
 
-    this.razorpay = new Razorpay({
-      key_id: this.config.keyId,
-      key_secret: this.config.keySecret,
-    });
+  private getRazorpay(): Razorpay {
+    if (!this.razorpay) {
+      if (!this.config.keyId || !this.config.keySecret) {
+        throw new Error('Razorpay credentials not configured');
+      }
+      this.razorpay = new Razorpay({
+        key_id: this.config.keyId,
+        key_secret: this.config.keySecret,
+      });
+    }
+    return this.razorpay;
   }
 
   /**
@@ -28,7 +36,7 @@ class RazorpayService {
    */
   async createOrder(amount: number, currency: string = 'INR', receipt?: string, notes?: any) {
     try {
-      const order = await this.razorpay.orders.create({
+      const order = await this.getRazorpay().orders.create({
         amount: Math.round(amount * 100), // Convert to paise
         currency,
         receipt: receipt || `order_${Date.now()}`,
@@ -56,6 +64,10 @@ class RazorpayService {
     razorpaySignature: string
   ): boolean {
     try {
+      if (!this.config.keySecret) {
+        console.error('Razorpay key secret not configured');
+        return false;
+      }
       const text = `${razorpayOrderId}|${razorpayPaymentId}`;
       const generated_signature = crypto
         .createHmac('sha256', this.config.keySecret)
@@ -91,7 +103,7 @@ class RazorpayService {
       }
 
       // Fetch payment details from Razorpay
-      const payment = await this.razorpay.payments.fetch(razorpayPaymentId);
+      const payment = await this.getRazorpay().payments.fetch(razorpayPaymentId);
 
       // Update order in database
       const order = await prisma.order.update({
@@ -156,7 +168,7 @@ class RazorpayService {
    */
   async capturePayment(paymentId: string, amount: number, currency: string = 'INR') {
     try {
-      const payment = await this.razorpay.payments.capture(
+      const payment = await this.getRazorpay().payments.capture(
         paymentId,
         Math.round(amount * 100),
         currency
@@ -179,7 +191,7 @@ class RazorpayService {
         refundData.amount = Math.round(amount * 100); // Convert to paise
       }
 
-      const refund = await this.razorpay.payments.refund(paymentId, refundData);
+      const refund = await this.getRazorpay().payments.refund(paymentId, refundData);
 
       return {
         success: true,
@@ -245,7 +257,7 @@ class RazorpayService {
    */
   async getPayment(paymentId: string) {
     try {
-      const payment = await this.razorpay.payments.fetch(paymentId);
+      const payment = await this.getRazorpay().payments.fetch(paymentId);
       return { success: true, payment };
     } catch (error: any) {
       console.error('Fetch payment error:', error);
@@ -258,7 +270,7 @@ class RazorpayService {
    */
   async getOrder(orderId: string) {
     try {
-      const order = await this.razorpay.orders.fetch(orderId);
+      const order = await this.getRazorpay().orders.fetch(orderId);
       return { success: true, order };
     } catch (error: any) {
       console.error('Fetch order error:', error);
@@ -272,6 +284,10 @@ class RazorpayService {
   verifyWebhookSignature(body: string, signature: string, secret?: string): boolean {
     try {
       const webhookSecret = secret || this.config.keySecret;
+      if (!webhookSecret) {
+        console.error('Razorpay webhook secret not configured');
+        return false;
+      }
       const expectedSignature = crypto
         .createHmac('sha256', webhookSecret)
         .update(body)
@@ -303,7 +319,7 @@ class RazorpayService {
    */
   async createSubscription(planId: string, customerId: string, quantity: number = 1) {
     try {
-      const subscription = await this.razorpay.subscriptions.create({
+      const subscription = await this.getRazorpay().subscriptions.create({
         plan_id: planId,
         customer_notify: 1,
         quantity,
@@ -322,7 +338,7 @@ class RazorpayService {
    */
   async cancelSubscription(subscriptionId: string, cancelAtCycleEnd: boolean = false) {
     try {
-      const subscription = await this.razorpay.subscriptions.cancel(
+      const subscription = await this.getRazorpay().subscriptions.cancel(
         subscriptionId,
         cancelAtCycleEnd as any
       );
